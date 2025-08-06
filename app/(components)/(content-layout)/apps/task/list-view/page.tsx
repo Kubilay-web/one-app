@@ -30,7 +30,7 @@ const ListView = () => {
     };
     const [manageTaskData, setManageTaskData] = useState([...TotalTasks]);
 
-    const handleDelete = (idToRemove: Number) => {
+    const handleDelete = (idToRemove: number) => {
         const updatedTaskData = manageTaskData.filter((item: any) => item.id !== idToRemove);
         setManageTaskData(updatedTaskData);
     };

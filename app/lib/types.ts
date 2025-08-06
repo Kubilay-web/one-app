@@ -181,9 +181,9 @@ export interface MessageCountInfo {
 }
 
 export interface DashboardSidebarMenuInterface {
-  label: String;
-  icon: String;
-  link: String;
+  label: string;
+  icon: string;
+  link: string;
 }
 
 export type SubCategoryWithCategoryType = Prisma.PromiseReturnType<
