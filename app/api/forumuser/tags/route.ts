@@ -1,6 +1,5 @@
 import db from "@/app/lib/db";
 import { NextResponse } from "next/server";
-import handleError from '@/app/lib/handlers/error';
 
 export async function GET(request: Request) {
   try {
@@ -12,14 +11,15 @@ export async function GET(request: Request) {
     const filter = searchParams.get("filter") || "popular";
 
     if (page < 1 || pageSize < 1) {
-      throw new Error("page and pageSize must be at least 1");
+      return NextResponse.json(
+        { error: "page and pageSize must be at least 1" },
+        { status: 400 }
+      );
     }
 
     const skip = (page - 1) * pageSize;
-    const limit = pageSize;
 
     const whereClause: any = {};
-
     if (query) {
       whereClause.name = {
         contains: query,
@@ -31,8 +31,7 @@ export async function GET(request: Request) {
 
     switch (filter) {
       case "popular":
-        // Bu sıralamayı aşağıda elle yapacağız çünkü Prisma nested count sıralamasını desteklemiyor.
-        orderBy = {};
+        orderBy = {}; // Elle sıralanacak
         break;
       case "recent":
         orderBy = { createdAt: "desc" };
@@ -47,17 +46,17 @@ export async function GET(request: Request) {
         orderBy = { createdAt: "desc" };
     }
 
-    // Popülerlik filtresine göre sıralama gerekiyorsa elle yap
     let tags = await db.tagForum.findMany({
       where: whereClause,
       skip,
-      take: limit,
+      take: pageSize,
       orderBy: filter === "popular" ? undefined : orderBy,
       include: {
         tagQuestions: true,
       },
     });
 
+    // Popülerlik sıralaması (elle)
     if (filter === "popular") {
       tags = tags.sort((a, b) => b.tagQuestions.length - a.tagQuestions.length);
     }
@@ -75,9 +74,13 @@ export async function GET(request: Request) {
         success: true,
         data: { tags: tagsWithCount, isNext },
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
-    return handleError(error, "api");
+    console.error("Error fetching tags:", error);
+    return NextResponse.json(
+      { error: "An unexpected error occurred while fetching tags." },
+      { status: 500 }
+    );
   }
 }

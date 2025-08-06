@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import db from "@/app/lib/db";
-import handleError from '@/app/lib/handlers/error';
 import { validateRequest } from "@/app/auth";
 
+// POST: Yeni soru oluştur
 export async function POST(req: Request) {
   try {
     const { title, content, tagNames } = await req.json();
@@ -15,30 +15,25 @@ export async function POST(req: Request) {
     if (!title || !content || !Array.isArray(tagNames) || tagNames.length === 0) {
       return NextResponse.json(
         { error: "Eksik veya hatalı alanlar var" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    // DB'de tag isimlerine göre mevcut tagları bul
     const existingTags = await db.tagForum.findMany({
       where: { name: { in: tagNames } },
       select: { id: true, name: true },
     });
 
-    // DB’de olmayan tag isimlerini filtrele
     const existingTagNames = existingTags.map((t) => t.name);
     const newTagNames = tagNames.filter((name) => !existingTagNames.includes(name));
 
-    // Yeni tagları oluştur
     const newTags = await Promise.all(
-      newTagNames.map((name) => db.tagForum.create({ data: { name } })),
+      newTagNames.map((name) => db.tagForum.create({ data: { name } }))
     );
 
-    // Tüm tag objeleri (eski + yeni)
     const allTags = [...existingTags, ...newTags];
     const tagIds = allTags.map((t) => t.id);
 
-    // Yeni soru oluştur
     const newQuestion = await db.questionForum.create({
       data: {
         title,
@@ -47,7 +42,6 @@ export async function POST(req: Request) {
       },
     });
 
-    // Tag ilişkilerini oluştur
     if (tagIds.length > 0) {
       await db.tagQuestionForum.createMany({
         data: tagIds.map((tagId) => ({
@@ -57,7 +51,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Güncellenmiş soruyu taglar ile birlikte getir
     const questionWithTags = await db.questionForum.findUnique({
       where: { id: newQuestion.id },
       include: {
@@ -71,11 +64,12 @@ export async function POST(req: Request) {
     console.error("Error creating question:", error);
     return NextResponse.json(
       { error: "Could not create question" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
+// PUT: Soruyu güncelle
 export async function PUT(req: Request) {
   try {
     const { id, title, content, tagNames } = await req.json();
@@ -83,33 +77,29 @@ export async function PUT(req: Request) {
     if (!id || !title || !content || !Array.isArray(tagNames)) {
       return NextResponse.json(
         { error: "Eksik veya hatalı alanlar var" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    // 1. Soruyu güncelle
     await db.questionForum.update({
       where: { id },
       data: { title, content },
     });
 
-    // 2. Eski tag ilişkilerini sil
     await db.tagQuestionForum.deleteMany({
       where: { questionId: id },
     });
 
-    // 3. Yeni tag isimlerini kullanarak tag'leri bul veya oluştur
     const tags = await Promise.all(
-      tagNames.map(async (tagName: string) => {
-        return await db.tagForum.upsert({
+      tagNames.map((tagName: string) => {
+        return db.tagForum.upsert({
           where: { name: tagName },
           update: {},
           create: { name: tagName },
         });
-      }),
+      })
     );
 
-    // 4. Yeni tag ilişkilerini oluştur
     await db.tagQuestionForum.createMany({
       data: tags.map((tag) => ({
         tagId: tag.id,
@@ -117,7 +107,6 @@ export async function PUT(req: Request) {
       })),
     });
 
-    // 5. Güncellenmiş soruyu geri dön
     const updatedQuestion = await db.questionForum.findUnique({
       where: { id },
       include: {
@@ -133,10 +122,14 @@ export async function PUT(req: Request) {
     return NextResponse.json(updatedQuestion, { status: 200 });
   } catch (error) {
     console.error("Soru güncellenirken hata:", error);
-    return NextResponse.json({ error: "Soru güncellenemedi" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Soru güncellenemedi" },
+      { status: 500 }
+    );
   }
 }
 
+// GET: Soru listesi getir (query, filtre, sayfalama ile)
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -146,13 +139,16 @@ export async function GET(request: Request) {
     const filter = searchParams.get("filter") || "newest";
 
     if (page < 1 || pageSize < 1) {
-      throw new Error("Page and pageSize must be at least 1");
+      return NextResponse.json(
+        { error: "Page and pageSize must be at least 1" },
+        { status: 400 }
+      );
     }
 
     if (filter === "recommended") {
       return NextResponse.json(
         { success: true, data: { questions: [], isNext: false } },
-        { status: 200 },
+        { status: 200 }
       );
     }
 
@@ -192,7 +188,6 @@ export async function GET(request: Request) {
       },
     });
 
-    // Tag objelerini questions içine dahil et
     const questionsWithTags = questions.map((q) => ({
       ...q,
       tags: q.tagQuestions.map((tq) => tq.tag),
@@ -206,9 +201,13 @@ export async function GET(request: Request) {
         success: true,
         data: { questions: questionsWithTags, isNext },
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
-    return handleError(error, "api");
+    console.error("Soru listesi alınırken hata:", error);
+    return NextResponse.json(
+      { error: "Soru listesi alınamadı" },
+      { status: 500 }
+    );
   }
 }

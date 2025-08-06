@@ -1,6 +1,5 @@
 import db from "@/app/lib/db";
 import { NextResponse } from "next/server";
-import handleError from '@/app/lib/handlers/error';
 
 interface Params {
   params: {
@@ -13,7 +12,7 @@ export async function GET(request: Request, { params }: Params) {
     const { id: tagId } = params;
 
     if (!tagId) {
-      throw new Error("tagId is required");
+      return NextResponse.json({ error: "Tag ID is required" }, { status: 400 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -22,7 +21,10 @@ export async function GET(request: Request, { params }: Params) {
     const query = searchParams.get("query") || "";
 
     if (page < 1 || pageSize < 1) {
-      throw new Error("page and pageSize must be at least 1");
+      return NextResponse.json(
+        { error: "Page and pageSize must be at least 1" },
+        { status: 400 }
+      );
     }
 
     const skip = (page - 1) * pageSize;
@@ -33,7 +35,7 @@ export async function GET(request: Request, { params }: Params) {
     });
 
     if (!tag) {
-      throw new Error("Tag not found");
+      return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     }
 
     // Bu tag'e ait questionId'leri çek
@@ -54,7 +56,7 @@ export async function GET(request: Request, { params }: Params) {
             isNext: false,
           },
         },
-        { status: 200 },
+        { status: 200 }
       );
     }
 
@@ -97,9 +99,13 @@ export async function GET(request: Request, { params }: Params) {
           isNext,
         },
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
-    return handleError(error, "api");
+    console.error("Error fetching tag questions:", error);
+    return NextResponse.json(
+      { error: "An unexpected error occurred while fetching questions." },
+      { status: 500 }
+    );
   }
 }
