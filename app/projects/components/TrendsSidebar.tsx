@@ -1,7 +1,7 @@
-import { validateRequest } from "@/auth";
-import prisma from "@/lib/prisma";
-import { getUserDataSelect } from "@/lib/types";
-import { formatNumber } from "@/lib/utils";
+import { validateRequest } from "@/app/auth";
+import prisma from "@/app/lib/prisma";
+import { getUserDataSelect } from "@/app/lib/types";
+import { formatNumber } from "@/app/lib/utils";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";

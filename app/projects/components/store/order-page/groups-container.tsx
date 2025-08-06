@@ -1,5 +1,5 @@
-import { OrderGroupWithItemsType } from "@/lib/types";
-import { getShippingDatesRange } from "@/lib/utils";
+import { OrderGroupWithItemsType } from "@/app/lib/types";
+import { getShippingDatesRange } from "@/app/lib/utils";
 import OrderGroupTable from "./group-table";
 
 export default function OrderGroupsContainer({

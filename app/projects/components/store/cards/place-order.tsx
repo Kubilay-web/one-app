@@ -4,11 +4,11 @@ import { Button } from "../ui/button";
 import FastDelivery from "./product/fast-delivery";
 import { SecurityPrivacyCard } from "../product-page/returns-security-privacy-card";
 import toast from "react-hot-toast";
-import { emptyUserCart, placeOrder } from "@/queries/user";
-import { useCartStore } from "@/cart-store/useCartStore";
+import { emptyUserCart, placeOrder } from "@/app/queries/user";
+import { useCartStore } from "@/app/cart-store/useCartStore";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { CartWithCartItemsType } from "@/lib/types";
+import { cn } from "@/app/lib/utils";
+import { CartWithCartItemsType } from "@/app/lib/types";
 import ApplyCouponForm from "../forms/apply-coupon";
 import { PulseLoader } from "react-spinners";
 

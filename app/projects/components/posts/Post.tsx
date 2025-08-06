@@ -1,8 +1,8 @@
 "use client";
 
-import { useSession } from "@/app/(main)/SessionProvider";
-import { PostData } from "@/lib/types";
-import { cn, formatRelativeDate } from "@/lib/utils";
+import { useSession } from "@/app/SessionProvider";
+import { PostData } from "@/app/lib/types";
+import { cn, formatRelativeDate } from "@/app/lib/utils";
 import { Media } from "@prisma/client";
 import { MessageSquare } from "lucide-react";
 import Image from "next/image";

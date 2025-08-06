@@ -1,6 +1,6 @@
-import { useCartStore } from "@/cart-store/useCartStore";
-import { CartProductType } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { useCartStore } from "@/app/cart-store/useCartStore";
+import { CartProductType } from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import { Check } from "lucide-react";
 import { Dispatch, FC, SetStateAction } from "react";
 

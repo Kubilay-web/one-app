@@ -1,8 +1,8 @@
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 import Link from "next/link";
 import React from "react";
 import { Badge } from "../ui/badge";
-import { cn, getDeviconClassName, getTechDescription } from "@/lib/utils";
+import { cn, getDeviconClassName, getTechDescription } from "@/app/lib/utils";
 import Image from "next/image";
 
 interface Props {

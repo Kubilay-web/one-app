@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { Check, ChevronsUpDown, PlusCircle, StoreIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { FC, useState } from "react";

@@ -1,12 +1,12 @@
-import { UserShippingAddressType } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { UserShippingAddressType } from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import { Country } from "@prisma/client";
 import { Check } from "lucide-react";
 import { FC, useState } from "react";
 import Modal from "../shared/modal";
 import AddressDetails from "../shared/shipping-addresses/address-details";
 import toast from "react-hot-toast";
-import { upsertShippingAddress } from "@/queries/user";
+import { upsertShippingAddress } from "@/app/queries/user";
 import { useRouter } from "next/navigation";
 
 interface Props {

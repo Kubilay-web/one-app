@@ -10,7 +10,7 @@ import {
   PinterestShareButton,
   PinterestIcon,
 } from "next-share";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 interface Props {
   url: string;

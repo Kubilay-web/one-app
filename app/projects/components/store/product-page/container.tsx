@@ -1,19 +1,19 @@
 "use client";
 
-import { CartProductType, ProductPageDataType } from "@/lib/types";
+import { CartProductType, ProductPageDataType } from "@/app/lib/types";
 import { ReactNode, FC, useState, useEffect, useMemo } from "react";
 import ProductSwiper from "./product-swiper";
 import ProductInfo from "./product-info/product-info";
 import ShipTo from "./shipping/ship-to";
 import ShippingDetails from "./shipping/shipping-details";
 import ReturnPrivacySecurityCard from "./returns-security-privacy-card";
-import { isProductValidToAdd, updateProductHistory } from "@/lib/utils";
+import { isProductValidToAdd, updateProductHistory } from "@/app/lib/utils";
 import QuantitySelector from "./quantity-selector";
 import SocialShare from "../shared/social-share";
 import { ProductVariantImage } from "@prisma/client";
-import { useCartStore } from "@/cart-store/useCartStore";
-import { useToast } from "@/components/ui/use-toast";
-import useFromStore from "@/hooks/useFromStore";
+import { useCartStore } from "@/app/cart-store/useCartStore";
+import { useToast } from "@/app/projects/components/ui/use-toast";
+import useFromStore from "@/app/hooks/useFromStore";
 import { setCookie } from "cookies-next";
 
 interface Props {

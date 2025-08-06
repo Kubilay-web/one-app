@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { DashboardSidebarMenuInterface } from "@/lib/types";
+import { DashboardSidebarMenuInterface } from "@/app/lib/types";
 import {
   Command,
   CommandEmpty,
@@ -9,10 +9,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { cn } from "@/lib/utils";
+} from "@/app/projects/components/ui/command";
+import { cn } from "@/app/lib/utils";
 import Link from "next/link";
-import { icons } from "@/constants/icons";
+import { icons } from "@/app/constants/icons";
 import { usePathname } from "next/navigation";
 
 export default function SidebarNavAdmin({

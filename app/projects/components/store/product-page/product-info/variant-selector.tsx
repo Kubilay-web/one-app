@@ -3,8 +3,8 @@ import {
   CartProductType,
   ProductVariantDataType,
   VariantInfoType,
-} from "@/lib/types";
-import { cn } from "@/lib/utils";
+} from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import { ProductVariantImage } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";

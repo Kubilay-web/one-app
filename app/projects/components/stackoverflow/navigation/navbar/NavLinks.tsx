@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { SheetClose } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { sidebarLinks } from "@/constants";
+import { SheetClose } from "@/app/projects/components/ui/sheet";
+import { cn } from "@/app/lib/utils";
+import { sidebarLinks } from "@/app/constants";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";

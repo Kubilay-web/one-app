@@ -1,8 +1,8 @@
-import { google, lucia } from "@/auth";
-import kyInstance from "@/lib/ky";
-import prisma from "@/lib/prisma";
-import streamServerClient from "@/lib/stream";
-import { slugify } from "@/lib/utils";
+import { google, lucia } from "@/app/auth";
+import kyInstance from "@/app/lib/ky";
+import prisma from "@/app/lib/prisma";
+import streamServerClient from "@/app/lib/stream";
+import { slugify } from "@/app/lib/utils";
 import { OAuth2RequestError } from "arctic";
 import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";

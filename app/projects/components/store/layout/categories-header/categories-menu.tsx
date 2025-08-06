@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { Category } from "@prisma/client";
 import { ChevronDown, Menu } from "lucide-react";
 import Image from "next/image";

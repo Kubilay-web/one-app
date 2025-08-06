@@ -1,6 +1,6 @@
-import kyInstance from "@/lib/ky";
-import { BookmarkInfo } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import kyInstance from "@/app/lib/ky";
+import { BookmarkInfo } from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import {
   QueryKey,
   useMutation,

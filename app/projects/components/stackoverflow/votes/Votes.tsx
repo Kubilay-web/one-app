@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { UserInfo } from "@/queries/user";
-import { formatNumbers } from "@/lib/utils";
+import { UserInfo } from "@/app/queries/user";
+import { formatNumbers } from "@/app/lib/utils";
 
 interface Props {
   targetId: string;

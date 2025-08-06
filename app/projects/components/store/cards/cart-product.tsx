@@ -1,7 +1,7 @@
-import { useCartStore } from "@/cart-store/useCartStore";
-import { CartProductType, Country } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { addToWishlist } from "@/queries/user";
+import { useCartStore } from "@/app/cart-store/useCartStore";
+import { CartProductType, Country } from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
+import { addToWishlist } from "@/app/queries/user";
 import {
   Check,
   ChevronRight,

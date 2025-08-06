@@ -1,6 +1,6 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { followStore, UserInfo } from "@/queries/user";
+import { cn } from "@/app/lib/utils";
+import { followStore, UserInfo } from "@/app/queries/user";
 import { Check, MessageSquareMore, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";

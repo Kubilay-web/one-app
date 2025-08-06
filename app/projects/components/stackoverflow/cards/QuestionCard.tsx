@@ -1,5 +1,5 @@
-import ROUTES from "@/constants/routes";
-import { getTimeStamps } from "@/lib/utils";
+import ROUTES from "@/app/constants/routes";
+import { getTimeStamps } from "@/app/lib/utils";
 import Link from "next/link";
 import React from "react";
 import TagCard from "./TagCard";

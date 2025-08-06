@@ -1,6 +1,6 @@
-import kyInstance from "@/lib/ky";
-import { LikeInfo } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import kyInstance from "@/app/lib/ky";
+import { LikeInfo } from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import {
   QueryKey,
   useMutation,

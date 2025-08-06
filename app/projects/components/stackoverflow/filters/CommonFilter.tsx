@@ -9,10 +9,10 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/projects/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { formUrlQuery } from "@/lib/url";
+import { cn } from "@/app/lib/utils";
+import { formUrlQuery } from "@/app/lib/url";
 
 interface Filter {
   name: string;

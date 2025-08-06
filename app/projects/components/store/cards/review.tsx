@@ -1,8 +1,8 @@
 "use client";
 
-import ColorWheel from "@/components/shared/color-wheel";
-import { ReviewWithImageType } from "@/lib/types";
-import { censorName } from "@/lib/utils";
+import ColorWheel from "@/app/projects/components/shared/color-wheel";
+import { ReviewWithImageType } from "@/app/lib/types";
+import { censorName } from "@/app/lib/utils";
 import Image from "next/image";
 import StarRatings from "react-star-ratings";
 

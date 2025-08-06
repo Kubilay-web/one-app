@@ -1,12 +1,12 @@
 "use client";
-import OrderStatusTag from "@/components/shared/order-status";
-import PaymentStatusTag from "@/components/shared/payment-status";
-import { Button } from "@/components/ui/button";
-import { OrderFulltType, OrderStatus, PaymentStatus } from "@/lib/types";
+import OrderStatusTag from "../../shared/order-status";
+import PaymentStatusTag from "../../shared/payment-status";
+import { Button } from "@/app/projects/components/ui/button";
+import { OrderFulltType, OrderStatus, PaymentStatus } from "@/app/lib/types";
 import { ChevronLeft, ChevronRight, Download, Printer } from "lucide-react";
 import React from "react";
 import { generateOrderPDFBlob } from "./pdf-invoice";
-import { downloadBlobAsFile, printPDF } from "@/lib/utils";
+import { downloadBlobAsFile, printPDF } from "@/app/lib/utils";
 
 export default function OrderHeader({ order }: { order: OrderFulltType }) {
   if (!order) return;

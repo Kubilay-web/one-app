@@ -1,7 +1,7 @@
 "use client";
 
 // Provider
-import { useModal } from "@/providers/modal-provider";
+import { useModal } from "@/app/projects/components/providers/modal-provider";
 
 // UI components
 import {
@@ -9,9 +9,9 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-} from "@/components/ui/dialog";
+} from "@/app/projects/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 type Props = {
   heading?: string;

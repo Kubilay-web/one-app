@@ -2,8 +2,8 @@ import {
   RatingStatisticsType,
   ReviewsFiltersType,
   ReviewsOrderType,
-} from "@/lib/types";
-import { cn } from "@/lib/utils";
+} from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import { Dispatch, FC, SetStateAction } from "react";
 
 interface Props {

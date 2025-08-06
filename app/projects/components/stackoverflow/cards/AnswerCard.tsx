@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import UserAvatar from "../UserAvatar";
-import { getTimeStamp, getTimeStamps } from "@/lib/utils";
+import { getTimeStamp, getTimeStamps } from "@/app/lib/utils";
 import Link from "next/link";
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 import Preview from "../editor/Preview";
 import Votes from "../votes/Votes";
 

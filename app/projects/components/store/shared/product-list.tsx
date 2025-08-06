@@ -1,5 +1,5 @@
-import { ProductType } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { ProductType } from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";

@@ -1,9 +1,9 @@
 "use client";
-import { ShippingDetailsType } from "@/lib/types";
+import { ShippingDetailsType } from "@/app/lib/types";
 import { ChevronDown, ChevronRight, ChevronUp, Truck } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import ProductShippingFee from "./shipping-fee";
-import { getShippingDatesRange } from "@/lib/utils";
+import { getShippingDatesRange } from "@/app/lib/utils";
 import { BarLoader, BounceLoader, MoonLoader } from "react-spinners";
 
 interface Props {

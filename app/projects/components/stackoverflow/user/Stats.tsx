@@ -1,4 +1,4 @@
-import { formatNumber } from "@/lib/utils";
+import { formatNumber } from "@/app/lib/utils";
 import Image from "next/image";
 import React from "react";
 

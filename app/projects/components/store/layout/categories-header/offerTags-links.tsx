@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { OfferTag } from "@prisma/client";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";

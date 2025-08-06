@@ -5,8 +5,8 @@ import {
   PaymentTableFilter,
   ReviewDateFilter,
   ReviewFilter,
-} from "@/lib/types";
-import { cn } from "@/lib/utils";
+} from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 
 import { useRouter } from "next/navigation";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { ProductVariantImage } from "@prisma/client";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import ImageZoom from "react-image-zooom";

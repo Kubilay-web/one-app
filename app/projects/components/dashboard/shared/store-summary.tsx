@@ -1,12 +1,12 @@
-import PaymentStatusTag from "@/components/shared/payment-status";
+import PaymentStatusTag from "@/app/projects/components/shared/payment-status";
 import {
   AdminStoreType,
   OrderStatus,
   PaymentStatus,
   ProductStatus,
   StoreStatus,
-} from "@/lib/types";
-import { cn, getShippingDatesRange } from "@/lib/utils";
+} from "@/app/lib/types";
+import { cn, getShippingDatesRange } from "@/app/lib/utils";
 import { FC, useState } from "react";
 import OrderStatusSelect from "../forms/order-status-select";
 import Image from "next/image";

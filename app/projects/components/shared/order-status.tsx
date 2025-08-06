@@ -1,5 +1,5 @@
-import { OrderStatus } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { OrderStatus } from "@/app/lib/types";
+import { cn } from "@/app/lib/utils";
 import { Truck } from "lucide-react";
 import { FC } from "react";
 

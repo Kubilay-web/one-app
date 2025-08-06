@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { MoveLeft, MoveRight } from "lucide-react";
 import { Dispatch, FC, SetStateAction } from "react";
 

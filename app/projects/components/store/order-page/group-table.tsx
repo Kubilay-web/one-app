@@ -1,12 +1,12 @@
 "use client";
-import OrderStatusTag from "@/components/shared/order-status";
-import { OrderGroupWithItemsType, OrderStatus } from "@/lib/types";
+import OrderStatusTag from "@/app/projects/components/shared/order-status";
+import { OrderGroupWithItemsType, OrderStatus } from "@/app/lib/types";
 import Image from "next/image";
 import React from "react";
 import ProductRow from "./product-row";
 import { useMediaQuery } from "react-responsive";
 import ProductRowGrid from "./product-row-grid";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 export default function OrderGroupTable({
   group,

@@ -1,8 +1,8 @@
 "use client";
 
-import { logout } from "@/app/(auth)/actions";
-import { useSession } from "@/app/(main)/SessionProvider";
-import { cn } from "@/lib/utils";
+import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
+import { useSession } from "@/app/SessionProvider";
+import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
 import { useTheme } from "next-themes";

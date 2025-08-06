@@ -6,7 +6,7 @@ import Image from "next/image";
 import NoImageImg from "../../../../public/assets/images/no_image_2.png";
 
 // Utils
-import { cn, getDominantColors, getGridClassName } from "@/lib/utils";
+import { cn, getDominantColors, getGridClassName } from "@/app/lib/utils";
 
 //Icons
 import { Trash } from "lucide-react";

@@ -2,8 +2,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
+import { cn } from "@/app/lib/utils";
+import { formUrlQuery, removeKeysFromUrlQuery } from "@/app/lib/url";
 
 const filters = [
   { name: "React", value: "react" },

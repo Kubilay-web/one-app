@@ -1,9 +1,9 @@
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 import Link from "next/link";
 import React from "react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 interface Props {
   id: string;

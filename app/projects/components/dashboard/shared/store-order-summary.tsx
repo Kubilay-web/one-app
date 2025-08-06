@@ -5,14 +5,14 @@ import {
   ProductStatus,
   StoreOrderType,
   UserShippingAddressType,
-} from "@/lib/types";
-import { getShippingDatesRange } from "@/lib/utils";
+} from "@/app/lib/types";
+import { getShippingDatesRange } from "@/app/lib/utils";
 import { PaymentDetails } from "@prisma/client";
 import { FC } from "react";
 import OrderStatusSelect from "../forms/order-status-select";
 import { Gruppo } from "next/font/google";
 import Image from "next/image";
-import ProductStatusTag from "@/components/shared/product-status";
+import ProductStatusTag from "@/app/projects/components/shared/product-status";
 import ProductStatusSelect from "../forms/product-status-select";
 
 interface Props {

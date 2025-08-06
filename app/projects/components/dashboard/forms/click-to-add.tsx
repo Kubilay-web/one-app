@@ -2,14 +2,14 @@
 import React, { FC, useState } from "react";
 
 // UI Components
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/projects/components/ui/input";
 
 // Icons
 import { PaintBucket } from "lucide-react";
 
 // Color picker
 import { SketchPicker } from "react-color";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 // Define the interface for each detail object
 export interface Detail<T = { [key: string]: string | number | undefined }> {
