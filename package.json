@@ -102,6 +102,7 @@
     "sass": "^1.83.0",
     "shepherd.js": "^14.3.0",
     "simplebar-react": "^3.3.0",
+    "sortablejs": "^1.15.6",
     "stream-chat": "^9.14.0",
     "styled-components": "^6.1.13",
     "suneditor": "^2.47.6",
