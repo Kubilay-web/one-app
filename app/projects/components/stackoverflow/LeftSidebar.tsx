@@ -4,7 +4,7 @@ import React from "react";
 import NavLinks from "./navigation/navbar/NavLinks";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 import Image from "next/image";
 import { LogOut } from "lucide-react";
 import { logout } from "@/app/(auth)/actions";

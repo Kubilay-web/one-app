@@ -15,14 +15,14 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AskQuestionSchema } from "@/lib/validation";
+import { AskQuestionSchema } from "@/app/lib/validation";
 import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { z } from "zod";
 import TagCard from "../cards/TagCard";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 
 const Editor = dynamic(
   () => import("../../../components/stackoverflow/editor/index"),

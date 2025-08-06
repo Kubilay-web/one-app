@@ -1,6 +1,6 @@
 "use client";
 import { Form, FormControl, FormField, FormItem } from "@/app/projects/components/ui/form";
-import { AddReviewSchema } from "@/lib/validation";
+import { AddReviewSchema } from "@/app/lib/validation";
 import StarRatings from "react-star-ratings";
 import {
   ProductVariantDataType,

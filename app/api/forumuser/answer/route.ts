@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { AnswerServerSchema } from "@/lib/validation";
+import { AnswerServerSchema } from "@/app/lib/validation";
 import db from "@/app/lib/db";
 import { validateRequest } from "@/app/auth";
 import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 
 export async function POST(req: Request) {
   const { user } = await validateRequest();

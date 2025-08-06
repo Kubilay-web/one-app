@@ -4,7 +4,7 @@ import { Category } from "@prisma/client";
 import { FC, useEffect } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { StoreShippingFormSchema } from "@/lib/validation";
+import { StoreShippingFormSchema } from "@/app/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import {

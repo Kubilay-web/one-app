@@ -4,7 +4,7 @@ import { Category } from "@prisma/client";
 import { FC, useEffect } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { CategoryFormSchema } from "@/lib/validation";
+import { CategoryFormSchema } from "@/app/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import {

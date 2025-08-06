@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/app/lib/db";
-import handleError from "'@/app/lib/handlers/error'";
-import { NotFoundError, ValidationError } from "@/lib/http-errors";
+import handleError from '@/app/lib/handlers/error';
+import { NotFoundError, ValidationError } from "@/app/lib/http-errors";
 
 export async function POST(request: Request) {
   try {

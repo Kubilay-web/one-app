@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Types, Schema
-import { ShippingAddressSchema } from "@/lib/validation";
+import { ShippingAddressSchema } from "@/app/lib/validation";
 import { SelectMenuOption, UserShippingAddressType } from "@/lib/types";
 
 // UI Components

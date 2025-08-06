@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Schema
-import { StoreFormSchema } from "@/lib/validation";
+import { StoreFormSchema } from "@/app/lib/validation";
 import { upsertStore } from "@/queries/store";
 
 // UI Components

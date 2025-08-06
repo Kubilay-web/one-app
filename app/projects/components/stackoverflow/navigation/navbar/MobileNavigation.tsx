@@ -13,7 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/projects/components/ui/sheet";
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 import NavLinks from "./NavLinks";
 import { validateRequest } from "@/app/auth";
 import { logout } from "@/app/(auth)/actions";

@@ -5,7 +5,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/app/projects/components/ui/form";
-import { ApplyCouponFormSchema } from "@/lib/validation";
+import { ApplyCouponFormSchema } from "@/app/lib/validation";
 import { CartWithCartItemsType } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";

@@ -1,6 +1,6 @@
 // RightSidebar.tsx
 
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

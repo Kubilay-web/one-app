@@ -1,7 +1,7 @@
 import React from "react";
 import UserAvatar from "../UserAvatar";
 import Link from "next/link";
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 
 const UserCard = ({ id, displayName, image, username }: User) => (
   <div className="shadow-light100_darknone w-full xs:w-[230px]">

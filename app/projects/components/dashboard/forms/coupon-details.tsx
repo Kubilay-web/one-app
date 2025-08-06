@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Schema
-import { CouponFormSchema } from "@/lib/validation";
+import { CouponFormSchema } from "@/app/lib/validation";
 
 // UI Components
 import { AlertDialog } from "@/app/projects/components/ui/alert-dialog";

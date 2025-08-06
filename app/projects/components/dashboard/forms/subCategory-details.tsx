@@ -11,7 +11,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { SubCategoryFormSchema } from "@/lib/validation";
+import { SubCategoryFormSchema } from "@/app/lib/validation";
 
 // UI Components
 import { AlertDialog } from "@/app/projects/components/ui/alert-dialog";

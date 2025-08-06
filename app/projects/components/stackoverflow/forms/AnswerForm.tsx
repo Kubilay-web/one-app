@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnswerSchema } from "@/lib/validation";
+import { AnswerSchema } from "@/app/lib/validation";
 import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { z } from "zod";

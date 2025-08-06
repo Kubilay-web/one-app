@@ -1,6 +1,6 @@
 import db from "@/app/lib/db";
 import { NextResponse } from "next/server";
-import handleError from "'@/app/lib/handlers/error'";
+import handleError from '@/app/lib/handlers/error';
 
 interface Params {
   params: {

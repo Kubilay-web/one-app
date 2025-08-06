@@ -3,7 +3,7 @@
 import { validateRequest } from "@/app/auth";
 import prisma from "@/app/lib/prisma";
 import { getPostDataInclude } from "@/lib/types";
-import { createPostSchema } from "@/lib/validation";
+import { createPostSchema } from "@/app/lib/validation";
 
 export async function submitPost(input: {
   content: string;

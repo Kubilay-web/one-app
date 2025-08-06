@@ -1,4 +1,4 @@
-import ROUTES from "@/constants/routes";
+import ROUTES from "@/app/constants/routes";
 import Link from "next/link";
 import React from "react";
 import { Avatar, AvatarFallback } from "./avatar";

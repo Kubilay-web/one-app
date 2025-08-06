@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/app/lib/db";
-import { UpdateVoteCountSchema } from "@/lib/validation";
+import { UpdateVoteCountSchema } from "@/app/lib/validation";
 
 export async function POST(req: Request) {
   try {
