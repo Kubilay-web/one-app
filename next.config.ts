@@ -3,7 +3,7 @@ const path = require('path');
 const isProd = process.env.NODE_ENV === "production";
 const nextConfig: NextConfig = {
 
-  output: "export",  // Uncomment the following line only for building purposes. By default, this line should remain commented out.
+  //output: "export",  // Uncomment the following line only for building purposes. By default, this line should remain commented out.
   trailingSlash: true,
   basePath: isProd ? "/tailwind/app-router/mamix-ts/preview" : undefined,
   assetPrefix: isProd ? "/tailwind/app-router/mamix-ts/preview" : undefined,
