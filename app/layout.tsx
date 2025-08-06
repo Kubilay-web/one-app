@@ -6,36 +6,56 @@ import "./globals.scss";
 import { Provider } from "react-redux";
 import store from "@/shared/redux/store";
 import { Initialload } from "@/shared/layouts-components/contextapi";
+import { useRouter } from 'next/navigation';  // Router kullanımı için ekledim
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // React Query client initialization
   const [queryClient] = useState(() => new QueryClient());
-
-  // Pageloading state (initially false)
   const [pageloading, setpageloading] = useState(false);
-
-  // Hydration error can be avoided with a client-side effect
   const [isClient, setIsClient] = useState(false);
+  const [session, setSession] = useState(null);
+  const router = useRouter();  // Next.js Router
 
   useEffect(() => {
-    // Set the client-side state after the component has mounted
     setIsClient(true);
+
+    // Session'ı client-side çek
+    const fetchSession = async () => {
+      try {
+        const res = await fetch("/api/session");
+        if (res.ok) {
+          const data = await res.json();
+          setSession(data);
+        } else {
+          setSession(null);
+          router.push("/");  // Eğer session yoksa, anasayfaya yönlendir
+        }
+      } catch (error) {
+        console.error("Session fetch error:", error);
+        setSession(null);
+        router.push("/");  // Hata durumunda anasayfaya yönlendir
+      }
+    };
+
+    fetchSession();
   }, []);
 
-  if (!isClient) {
-    // To prevent rendering on the server-side during hydration
-    return null;
-  }
+  useEffect(() => {
+    if (session) {
+      // Eğer session varsa, kullanıcıyı /dashboards/sales sayfasına yönlendir
+      router.push("/dashboards/sales");
+    }
+  }, [session]);
+
+  if (!isClient) return null;
 
   return (
-    <html lang="en">
-      <head>{/* Buraya meta, title, link gibi global head elemanları */}</head>
+    <html lang="en" suppressHydrationWarning>
+      <head>{/* Meta, title, vs. */}</head>
       <body>
-        {/* Wrap providers with client-side state management */}
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
             <Initialload.Provider value={{ pageloading, setpageloading }}>

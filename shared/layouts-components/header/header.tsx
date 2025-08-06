@@ -7,9 +7,17 @@ import { connect } from "react-redux";
 import { MENUITEMS } from "../sidebar/nav";
 import Image from "next/image";
 import nextConfig from "@/next.config";
+import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
+import { useQueryClient } from "@tanstack/react-query";
+import router from "next/router";
 
 
 const Header = ({ local_varaiable, ThemeChanger }: any) => {
+
+
+  
+
+   const queryClient = useQueryClient(); // React Query Client
   let { basePath } = nextConfig;
   ///****fullscreeen */
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -873,7 +881,10 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     className="ti ti-settings me-2 text-[1.125rem] text-orangemain"></i>Settings</Link></li>
                   <li><Link scroll={false} className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center  dark:!border-defaultborder/10" href="/pages/chat"><i
                     className="ti ti-headset me-2 text-[1.125rem] text-info"></i>Support</Link></li>
-                  <li><Link scroll={false} className="ti-dropdown-item !py-[0.6rem] !px-4 flex items-center" href="/authentication/sign-in/cover"><i
+                  <li  onClick={() => {
+                                queryClient.clear();
+                                logout();
+                              }}><Link scroll={false} className="ti-dropdown-item !py-[0.6rem] !px-4 flex items-center" href="/authentication/sign-in/cover"><i
                     className="ti ti-logout me-2 text-[1.125rem] text-warning"></i>Log Out</Link></li>
                 </ul>
               </div>
@@ -925,3 +936,7 @@ const mapStateToProps = (state: any) => ({
   local_varaiable: state.reducer
 });
 export default connect(mapStateToProps, { ThemeChanger })(Header);
+function setIsClient(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+
