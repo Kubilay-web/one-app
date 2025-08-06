@@ -10,7 +10,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import axios from "axios";
 import { convert } from "html-to-text";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { UserInfo } from "@/queries/user";
 import toast from "react-hot-toast";
 

@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import db from "@/app/lib/db";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 export async function POST(req: Request) {
   const { token } = await req.json();

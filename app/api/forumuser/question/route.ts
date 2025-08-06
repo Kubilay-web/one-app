@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/app/lib/db";
 import handleError from "@/lib/handlers/error";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 export async function POST(req: Request) {
   try {

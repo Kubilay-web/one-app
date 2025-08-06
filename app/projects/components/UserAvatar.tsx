@@ -1,4 +1,4 @@
-import avatarPlaceholder from "@/assets/avatar-placeholder.png";
+import avatarPlaceholder from "@/app/assets/avatar-placeholder.png";
 import { cn } from "@/app/lib/utils";
 import Image from "next/image";
 

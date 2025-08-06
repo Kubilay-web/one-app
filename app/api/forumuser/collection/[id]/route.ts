@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import db from "@/app/lib/db";
 
 import { revalidatePath } from "next/cache";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 // PATCH: Soruyu kaydet veya kaldır
 export async function PATCH(

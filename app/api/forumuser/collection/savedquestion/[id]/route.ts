@@ -1,4 +1,4 @@
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/lib/db";
 

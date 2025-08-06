@@ -1,4 +1,4 @@
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import Input from "@/app/projects/components/store/ui/input";
 import UserButton from "@/app/projects/components/UserButton";
 import { UserInfo } from "@/queries/user";

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/lib/db"; // Prisma Client
 import { ObjectId } from "mongodb";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 export async function PUT(
   req: NextRequest,

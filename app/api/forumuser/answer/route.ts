@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { AnswerServerSchema } from "@/lib/validation";
 import db from "@/app/lib/db";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
 

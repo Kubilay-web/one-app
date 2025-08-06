@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { hash } from "@node-rs/argon2";
 import prisma from "@/lib/prisma";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 export async function POST(req: Request) {
   try {

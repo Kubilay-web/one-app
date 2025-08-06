@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/app/lib/db"; // Prisma client
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 export async function GET() {
   const { user } = await validateRequest();

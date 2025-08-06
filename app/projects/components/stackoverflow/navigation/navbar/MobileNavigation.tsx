@@ -15,7 +15,7 @@ import {
 } from "@/app/projects/components/ui/sheet";
 import ROUTES from "@/constants/routes";
 import NavLinks from "./NavLinks";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { logout } from "@/app/(auth)/actions";
 import { LogOut } from "lucide-react";
 

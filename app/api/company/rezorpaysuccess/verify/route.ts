@@ -4,7 +4,7 @@
 // import Razorpay from "razorpay";
 // import { v4 as uuidv4 } from "uuid";
 // import db from "@/app/lib/db";
-// import { validateRequest } from "@/auth";
+// import { validateRequest } from "@/app/auth";
 
 // const razorpay = new Razorpay({
 //   key_id: process.env.RAZORPAY_KEY_ID!,

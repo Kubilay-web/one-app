@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
 import moment from "moment";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 const prisma = new PrismaClient();
 

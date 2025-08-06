@@ -1,7 +1,7 @@
 // örnek (Next.js API route için)
 import { NextResponse } from "next/server";
 import db from "@/app/lib/db";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { v2 as cloudinary } from "cloudinary";
 
 export async function GET(req: Request) {

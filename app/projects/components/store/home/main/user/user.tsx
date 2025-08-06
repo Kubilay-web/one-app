@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "../../../ui/button";
 import MainSwiper from "../../../shared/swiper";
 import UserCardProducts from "./products";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { useEffect, useState } from "react";
 import { UserInfo } from "@/queries/user";
 

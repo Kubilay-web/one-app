@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/app/lib/db";
 import { CreateVoteSchema } from "@/lib/validation";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 const MAX_RETRIES = 5;
 

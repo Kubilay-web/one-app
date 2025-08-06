@@ -1,4 +1,4 @@
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { Eye, Heart, Puzzle, Rss, WalletCards } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

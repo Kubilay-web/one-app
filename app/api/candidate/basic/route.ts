@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import slugify from "slugify";
 import db from "@/app/lib/db";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 export async function POST(req: Request) {
   try {

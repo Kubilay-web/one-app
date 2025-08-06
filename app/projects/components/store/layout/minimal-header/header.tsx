@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "../../ui/button";
 import UserButton from "@/app/projects/components/UserButton";
 import { validate } from "uuid";
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 
 export default async function MinimalHeader() {
   const { user } = await validateRequest();
