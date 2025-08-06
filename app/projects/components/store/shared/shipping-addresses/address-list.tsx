@@ -1,4 +1,4 @@
-import { UserShippingAddressType } from "@/lib/types";
+import { UserShippingAddressType } from "@/app/lib/types";
 import { Country, ShippingAddress } from "@prisma/client";
 import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import ShippingAddressCard from "../../cards/address-card";

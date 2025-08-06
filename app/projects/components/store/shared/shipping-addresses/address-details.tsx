@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // Types, Schema
 import { ShippingAddressSchema } from "@/app/lib/validation";
-import { SelectMenuOption, UserShippingAddressType } from "@/lib/types";
+import { SelectMenuOption, UserShippingAddressType } from "@/app/lib/types";
 
 // UI Components
 import CountrySelector from "@/app/projects/components/shared/country-selector";

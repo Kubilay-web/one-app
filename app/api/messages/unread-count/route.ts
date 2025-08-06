@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
-import streamServerClient from "@/lib/stream";
-import { MessageCountInfo } from "@/lib/types";
+import streamServerClient from "@/app/lib/stream";
+import { MessageCountInfo } from "@/app/lib/types";
 
 export async function GET() {
   try {

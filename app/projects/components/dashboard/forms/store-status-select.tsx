@@ -1,6 +1,6 @@
 import StoreStatusTag from "@/app/projects/components/shared/store-status";
 import { useToast } from "@/app/projects/components/ui/use-toast";
-import { StoreStatus } from "@/lib/types";
+import { StoreStatus } from "@/app/lib/types";
 import { updateOrderGroupStatus } from "@/queries/order";
 import { updateStoreStatus } from "@/queries/store";
 import { useRouter } from "next/navigation";

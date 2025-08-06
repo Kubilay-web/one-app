@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
 import prisma from "@/app/lib/prisma";
-import { BookmarkInfo } from "@/lib/types";
+import { BookmarkInfo } from "@/app/lib/types";
 
 export async function GET(
   req: Request,

@@ -1275,7 +1275,7 @@ const incrementProductViews = async (productId: string) => {
 
 // lib/queries/getFeaturedProducts.ts
 
-import { SimpleProduct } from "@/lib/types";
+import { SimpleProduct } from "@/app/lib/types";
 
 export const getFeaturedProducts = async (): Promise<SimpleProduct[]> => {
   const products = await db.product.findMany({

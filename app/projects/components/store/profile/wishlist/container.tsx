@@ -1,5 +1,5 @@
 "use client";
-import { ProductWishlistType } from "@/lib/types";
+import { ProductWishlistType } from "@/app/lib/types";
 import ProductList from "../../shared/product-list";
 import Pagination from "../../shared/pagination";
 import { useEffect, useState } from "react";

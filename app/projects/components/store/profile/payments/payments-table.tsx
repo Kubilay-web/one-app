@@ -3,7 +3,7 @@ import {
   PaymentTableDateFilter,
   PaymentTableFilter,
   UserPaymentType,
-} from "@/lib/types";
+} from "@/app/lib/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Pagination from "../../shared/pagination";

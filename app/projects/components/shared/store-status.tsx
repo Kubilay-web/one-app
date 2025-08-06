@@ -1,4 +1,4 @@
-import { StoreStatus } from "@/lib/types";
+import { StoreStatus } from "@/app/lib/types";
 import { Store } from "lucide-react"; // Lucide store icon
 
 interface StoreStatusTagProps {

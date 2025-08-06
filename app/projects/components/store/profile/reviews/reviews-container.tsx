@@ -3,7 +3,7 @@ import {
   ReviewDateFilter,
   ReviewFilter,
   ReviewWithImageType,
-} from "@/lib/types";
+} from "@/app/lib/types";
 import { useEffect, useState } from "react";
 import Pagination from "../../shared/pagination";
 import { getUserReviews } from "@/queries/profile";

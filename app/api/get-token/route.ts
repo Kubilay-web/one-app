@@ -1,5 +1,5 @@
 import { validateRequest } from "@/app/auth";
-import streamServerClient from "@/lib/stream";
+import streamServerClient from "@/app/lib/stream";
 
 export async function GET() {
   try {

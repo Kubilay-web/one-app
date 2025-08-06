@@ -1,5 +1,5 @@
 "use client";
-import { UserShippingAddressType } from "@/lib/types";
+import { UserShippingAddressType } from "@/app/lib/types";
 import { Country, ShippingAddress } from "@prisma/client";
 import { FC, useState } from "react";
 import UserShippingAddresses from "../../shared/shipping-addresses/shipping-addresses";

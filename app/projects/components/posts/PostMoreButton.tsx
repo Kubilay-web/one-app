@@ -1,4 +1,4 @@
-import { PostData } from "@/lib/types";
+import { PostData } from "@/app/lib/types";
 import { MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";

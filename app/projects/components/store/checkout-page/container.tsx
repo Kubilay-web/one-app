@@ -1,12 +1,12 @@
 "use client";
 
-import { CartWithCartItemsType, UserShippingAddressType } from "@/lib/types";
+import { CartWithCartItemsType, UserShippingAddressType } from "@/app/lib/types";
 import { Country, ShippingAddress } from "@prisma/client";
 import { FC, useEffect, useState } from "react";
 import UserShippingAddresses from "../shared/shipping-addresses/shipping-addresses";
 import CheckoutProductCard from "../cards/checkout-product";
 import PlaceOrderCard from "../cards/place-order";
-import { Country as CountryType } from "@/lib/types";
+import { Country as CountryType } from "@/app/lib/types";
 import CountryNote from "../cart-page/country-note";
 import { updateCheckoutProductstWithLatest } from "@/queries/user";
 

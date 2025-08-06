@@ -1,6 +1,6 @@
 "use client";
 
-import { CartProductType, ProductPageDataType } from "@/lib/types";
+import { CartProductType, ProductPageDataType } from "@/app/lib/types";
 import Link from "next/link";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import Image from "next/image";

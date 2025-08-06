@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import MainSwiper from "../../shared/swiper";
-import { SimpleProduct } from "@/lib/types";
+import { SimpleProduct } from "@/app/lib/types";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 

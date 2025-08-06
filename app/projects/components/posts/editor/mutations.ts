@@ -1,6 +1,6 @@
 import { useSession } from "@/app/(main)/SessionProvider";
 import { useToast } from "@/app/projects/components/ui/use-toast";
-import { PostsPage } from "@/lib/types";
+import { PostsPage } from "@/app/lib/types";
 import {
   InfiniteData,
   QueryFilters,

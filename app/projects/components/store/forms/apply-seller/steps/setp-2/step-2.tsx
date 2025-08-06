@@ -1,5 +1,5 @@
 import { StoreFormSchema } from "@/app/lib/validation";
-import { StoreType } from "@/lib/types";
+import { StoreType } from "@/app/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";

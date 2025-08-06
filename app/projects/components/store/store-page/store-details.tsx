@@ -1,5 +1,5 @@
 "use client";
-import { StoreDetailsType } from "@/lib/types";
+import { StoreDetailsType } from "@/app/lib/types";
 import { CircleCheckBig } from "lucide-react";
 import Image from "next/image";
 import ReactStars from "react-rating-stars-component";

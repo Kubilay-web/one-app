@@ -1,5 +1,5 @@
 "use client";
-import { SimpleProduct } from "@/lib/types";
+import { SimpleProduct } from "@/app/lib/types";
 import AnimatedImg from "@/public/assets/images/ads/animated-deals.gif";
 import TopSellerImg from "@/public/assets/images/featured/most-popular.avif";
 import TopRatedImg from "@/public/assets/images/featured/top-rated.jpg";

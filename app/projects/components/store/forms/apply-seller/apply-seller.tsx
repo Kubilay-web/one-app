@@ -1,5 +1,5 @@
 "use client";
-import { StoreType } from "@/lib/types";
+import { StoreType } from "@/app/lib/types";
 import { useState } from "react";
 import Instructions from "./instructions";
 import ProgressBar from "./progress-bar";

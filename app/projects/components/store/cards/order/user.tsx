@@ -1,4 +1,4 @@
-import { UserShippingAddressType } from "@/lib/types";
+import { UserShippingAddressType } from "@/app/lib/types";
 import Image from "next/image";
 
 export default function OrderUserDetailsCard({

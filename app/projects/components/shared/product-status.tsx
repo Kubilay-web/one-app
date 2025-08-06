@@ -1,4 +1,4 @@
-import { ProductStatus } from "@/lib/types";
+import { ProductStatus } from "@/app/lib/types";
 import { Package } from "lucide-react"; // Lucide package icon
 
 interface ProductStatusTagProps {

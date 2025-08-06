@@ -1,5 +1,5 @@
 "use client";
-import { ProductType, SimpleProduct } from "@/lib/types";
+import { ProductType, SimpleProduct } from "@/app/lib/types";
 import { FC, ReactNode } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";

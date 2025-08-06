@@ -1,4 +1,4 @@
-import { CatgegoryWithSubsType } from "@/lib/types";
+import { CatgegoryWithSubsType } from "@/app/lib/types";
 import { Minus, Plus } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";

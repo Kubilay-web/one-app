@@ -1,4 +1,4 @@
-import { OrderFulltType } from "@/lib/types";
+import { OrderFulltType } from "@/app/lib/types";
 import {
   Document,
   Page,

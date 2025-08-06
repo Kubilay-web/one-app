@@ -1,4 +1,4 @@
-import { ReviewsOrderType } from "@/lib/types";
+import { ReviewsOrderType } from "@/app/lib/types";
 import { ChevronDown } from "lucide-react";
 import { Dispatch, FC, SetStateAction } from "react";
 

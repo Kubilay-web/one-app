@@ -7,7 +7,7 @@ import {
   RatingStatisticsType,
   ReviewDetailsType,
   ReviewWithImageType,
-} from "@/lib/types";
+} from "@/app/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

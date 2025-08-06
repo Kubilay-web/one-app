@@ -1,4 +1,4 @@
-import { CartProductType, CartWithCartItemsType } from "@/lib/types";
+import { CartProductType, CartWithCartItemsType } from "@/app/lib/types";
 import { FC, useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";

@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
 import prisma from "@/app/lib/prisma";
-import { FollowerInfo } from "@/lib/types";
+import { FollowerInfo } from "@/app/lib/types";
 
 export async function GET(
   req: Request,

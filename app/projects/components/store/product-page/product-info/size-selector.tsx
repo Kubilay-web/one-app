@@ -1,4 +1,4 @@
-import { CartProductType } from "@/lib/types";
+import { CartProductType } from "@/app/lib/types";
 import { Size } from "@prisma/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Dispatch, FC, SetStateAction, useEffect } from "react";

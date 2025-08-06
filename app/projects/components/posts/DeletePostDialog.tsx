@@ -1,4 +1,4 @@
-import { PostData } from "@/lib/types";
+import { PostData } from "@/app/lib/types";
 import LoadingButton from "../LoadingButton";
 import { Button } from "../ui/button";
 import {

@@ -1,6 +1,6 @@
 "use client";
 
-import { SimpleProduct } from "@/lib/types";
+import { SimpleProduct } from "@/app/lib/types";
 import Image from "next/image";
 import UserImg from "@/public/assets/images/default-user.avif";
 import Link from "next/link";

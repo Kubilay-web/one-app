@@ -1,6 +1,6 @@
 import OrderStatusTag from "@/app/projects/components/shared/order-status";
 import { useToast } from "@/app/projects/components/ui/use-toast";
-import { OrderStatus } from "@/lib/types";
+import { OrderStatus } from "@/app/lib/types";
 import { updateOrderGroupStatus } from "@/queries/order";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";

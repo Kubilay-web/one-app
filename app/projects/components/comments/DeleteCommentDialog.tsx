@@ -1,4 +1,4 @@
-import { CommentData } from "@/lib/types";
+import { CommentData } from "@/app/lib/types";
 import LoadingButton from "../LoadingButton";
 import { Button } from "../ui/button";
 import {

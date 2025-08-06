@@ -1,5 +1,5 @@
 "use client";
-import { ReviewWithImageType, VariantInfoType } from "@/lib/types";
+import { ReviewWithImageType, VariantInfoType } from "@/app/lib/types";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import ReviewDetails from "../../forms/review-details";
 

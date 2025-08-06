@@ -1,5 +1,5 @@
 "use client";
-import { SearchResult } from "@/lib/types";
+import { SearchResult } from "@/app/lib/types";
 import { Search as SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useState, useEffect } from "react";

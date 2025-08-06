@@ -1,5 +1,5 @@
 "use client";
-import { FeaturedCategoryType } from "@/lib/types";
+import { FeaturedCategoryType } from "@/app/lib/types";
 import CategoryCard from "./category-card";
 import { useEffect, useState } from "react";
 import { getHomeFeaturedCategories } from "@/queries/home";

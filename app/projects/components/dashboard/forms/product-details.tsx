@@ -57,7 +57,7 @@ import { WithOutContext as ReactTags } from "react-tag-input";
 import { v4 } from "uuid";
 
 // Types
-import { ProductWithVariantType } from "@/lib/types";
+import { ProductWithVariantType } from "@/app/lib/types";
 import ImagesPreviewGrid from "../shared/images-preview-grid";
 import ClickToAddInputs from "./click-to-add";
 import {

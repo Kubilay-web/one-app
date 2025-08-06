@@ -1,4 +1,4 @@
-import { UserShippingAddressType } from "@/lib/types";
+import { UserShippingAddressType } from "@/app/lib/types";
 import { Country, ShippingAddress } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { Dispatch, FC, SetStateAction, useState } from "react";

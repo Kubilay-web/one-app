@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
 import prisma from "@/app/lib/prisma";
-import { NotificationCountInfo } from "@/lib/types";
+import { NotificationCountInfo } from "@/app/lib/types";
 
 export async function GET() {
   try {

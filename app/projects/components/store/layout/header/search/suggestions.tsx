@@ -1,4 +1,4 @@
-import { SearchResult } from "@/lib/types";
+import { SearchResult } from "@/app/lib/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FC } from "react";

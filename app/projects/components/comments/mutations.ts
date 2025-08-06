@@ -1,4 +1,4 @@
-import { CommentsPage } from "@/lib/types";
+import { CommentsPage } from "@/app/lib/types";
 import {
   InfiniteData,
   QueryKey,

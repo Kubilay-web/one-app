@@ -6,7 +6,7 @@ import {
   ReviewsOrderType,
   ReviewWithImageType,
   VariantInfoType,
-} from "@/lib/types";
+} from "@/app/lib/types";
 import { FC, useEffect, useState } from "react";
 import RatingCard from "../../cards/product-rating";
 import RatingStatisticsCard from "../../cards/rating-statistics";

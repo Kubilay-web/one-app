@@ -11,7 +11,7 @@ import {
   PaymentTableFilter,
   ReviewDateFilter,
   ReviewFilter,
-} from "@/lib/types";
+} from "@/app/lib/types";
 import { PaymentMethod } from "@prisma/client";
 import { subMonths, subYears } from "date-fns";
 

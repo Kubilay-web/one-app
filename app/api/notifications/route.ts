@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
 import prisma from "@/app/lib/prisma";
-import { notificationsInclude, NotificationsPage } from "@/lib/types";
+import { notificationsInclude, NotificationsPage } from "@/app/lib/types";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {

@@ -1,5 +1,5 @@
 "use client";
-import { StatisticsCardType } from "@/lib/types";
+import { StatisticsCardType } from "@/app/lib/types";
 import ReactStars from "react-rating-stars-component"; // Yeni paket
 import StarRatings from "react-star-ratings";
 

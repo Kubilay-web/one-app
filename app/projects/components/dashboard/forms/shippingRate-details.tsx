@@ -29,7 +29,7 @@ import { Button } from "@/app/projects/components/ui/button";
 import { v4 } from "uuid";
 import { useToast } from "@/app/projects/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { CountryWithShippingRatesType } from "@/lib/types";
+import { CountryWithShippingRatesType } from "@/app/lib/types";
 import { NumberInput } from "@tremor/react";
 import { Textarea } from "@/app/projects/components/ui/textarea";
 

@@ -31,7 +31,7 @@ import { updateStoreDefaultShippingDetails } from "@/queries/store";
 import { v4 } from "uuid";
 import { useToast } from "@/app/projects/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { StoreDefaultShippingType } from "@/lib/types";
+import { StoreDefaultShippingType } from "@/app/lib/types";
 
 interface StoreDefaultShippingDetailsProps {
   data?: StoreDefaultShippingType;

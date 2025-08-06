@@ -1,4 +1,4 @@
-import { PostsPage } from "@/lib/types";
+import { PostsPage } from "@/app/lib/types";
 import {
   InfiniteData,
   QueryFilters,

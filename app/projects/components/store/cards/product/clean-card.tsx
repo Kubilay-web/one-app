@@ -1,4 +1,4 @@
-import { ProductType, VariantSimplified } from "@/lib/types";
+import { ProductType, VariantSimplified } from "@/app/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";

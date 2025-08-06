@@ -1,4 +1,4 @@
-import { PaymentStatus } from "@/lib/types";
+import { PaymentStatus } from "@/app/lib/types";
 import { CreditCard } from "lucide-react"; // Lucide credit card icon
 
 interface PaymentStatusTagProps {

@@ -1,4 +1,4 @@
-import { SimpleProduct } from "@/lib/types";
+import { SimpleProduct } from "@/app/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 
