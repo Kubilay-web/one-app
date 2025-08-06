@@ -1,5 +1,5 @@
 import { validateRequest } from "@/app/auth";
-import prisma from "@/lib/prisma";
+import prisma from "@/app/lib/prisma";
 import { notificationsInclude, NotificationsPage } from "@/lib/types";
 import { NextRequest } from "next/server";
 
