@@ -21,6 +21,7 @@ const RootLayout = ({ children }: any) => {
   return (
     <html>
       <body>
+        
         <Provider store={store}>
           <Initialload.Provider value={{ pageloading, setpageloading }}>
             {children}
