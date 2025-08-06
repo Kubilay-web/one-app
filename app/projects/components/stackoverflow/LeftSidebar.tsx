@@ -7,9 +7,9 @@ import Link from "next/link";
 import ROUTES from "@/app/constants/routes";
 import Image from "next/image";
 import { LogOut } from "lucide-react";
-import { logout } from "@/app/(auth)/actions";
+import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "@/app/(main)/SessionProvider";
+import { useSession } from "@/app/SessionProvider";
 
 export default function LeftSidebar() {
   const { user } = useSession(); // Kullanıcı bilgisi

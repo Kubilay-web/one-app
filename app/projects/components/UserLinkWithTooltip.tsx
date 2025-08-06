@@ -1,6 +1,6 @@
 "use client";
 
-import kyInstance from "@/app/ib/ky";
+import kyInstance from "@/app/lib/ky";
 import { UserData } from "@/app/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { HTTPError } from "ky";

@@ -6,7 +6,7 @@ import "./globals.scss";
 import { Provider } from "react-redux";
 import store from "@/shared/redux/store";
 import { Initialload } from "@/shared/layouts-components/contextapi";
-import { useRouter } from 'next/navigation';  // Router kullanımı için ekledim
+import { useRouter } from "next/navigation"; // Router kullanımı için ekledim
 
 export default function RootLayout({
   children,
@@ -17,7 +17,7 @@ export default function RootLayout({
   const [pageloading, setpageloading] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [session, setSession] = useState(null);
-  const router = useRouter();  // Next.js Router
+  const router = useRouter(); // Next.js Router
 
   useEffect(() => {
     setIsClient(true);
@@ -31,12 +31,12 @@ export default function RootLayout({
           setSession(data);
         } else {
           setSession(null);
-          router.push("/");  // Eğer session yoksa, anasayfaya yönlendir
+          router.push("/");
         }
       } catch (error) {
         console.error("Session fetch error:", error);
         setSession(null);
-        router.push("/");  // Hata durumunda anasayfaya yönlendir
+        router.push("/"); 
       }
     };
 
@@ -45,25 +45,21 @@ export default function RootLayout({
 
   useEffect(() => {
     if (session) {
-      // Eğer session varsa, kullanıcıyı /dashboards/sales sayfasına yönlendir
-      router.push("/dashboards/sales");
+      router.push("/social");
     }
   }, [session]);
 
   if (!isClient) return null;
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>{/* Meta, title, vs. */}</head>
-      <body>
-        <QueryClientProvider client={queryClient}>
-          <Provider store={store}>
-            <Initialload.Provider value={{ pageloading, setpageloading }}>
-              {children}
-            </Initialload.Provider>
-          </Provider>
-        </QueryClientProvider>
-      </body>
-    </html>
+    <div>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <Initialload.Provider value={{ pageloading, setpageloading }}>
+            {children}
+          </Initialload.Provider>
+        </Provider>
+      </QueryClientProvider>
+    </div>
   );
 }

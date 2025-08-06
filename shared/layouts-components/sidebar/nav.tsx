@@ -184,6 +184,7 @@ export const MENUITEMS: any = [
           { path: "/apps/jobs/candidate-details", type: "link", active: false, selected: false, title: "Candidate Details" },
         ]
       },
+      
       {
         title: "NFT", type: "sub", active: false, children: [
           { path: "/apps/nft/market-place", type: "link", active: false, selected: false, title: "Market Place" },
@@ -286,6 +287,11 @@ export const MENUITEMS: any = [
           { path: "/pages/blog/blog", type: "link", active: false, selected: false, title: "Blog" },
           { path: "/pages/blog/blog-details", type: "link", active: false, selected: false, title: "Blog Details" },
           { path: "/pages/blog/create-blog", type: "link", active: false, selected: false, title: "Create Blog" },
+        ]
+      },
+      {
+        title: "Social", type: "sub", active: false, children: [
+          { path: "/social", type: "link", active: false, selected: false, title: "Social" }
         ]
       },
       { path: "/pages/chat", type: "link", active: false, selected: false, title: "Chat" },

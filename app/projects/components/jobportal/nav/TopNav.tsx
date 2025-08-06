@@ -1,9 +1,9 @@
 "use client";
 
-import { useSession } from "@/app/(main)/SessionProvider";
+import { useSession } from "@/app/SessionProvider";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
-import { logout } from "@/app/(auth)/actions";
+import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useEffect } from "react";
 
 // Role-based redirection in Next.js can be implemented to

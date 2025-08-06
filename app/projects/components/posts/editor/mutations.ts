@@ -1,4 +1,4 @@
-import { useSession } from "@/app/(main)/SessionProvider";
+import { useSession } from "@/app/SessionProvider";
 import { useToast } from "@/app/projects/components/ui/use-toast";
 import { PostsPage } from "@/app/lib/types";
 import {

@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
-import { useSession } from "@/app/(main)/SessionProvider";
-import { logout } from "@/app/(auth)/actions";
+import { useSession } from "@/app/SessionProvider";
+import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 

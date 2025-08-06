@@ -1,4 +1,4 @@
-import kyInstance from "@/app/ib/ky";
+import kyInstance from "@/app/lib/ky";
 import { FollowerInfo } from "@/app/lib/types";
 import { useQuery } from "@tanstack/react-query";
 

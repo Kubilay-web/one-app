@@ -1,5 +1,5 @@
 .tiptap p.is-editor-empty:first-child::before {
-  color: theme("colors.muted.foreground");
+  color: red;
   content: attr(data-placeholder);
   float: left;
   height: 0;

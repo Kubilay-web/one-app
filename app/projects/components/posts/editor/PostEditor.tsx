@@ -36,17 +36,25 @@ export default function PostEditor() {
 
   const { onClick, ...rootProps } = getRootProps();
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        bold: false,
-        italic: false,
-      }),
-      Placeholder.configure({
-        placeholder: "What's crack-a-lackin'?",
-      }),
-    ],
-  });
+const editor = useEditor({
+  extensions: [
+    StarterKit.configure({
+      bold: false,
+      italic: false,
+    }),
+    Placeholder.configure({
+      placeholder: "What's crack-a-lackin'?",
+    }),
+  ],
+  editorProps: {
+    attributes: {
+      class: 'prose focus:outline-none',
+    },
+  },
+  // Prevent rendering on SSR
+  immediatelyRender: false,
+}, []);
+
 
   const input =
     editor?.getText({

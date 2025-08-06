@@ -1,5 +1,5 @@
 import { useToast } from "@/app/projects/components/ui/use-toast";
-import { useUploadThing } from "@/lib/uploadthing";
+import { useUploadThing } from "@/app/lib/uploadthing";
 import { useState } from "react";
 
 export interface Attachment {

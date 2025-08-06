@@ -43,7 +43,7 @@ const Layout = ({ local_varaiable, children }: any) => {
       data-icon-overlay={local_varaiable.iconOverlay}
       bg-img={local_varaiable.bgImg}
       icon-text={local_varaiable.iconText}
-      style={customstyles}>
+      style={customstyles} suppressHydrationWarning>
       <head>
         <meta name="keywords" content="" />
       </head>
