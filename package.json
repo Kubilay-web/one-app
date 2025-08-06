@@ -12,6 +12,7 @@
     "sass-min": "sass ./public/assets/scss/:./public/assets/css/ --style compressed"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^9.1.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fullcalendar/core": "~6.1.17",
