@@ -766,6 +766,13 @@
   resolved "https://registry.npmjs.org/@floating-ui/utils/-/utils-0.2.9.tgz"
   integrity sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==
 
+"@fullcalendar/core@~6.1.17":
+  version "6.1.18"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.18.tgz#772477215aa45c4cad0f45a83465a9c8095bd15a"
+  integrity sha512-cD7XtZIZZ87Cg2+itnpsONCsZ89VIfLLDZ22pQX4IQVWlpYUB3bcCf878DhWkqyEen6dhi5ePtBoqYgm5K+0fQ==
+  dependencies:
+    preact "~10.12.1"
+
 "@fullcalendar/daygrid@^6.1.15", "@fullcalendar/daygrid@~6.1.17":
   version "6.1.17"
   resolved "https://registry.npmjs.org/@fullcalendar/daygrid/-/daygrid-6.1.17.tgz"
@@ -1618,10 +1625,10 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
-"@prisma/client@^6.13.0":
-  version "6.13.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-6.13.0.tgz#7073ab6ccf10c0c99ab7582e39aa7a1422c6a7db"
-  integrity sha512-8m2+I3dQovkV8CkDMluiwEV1TxV9EXdT6xaCz39O6jYw7mkf5gwfmi+cL4LJsEPwz5tG7sreBwkRpEMJedGYUQ==
+"@prisma/client@^5.0.0":
+  version "5.22.0"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-5.22.0.tgz#da1ca9c133fbefe89e0da781c75e1c59da5f8802"
+  integrity sha512-M0SVXfyHnQREBKxCgyo7sffrKttwE6R8PMq330MIUF0pTwjUhLbW84pFDlf06B27XyCR++VtjugEnIHdr07SVA==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -4610,7 +4617,7 @@ postcss@^8.4.47, postcss@^8.5.1:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
-preact@^10.11.3, preact@^10.6.5:
+preact@^10.11.3, preact@^10.6.5, preact@~10.12.1:
   version "10.12.1"
   resolved "https://registry.npmjs.org/preact/-/preact-10.12.1.tgz"
   integrity sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==
