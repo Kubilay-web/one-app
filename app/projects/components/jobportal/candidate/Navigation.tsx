@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 import { useEffect, useState } from "react";
-import Basic from "@/components/jobportal/candidate/Basic";
+import Basic from "@/app/projects/components/jobportal/candidate/Basic";
 import Profile from "./Profile";
 import AccountSettings from "./AccountSettings";
 import ExperienceEdu from "./ExperienceEdu";

@@ -1,7 +1,7 @@
 // app/api/payments/paypal/route.ts
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import { validateRequest } from "@/auth";
 
 export async function POST(req: Request) {

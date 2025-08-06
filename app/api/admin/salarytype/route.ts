@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import slugify from "slugify";
-import db from "@/lib/db"; // Prisma client'ınızın import edildiği dosya
+import db from "@/app/lib/db"; // Prisma client'ınızın import edildiği dosya
 
 // GET: Fetch all salary types
 export async function GET() {

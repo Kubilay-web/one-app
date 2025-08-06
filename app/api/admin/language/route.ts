@@ -2,7 +2,7 @@
 
 import { NextResponse } from "next/server";
 import slugify from "slugify";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 // GET method - Fetch all languages sorted by createdAt in descending order
 export async function GET(req) {

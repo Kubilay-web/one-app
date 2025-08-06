@@ -1,4 +1,4 @@
-import PaymentStatusTag from "@/components/shared/payment-status";
+import PaymentStatusTag from "@/app/projects/components/shared/payment-status";
 import {
   OrderStatus,
   PaymentStatus,

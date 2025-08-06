@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import slugify from "slugify";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 // PUT: Update language
 export async function PUT(req: Request, context: { params: { id: string } }) {

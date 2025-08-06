@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db"; // Prisma Client
+import db from "@/app/lib/db"; // Prisma Client
 
 export async function DELETE(
   req: Request,

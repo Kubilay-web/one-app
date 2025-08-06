@@ -1,4 +1,4 @@
-import { SendIcon } from "@/components/store/icons";
+import { SendIcon } from "@/app/projects/components/store/icons";
 
 export default function Newsletter() {
   return (

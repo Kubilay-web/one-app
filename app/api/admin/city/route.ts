@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db"; // Prisma client import
+import db from "@/app/lib/db"; // Prisma client import
 
 // GET: Fetch all cities, including their associated state and country data
 export async function GET() {

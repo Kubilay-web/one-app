@@ -6,7 +6,7 @@ import { UserInfo } from "@/queries/user";
 import DefaultUserImg from "@/public/assets/images/default-user.jpg";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/store/ui/button";
+import { Button } from "@/app/projects/components/store/ui/button";
 import UserDetails from "./user-details";
 
 export default function Step1({ step, setStep }) {

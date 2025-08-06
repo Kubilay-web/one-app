@@ -14,14 +14,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubCategoryFormSchema } from "@/lib/validation";
 
 // UI Components
-import { AlertDialog } from "@/components/ui/alert-dialog";
+import { AlertDialog } from "@/app/projects/components/ui/alert-dialog";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/app/projects/components/ui/card";
 import {
   Form,
   FormControl,
@@ -30,10 +30,10 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "@/app/projects/components/ui/form";
+import { Checkbox } from "@/app/projects/components/ui/checkbox";
+import { Button } from "@/app/projects/components/ui/button";
+import { Input } from "@/app/projects/components/ui/input";
 import ImageUpload from "../shared/image-upload";
 
 // Queries
@@ -41,7 +41,7 @@ import { upsertSubCategory } from "@/queries/subCategory";
 
 // Utils
 import { v4 } from "uuid";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/projects/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import {
   Select,
@@ -49,7 +49,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/projects/components/ui/select";
 
 interface SubCategoryDetailsProps {
   data?: SubCategory;

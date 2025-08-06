@@ -1,4 +1,4 @@
-import { FormLabel } from "@/components/ui/form";
+import { FormLabel } from "@/app/projects/components/ui/form";
 import { Dot } from "lucide-react";
 import { ReactNode } from "react";
 

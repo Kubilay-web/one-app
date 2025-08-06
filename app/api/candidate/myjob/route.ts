@@ -1,7 +1,7 @@
 // app/api/candidate/my-jobs/route.ts
 import { NextResponse } from "next/server";
 
-import db from "@/lib/db"; // Prisma client
+import db from "@/app/lib/db"; // Prisma client
 import { validateRequest } from "@/auth";
 
 export async function GET() {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 // POST: Save or update settings
 export async function POST(req) {
   const body = await req.json();

@@ -1,8 +1,8 @@
 "use client";
 
 // Custom components
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/app/projects/components/ui/input";
+import { Button } from "@/app/projects/components/ui/button";
 import CustomModal from "../dashboard/shared/custom-modal";
 
 // Table components
@@ -13,7 +13,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/projects/components/ui/table";
 
 // Tanstack react table
 import {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import { DevBundlerService } from "next/dist/server/lib/dev-bundler-service";
 
 export async function GET(req: Request) {

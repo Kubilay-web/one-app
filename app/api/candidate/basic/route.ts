@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import slugify from "slugify";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import { validateRequest } from "@/auth";
 
 export async function POST(req: Request) {

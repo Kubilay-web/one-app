@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 import { revalidatePath } from "next/cache";
 import { validateRequest } from "@/auth";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AppealIcon, ArrowIcon, DollarIcon } from "@/components/store/icons";
+import { AppealIcon, ArrowIcon, DollarIcon } from "@/app/projects/components/store/icons";
 import UnpaidImg from "@/public/assets/images/unpaid.avif";
 import ToBeShippedImg from "@/public/assets/images/to-be-shipped.avif";
 import ShippedImg from "@/public/assets/images/shipped.avif";

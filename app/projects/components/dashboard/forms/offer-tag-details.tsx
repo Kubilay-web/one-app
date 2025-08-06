@@ -15,14 +15,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { OfferTagFormSchema } from "@/lib/validation";
 
 // UI Components
-import { AlertDialog } from "@/components/ui/alert-dialog";
+import { AlertDialog } from "@/app/projects/components/ui/alert-dialog";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/app/projects/components/ui/card";
 import {
   Form,
   FormControl,
@@ -30,16 +30,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "@/app/projects/components/ui/form";
+import { Button } from "@/app/projects/components/ui/button";
+import { Input } from "@/app/projects/components/ui/input";
 
 // Queries
 import { upsertOfferTag } from "@/queries/offer-tag";
 
 // Utils
 import { v4 } from "uuid";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/projects/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
 interface OfferTagDetailsProps {

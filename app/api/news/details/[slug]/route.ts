@@ -1,6 +1,6 @@
 // app/api/news/[slug]/route.ts
 
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(

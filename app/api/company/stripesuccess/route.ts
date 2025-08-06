@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import Stripe from "stripe";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import { validateRequest } from "@/auth";
 
 const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY!, {

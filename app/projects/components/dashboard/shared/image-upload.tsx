@@ -3,7 +3,7 @@
 import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { CldUploadWidget } from "next-cloudinary";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/projects/components/ui/button";
 import { Trash } from "lucide-react";
 
 interface ImageUploadProps {

@@ -1,6 +1,6 @@
 import { validateRequest } from "@/auth";
-import Input from "@/components/store/ui/input";
-import UserButton from "@/components/UserButton";
+import Input from "@/app/projects/components/store/ui/input";
+import UserButton from "@/app/projects/components/UserButton";
 import { UserInfo } from "@/queries/user";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";

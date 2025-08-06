@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 // dbConnect artık gerekmez Prisma kullandığın için
 
 export async function GET(req: Request, context: { params: { slug: string } }) {

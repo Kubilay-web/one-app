@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db"; // Prisma Client yoluna göre değiştir
+import db from "@/app/lib/db"; // Prisma Client yoluna göre değiştir
 import slugify from "slugify";
 
 // PUT: Job experience ID güncelle

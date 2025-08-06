@@ -13,7 +13,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/app/projects/components/ui/card";
 import {
   Form,
   FormControl,
@@ -22,16 +22,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@/app/projects/components/ui/form";
+import { Input } from "@/app/projects/components/ui/input";
+import { Button } from "@/app/projects/components/ui/button";
 
 import { v4 } from "uuid";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/projects/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { CountryWithShippingRatesType } from "@/lib/types";
 import { NumberInput } from "@tremor/react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/app/projects/components/ui/textarea";
 
 import { upsertShippingRate } from "@/queries/store";
 

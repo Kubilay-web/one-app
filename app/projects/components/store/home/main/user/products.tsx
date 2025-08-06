@@ -1,5 +1,5 @@
 "use client";
-import MainSwiper from "@/components/store/shared/swiper";
+import MainSwiper from "@/app/projects/components/store/shared/swiper";
 import { SimpleProduct } from "@/lib/types";
 
 export default function UserCardProducts({

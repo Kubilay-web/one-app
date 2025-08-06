@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/projects/components/ui/avatar";
+import { Badge } from "@/app/projects/components/ui/badge";
+import { Button } from "@/app/projects/components/ui/button";
 import React from "react";
 
 interface UserInfoProps {

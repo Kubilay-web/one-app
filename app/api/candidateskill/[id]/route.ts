@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 export async function GET(req: Request, context: { params: Params }) {

@@ -1,5 +1,5 @@
-import OrderStatusTag from "@/components/shared/order-status";
-import { useToast } from "@/components/ui/use-toast";
+import OrderStatusTag from "@/app/projects/components/shared/order-status";
+import { useToast } from "@/app/projects/components/ui/use-toast";
 import { OrderStatus } from "@/lib/types";
 import { updateOrderGroupStatus } from "@/queries/order";
 import { useRouter } from "next/navigation";

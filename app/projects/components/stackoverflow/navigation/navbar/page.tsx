@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import Theme from "./Theme";
 import MobileNavigation from "./MobileNavigation";
-import UserButton from "@/components/UserButton";
+import UserButton from "@/app/projects/components/UserButton";
 
 const Navbar = () => {
   return (

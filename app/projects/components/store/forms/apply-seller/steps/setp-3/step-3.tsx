@@ -11,10 +11,10 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import ImageUpload from "@/components/dashboard/shared/image-upload";
-import Input from "@/components/store/ui/input";
-import { Textarea } from "@/components/store/ui/textarea";
+} from "@/app/projects/components/ui/form";
+import ImageUpload from "@/app/projects/components/dashboard/shared/image-upload";
+import Input from "@/app/projects/components/store/ui/input";
+import { Textarea } from "@/app/projects/components/store/ui/textarea";
 import { applySeller } from "@/queries/store";
 import toast from "react-hot-toast";
 

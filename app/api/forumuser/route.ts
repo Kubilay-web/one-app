@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db"; // Prisma Client burada tanımlı olmalı
+import db from "@/app/lib/db"; // Prisma Client burada tanımlı olmalı
 import handleError from "@/lib/handlers/error";
 
 type APIErrorResponse = ReturnType<typeof handleError>;

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 // Cloudinary
 import { CldUploadWidget } from "next-cloudinary";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/projects/components/ui/button";
 import { Plus, Trash } from "lucide-react";
 
 interface ImageUploadProps {

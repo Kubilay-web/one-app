@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/projects/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -12,7 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/app/projects/components/ui/sheet";
 import ROUTES from "@/constants/routes";
 import NavLinks from "./NavLinks";
 import { validateRequest } from "@/auth";

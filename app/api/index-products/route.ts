@@ -1,4 +1,4 @@
-// import db from "@/lib/db";
+// import db from "@/app/lib/db";
 // import client from "@/lib/elasticsearch";
 // import { NextResponse } from "next/server";
 

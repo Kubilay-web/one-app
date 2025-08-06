@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { validateRequest } from "@/auth";
-import Logo from "@/components/logo/logo";
+import Logo from "@/app/projects/components/logo/logo";
 import UserInfo from "./user-info";
 import SidebarNavAdmin from "./nav-admin";
 import {

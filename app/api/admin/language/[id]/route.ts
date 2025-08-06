@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import slugify from "slugify";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 // PUT: Dil güncelleme
 export async function PUT(req, context) {

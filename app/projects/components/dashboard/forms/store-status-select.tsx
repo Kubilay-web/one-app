@@ -1,5 +1,5 @@
-import StoreStatusTag from "@/components/shared/store-status";
-import { useToast } from "@/components/ui/use-toast";
+import StoreStatusTag from "@/app/projects/components/shared/store-status";
+import { useToast } from "@/app/projects/components/ui/use-toast";
 import { StoreStatus } from "@/lib/types";
 import { updateOrderGroupStatus } from "@/queries/order";
 import { updateStoreStatus } from "@/queries/store";

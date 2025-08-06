@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db"; // Prisma client'ınızı doğru şekilde import edin
+import db from "@/app/lib/db"; // Prisma client'ınızı doğru şekilde import edin
 
 export async function GET(req) {
   // `nextUrl.searchParams.get` ile URL query parametresini alıyoruz.

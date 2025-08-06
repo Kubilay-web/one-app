@@ -1,4 +1,4 @@
-import UserButton from "@/components/UserButton";
+import UserButton from "@/app/projects/components/UserButton";
 import { updateVariantImage } from "@/migration-scripts/migrate-variantImage";
 import React from "react";
 

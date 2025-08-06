@@ -16,7 +16,7 @@ import { ShippingAddressSchema } from "@/lib/validation";
 import { SelectMenuOption, UserShippingAddressType } from "@/lib/types";
 
 // UI Components
-import CountrySelector from "@/components/shared/country-selector";
+import CountrySelector from "@/app/projects/components/shared/country-selector";
 import {
   Form,
   FormControl,
@@ -24,14 +24,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/projects/components/ui/form";
+import { Input } from "@/app/projects/components/ui/input";
 
 // Queries
 import { upsertShippingAddress } from "@/queries/user";
 // Utils
 import { v4 } from "uuid";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/projects/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
 

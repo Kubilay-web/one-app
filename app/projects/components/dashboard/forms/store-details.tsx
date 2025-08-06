@@ -17,14 +17,14 @@ import { StoreFormSchema } from "@/lib/validation";
 import { upsertStore } from "@/queries/store";
 
 // UI Components
-import { AlertDialog } from "@/components/ui/alert-dialog";
+import { AlertDialog } from "@/app/projects/components/ui/alert-dialog";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/app/projects/components/ui/card";
 import {
   Form,
   FormControl,
@@ -33,13 +33,13 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/app/projects/components/ui/form";
+import { Checkbox } from "@/app/projects/components/ui/checkbox";
+import { Button } from "@/app/projects/components/ui/button";
+import { Input } from "@/app/projects/components/ui/input";
+import { Textarea } from "@/app/projects/components/ui/textarea";
 import ImageUpload from "../shared/image-upload";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/projects/components/ui/use-toast";
 
 // Utils
 import { v4 } from "uuid";

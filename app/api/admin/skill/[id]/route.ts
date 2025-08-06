@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db"; // Prisma client'ını import ediyorum
+import db from "@/app/lib/db"; // Prisma client'ını import ediyorum
 import slugify from "slugify";
 
 // PUT: Skill güncelleme
