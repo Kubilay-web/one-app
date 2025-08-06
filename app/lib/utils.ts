@@ -10,8 +10,8 @@ import ColorThief from "colorthief";
 import { PrismaClient } from "@prisma/client";
 import prisma from "./db";
 import { CartProductType, Country } from "./types";
-import countries from "@/data/countries.json";
-import { techMap } from "@/constants/techMap";
+import countries from "@/app/data/countries.json";
+import { techMap } from "@/app/constants/techMap";
 
 export function formatRelativeDate(from: Date) {
   const currentDate = new Date();
