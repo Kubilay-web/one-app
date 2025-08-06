@@ -157,6 +157,7 @@
     "swiper": "^11.1.15",
     "tailwind-merge": "^3.3.1",
     "uploader": "^3.48.3",
+    "uuid": "^11.1.0",
     "vaul": "^1.1.2",
     "yet-another-react-lightbox": "^3.21.7",
     "zod": "^4.0.14",
