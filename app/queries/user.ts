@@ -172,7 +172,7 @@ export const saveUserCart = async (
         : size.price;
 
       // Calculate Shipping details
-      const countryCookie = cookies().get("userCountry");
+      const countryCookie = (await cookies()).get("userCountry");
 
       let details = {
         shippingFee: 0,
