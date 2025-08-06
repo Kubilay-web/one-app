@@ -38,14 +38,14 @@ import {
   OrderGroup,
   OrderItem,
 } from "@prisma/client";
-import countries from "@/data/countries.json";
-import { getOrder, getOrderJob } from "@/queries/order";
+import countries from "@/app/data/countries.json";
+import { getOrder, getOrderJob } from "@/app/queries/order";
 import {
   getUserOrders,
   getUserPayments,
   getUserWishlist,
-} from "@/queries/profile";
-import { getHomeFeaturedCategories } from "@/queries/home";
+} from "@/app/queries/profile";
+import { getHomeFeaturedCategories } from "@/app/queries/home";
 import { NextResponse } from "next/server";
 
 export function getUserDataSelect(loggedInUserId: string) {
