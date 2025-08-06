@@ -1,7 +1,7 @@
 "use client";
 
 import { useCartStore } from "@/cart-store/useCartStore";
-import useFromStore from "@/hooks/useFromStore";
+import useFromStore from "@/app/hooks/useFromStore";
 import { CartProductType } from "@/app/lib/types";
 import { Country } from "@prisma/client";
 import React, { useEffect, useState } from "react";

@@ -1,5 +1,5 @@
 // import db from "@/app/lib/db";
-// import client from "@/lib/elasticsearch";
+// import client from "@/app/lib/elasticsearch";
 // import { NextResponse } from "next/server";
 
 // // POST handler for indexing products and variants to Elasticsearch

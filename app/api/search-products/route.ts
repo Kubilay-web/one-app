@@ -1,4 +1,4 @@
-import client from "@/lib/elasticsearch";
+import client from "@/app/lib/elasticsearch";
 import { NextResponse } from "next/server";
 
 // Define product type

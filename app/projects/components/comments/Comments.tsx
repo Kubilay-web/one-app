@@ -1,4 +1,4 @@
-import kyInstance from "@/lib/ky";
+import kyInstance from "@/app/ib/ky";
 import { CommentsPage, PostData } from "@/app/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
