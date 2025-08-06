@@ -1,6 +1,6 @@
 // src/app/api/featured-products/route.ts
 import { NextResponse } from "next/server";
-import { getFeaturedProducts } from "@/queries/product";
+import { getFeaturedProducts } from "@/app/queries/product";
 
 export async function GET() {
   try {

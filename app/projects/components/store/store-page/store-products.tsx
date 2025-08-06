@@ -1,6 +1,6 @@
 "use client";
-import { FiltersQueryType, ProductType } from "@/lib/types";
-import { getProducts } from "@/queries/product";
+import { FiltersQueryType, ProductType } from "@/app/lib/types";
+import { getProducts } from "@/app/queries/product";
 import { useEffect, useState } from "react";
 import ProductCard from "../cards/product/product-card";
 import ProductPageStoreProductsSkeletonLoader from "../skeletons/product-page/store-products";

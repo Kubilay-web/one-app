@@ -5,14 +5,14 @@ import {
   getRatingStatistics,
   getShippingDetails,
   retrieveProductDetails,
-} from "@/queries/product";
+} from "@/app/queries/product";
 import {
   getAllStores,
   getStoreDefaultShippingDetails,
   getStoreOrders,
   getStorePageDetails,
-} from "@/queries/store";
-import { getAllSubCategories } from "@/queries/subCategory";
+} from "@/app/queries/store";
+import { getAllSubCategories } from "@/app/queries/subCategory";
 import {
   Cart,
   CartItem,

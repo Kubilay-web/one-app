@@ -17,7 +17,7 @@ import Pagination from "../../shared/pagination";
 import ReviewDetails from "../../forms/review-details";
 import ProductPageReviewsSkeletonLoader from "../../skeletons/product-page/reviews";
 import { DotLoader } from "react-spinners";
-import { getProductFilteredReviews } from "@/queries/product";
+import { getProductFilteredReviews } from "@/app/queries/product";
 import { Review } from "@prisma/client";
 import { randomBytes } from "crypto";
 

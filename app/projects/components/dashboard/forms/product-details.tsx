@@ -47,8 +47,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/projects/compone
 import { MultiSelect } from "react-multi-select-component";
 
 // Queries
-import { upsertProduct } from "@/queries/product";
-import { getAllCategoriesForCategory } from "@/queries/category";
+import { upsertProduct } from "@/app/queries/product";
+import { getAllCategoriesForCategory } from "@/app/queries/category";
 
 // ReactTags
 import { WithOutContext as ReactTags } from "react-tag-input";

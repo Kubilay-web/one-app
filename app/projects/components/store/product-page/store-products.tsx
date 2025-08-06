@@ -1,6 +1,6 @@
 "use client";
-import { ProductType } from "@/lib/types";
-import { getProducts } from "@/queries/product";
+import { ProductType } from "@/app/lib/types";
+import { getProducts } from "@/app/queries/product";
 import { FC, useEffect, useState } from "react";
 import ProductList from "../shared/product-list";
 // import ProductPageStoreProductsSkeletonLoader from "../skeletons/product-page/store-products";
