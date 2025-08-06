@@ -1,8 +1,8 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
-import { ReviewDetailsType } from "@/lib/types";
-import { validateRequest } from "@/auth";
+import { ReviewDetailsType } from "@/app/lib/types";
+import { validateRequest } from "@/app/auth";
 import { getRatingStatistics } from "./product";
 
 const prisma = new PrismaClient();

@@ -1,7 +1,7 @@
 "use server";
 
-import { validateRequest } from "@/auth";
-import db from "@/lib/db";
+import { validateRequest } from "@/app/auth";
+import db from "@/app/lib/db";
 import {
   OrderStatus,
   OrderTableDateFilter,

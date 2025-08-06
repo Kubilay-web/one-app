@@ -1,8 +1,8 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import { getRatingStatistics } from "./product";
-import { SortOrder } from "@/lib/types";
+import { SortOrder } from "@/app/lib/types";
 
 export const getProductFilteredReviews = async (
   productId: string,

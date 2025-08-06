@@ -1,6 +1,6 @@
 "use server";
 
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import { PrismaClient, SubCategory } from "@prisma/client";
 
 // Prisma client

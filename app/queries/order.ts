@@ -1,8 +1,8 @@
 "use server";
 
-import { validateRequest } from "@/auth";
-import db from "@/lib/db";
-import { OrderStatus, ProductStatus } from "@/lib/types";
+import { validateRequest } from "@/app/auth";
+import db from "@/app/lib/db";
+import { OrderStatus, ProductStatus } from "@/app/lib/types";
 
 // Function: getOrder
 // Description: Retrieves a specific order by its ID and the current user's ID, including associated groups, items, store information,

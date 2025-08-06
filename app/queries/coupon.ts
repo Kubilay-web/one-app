@@ -1,8 +1,8 @@
 "use server";
 
-import { validateRequest } from "@/auth";
-import db from "@/lib/db";
-import { CartWithCartItemsType } from "@/lib/types";
+import { validateRequest } from "@/app/auth";
+import db from "@/app/lib/db";
+import { CartWithCartItemsType } from "@/app/lib/types";
 import { Coupon } from "@prisma/client";
 
 // Function: upsertCoupon

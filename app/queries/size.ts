@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 // Function: getFilteredSizes
 // Description: Retrieves all sizes that exist in a product based on the filters (category, subCategory, offer).

@@ -1,7 +1,7 @@
 "use server";
 
-import { validateRequest } from "@/auth";
-import db from "@/lib/db";
+import { validateRequest } from "@/app/auth";
+import db from "@/app/lib/db";
 
 // Function: createPayPalPayment
 // Description: Creates a PayPal payment and return payment details.

@@ -1,13 +1,13 @@
 "use server";
 
-import { validateRequest } from "@/auth";
-import prisma from "@/lib/prisma";
+import { validateRequest } from "@/app/auth";
+import prisma from "@/app/lib/prisma";
 import {
   CountryWithShippingRatesType,
   StoreDefaultShippingType,
   StoreStatus,
   StoreType,
-} from "@/lib/types";
+} from "@/app/lib/types";
 import { ShippingRate, User } from "@prisma/client";
 
 export interface IStore {

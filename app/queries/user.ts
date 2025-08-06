@@ -1,8 +1,8 @@
 "use server";
 
 import { CartItem, PrismaClient, ShippingAddress } from "@prisma/client";
-import { validateRequest } from "@/auth";
-import { CartProductType, CartWithCartItemsType } from "@/lib/types";
+import { validateRequest } from "@/app/auth";
+import { CartProductType, CartWithCartItemsType } from "@/app/lib/types";
 import { getCookie } from "cookies-next";
 import {
   getDeliveryDetailsForStoreByCountry,

@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 import {
   ProductSimpleVariantType,
   ProductSize,
@@ -8,7 +8,7 @@ import {
   ProductWithVariants,
   SimpleProduct,
   VariantImageType,
-} from "@/lib/types";
+} from "@/app/lib/types";
 
 type FormatType = "simple" | "full";
 

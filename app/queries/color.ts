@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 export const getFilteredColors = async (
   filters: {

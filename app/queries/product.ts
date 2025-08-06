@@ -1,6 +1,6 @@
 "use server";
 
-import { validateRequest } from "@/auth";
+import { validateRequest } from "@/app/auth";
 import {
   FreeShippingWithCountriesType,
   ProductPageType,
@@ -8,10 +8,10 @@ import {
   ProductWithVariantType,
   RatingStatisticsType,
   SortOrder,
-} from "@/lib/types";
+} from "@/app/lib/types";
 
 import slugify from "slugify";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 import {
   Country,
@@ -22,7 +22,7 @@ import {
   Size,
   Store,
 } from "@prisma/client";
-import { generateUniqueSlug } from "@/lib/utils";
+import { generateUniqueSlug } from "@/app/lib/utils";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 

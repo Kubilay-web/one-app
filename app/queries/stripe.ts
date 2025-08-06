@@ -1,12 +1,12 @@
 "use server";
 
-import { validateRequest } from "@/auth";
-import db from "@/lib/db";
+import { validateRequest } from "@/app/auth";
+import db from "@/app/lib/db";
 import { PaymentIntent } from "@stripe/stripe-js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-04-30.basil",
+  apiVersion: "2025-07-30.basil",
 });
 
 export const createStripePaymentIntent = async (orderId: string) => {
