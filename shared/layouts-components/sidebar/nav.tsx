@@ -290,7 +290,7 @@ export const MENUITEMS: any = [
         ]
       },
       {
-        title: "Social", type: "sub", active: false, children: [
+        title: "Social", type: "link", active: false, children: [
           { path: "/social", type: "link", active: false, selected: false, title: "Social" }
         ]
       },
