@@ -112,11 +112,11 @@ export default function Home() {
     });
 
     return (
-        <html>
-            <body>
+        <div>
+            <div>
                 <Cover/>
                 <ToastContainer />
-            </body>
-        </html>
+            </div>
+        </div>
     );
 }

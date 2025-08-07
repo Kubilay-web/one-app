@@ -26,7 +26,7 @@ const Layout = ({ local_varaiable, children }: any) => {
   }, []);
 
   return (
-    <html
+    <div
       dir={local_varaiable.dir}
       className={local_varaiable.class}
       data-header-styles={local_varaiable.dataHeaderStyles}
@@ -43,14 +43,11 @@ const Layout = ({ local_varaiable, children }: any) => {
       data-icon-overlay={local_varaiable.iconOverlay}
       bg-img={local_varaiable.bgImg}
       icon-text={local_varaiable.iconText}
-      style={customstyles} suppressHydrationWarning>
-      <head>
-        <meta name="keywords" content="" />
-      </head>
-      <body className={`${local_varaiable.body ? local_varaiable.body : ''}`}>
+      style={customstyles} suppressHydrationWarning={false}>
+      <div className={`${local_varaiable.body ? local_varaiable.body : ''}`}>
         {children}
-      </body>
-    </html>
+      </div>
+    </div>
   )
 }
 
