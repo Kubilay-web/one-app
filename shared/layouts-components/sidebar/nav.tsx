@@ -289,11 +289,7 @@ export const MENUITEMS: any = [
           { path: "/pages/blog/create-blog", type: "link", active: false, selected: false, title: "Create Blog" },
         ]
       },
-      {
-        title: "Social", type: "link", active: false, children: [
-          { path: "/social", type: "link", active: false, selected: false, title: "Social" }
-        ]
-      },
+     { path: "/social", type: "link", active: false, selected: false, title: "Social" },
       { path: "/pages/chat", type: "link", active: false, selected: false, title: "Chat" },
       {
         title: "Email", type: "sub", active: false, children: [
