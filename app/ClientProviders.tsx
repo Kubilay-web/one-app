@@ -22,7 +22,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
         if (res.ok) {
           const data = await res.json();
           if (!data) {
-            router.push("/"); // Session boşsa anasayfaya yönlendir
+            router.push("/"); 
           }
         } else {
           router.push("/");
