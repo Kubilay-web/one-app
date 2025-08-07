@@ -12,38 +12,37 @@ export default function ClientProviders({ children }: { children: React.ReactNod
   const [queryClient] = useState(() => new QueryClient());
   const [pageloading, setpageloading] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [session, setSession] = useState(null);
+  const [sessionChecked, setSessionChecked] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setIsClient(true);
-
-    const fetchSession = async () => {
+    const checkSession = async () => {
       try {
         const res = await fetch("/api/session");
         if (res.ok) {
           const data = await res.json();
-          setSession(data);
+          if (!data) {
+            router.push("/"); // Session boşsa anasayfaya yönlendir
+          }
         } else {
-          setSession(null);
+          router.push("/");
         }
       } catch (error) {
-        console.error("Session fetch error:", error);
-        setSession(null);
-
+        console.error("Session kontrol hatası:", error);
+        router.push("/");
+      } finally {
+        setSessionChecked(true);
       }
     };
 
-    fetchSession();
-  }, []);
+    setIsClient(true);
+    checkSession();
+  }, [router]);
 
-  useEffect(() => {
-    if (session) {
-      router.push("/social");  // Eğer session varsa social sayfasına yönlendir
-    }
-  }, []);
 
-  if (!isClient) return null;
+  if (!isClient || !sessionChecked) {
+    return null;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

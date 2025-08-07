@@ -98,7 +98,7 @@ export default function Home() {
       };
     const router = useRouter();
     const RouteChange = () => {
-        let path = "/dashboards/sales";
+        let path = "/social";
         router.push(path);
     };
     
