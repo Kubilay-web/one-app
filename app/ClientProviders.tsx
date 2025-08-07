@@ -26,12 +26,12 @@ export default function ClientProviders({ children }: { children: React.ReactNod
           setSession(data);
         } else {
           setSession(null);
-          router.push("/");
+          router.push("/login");  // Eğer session yoksa login sayfasına yönlendir
         }
       } catch (error) {
         console.error("Session fetch error:", error);
         setSession(null);
-        router.push("/");
+        router.push("/login");  // Hata durumunda da login sayfasına yönlendir
       }
     };
 
@@ -40,7 +40,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
 
   useEffect(() => {
     if (session) {
-      router.push("/social");
+      router.push("/social");  // Eğer session varsa social sayfasına yönlendir
     }
   }, [session]);
 
