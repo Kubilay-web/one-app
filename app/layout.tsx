@@ -1,6 +1,7 @@
 // app/layout.tsx
 import "./globals.scss";
 import ClientProviders from "./ClientProviders";
+import PrelineScript from "./PrelineScript";
 
 export const metadata = {
   title: "My App",
@@ -17,6 +18,7 @@ export default function RootLayout({
       <head />
       <body>
         <ClientProviders>{children}</ClientProviders>
+        <PrelineScript />
       </body>
     </html>
   );

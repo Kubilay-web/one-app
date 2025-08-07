@@ -27,6 +27,14 @@ const nextConfig: NextConfig = {
     quietDeps: true,
   },
   reactStrictMode: false,
+
+    webpack(config, { isServer }) {
+    // Webpack cache'i devre dışı bırakıyoruz
+    if (!isServer) {
+      config.cache = false;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -8,6 +8,7 @@ import nextConfig from '@/next.config';
 import Image from "next/image";
 import { ToastContainer, toast } from 'react-toastify';
 import Cover from "./(components)/(authentication-layout)/authentication/sign-in/cover/page";
+import PrelineScript from "./PrelineScript";
 export default function Home() {
 
     let { basePath } = nextConfig
@@ -116,6 +117,7 @@ export default function Home() {
             <div>
                 <Cover/>
                 <ToastContainer />
+                <PrelineScript/>
             </div>
         </div>
     );
