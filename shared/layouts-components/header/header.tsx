@@ -10,8 +10,11 @@ import nextConfig from "@/next.config";
 import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import router from "next/router";
+import { useSession } from "@/app/SessionProvider";
 
 const Header = ({ local_varaiable, ThemeChanger }: any) => {
+
+  const { user } = useSession();
   const queryClient = useQueryClient(); // React Query Client
   let { basePath } = nextConfig;
   ///****fullscreeen */
@@ -1306,16 +1309,14 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                 >
                   <Image
                     fill
-                    src={`${
-                      process.env.NODE_ENV === "production" ? basePath : ""
-                    }/assets/images/faces/14.jpg`}
+                    src={user.avatarUrl}
                     alt="Image Description"
                     className="avatar avatar-sm avatar-rounded inline-block"
                   />
                 </button>
 
                 <div className="xl:block hidden dropdown-profile">
-                  <span className="font-medium leading-none">Mr. Jack</span>
+                  <span className="font-medium leading-none">{user.username}</span>
                 </div>
 
                 <ul className="main-header-dropdown ti-dropdown-menu hs-dropdown-menu !w-[11rem] hidden pt-0 overflow-hidden header-profile-dropdown">
