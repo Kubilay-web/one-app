@@ -10,7 +10,8 @@ export default function Navbar() {
           oneepp
         </Link>
         <SearchField />
-        <UserButton className="sm:ms-auto" />
+        {/* <UserButton className="sm:ms-auto" /> */}
+        <div className="sm:ms-auto"/>
       </div>
     </header>
   );
