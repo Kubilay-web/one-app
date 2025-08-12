@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AnimatedContainer from "../../animated-container";
-import { UserInfo } from "@/queries/user";
+import { UserInfo } from "@/app/queries/user";
 import DefaultUserImg from "@/public/assets/images/default-user.jpg";
 import Image from "next/image";
 import Link from "next/link";

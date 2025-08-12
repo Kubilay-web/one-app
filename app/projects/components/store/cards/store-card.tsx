@@ -1,5 +1,5 @@
 "use client";
-import { followStore, UserInfo } from "@/queries/user";
+import { followStore, UserInfo } from "@/app/queries/user";
 import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";

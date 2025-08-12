@@ -9,7 +9,7 @@ import MainSwiper from "../../../shared/swiper";
 import UserCardProducts from "./products";
 import { validateRequest } from "@/app/auth";
 import { useEffect, useState } from "react";
-import { UserInfo } from "@/queries/user";
+import { UserInfo } from "@/app/queries/user";
 
 export default function HomeUserCard() {
   const [products, setProducts] = useState<SimpleProduct[]>([]);

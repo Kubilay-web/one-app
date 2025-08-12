@@ -213,73 +213,73 @@ export const MENUITEMS: any = [
       },
     ]
   },
-  {
-    icon: NestedmenuIcon, title: "Nested Menu", selected: false, active: false, type: "sub", children: [
-      { path: "", title: "Nested-1", type: "empty", active: false, selected: false, dirchange: false, },
-      { title: "Nested-2", type: "sub", active: false, selected: false, dirchange: false, children: [
-          { path: "", type: "empty", active: false, selected: false, dirchange: false, title: "Nested-2-1", },
-          { title: "Nested-2-2", type: "sub", active: false, selected: false, dirchange: false, children: [
-              { path: "", type: "empty", ctive: false, selected: false, dirchange: false, title: "Nested-2-2-1", },
-              { path: "", type: "empty", active: false, selected: false, dirchange: false, title: "Nested-2-2-2", },
-            ]
-          }
-        ],
-      },
-    ],
-  },
+  // {
+  //   icon: NestedmenuIcon, title: "Nested Menu", selected: false, active: false, type: "sub", children: [
+  //     { path: "", title: "Nested-1", type: "empty", active: false, selected: false, dirchange: false, },
+  //     { title: "Nested-2", type: "sub", active: false, selected: false, dirchange: false, children: [
+  //         { path: "", type: "empty", active: false, selected: false, dirchange: false, title: "Nested-2-1", },
+  //         { title: "Nested-2-2", type: "sub", active: false, selected: false, dirchange: false, children: [
+  //             { path: "", type: "empty", ctive: false, selected: false, dirchange: false, title: "Nested-2-2-1", },
+  //             { path: "", type: "empty", active: false, selected: false, dirchange: false, title: "Nested-2-2-2", },
+  //           ]
+  //         }
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     menutitle: "PAGES"
   },
-  {
-    icon: Authenticationicon, title: " Authentication",badgetxt: badge2, type: "sub", active: false, selected: false, children: [
-      { path: "/authentication/coming-soon", type: "link", active: false, selected: false, title: "Coming Soon" },
-      {
-        title: "Create Password", type: "sub", active: false, selected: false, children: [
-          { path: "/authentication/create-password/basic", type: "link", active: false, selected: false, title: "Basic" },
-          { path: "/authentication/create-password/cover", type: "link", active: false, selected: false, title: "Cover" },
-        ],
-      },
-      {
-        title: "Lock Screen", type: "sub", active: false, selected: false, children: [
-          { path: "/authentication/lock-screen/basic", type: "link", active: false, selected: false, title: "Basic" },
-          { path: "/authentication/lock-screen/cover", type: "link", active: false, selected: false, title: "Cover" },
-        ],
-      },
-      {
-        title: "Reset Password", type: "sub", active: false, selected: false, children: [
-          { path: "/authentication/reset-password/basic", type: "link", active: false, selected: false, title: "Basic" },
-          { path: "/authentication/reset-password/cover", type: "link", active: false, selected: false, title: "Cover" },
-        ],
-      },
-      {
-        title: "Sign Up", type: "sub", active: false, selected: false, children: [
-          { path: "/authentication/sign-up/basic", type: "link", active: false, selected: false, title: "Basic" },
-          { path: "/authentication/sign-up/cover", type: "link", active: false, selected: false, title: "Cover" },
-        ],
-      },
-      {
-        title: "Sign In", type: "sub", active: false, selected: false, children: [
-          { path: "/authentication/sign-in/basic", type: "link", active: false, selected: false, title: "Basic" },
-          { path: "/authentication/sign-in/cover", type: "link", active: false, selected: false, title: "Cover" },
-        ],
-      },
-      {
-        title: "Two Step Verification", type: "sub", active: false, selected: false, children: [
-          { path: "/authentication/two-step-verification/basic", type: "link", active: false, selected: false, title: "Basic" },
-          { path: "/authentication/two-step-verification/cover", type: "link", active: false, selected: false, title: "Cover" },
-        ],
-      },
-      { path: "/authentication/under-maintainance", type: "link", active: false, selected: false, title: "Under Maintainance" },
-    ]
-  },
-  {
-    icon: Erroricon, title: "Error",badgetxt: badge3, type: "sub", active: false, selected: false, children: [
+  // {
+  //   icon: Authenticationicon, title: " Authentication",badgetxt: badge2, type: "sub", active: false, selected: false, children: [
+  //     { path: "/authentication/coming-soon", type: "link", active: false, selected: false, title: "Coming Soon" },
+  //     {
+  //       title: "Create Password", type: "sub", active: false, selected: false, children: [
+  //         { path: "/authentication/create-password/basic", type: "link", active: false, selected: false, title: "Basic" },
+  //         { path: "/authentication/create-password/cover", type: "link", active: false, selected: false, title: "Cover" },
+  //       ],
+  //     },
+  //     {
+  //       title: "Lock Screen", type: "sub", active: false, selected: false, children: [
+  //         { path: "/authentication/lock-screen/basic", type: "link", active: false, selected: false, title: "Basic" },
+  //         { path: "/authentication/lock-screen/cover", type: "link", active: false, selected: false, title: "Cover" },
+  //       ],
+  //     },
+  //     {
+  //       title: "Reset Password", type: "sub", active: false, selected: false, children: [
+  //         { path: "/authentication/reset-password/basic", type: "link", active: false, selected: false, title: "Basic" },
+  //         { path: "/authentication/reset-password/cover", type: "link", active: false, selected: false, title: "Cover" },
+  //       ],
+  //     },
+  //     {
+  //       title: "Sign Up", type: "sub", active: false, selected: false, children: [
+  //         { path: "/authentication/sign-up/basic", type: "link", active: false, selected: false, title: "Basic" },
+  //         { path: "/authentication/sign-up/cover", type: "link", active: false, selected: false, title: "Cover" },
+  //       ],
+  //     },
+  //     {
+  //       title: "Sign In", type: "sub", active: false, selected: false, children: [
+  //         { path: "/authentication/sign-in/basic", type: "link", active: false, selected: false, title: "Basic" },
+  //         { path: "/authentication/sign-in/cover", type: "link", active: false, selected: false, title: "Cover" },
+  //       ],
+  //     },
+  //     {
+  //       title: "Two Step Verification", type: "sub", active: false, selected: false, children: [
+  //         { path: "/authentication/two-step-verification/basic", type: "link", active: false, selected: false, title: "Basic" },
+  //         { path: "/authentication/two-step-verification/cover", type: "link", active: false, selected: false, title: "Cover" },
+  //       ],
+  //     },
+  //     { path: "/authentication/under-maintainance", type: "link", active: false, selected: false, title: "Under Maintainance" },
+  //   ]
+  // },
+  // {
+  //   icon: Erroricon, title: "Error",badgetxt: badge3, type: "sub", active: false, selected: false, children: [
 
-      { path: "/authentication/error/error-401", type: "link", active: false, selected: false, title: "401-Error" },
-      { path: "/authentication/error/error-404", type: "link", active: false, selected: false, title: "404-Error" },
-      { path: "/authentication/error/error-500", type: "link", active: false, selected: false, title: "500-Error" },
-    ]
-  },
+  //     { path: "/authentication/error/error-401", type: "link", active: false, selected: false, title: "401-Error" },
+  //     { path: "/authentication/error/error-404", type: "link", active: false, selected: false, title: "404-Error" },
+  //     { path: "/authentication/error/error-500", type: "link", active: false, selected: false, title: "500-Error" },
+  //   ]
+  // },
   {
     icon: Pagesicon, title: "Pages", type: "sub", active: false, children: [
       {
@@ -318,142 +318,142 @@ export const MENUITEMS: any = [
       { path: "/pages/todolist", type: "link", active: false, selected: false, title: "To Do List" },
     ]
   },
-  {
-    menutitle: "GENERAL"
-  },
-  {
-    title: "Forms", icon: Formsicon, type: "sub", active: false, selected: false, children: [
+  // {
+  //   menutitle: "GENERAL"
+  // },
+  // {
+  //   title: "Forms", icon: Formsicon, type: "sub", active: false, selected: false, children: [
 
-      { path: "/forms/form-advanced", type: "link", active: false, selected: false, title: "Form Advanced" },
+  //     { path: "/forms/form-advanced", type: "link", active: false, selected: false, title: "Form Advanced" },
 
-      {
-        title: "Form Elements", type: "sub", menusub: true, active: false, selected: false, children: [
-          { path: "/forms/form-elements/inputs", type: "link", active: false, selected: false, title: "Inputs" },
-          { path: "/forms/form-elements/checks-radios", type: "link", active: false, selected: false, title: "Checks & Radios " },
-          { path: "/forms/form-elements/formswitch", type: "link", active: false, selected: false, title: "Form switch " },
-          { path: "/forms/form-elements/input-group", type: "link", active: false, selected: false, title: "Input Group" },
-          { path: "/forms/form-elements/form-select", type: "link", active: false, selected: false, title: "Form Select" },
-          { path: "/forms/form-elements/range-slider", type: "link", active: false, selected: false, title: "Range Slider" },
-          { path: "/forms/form-elements/input-masks", type: "link", active: false, selected: false, title: "Input Masks" },
-          { path: "/forms/form-elements/file-uploads", type: "link", active: false, selected: false, title: "File Uploads" },
-          { path: "/forms/form-elements/date-time-picker", type: "link", active: false, selected: false, title: "Date,Time Picker" },
-          { path: "/forms/form-elements/color-picker", type: "link", active: false, selected: false, title: "Color Pickers" },
-          { path: "/forms/form-elements/form-wizard", type: "link", active: false, selected: false, title: "Form Wizard" },
-          { path: "/forms/form-elements/advancedselect", type: "link", active: false, selected: false, title: "Advanced Select" },
-          { path: "/forms/form-elements/input-number", type: "link", active: false, selected: false, title: "Input Number" },
-          { path: "/forms/form-elements/passwords", type: "link", active: false, selected: false, title: "Passwords" },
-          { path: "/forms/form-elements/counters-markup", type: "link", active: false, selected: false, title: "Counters & Markup" },
+  //     {
+  //       title: "Form Elements", type: "sub", menusub: true, active: false, selected: false, children: [
+  //         { path: "/forms/form-elements/inputs", type: "link", active: false, selected: false, title: "Inputs" },
+  //         { path: "/forms/form-elements/checks-radios", type: "link", active: false, selected: false, title: "Checks & Radios " },
+  //         { path: "/forms/form-elements/formswitch", type: "link", active: false, selected: false, title: "Form switch " },
+  //         { path: "/forms/form-elements/input-group", type: "link", active: false, selected: false, title: "Input Group" },
+  //         { path: "/forms/form-elements/form-select", type: "link", active: false, selected: false, title: "Form Select" },
+  //         { path: "/forms/form-elements/range-slider", type: "link", active: false, selected: false, title: "Range Slider" },
+  //         { path: "/forms/form-elements/input-masks", type: "link", active: false, selected: false, title: "Input Masks" },
+  //         { path: "/forms/form-elements/file-uploads", type: "link", active: false, selected: false, title: "File Uploads" },
+  //         { path: "/forms/form-elements/date-time-picker", type: "link", active: false, selected: false, title: "Date,Time Picker" },
+  //         { path: "/forms/form-elements/color-picker", type: "link", active: false, selected: false, title: "Color Pickers" },
+  //         { path: "/forms/form-elements/form-wizard", type: "link", active: false, selected: false, title: "Form Wizard" },
+  //         { path: "/forms/form-elements/advancedselect", type: "link", active: false, selected: false, title: "Advanced Select" },
+  //         { path: "/forms/form-elements/input-number", type: "link", active: false, selected: false, title: "Input Number" },
+  //         { path: "/forms/form-elements/passwords", type: "link", active: false, selected: false, title: "Passwords" },
+  //         { path: "/forms/form-elements/counters-markup", type: "link", active: false, selected: false, title: "Counters & Markup" },
 
-        ],
-      },
-      { path: "/forms/form-layouts", type: "link", active: false, selected: false, title: "Form Layouts" },
-      { path: "/forms/sun-editor", type: "link", active: false, selected: false, title: "Sun Editor" },
-      { path: "/forms/validation", type: "link", active: false, selected: false, title: "Validation" },
-      { path: "/forms/select2", type: "link", active: false, selected: false, title: "Select2" },
-    ],
-  },
-  {
-    title: "Ui Elements", icon: Elementsicon, type: "sub", active: false, selected: false, children: [
-      { path: "/ui-elements/alerts", type: "link", active: false, selected: false, title: "Alerts" },
-      { path: "/ui-elements/badge", type: "link", active: false, selected: false, title: "Badge" },
-      { path: "/ui-elements/breadcrumb", type: "link", active: false, selected: false, title: "Breadcrumb" },
-      { path: "/ui-elements/buttons", type: "link", active: false, selected: false, title: "Buttons" },
-      { path: "/ui-elements/button-group", type: "link", active: false, selected: false, title: "Button Group" },
-      { path: "/ui-elements/blockquotes", type: "link", active: false, selected: false, title: "Blockquotes" },
-      { path: "/ui-elements/cards", type: "link", active: false, selected: false, title: "Cards" },
-      { path: "/ui-elements/dropdowns", type: "link", active: false, selected: false, title: "Dropdowns" },
-      { path: "/ui-elements/images-figures", type: "link", active: false, selected: false, title: "Images & Figures" },
-      { path: "/ui-elements/list-group", type: "link", active: false, selected: false, title: "List Group" },
-      { path: "/ui-elements/navs-tabs", type: "link", active: false, selected: false, title: "Navs & Tabs" },
-      { path: "/ui-elements/object-fit", type: "link", active: false, selected: false, title: "Object Fit" },
-      { path: "/ui-elements/pagination", type: "link", active: false, selected: false, title: "Pagination" },
-      { path: "/ui-elements/popovers", type: "link", active: false, selected: false, title: "Popovers" },
-      { path: "/ui-elements/progress", type: "link", active: false, selected: false, title: "Progress" },
-      { path: "/ui-elements/indicators", type: "link", active: false, selected: false, title: "Indicators" },
-      { path: "/ui-elements/spinners", type: "link", active: false, selected: false, title: "Spinners" },
-      { path: "/ui-elements/toasts", type: "link", active: false, selected: false, title: "Toasts" },
-      { path: "/ui-elements/tooltips", type: "link", active: false, selected: false, title: "Tooltips" },
-      { path: "/ui-elements/typography", type: "link", active: false, selected: false, title: "Typography" },
-    ],
-  },
-  {
-    title: "Advanced Ui", icon: Advanceuiicon, type: "sub", active: false, selected: false, children: [
-      { path: "/advanced-ui/accordions-collapse", type: "link", active: false, selected: false, title: "Accordions & collapse" },
-      { path: "/advanced-ui/customscrollbar", type: "link", active: false, selected: false, title: "Custom scrollbar" },
-      { path: "/advanced-ui/draggable-cards", type: "link", active: false, selected: false, title: "Draggable Cards" },
-      { path: "/advanced-ui/media-player", type: "link", active: false, selected: false, title: "Media Player" },
-      { path: "/advanced-ui/modals-closes", type: "link", active: false, selected: false, title: "Modals & Closes" },
-      { path: "/advanced-ui/navbar", type: "link", active: false, selected: false, title: "Navbar" },
-      { path: "/advanced-ui/offcanvas", type: "link", active: false, selected: false, title: "Offcanvas" },
-      { path: "/advanced-ui/skeleton", type: "link", active: false, selected: false, title: "Skeleton" },
-      { path: "/advanced-ui/ratings", type: "link", active: false, selected: false, title: "Ratings" },
-      { path: "/advanced-ui/ribbons", type: "link", active: false, selected: false, title: "Ribbons" },
-      { path: "/advanced-ui/sortable-js", type: "link", active: false, selected: false, title: "Sortable Js" },
-      { path: "/advanced-ui/swiper-js", type: "link", active: false, selected: false, title: "Swiper JS" },
-      { path: "/advanced-ui/tour", type: "link", active: false, selected: false, title: "Tour" },
-    ],
-  },
-  {
-    title: "Utilities", icon: Utilitiesicon, type: "sub", active: false, selected: false, children: [
-      { path: "/utilities/avatars", type: "link", active: false, selected: false, title: "Avatars" },
-      { path: "/utilities/borders", type: "link", active: false, selected: false, title: "Borders" },
-      { path: "/utilities/colors", type: "link", active: false, selected: false, title: "Colors" },
-      { path: "/utilities/columns", type: "link", active: false, selected: false, title: "Columns" },
-      { path: "/utilities/grid", type: "link", active: false, selected: false, title: "Grid" },
-      { path: "/utilities/flex", type: "link", active: false, selected: false, title: "Flex" },
+  //       ],
+  //     },
+  //     { path: "/forms/form-layouts", type: "link", active: false, selected: false, title: "Form Layouts" },
+  //     { path: "/forms/sun-editor", type: "link", active: false, selected: false, title: "Sun Editor" },
+  //     { path: "/forms/validation", type: "link", active: false, selected: false, title: "Validation" },
+  //     { path: "/forms/select2", type: "link", active: false, selected: false, title: "Select2" },
+  //   ],
+  // },
+  // {
+  //   title: "Ui Elements", icon: Elementsicon, type: "sub", active: false, selected: false, children: [
+  //     { path: "/ui-elements/alerts", type: "link", active: false, selected: false, title: "Alerts" },
+  //     { path: "/ui-elements/badge", type: "link", active: false, selected: false, title: "Badge" },
+  //     { path: "/ui-elements/breadcrumb", type: "link", active: false, selected: false, title: "Breadcrumb" },
+  //     { path: "/ui-elements/buttons", type: "link", active: false, selected: false, title: "Buttons" },
+  //     { path: "/ui-elements/button-group", type: "link", active: false, selected: false, title: "Button Group" },
+  //     { path: "/ui-elements/blockquotes", type: "link", active: false, selected: false, title: "Blockquotes" },
+  //     { path: "/ui-elements/cards", type: "link", active: false, selected: false, title: "Cards" },
+  //     { path: "/ui-elements/dropdowns", type: "link", active: false, selected: false, title: "Dropdowns" },
+  //     { path: "/ui-elements/images-figures", type: "link", active: false, selected: false, title: "Images & Figures" },
+  //     { path: "/ui-elements/list-group", type: "link", active: false, selected: false, title: "List Group" },
+  //     { path: "/ui-elements/navs-tabs", type: "link", active: false, selected: false, title: "Navs & Tabs" },
+  //     { path: "/ui-elements/object-fit", type: "link", active: false, selected: false, title: "Object Fit" },
+  //     { path: "/ui-elements/pagination", type: "link", active: false, selected: false, title: "Pagination" },
+  //     { path: "/ui-elements/popovers", type: "link", active: false, selected: false, title: "Popovers" },
+  //     { path: "/ui-elements/progress", type: "link", active: false, selected: false, title: "Progress" },
+  //     { path: "/ui-elements/indicators", type: "link", active: false, selected: false, title: "Indicators" },
+  //     { path: "/ui-elements/spinners", type: "link", active: false, selected: false, title: "Spinners" },
+  //     { path: "/ui-elements/toasts", type: "link", active: false, selected: false, title: "Toasts" },
+  //     { path: "/ui-elements/tooltips", type: "link", active: false, selected: false, title: "Tooltips" },
+  //     { path: "/ui-elements/typography", type: "link", active: false, selected: false, title: "Typography" },
+  //   ],
+  // },
+  // {
+  //   title: "Advanced Ui", icon: Advanceuiicon, type: "sub", active: false, selected: false, children: [
+  //     { path: "/advanced-ui/accordions-collapse", type: "link", active: false, selected: false, title: "Accordions & collapse" },
+  //     { path: "/advanced-ui/customscrollbar", type: "link", active: false, selected: false, title: "Custom scrollbar" },
+  //     { path: "/advanced-ui/draggable-cards", type: "link", active: false, selected: false, title: "Draggable Cards" },
+  //     { path: "/advanced-ui/media-player", type: "link", active: false, selected: false, title: "Media Player" },
+  //     { path: "/advanced-ui/modals-closes", type: "link", active: false, selected: false, title: "Modals & Closes" },
+  //     { path: "/advanced-ui/navbar", type: "link", active: false, selected: false, title: "Navbar" },
+  //     { path: "/advanced-ui/offcanvas", type: "link", active: false, selected: false, title: "Offcanvas" },
+  //     { path: "/advanced-ui/skeleton", type: "link", active: false, selected: false, title: "Skeleton" },
+  //     { path: "/advanced-ui/ratings", type: "link", active: false, selected: false, title: "Ratings" },
+  //     { path: "/advanced-ui/ribbons", type: "link", active: false, selected: false, title: "Ribbons" },
+  //     { path: "/advanced-ui/sortable-js", type: "link", active: false, selected: false, title: "Sortable Js" },
+  //     { path: "/advanced-ui/swiper-js", type: "link", active: false, selected: false, title: "Swiper JS" },
+  //     { path: "/advanced-ui/tour", type: "link", active: false, selected: false, title: "Tour" },
+  //   ],
+  // },
+  // {
+  //   title: "Utilities", icon: Utilitiesicon, type: "sub", active: false, selected: false, children: [
+  //     { path: "/utilities/avatars", type: "link", active: false, selected: false, title: "Avatars" },
+  //     { path: "/utilities/borders", type: "link", active: false, selected: false, title: "Borders" },
+  //     { path: "/utilities/colors", type: "link", active: false, selected: false, title: "Colors" },
+  //     { path: "/utilities/columns", type: "link", active: false, selected: false, title: "Columns" },
+  //     { path: "/utilities/grid", type: "link", active: false, selected: false, title: "Grid" },
+  //     { path: "/utilities/flex", type: "link", active: false, selected: false, title: "Flex" },
 
-    ],
-  },
-  { path: "/widgets", title: "widgets", icon: Widgetsicon, type: "link", active: false, selected: false },
-  {
-    menutitle: "MAPS & ICONS"
-  },
-  {
-    title: "Maps", icon: Mapsicon, type: "sub", background: "hor-rightangle", active: false, selected: false, children: [
-      { path: "/maps/pigeon-maps", type: "link", active: false, selected: false, title: "Pigeon Maps" },
-      { path: "/maps/leaflet-maps", type: "link", active: false, selected: false, title: "Leaflet Maps" },
+  //   ],
+  // },
+  // { path: "/widgets", title: "widgets", icon: Widgetsicon, type: "link", active: false, selected: false },
+  // {
+  //   menutitle: "MAPS & ICONS"
+  // },
+  // {
+  //   title: "Maps", icon: Mapsicon, type: "sub", background: "hor-rightangle", active: false, selected: false, children: [
+  //     { path: "/maps/pigeon-maps", type: "link", active: false, selected: false, title: "Pigeon Maps" },
+  //     { path: "/maps/leaflet-maps", type: "link", active: false, selected: false, title: "Leaflet Maps" },
 
-    ],
-  },
-  { path: "/icons", icon: Icons, type: "link", active: false, selected: false, title: "Icons" },
-  {
-    menutitle: "TABLES & CHARTS"
-  },
-  {
-    title: "Charts", icon: Chartsicon, type: "sub", children: [
-      {
-        title: "Apex Charts", type: "sub", menusub: true, active: false, selected: false, children: [
+  //   ],
+  // },
+  // { path: "/icons", icon: Icons, type: "link", active: false, selected: false, title: "Icons" },
+  // {
+  //   menutitle: "TABLES & CHARTS"
+  // },
+  // {
+  //   title: "Charts", icon: Chartsicon, type: "sub", children: [
+  //     {
+  //       title: "Apex Charts", type: "sub", menusub: true, active: false, selected: false, children: [
 
-          { path: "/charts/apex-charts/line-chart", type: "link", active: false, selected: false, title: "Line Charts" },
-          { path: "/charts/apex-charts/area-chart", type: "link", active: false, selected: false, title: "Area Charts " },
-          { path: "/charts/apex-charts/column-chart", type: "link", active: false, selected: false, title: "Column Charts" },
-          { path: "/charts/apex-charts/bar-chart", type: "link", active: false, selected: false, title: "Bar Charts" },
-          { path: "/charts/apex-charts/mixed-chart", type: "link", active: false, selected: false, title: "Mixed Charts" },
-          { path: "/charts/apex-charts/range-area-chart", type: "link", active: false, selected: false, title: "Range Area Charts" },
-          { path: "/charts/apex-charts/timeline-chart", type: "link", active: false, selected: false, title: "Timeline Charts" },
-          { path: "/charts/apex-charts/funnel-chart", type: "link", active: false, selected: false, title: "Funnel Charts" },
-          { path: "/charts/apex-charts/candlestick-chart", type: "link", active: false, selected: false, title: "CandleStick Charts" },
-          { path: "/charts/apex-charts/boxplot-chart", type: "link", active: false, selected: false, title: "Boxplot Charts" },
-          { path: "/charts/apex-charts/bubble-chart", type: "link", active: false, selected: false, title: "Bubble Charts" },
-          { path: "/charts/apex-charts/scatter-chart", type: "link", active: false, selected: false, title: "Scatter Charts" },
-          { path: "/charts/apex-charts/heatmap-chart", type: "link", active: false, selected: false, title: "Heatmap Charts" },
-          { path: "/charts/apex-charts/treemap-chart", type: "link", active: false, selected: false, title: "Treemap Charts" },
-          { path: "/charts/apex-charts/pie-chart", type: "link", active: false, selected: false, title: "Pie Charts" },
-          { path: "/charts/apex-charts/radialbar-chart", type: "link", active: false, selected: false, title: "Radialbar Charts" },
-          { path: "/charts/apex-charts/radar-chart", type: "link", active: false, selected: false, title: "Radar Charts" },
-          { path: "/charts/apex-charts/polararea-chart", type: "link", active: false, selected: false, title: "Polararea Charts" },
-          // { path: "/charts/apex-charts/slope-chart", type: "link", active: false, selected: false, title: "Slope Charts" },
-        ],
-      },
-      { path: "/charts/chartjs-charts", type: "link", active: false, selected: false, title: "Chartjs Charts" },
-      { path: "/charts/echart-charts", type: "link", active: false, selected: false, title: "Echart Charts" },
-    ],
-  },
-  {
-    title: "Tables", icon: Tableicon, type: "sub", menutitle: "", active: false, selected: false, children: [
-      { path: "/tables/tables", type: "link", active: false, selected: false, title: "Tables" },
-      { path: "/tables/grid-js-tables", type: "link", active: false, selected: false, title: "Grid JS Tables" },
-      { path: "/tables/data-tables", type: "link", active: false, selected: false, title: "Data Tables" },
-    ],
-  },
+  //         { path: "/charts/apex-charts/line-chart", type: "link", active: false, selected: false, title: "Line Charts" },
+  //         { path: "/charts/apex-charts/area-chart", type: "link", active: false, selected: false, title: "Area Charts " },
+  //         { path: "/charts/apex-charts/column-chart", type: "link", active: false, selected: false, title: "Column Charts" },
+  //         { path: "/charts/apex-charts/bar-chart", type: "link", active: false, selected: false, title: "Bar Charts" },
+  //         { path: "/charts/apex-charts/mixed-chart", type: "link", active: false, selected: false, title: "Mixed Charts" },
+  //         { path: "/charts/apex-charts/range-area-chart", type: "link", active: false, selected: false, title: "Range Area Charts" },
+  //         { path: "/charts/apex-charts/timeline-chart", type: "link", active: false, selected: false, title: "Timeline Charts" },
+  //         { path: "/charts/apex-charts/funnel-chart", type: "link", active: false, selected: false, title: "Funnel Charts" },
+  //         { path: "/charts/apex-charts/candlestick-chart", type: "link", active: false, selected: false, title: "CandleStick Charts" },
+  //         { path: "/charts/apex-charts/boxplot-chart", type: "link", active: false, selected: false, title: "Boxplot Charts" },
+  //         { path: "/charts/apex-charts/bubble-chart", type: "link", active: false, selected: false, title: "Bubble Charts" },
+  //         { path: "/charts/apex-charts/scatter-chart", type: "link", active: false, selected: false, title: "Scatter Charts" },
+  //         { path: "/charts/apex-charts/heatmap-chart", type: "link", active: false, selected: false, title: "Heatmap Charts" },
+  //         { path: "/charts/apex-charts/treemap-chart", type: "link", active: false, selected: false, title: "Treemap Charts" },
+  //         { path: "/charts/apex-charts/pie-chart", type: "link", active: false, selected: false, title: "Pie Charts" },
+  //         { path: "/charts/apex-charts/radialbar-chart", type: "link", active: false, selected: false, title: "Radialbar Charts" },
+  //         { path: "/charts/apex-charts/radar-chart", type: "link", active: false, selected: false, title: "Radar Charts" },
+  //         { path: "/charts/apex-charts/polararea-chart", type: "link", active: false, selected: false, title: "Polararea Charts" },
+  //         // { path: "/charts/apex-charts/slope-chart", type: "link", active: false, selected: false, title: "Slope Charts" },
+  //       ],
+  //     },
+  //     { path: "/charts/chartjs-charts", type: "link", active: false, selected: false, title: "Chartjs Charts" },
+  //     { path: "/charts/echart-charts", type: "link", active: false, selected: false, title: "Echart Charts" },
+  //   ],
+  // },
+  // {
+  //   title: "Tables", icon: Tableicon, type: "sub", menutitle: "", active: false, selected: false, children: [
+  //     { path: "/tables/tables", type: "link", active: false, selected: false, title: "Tables" },
+  //     { path: "/tables/grid-js-tables", type: "link", active: false, selected: false, title: "Grid JS Tables" },
+  //     { path: "/tables/data-tables", type: "link", active: false, selected: false, title: "Data Tables" },
+  //   ],
+  // },
 ]

@@ -8,7 +8,7 @@ import CheckoutProductCard from "../cards/checkout-product";
 import PlaceOrderCard from "../cards/place-order";
 import { Country as CountryType } from "@/app/lib/types";
 import CountryNote from "../cart-page/country-note";
-import { updateCheckoutProductstWithLatest } from "@/queries/user";
+import { updateCheckoutProductstWithLatest } from "@/app/queries/user";
 
 interface Props {
   cart: CartWithCartItemsType;

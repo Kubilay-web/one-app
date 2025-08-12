@@ -1,7 +1,7 @@
 import { validateRequest } from "@/app/auth";
 import Input from "@/app/projects/components/store/ui/input";
 import UserButton from "@/app/projects/components/UserButton";
-import { UserInfo } from "@/queries/user";
+import { UserInfo } from "@/app/queries/user";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 

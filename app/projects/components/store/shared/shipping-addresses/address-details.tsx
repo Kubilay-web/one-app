@@ -28,7 +28,7 @@ import {
 import { Input } from "@/app/projects/components/ui/input";
 
 // Queries
-import { upsertShippingAddress } from "@/queries/user";
+import { upsertShippingAddress } from "@/app/queries/user";
 // Utils
 import { v4 } from "uuid";
 import { useToast } from "@/app/projects/components/ui/use-toast";

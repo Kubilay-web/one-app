@@ -2,7 +2,7 @@
 import toast from "react-hot-toast";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { UserInfo } from "@/queries/user";
+import { UserInfo } from "@/app/queries/user";
 
 // SaveQuestion bileşeni
 const SaveQuestion = ({

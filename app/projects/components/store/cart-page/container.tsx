@@ -1,6 +1,6 @@
 "use client";
 
-import { useCartStore } from "@/cart-store/useCartStore";
+import { useCartStore } from "@/app/cart-store/useCartStore";
 import useFromStore from "@/app/hooks/useFromStore";
 import { CartProductType } from "@/app/lib/types";
 import { Country } from "@prisma/client";
@@ -12,7 +12,7 @@ import FastDelivery from "../cards/product/fast-delivery";
 import { SecurityPrivacyCard } from "../product-page/returns-security-privacy-card";
 import EmptyCart from "./empty-cart";
 import Header from "../layout/header/header";
-import { updateCartWithLatest } from "@/queries/user";
+import { updateCartWithLatest } from "@/app/queries/user";
 import CountryNote from "./country-note";
 
 export default function CartContainer({
