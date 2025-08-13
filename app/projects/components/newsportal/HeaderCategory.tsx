@@ -44,7 +44,7 @@ const Header_Category = () => {
 
           <div className="hidden flex-wrap lg:flex">
             <Link
-              className={`px-6 py-[13px] font-medium ${path === "/" ? "bg-[#00000026]" : ""} `}
+              className={`px-6 py-[13px] font-medium ${path === "/news" ? "bg-[#00000026]" : ""} `}
               href={"/news"}
             >
               {" "}
