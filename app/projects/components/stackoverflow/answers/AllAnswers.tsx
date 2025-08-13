@@ -1,6 +1,6 @@
 import React from "react";
 import DataRenderer from "../DataRenderer";
-import { EMPTY_ANSWERS } from "@/constants/states";
+import { EMPTY_ANSWERS } from "@/app/constants/states";
 import AnswerCard from "../cards/AnswerCard";
 
 interface Props extends ActionResponse<Answer[]> {
