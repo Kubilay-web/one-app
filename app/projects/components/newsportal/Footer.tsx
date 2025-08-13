@@ -22,7 +22,8 @@ const Footer = () => {
                 src="/assets/news-portal/assets/logo.png"
                 alt="logo"
               />
-              <h2 className="text-justify text-slate-300">
+
+              <h2 className="text-justify text-slate-300 text-[15px]">
                 Easynews24.com is one of the popular Indian news portal. It has
                 begun with commitment of fearless, investigative, informative
                 and independent journalism. This online portal has started to
