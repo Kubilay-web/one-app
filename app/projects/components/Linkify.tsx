@@ -44,7 +44,7 @@ function LinkifyHashtag({ children }: LinkifyProps) {
       component={(match, key) => (
         <Link
           key={key}
-          href={`/hashtag/${match.slice(1)}`}
+          href={`/social/hashtag/${match.slice(1)}`}
           className="text-primary hover:underline"
         >
           {match}

@@ -13,16 +13,13 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment, useRef, useState } from "react";
 import SimpleBar from "simplebar-react";
-import useInitializeChatClient from "./useInitializeChatClient";
+import useInitializeChatClient from "../messages/useInitializeChatClient";
 import { useTheme } from "next-themes";
 import { Loader2 } from "lucide-react";
 import { MessageInput, MessageList, Chat as StreamChat } from "stream-chat-react";
 import ChatSidebar from "../messages/ChatSidebar";
 
 const Chat = () => {
-
-
-
 
   const [activeUser, setActiveUser] = useState({
     name: "Emma Johnson",

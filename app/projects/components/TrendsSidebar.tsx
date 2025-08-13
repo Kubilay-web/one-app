@@ -73,7 +73,7 @@ async function WhoToFollow() {
         <div key={user.id} className="flex items-center justify-between gap-3">
           <UserTooltip user={user}>
             <Link
-              href={`/users/${user.username}`}
+              href={`/social/users/${user.username}`}
               className="flex items-center gap-3"
             >
               <UserAvatar avatarUrl={user.avatarUrl} className="flex-none" />
@@ -149,7 +149,7 @@ async function TrendingTopics() {
         const title = hashtag.split("#")[1]; // Remove the "#" symbol
 
         return (
-          <Link key={title} href={`/hashtag/${title}`} className="block">
+          <Link key={title} href={`/social/hashtag/${title}`} className="block">
             <p
               className="line-clamp-1 break-all font-semibold hover:underline"
               title={hashtag}

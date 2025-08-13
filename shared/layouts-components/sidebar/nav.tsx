@@ -290,6 +290,7 @@ export const MENUITEMS: any = [
         ]
       },
      { path: "/social", type: "link", active: false, selected: false, title: "Social" },
+      { path: "/forum", type: "link", active: false, selected: false, title: "Forum" },
       { path: "/pages/chat", type: "link", active: false, selected: false, title: "Chat" },
       {
         title: "Email", type: "sub", active: false, children: [

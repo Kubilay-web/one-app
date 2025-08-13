@@ -4,7 +4,7 @@ import { cn } from "@/app/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { Button } from "./ui/button";
-import { formUrlQuery } from "@/lib/url";
+import { formUrlQuery } from "@/app/lib/url";
 
 interface Props {
   page: number | undefined | string;
