@@ -13,7 +13,6 @@ import router from "next/router";
 import { useSession } from "@/app/SessionProvider";
 
 const Header = ({ local_varaiable, ThemeChanger }: any) => {
-
   const { user } = useSession();
   const queryClient = useQueryClient(); // React Query Client
   let { basePath } = nextConfig;
@@ -529,10 +528,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
 
               <div className="header-element">
                 <div className="horizontal-logo">
-                  <div
-                    
-                    className="header-logo relative"
-                  >
+                  <div className="header-logo relative">
                     <img
                       src={`${
                         process.env.NODE_ENV === "production" ? basePath : ""
@@ -540,14 +536,19 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       alt="logo"
                       className="desktop-logo"
                     />
-                    <Image
-                      fill
-                      src={`${
-                        process.env.NODE_ENV === "production" ? basePath : ""
-                      }/assets/images/brand-logos/toggle-logo.png`}
-                      alt="logo"
-                      className="toggle-logo"
-                    />
+
+                    <div style={{ width: "90px", height: "auto" }}>
+                      <Image
+                        fill
+                        src={`${
+                          process.env.NODE_ENV === "production" ? basePath : ""
+                        }/assets/images/logo.png`}
+                        alt="logo"
+                        className="toggle-logo"
+                        style={{ objectFit: "contain" }} // or 'cover', depending on the effect you want
+                      />
+                    </div>
+
                     <Image
                       fill
                       src={`${
@@ -1316,7 +1317,9 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                 </button>
 
                 <div className="xl:block hidden dropdown-profile">
-                  <span className="font-medium leading-none">{user.username}</span>
+                  <span className="font-medium leading-none">
+                    {user.username}
+                  </span>
                 </div>
 
                 <ul className="main-header-dropdown ti-dropdown-menu hs-dropdown-menu !w-[11rem] hidden pt-0 overflow-hidden header-profile-dropdown">
