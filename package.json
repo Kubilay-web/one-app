@@ -197,6 +197,7 @@
     "ts-node": "^10.9.2",
     "uploader": "^3.48.3",
     "uploadthing": "^6.13.2",
+    "use-onclickoutside": "^0.4.1",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
     "wavesurfer.js": "^7.10.1",

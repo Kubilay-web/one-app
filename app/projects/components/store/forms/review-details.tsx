@@ -19,7 +19,7 @@ import Input from "../ui/input";
 import { Button } from "../ui/button";
 import { PulseLoader } from "react-spinners";
 import ImageUploadStore from "../shared/upload-images";
-import { upsertReview } from "@/queries/review";
+import { upsertReview } from "@/app/queries/review";
 
 export default function ReviewDetails({
   productId,

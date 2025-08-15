@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
 import { redirect } from "next/navigation";
-import SessionProvider from "../SessionProvider";
+import SessionProvider from "@/app/SessionProvider";
 
 export default async function Layout({
   children,

@@ -6,6 +6,7 @@ export const Ecommercemenuitems = [
     children: [
       { type: 'link', title: 'Shop', path: '/ecommerce/customer/shop', active: false, selected: false, icon: '', dirchange: '' },
       { type: 'link', title: 'Product Details', path: '/ecommerce/customer/product-details/', active: false, selected: false, icon: '', dirchange: '' },
+      { type: 'link', title: 'Browse', path: '/ecommerce/customer/browse/', active: false, selected: false, icon: '', dirchange: '' },
       { type: 'link', title: 'Wishlist', path: '/ecommerce/customer/wishlist', active: false, selected: false, icon: '', dirchange: '' },
       { type: 'link', title: 'Cart', path: '/ecommerce/customer/cart', active: false, selected: false, icon: '', dirchange: '' },
       { type: 'link', title: 'Coupons', path: '/ecommerce/customer/coupons', active: false, selected: false, icon: '', dirchange: '' },

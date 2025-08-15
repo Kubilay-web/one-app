@@ -1,10 +1,10 @@
 "use client";  // This ensures the component is rendered on the client-side
 
 import { useEffect, useState } from "react";
-import ProductFilters from "../projects/components/store/browse-page/filters";
-import ProductSort from "../projects/components/store/browse-page/sort";
-import ProductCard from "../projects/components/store/cards/product/product-card";
-import Header from "../projects/components/store/layout/header/header";
+import ProductFilters from "@/app/projects/components/store/browse-page/filters";
+import ProductSort from "@/app/projects/components/store/browse-page/sort";
+import ProductCard from "@/app/projects/components/store/cards/product/product-card";
+import Header from "@/app/projects/components/store/layout/header/header";
 import { FiltersQueryType } from "@/app/lib/types";
 import { getProducts } from "@/app/queries/product";
 import { getFilteredSizes } from "@/app/queries/size";

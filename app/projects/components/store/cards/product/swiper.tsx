@@ -41,7 +41,7 @@ export default function ProductCardImageSwiper({
           // Using `index` as a fallback key if `img.id` is not available
           <SwiperSlide key={img.id || index}> 
             <Image
-              src={img.image}
+              src={img.url}
               alt="Product image"
               width={400}
               height={400}

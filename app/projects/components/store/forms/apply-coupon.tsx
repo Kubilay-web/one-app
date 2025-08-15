@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
-import { applyCoupon } from "@/queries/coupon";
+import { applyCoupon } from "@/app/queries/coupon";
 
 export default function ApplyCouponForm({
   cartId,

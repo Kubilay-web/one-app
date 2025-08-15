@@ -565,6 +565,8 @@ const Landingsidebar = ({ ThemeChanger }: any) => {
                                             <span className="side-menu__label">Shop</span>
                                         </Link>
                                     </li>
+
+                                    
                                     {/*<!-- End::slide -->*/}
                                     {/*<!-- Start::slide -->*/}
                                     <li className="slide has-sub">
