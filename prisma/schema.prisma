@@ -77,6 +77,11 @@ model User {
   CollectionForum CollectionForum[]
   Interaction InteractionForum[]
   Writer Writer[]
+  
+
+  sentMessages Messages[] @relation("sentMessages")
+  receivedMessages Messages[] @relation("receivedMessages")
+  OnlineUser OnlineUser[]
 }
 
 
@@ -1858,13 +1863,34 @@ model Image {
 
 
 
+model Messages {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderId        String   
+  receiverId      String  
+  sender          User     @relation("sentMessages", fields: [senderId], references: [id])
+  receiver        User     @relation("receivedMessages", fields: [receiverId], references: [id])
+  type            MessageType  @default(text)
+  message         String
+  messageStatus   String   @default("sent")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum MessageType {
+  text
+  image
+  video
+  audio   
+}
 
 
-
-
-
-
-
+model OnlineUser {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @unique
+  socketId    String
+  connectedAt DateTime @default(now())
+    user       User     @relation(fields: [userId], references: [id])
+}
 
 
 
