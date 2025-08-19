@@ -626,12 +626,12 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
 			<aside ref={sidebarRef} className={`app-sidebar ${isSticky ? "sticky-pin" : ""}`} id="sidebar" onMouseOver={() => Onhover()} onMouseLeave={() => Outhover()}>
 				<div className="main-sidebar-header">
 					<div  className="header-logo relative">
-						<Image fill src="/assets/images/logo.png " alt="logo" className="desktop-logo" />
-						<Image fill src="/assets/images/logo.png " alt="logo" className="toggle-logo" />
-						<Image fill src="/assets/images/logo.png " alt="logo" className="desktop-dark" />
-						<Image fill src="/assets/images/logo.png " alt="logo" className="toggle-dark" />
-						<Image fill src="/assets/images/logo.png " alt="logo" className="desktop-white" />
-						<Image fill src="/assets/images/logo.png " alt="logo" className="toggle-white" />
+						<Image fill src="/assets/images/logo.png" alt="logo" className="desktop-logo" />
+						<Image fill src="/assets/images/logo.png" alt="logo" className="toggle-logo" />
+						<Image fill src="/assets/images/logo.png" alt="logo" className="desktop-dark" />
+						<Image fill src="/assets/images/logo.png" alt="logo" className="toggle-dark" />
+						<Image fill src="/assets/images/logo.png" alt="logo" className="desktop-white" />
+						<Image fill src="/assets/images/logo.png" alt="logo" className="toggle-white" />
 					</div>
 				</div>
 				<SimpleBar ref={mainContainerRef} className="main-sidebar" id="sidebar-scroll">
