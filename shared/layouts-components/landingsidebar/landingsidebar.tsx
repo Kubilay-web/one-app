@@ -122,8 +122,8 @@ const Landingsidebar = ({ ThemeChanger }: any) => {
                                 <div className="landing-logo-container">
                                     <div className="horizontal-logo">
                                         <Link scroll={false} href="/dashboards/sales" className="header-logo relative">
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-logo.png  `} alt="logo" className="desktop-logo !block" />
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-dark.png  `} alt="logo" className="desktop-dark" />
+                                            <Image fill src="/assets/images/logo.png " alt="logo" className="desktop-logo !block" />
+                                            <Image fill src="/assets/images/logo.png " alt="logo" className="desktop-dark" />
                                         </Link>
                                     </div>
                                 </div>
@@ -335,8 +335,8 @@ const Landingsidebar = ({ ThemeChanger }: any) => {
                                 <div className="landing-logo-container">
                                     <div className="horizontal-logo">
                                         <Link scroll={false} href="/dashboards/sales" className="header-logo relative">
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-logo.png  `} alt="logo" className="desktop-logo !block" />
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-dark.png  `} alt="logo" className="desktop-dark" />
+                                            <Image src="/assets/images/logo.png " alt="logo" className="desktop-logo !block" />
+                                            <Image src="/assets/images/logo.png " alt="logo" className="desktop-dark" />
                                         </Link>
                                     </div>
                                 </div>
@@ -537,8 +537,8 @@ const Landingsidebar = ({ ThemeChanger }: any) => {
                                 <div className="landing-logo-container">
                                     <div className="horizontal-logo">
                                         <Link scroll={false} href="/dashboards/sales" className="header-logo relative">
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-logo.png  `} alt="logo" className="desktop-logo !block" />
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-dark.png  `} alt="logo" className="desktop-dark" />
+                                            <Image src="/assets/images/logo.png " alt="logo" className="desktop-logo !block" />
+                                            <Image src="/assets/images/logo.png " alt="logo" className="desktop-dark" />
                                         </Link>
                                     </div>
                                 </div>
@@ -717,8 +717,8 @@ const Landingsidebar = ({ ThemeChanger }: any) => {
                                 <div className="landing-logo-container">
                                     <div className="horizontal-logo">
                                         <Link scroll={false} href="/dashboards/sales" className="header-logo relative">
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-logo.png  `} alt="logo" className="desktop-logo !block" />
-                                            <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/desktop-dark.png  `} alt="logo" className="desktop-dark" />
+                                            <Image src="/assets/images/logo.png " alt="logo" className="desktop-logo !block" />
+                                            <Image src="/assets/images/logo.png " alt="logo" className="desktop-dark" />
                                         </Link>
                                     </div>
                                 </div>
