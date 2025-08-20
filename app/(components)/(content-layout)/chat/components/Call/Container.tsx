@@ -198,8 +198,10 @@ export default function Container({ data }: ContainerProps) {
         </div>
       )}
 
+      {/* Remote video */}
       <div className="my-5 relative w-full h-[70vh]" id="remote-video"></div>
 
+      {/* Local video */}
       <div
         className="absolute bottom-5 right-5 w-32 h-28"
         id="local-video"
