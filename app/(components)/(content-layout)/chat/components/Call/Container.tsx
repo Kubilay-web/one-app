@@ -24,6 +24,7 @@ export default function Container({ data }: ContainerProps) {
 
   if (!data) return null;
 
+  // Çağrı kabul durumu
   useEffect(() => {
     if (data.type === "out going") {
       const onAcceptCall = () => setCallAccepted(true);
@@ -37,6 +38,7 @@ export default function Container({ data }: ContainerProps) {
     }
   }, [data, socket]);
 
+  // Token alma
   useEffect(() => {
     async function fetchToken() {
       try {
@@ -53,6 +55,7 @@ export default function Container({ data }: ContainerProps) {
     fetchToken();
   }, [user.id]);
 
+  // Zego başlatma
   useEffect(() => {
     if (!token) return;
 
@@ -73,7 +76,7 @@ export default function Container({ data }: ContainerProps) {
         { userUpdate: true }
       );
 
-      // Create local stream with proper constraints
+      // Local stream oluştur
       const local = await engine.createStream({
         camera: {
           audio: true,
@@ -82,9 +85,7 @@ export default function Container({ data }: ContainerProps) {
       });
       setLocalStream(local);
 
-      console.log("local", local);
-
-      // Render local video element
+      // Local video render
       const localContainer = document.getElementById("local-video");
       if (localContainer) {
         localContainer.innerHTML = "";
@@ -92,30 +93,32 @@ export default function Container({ data }: ContainerProps) {
         localVideo.id = "video-local-zego";
         localVideo.className = "h-28 w-32 rounded-md";
         localVideo.autoplay = true;
-        localVideo.muted = true; // Muted to avoid echo
+        localVideo.muted = true;
         localVideo.playsInline = true;
         localVideo.srcObject = local;
         localContainer.appendChild(localVideo);
       }
 
-      const streamId = "stream-" + Date.now();
+      // Yayın başlat
+      const streamId = "stream-" + user.id + "-" + Date.now();
       setPublishStreamId(streamId);
       await engine.startPublishingStream(streamId, local);
 
+      // Remote stream listener
       engine.on("roomStreamUpdate", async (roomId, updateType, streamList) => {
         const remoteContainer = document.getElementById("remote-video");
         if (!remoteContainer) return;
 
         if (updateType === "ADD" && streamList.length > 0) {
-          // Clear old video elements
-          remoteContainer.innerHTML = "";
-
           for (const streamInfo of streamList) {
+            if (streamInfo.streamID === streamId) continue; // Kendi yayını ekleme
+
             const remoteVideo = document.createElement("video");
             remoteVideo.id = `remote-video-${streamInfo.streamID}`;
             remoteVideo.autoplay = true;
             remoteVideo.playsInline = true;
-            remoteVideo.className = "rounded-md max-w-full max-h-[70vh]";
+            remoteVideo.className =
+              "rounded-md max-w-full max-h-[70vh] object-cover";
 
             remoteContainer.appendChild(remoteVideo);
 
@@ -145,6 +148,7 @@ export default function Container({ data }: ContainerProps) {
         }
       });
     }
+
     startCall();
 
     return () => {
@@ -156,6 +160,7 @@ export default function Container({ data }: ContainerProps) {
     };
   }, [token, data, user, endCallStore]);
 
+  // Çağrıyı bitirme
   const endCall = async () => {
     if (zg && localStream && publishStreamId) {
       zg.destroyStream(localStream);
@@ -163,7 +168,6 @@ export default function Container({ data }: ContainerProps) {
       await zg.logoutRoom(data.roomId.toString());
     }
 
-    // Burada data.id yerine user.id veya data.from (varsa) kullan
     const fromId = user.id || data.from || data.id;
 
     if (data.callType === "voice")
@@ -176,7 +180,7 @@ export default function Container({ data }: ContainerProps) {
   };
 
   return (
-    <div className="border-colors-conversation-border border-l w-full bg-colors-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white">
+    <div className="border-colors-conversation-border border-l w-full bg-colors-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white relative">
       <div className="flex flex-col gap-3 items-center">
         <span className="text-5xl">{data.displayName}</span>
         <span className="text-lg">
@@ -199,11 +203,14 @@ export default function Container({ data }: ContainerProps) {
       )}
 
       {/* Remote video */}
-      <div className="my-5 relative w-full h-[70vh]" id="remote-video"></div>
+      <div
+        className="my-5 relative w-full h-[70vh] flex justify-center items-center bg-black"
+        id="remote-video"
+      ></div>
 
       {/* Local video */}
       <div
-        className="absolute bottom-5 right-5 w-32 h-28"
+        className="absolute bottom-5 right-5 w-32 h-28 bg-black"
         id="local-video"
       ></div>
 
