@@ -198,14 +198,17 @@ export default function Container({ data }: ContainerProps) {
         </div>
       )}
 
-      {/* Remote video */}
+      {/* Local video 1 */}
+      <div className="my-5 relative w-full h-[70vh]" id="local-video"></div>
+
+      {/* Remote video 1 */}
       <div className="my-5 relative w-full h-[70vh]" id="remote-video"></div>
 
-      {/* Local video */}
-      <div
-        className="absolute bottom-5 right-5 w-32 h-28"
-        id="local-video"
-      ></div>
+      {/* Local video 2 (for second camera or different layout) */}
+      <div className="absolute bottom-5 right-5 w-32 h-28" id="local-video2"></div>
+
+      {/* Remote video 2 (for second camera or different layout) */}
+      <div className="absolute bottom-5 left-5 w-32 h-28" id="remote-video2"></div>
 
       <div className="my-8 flex justify-center w-full">
         <button
