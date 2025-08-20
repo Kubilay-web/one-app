@@ -56,10 +56,6 @@ const LandingPage = () => {
     <Fragment>
       {/* <!-- Start::app-content --> */}
       <div className="main-content landing-main ecommerce-main">
-        {products.map((product, i) => (
-          <ProductCard key={i} product={product} />
-        ))}
-
         {/* <!-- Start:: Section-1 --> */}
         <section className="section-sm relative">
           <div className="container main-banner-container">

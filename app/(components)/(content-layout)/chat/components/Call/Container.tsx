@@ -11,10 +11,10 @@ interface ContainerProps {
   data: any;
 }
 
-function Container({ data }: ContainerProps) {
+export default function Container({ data }: ContainerProps) {
   const { user } = useSession();
-  const socket = useChatStore((state: { socket: any }) => state.socket);
-  const endCallStore = useChatStore((state: { endCall: any }) => state.endCall);
+  const socket = useChatStore((state) => state.socket);
+  const endCallStore = useChatStore((state) => state.endCall);
 
   const [callAccepted, setCallAccepted] = useState(false);
   const [token, setToken] = useState<string>();
@@ -24,51 +24,48 @@ function Container({ data }: ContainerProps) {
 
   if (!data) return null;
 
-  // Çağrı kabul
   useEffect(() => {
     if (data.type === "out going") {
-      socket?.on("accept-call", () => setCallAccepted(true));
+      const onAcceptCall = () => setCallAccepted(true);
+      socket?.on("accept-call", onAcceptCall);
+      return () => {
+        socket?.off("accept-call", onAcceptCall);
+      };
     } else {
-      setTimeout(() => setCallAccepted(true), 1000);
+      const timeout = setTimeout(() => setCallAccepted(true), 1000);
+      return () => clearTimeout(timeout);
     }
   }, [data, socket]);
 
-  // Token al
   useEffect(() => {
-    const getToken = async () => {
+    async function fetchToken() {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/chat/zego/token/${user.id}`
         );
         const json = await res.json();
-
-        console.log("json",json)
         if (json.token) setToken(json.token);
         else console.error("Token alınamadı:", json);
-      } catch (error) {
-        console.error(error);
+      } catch (e) {
+        console.error(e);
       }
-    };
-    getToken();
+    }
+    fetchToken();
   }, [user.id]);
 
-  // Çağrıyı başlat
   useEffect(() => {
     if (!token) return;
 
-    const startCall = async () => {
+    async function startCall() {
       const appId = Number(process.env.NEXT_PUBLIC_ZEGO_APP_ID);
-      const serverSecret = process.env.NEXT_PUBLIC_ZEGO_SERVER_SECRET || "";
-
       if (!appId || appId <= 0) {
         console.error("Geçersiz Zego AppID");
         return;
       }
 
-      const engine = new ZegoExpressEngine(appId, serverSecret);
+      const engine = new ZegoExpressEngine(appId);
       setZg(engine);
 
-      // Odaya giriş
       await engine.loginRoom(
         data.roomId.toString(),
         token,
@@ -76,7 +73,7 @@ function Container({ data }: ContainerProps) {
         { userUpdate: true }
       );
 
-      // Local stream
+      // Create local stream with proper constraints
       const local = await engine.createStream({
         camera: {
           audio: true,
@@ -85,61 +82,94 @@ function Container({ data }: ContainerProps) {
       });
       setLocalStream(local);
 
-      // Local videoyu ekle
-      const localContainer = document.getElementById("local-audio");
+      console.log("local", local);
+
+      // Render local video element
+      const localContainer = document.getElementById("local-video");
       if (localContainer) {
+        localContainer.innerHTML = "";
         const localVideo = document.createElement("video");
         localVideo.id = "video-local-zego";
-        localVideo.className = "h-28 w-32";
+        localVideo.className = "h-28 w-32 rounded-md";
         localVideo.autoplay = true;
-        localVideo.muted = true;
+        localVideo.muted = true; // Muted to avoid echo
         localVideo.playsInline = true;
         localVideo.srcObject = local;
         localContainer.appendChild(localVideo);
       }
 
-      // Yayınla
       const streamId = "stream-" + Date.now();
       setPublishStreamId(streamId);
       await engine.startPublishingStream(streamId, local);
 
-      // Remote stream eventleri
       engine.on("roomStreamUpdate", async (roomId, updateType, streamList) => {
         const remoteContainer = document.getElementById("remote-video");
+        if (!remoteContainer) return;
 
-        if (updateType === "ADD" && streamList.length && remoteContainer) {
-          const remoteVideo = document.createElement("video");
-          remoteVideo.id = streamList[0].streamID;
-          remoteVideo.autoplay = true;
-          remoteVideo.playsInline = true;
-          remoteContainer.appendChild(remoteVideo);
+        if (updateType === "ADD" && streamList.length > 0) {
+          // Clear old video elements
+          remoteContainer.innerHTML = "";
 
-          const stream = await engine.startPlayingStream(streamList[0].streamID);
-          remoteVideo.srcObject = stream;
+          for (const streamInfo of streamList) {
+            const remoteVideo = document.createElement("video");
+            remoteVideo.id = `remote-video-${streamInfo.streamID}`;
+            remoteVideo.autoplay = true;
+            remoteVideo.playsInline = true;
+            remoteVideo.className = "rounded-md max-w-full max-h-[70vh]";
+
+            remoteContainer.appendChild(remoteVideo);
+
+            try {
+              const stream = await engine.startPlayingStream(
+                streamInfo.streamID
+              );
+              remoteVideo.srcObject = stream;
+            } catch (error) {
+              console.error("Stream oynatma hatası:", error);
+            }
+          }
         }
 
-        if (updateType === "DELETE" && streamList[0]) {
-          engine.stopPlayingStream(streamList[0].streamID);
-          engine.logoutRoom(data.roomId.toString());
+        if (updateType === "DELETE" && streamList.length > 0) {
+          for (const streamInfo of streamList) {
+            await engine.stopPlayingStream(streamInfo.streamID);
+            const videoElement = document.getElementById(
+              `remote-video-${streamInfo.streamID}`
+            );
+            if (videoElement && videoElement.parentNode) {
+              videoElement.parentNode.removeChild(videoElement);
+            }
+          }
+          await engine.logoutRoom(data.roomId.toString());
           endCallStore();
         }
       });
-    };
-
+    }
     startCall();
+
+    return () => {
+      if (zg && localStream && publishStreamId) {
+        zg.destroyStream(localStream);
+        zg.stopPublishingStream(publishStreamId);
+        zg.logoutRoom(data.roomId.toString());
+      }
+    };
   }, [token, data, user, endCallStore]);
 
-  const endCall = () => {
+  const endCall = async () => {
     if (zg && localStream && publishStreamId) {
       zg.destroyStream(localStream);
-      zg.stopPublishingStream(publishStreamId);
-      zg.logoutRoom(data.roomId.toString());
+      await zg.stopPublishingStream(publishStreamId);
+      await zg.logoutRoom(data.roomId.toString());
     }
 
+    // Burada data.id yerine user.id veya data.from (varsa) kullan
+    const fromId = user.id || data.from || data.id;
+
     if (data.callType === "voice")
-      socket?.emit("reject-voice-call", { from: data.id });
+      socket?.emit("reject-voice-call", { from: fromId });
     else if (data.callType === "video")
-      socket?.emit("reject-video-call", { from: data.id });
+      socket?.emit("reject-video-call", { from: fromId });
 
     endCallStore();
     setCallAccepted(false);
@@ -150,7 +180,9 @@ function Container({ data }: ContainerProps) {
       <div className="flex flex-col gap-3 items-center">
         <span className="text-5xl">{data.displayName}</span>
         <span className="text-lg">
-          {callAccepted && data.callType !== "video" ? "On going call" : "Calling"}
+          {callAccepted && data.callType !== "video"
+            ? "On going call"
+            : "Calling"}
         </span>
       </div>
 
@@ -166,9 +198,12 @@ function Container({ data }: ContainerProps) {
         </div>
       )}
 
-      <div className="my-5 relative" id="remote-video">
-        <div className="absolute bottom-5 right-5" id="local-audio"></div>
-      </div>
+      <div className="my-5 relative w-full h-[70vh]" id="remote-video"></div>
+
+      <div
+        className="absolute bottom-5 right-5 w-32 h-28"
+        id="local-video"
+      ></div>
 
       <div className="my-8 flex justify-center w-full">
         <button
@@ -181,5 +216,3 @@ function Container({ data }: ContainerProps) {
     </div>
   );
 }
-
-export default Container;

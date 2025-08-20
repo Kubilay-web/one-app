@@ -133,7 +133,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   connectSocket: (userId) => {
     if (get().socket) return;
 
-    const socket = io("https://one-app-wheat.vercel.app/api/express", {
+    const socket = io("https://chat-backend-05d7.onrender.com", {
       transports: ["websocket", "polling"],
     });
 
