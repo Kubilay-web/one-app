@@ -1288,7 +1288,7 @@ export const MENUITEMS: any = [
         title: "Social",
       },
       {
-        path: "/social/chat",
+        path: "/chat",
         type: "link",
         active: false,
         selected: false,
