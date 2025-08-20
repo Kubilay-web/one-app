@@ -30,13 +30,11 @@ function SearchBar() {
         <input
           type="text"
           placeholder="Search or start a new chat"
-          className="bg-transparent text-sm focus:outline-none text-white placeholder-red-200 w-full border-none"
-          value={query}
-          onChange={handleChange}
+          className="bg-transparent text-sm focus:outline-none w-full border-none
+           !text-white placeholder:text-white placeholder:opacity-100"
         />
       </div>
       <BsFilter className="text-panel-header-icon text-white cursor-pointer text-lg pr-5 pl-3" />
-
     </div>
   );
 }

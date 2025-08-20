@@ -20,6 +20,7 @@ function MessageBar() {
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ yeni state
   const emojiPickerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ function MessageBar() {
     if (!message.trim() && !file) return;
     if (!activeChat) return;
 
+    setLoading(true); // ✅ loading başlat
     try {
       const formData = new FormData();
       formData.append("from", user.id);
@@ -139,6 +141,8 @@ function MessageBar() {
       }
     } catch (err) {
       console.error("Error sending message:", err);
+    } finally {
+      setLoading(false); // ✅ loading durdur
     }
   };
 
@@ -214,14 +218,19 @@ function MessageBar() {
           placeholder="Type a message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="bg-colors-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-4 py-2 w-full border-none"
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          className="bg-colors-input-background text-sm focus:outline-none h-10 rounded-lg px-4 py-2 w-full border-none 
+                     !text-white placeholder:text-white placeholder:opacity-100"
         />
 
-        <MdSend
-          onClick={sendMessage}
-          className="text-colors-panel-header-icon cursor-pointer text-3xl"
-        />
+        {loading ? (
+          <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-white border-solid"></div>
+        ) : (
+          <MdSend
+            onClick={sendMessage}
+            className="text-colors-panel-header-icon cursor-pointer text-3xl"
+          />
+        )}
       </div>
     </div>
   );
