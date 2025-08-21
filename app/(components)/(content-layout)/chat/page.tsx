@@ -93,7 +93,7 @@ export default function Page() {
       setIncomingVideoCall(callData);
     };
 
-    // reddedildi/iptal/bitme -> tek fonksiyon
+
     const handleRejectedVoice = () => endCall();
     const handleRejectedVideo = () => endCall();
     const handleCanceledVoice = () => endCall();

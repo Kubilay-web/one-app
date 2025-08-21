@@ -530,9 +530,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                 <div className="horizontal-logo">
                   <div className="header-logo relative">
                     <img
-                      src={`${
-                        process.env.NODE_ENV === "production" ? basePath : ""
-                      }/assets/images/brand-logos/desktop-logo.png`}
+                      src="/assets/images/logo.png"
                       alt="logo"
                       className="desktop-logo"
                     />
@@ -540,9 +538,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     <div style={{ width: "90px", height: "auto" }}>
                       <Image
                         fill
-                        src={`${
-                          process.env.NODE_ENV === "production" ? basePath : ""
-                        }/assets/images/logo.png`}
+                        src="/assets/images/logo.png"
                         alt="logo"
                         className="toggle-logo"
                         style={{ objectFit: "contain" }} // or 'cover', depending on the effect you want
@@ -551,9 +547,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
 
                     <Image
                       fill
-                      src={`${
-                        process.env.NODE_ENV === "production" ? basePath : ""
-                      }/assets/images/brand-logos/desktop-dark.png`}
+                      src="/assets/images/logo.png"
                       alt="logo"
                       className="desktop-dark"
                     />

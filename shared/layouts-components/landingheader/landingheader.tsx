@@ -32,7 +32,7 @@ const Landingheader = ({ ThemeChanger }: any) => {
                         <div className="header-element">
                             <div className="horizontal-logo">
                                 <Link scroll={false} href="/dashboards/sales/" className="header-logo relative">
-                                    <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/toggle-logo.png`} alt="logo" className="toggle-logo" />
+                                    <Image fill  src="/assets/images/logo.png" alt="logo" className="toggle-logo" />
                                     <Image fill src={`${process.env.NODE_ENV === "production" ? basePath : ""}/assets/images/brand-logos/toggle-dark.png`} alt="logo" className="toggle-dark" />
                                 </Link>
                             </div>
