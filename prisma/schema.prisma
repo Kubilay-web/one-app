@@ -1333,6 +1333,7 @@ model Jobs {
   Jobbookmark Jobbookmark[]
 
   Applyjob Applyjob[]
+  
 }
 
 
@@ -1891,6 +1892,9 @@ model OnlineUser {
   connectedAt DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id])
 }
+
+
+
 
 
 

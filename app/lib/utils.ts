@@ -435,3 +435,16 @@ export const formatNumbers = (number: number) => {
     return number.toString();
   }
 };
+
+
+
+export function formatMoney(amount:number){
+  return new Intl.NumberFormat("en-Us",{
+    style:"currency",
+    currency:"USD"
+  }).format(amount)
+}
+
+export function relativeDate(from:Date){
+return formatDistanceToNowStrict(from,{addSuffix:true})
+}
