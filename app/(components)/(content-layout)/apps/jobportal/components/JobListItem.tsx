@@ -1,58 +1,68 @@
-import React from "react";
-import { Job } from "@prisma/client";
-import Image from "next/image";
-import companylogoPlaceholder from "@/public/assets/company-logo-placeholder.png";
+import companyLogoPlaceholder from "@/public/assets/company-logo-placeholder.png";
+import { formatMoney, relativeDate } from "../lib/utils";
+import { Jobs, Company, Jobtype, City, CountryJob } from "@prisma/client";
 import { Banknote, Briefcase, Clock, Globe2, MapPin } from "lucide-react";
-import { formatMoney, relativeDate } from "@/app/lib/utils";
+import Image from "next/image";
 import Badge from "./Badge";
 
+type JobWithRelations = Jobs & {
+  company?: Company | null;
+  job_type?: Jobtype | null;
+  city?: City | null;
+  country?: CountryJob | null;
+};
+
 interface JobListItemProps {
-  job: Job & {
-    job_type?: { name: string }; // job_type nesnesinin name özelliğini de al
-    job_category?: { name: string }; // job_category nesnesinin name özelliğini de al
-    job_role?: { name: string }; // job_role nesnesinin name özelliğini de al
-  };
+  job: JobWithRelations;
 }
 
-export default function JobListItem({
-  job: {
+export default function JobListItem({ job }: JobListItemProps) {
+  const {
     title,
-    companyName,
+    company,
     job_type,
-    locationType,
-    address,
+    city,
+    country,
     min_salary,
     max_salary,
-    companyLogoUrl,
     createdAt,
-  },
-}: JobListItemProps) {
+  } = job;
+
+  const companyName = company?.name || "Şirket Belirtilmemiş";
+  const companyLogoUrl = company?.logoSecureUrl || companyLogoPlaceholder;
+  const typeName = job_type?.name || "Belirtilmemiş";
+  const location = city?.name || country?.name || "Lokasyon Yok";
+  const salary =
+    min_salary && max_salary
+      ? `${formatMoney(min_salary)} - ${formatMoney(max_salary)}`
+      : "Maaş Belirtilmemiş";
+
   return (
-    <article className="flex gap-3 border border-gray-500 rounded-lg p-5 hover:bg-slate-200">
+    <article className="flex gap-3 rounded-lg border-4 p-5 hover:bg-muted/60">
       <Image
-        src={companyLogoUrl || companylogoPlaceholder}
-        alt="company logo"
-        width="100"
-        height="100"
-        className="rounded-lg self-center"
+        src={companyLogoUrl}
+        alt={`${companyName} logo`}
+        width={100}
+        height={100}
+        className="self-center rounded-lg"
       />
       <div className="flex-grow space-y-3">
         <div>
           <h2 className="text-xl font-medium">{title}</h2>
-          <p className="text-textmuted">{companyName}</p>
+          <p className="text-muted-foreground">{companyName}</p>
         </div>
         <div className="text-muted-foreground">
-          <p className="flex items-center gap-1.5">
-            <MapPin size={16} className="shrink-0" />
-            {address}
+          <p className="flex items-center gap-1.5 sm:hidden">
+            <Briefcase size={16} className="shrink-0" />
+            {typeName}
           </p>
           <p className="flex items-center gap-1.5">
-            <Globe2 size={16} className="shrink-0" />
-            {address || "worldwide"}
+            <MapPin size={16} className="shrink-0" />
+            {location}
           </p>
           <p className="flex items-center gap-1.5">
             <Banknote size={16} className="shrink-0" />
-            {formatMoney(min_salary)} - {formatMoney(max_salary)}
+            {salary}
           </p>
           <p className="flex items-center gap-1.5 sm:hidden">
             <Clock size={16} className="shrink-0" />
@@ -60,9 +70,9 @@ export default function JobListItem({
           </p>
         </div>
       </div>
-      <div className="hidden sm:flex flex-col shrink-0 items-end justify-between">
-        {/* <Badge>{job_type?.name}</Badge>  */}
-        <span className="flex items-center gap-1.5 text-textmuted">
+      <div className="hidden shrink-0 flex-col items-end justify-between sm:flex">
+        <Badge>{typeName}</Badge>
+        <span className="flex items-center gap-1.5 text-muted-foreground">
           <Clock size={16} />
           {relativeDate(createdAt)}
         </span>

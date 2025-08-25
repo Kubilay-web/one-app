@@ -1,4 +1,4 @@
-import citiesList from "../cities-list";
+import citiesList from "../lib/cities-list";
 import { forwardRef, useMemo, useState } from "react";
 import { Input } from "./ui/input";
 

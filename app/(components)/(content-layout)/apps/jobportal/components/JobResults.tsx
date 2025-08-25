@@ -1,12 +1,10 @@
+import prisma from "@/app/lib/prisma";
 import { cn } from "@/app/lib/utils";
-import { JobFilterValues } from "../validation";
+import { JobFilterValues } from "../lib/validation";
+import { Jobs, Prisma } from "@prisma/client";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import JobListItem from "./JobListItem";
-import { MongoClient } from "mongodb";
-
-const MONGO_URI = process.env.DATABASE_URL || "mongodb://localhost:27017";
-const DB_NAME = "jobportal";
 
 interface JobResultsProps {
   filterValues: JobFilterValues;
@@ -14,57 +12,81 @@ interface JobResultsProps {
 }
 
 export default async function JobResults({
-  filterValues,
+  filterValues = { q: undefined, type: undefined, location: undefined },
   page = 1,
 }: JobResultsProps) {
   const { q, type, location } = filterValues;
+
   const jobsPerPage = 6;
   const skip = (page - 1) * jobsPerPage;
 
-  const client = new MongoClient(MONGO_URI);
-  await client.connect();
-  const db = client.db(DB_NAME);
-  const collection = db.collection("jobs");
+  // Metin araması
+  const searchString = q
+    ?.split(" ")
+    .filter((word) => word.length > 0)
+    .join(" & ");
 
-  const filters: any = { status: "active" };
+  const searchFilter: Prisma.JobsWhereInput = searchString
+    ? {
+        OR: [
+          { title: { search: searchString } },
+          { company: { name: { search: searchString } } },
+          { job_type: { name: { search: searchString } } },
+          { city: { name: { search: searchString } } },
+          { state: { name: { search: searchString } } },
+          { country: { name: { search: searchString } } },
+        ],
+      }
+    : {};
 
-  if (q && q.trim() !== "") {
-    const regex = new RegExp(q.trim(), "i");
-    filters.$or = [
-      { title: { $regex: regex } },
-      { description: { $regex: regex } },
-      { "company.name": { $regex: regex } },
-    ];
-  }
+  // Filtreleme
+  const where: Prisma.JobsWhereInput = {
+    AND: [
+      searchFilter,
+      type ? { job_type: { name: type } } : {},
+      location
+        ? {
+            OR: [
+              { city: { name: location } },
+              { state: { name: location } },
+              { country: { name: location } },
+            ],
+          }
+        : {},
+      { status: "active" }, // veya approved/published duruma göre değiştir
+    ],
+  };
 
-  if (type) filters.jobTypeId = type;
-  if (location) filters.cityId = location;
+  const jobsPromise = prisma.jobs.findMany({
+    where,
+    include: {
+      company: true,
+      job_type: true,
+      city: true,
+      state: true,
+      country: true,
+    },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take: jobsPerPage,
+  });
 
-  const totalResults = await collection.countDocuments(filters);
+  const countPromise = prisma.jobs.count({ where });
 
-  const jobs = await collection
-    .find(filters)
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(jobsPerPage)
-    .toArray();
-
-  await client.close();
+  const [jobs, totalResults] = await Promise.all([jobsPromise, countPromise]);
 
   return (
     <div className="grow space-y-4">
       {jobs.length === 0 && (
         <p className="m-auto text-center">
-          Hiç iş bulunamadı. Filtreleri değiştirmeyi deneyin.
+          No jobs found. Try adjusting your search filters.
         </p>
       )}
-
       {jobs.map((job) => (
-        <Link key={job._id.toString()} href={`/jobs/${job.slug}`} className="block">
+        <Link key={job.id} href={`/apps/jobportal/job/jobs/${job.slug}`} className="block">
           <JobListItem job={job} />
         </Link>
       ))}
-
       {jobs.length > 0 && (
         <Pagination
           currentPage={page}
@@ -95,7 +117,7 @@ function Pagination({
       page: page.toString(),
     });
 
-    return `/apps/jobportal/?${searchParams.toString()}`;
+    return `/?${searchParams.toString()}`;
   }
 
   return (
@@ -108,13 +130,11 @@ function Pagination({
         )}
       >
         <ArrowLeft size={16} />
-        Önceki sayfa
+        Previous page
       </Link>
-
       <span className="font-semibold">
-        Sayfa {currentPage} / {totalPages}
+        Page {currentPage} of {totalPages}
       </span>
-
       <Link
         href={generatePageLink(currentPage + 1)}
         className={cn(
@@ -122,7 +142,7 @@ function Pagination({
           currentPage >= totalPages && "invisible"
         )}
       >
-        Sonraki sayfa
+        Next page
         <ArrowRight size={16} />
       </Link>
     </div>

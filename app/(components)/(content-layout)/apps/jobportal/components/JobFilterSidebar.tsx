@@ -1,98 +1,94 @@
+import { jobTypes } from "../lib/job-types";
+import prisma from "@/app/lib/prisma";
+import { jobFilterSchema, JobFilterValues } from "../lib/validation";
 import { redirect } from "next/navigation";
+import FormSubmitButton from "./FormSubmitButton";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import Select from "./ui/select";
-import FormSubmitButton from "./FormSubmitButton";
-import { MongoClient } from "mongodb";
-
-const MONGO_URI = process.env.DATABASE_URL || "mongodb://localhost:27017";
-const DB_NAME = "Jobs";
-
-let cachedClient: MongoClient | null = null;
-
-async function getClient() {
-  if (cachedClient) return cachedClient;
-  const client = new MongoClient(MONGO_URI);
-  await client.connect();
-  cachedClient = client;
-  return client;
-}
 
 async function filterJobs(formData: FormData) {
   "use server";
+
   const values = Object.fromEntries(formData.entries());
-  const { q, type, city } = values as { q?: string; type?: string; city?: string };
+  const { q, type, location } = jobFilterSchema.parse(values);
+
   const searchParams = new URLSearchParams({
     ...(q && { q: q.trim() }),
     ...(type && { type }),
-    ...(city && { city }),
+    ...(location && { location }),
   });
-  redirect(`/apps/jobportal/?${searchParams.toString()}`);
+
+  redirect(`/apps/jobportal/job/?${searchParams.toString()}`);
 }
 
-export default async function JobFilterSidebar() {
-  const client = await getClient();
-  const db = client.db(DB_NAME);
+interface JobFilterSidebarProps {
+  defaultValues: JobFilterValues;
+}
 
-  // Job type listesini çek
-  const jobTypes = await db.collection("jobs").aggregate([
-    {
-      $lookup: {
-        from: "jobtypes",
-        localField: "jobTypeId",
-        foreignField: "_id",
-        as: "jobType",
-      },
-    },
-    { $unwind: "$jobType" },
-    { $group: { _id: "$jobType._id", name: { $first: "$jobType.name" } } },
-    { $sort: { name: 1 } },
-  ]).toArray();
-
-  // Şehir listesini çek
-  const distinctCities = await db.collection("jobs").aggregate([
-    {
-      $lookup: {
-        from: "cities",
-        localField: "cityId",
-        foreignField: "_id",
-        as: "cityDoc",
-      },
-    },
-    { $unwind: "$cityDoc" },
-    { $group: { _id: "$cityDoc._id", name: { $first: "$cityDoc.name" } } },
-    { $sort: { name: 1 } },
-  ]).toArray();
+export default async function JobFilterSidebar({
+  defaultValues,
+}: JobFilterSidebarProps) {
+  const distinctLocations = (await prisma.jobs
+    .findMany({
+      where: {},
+      select: { city: true },
+      distinct: ["cityId"],
+    })
+    .then((locations) =>
+      locations
+        .map(({ city }) => city?.name)
+        .filter((loc): loc is string => Boolean(loc))
+    )) as string[];
 
   return (
-    <aside className="sticky top-0 h-fit rounded p-4 border">
-      <form action={filterJobs}>
-        <div className="mb-4">
-          <Label htmlFor="q">Arama</Label>
-          <Input id="q" name="q" placeholder="Anahtar kelime" />
-        </div>
+    <aside className="sticky top-0 h-fit rounded-lg border bg-background p-4 md:w-[260px]">
+      <form action={filterJobs} key={JSON.stringify(defaultValues)}>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="q">Search</Label>
+            <Input
+              id="q"
+              name="q"
+              placeholder="Title, company, etc."
+              defaultValue={defaultValues.q}
+            />
+          </div>
 
-        <div className="mb-4">
-          <Label htmlFor="type">İş Türü</Label>
-          <Select id="type" name="type">
-            <option value="">Tümü</option>
-            {jobTypes.map((type: any) => (
-              <option key={type._id} value={type._id}>{type.name}</option>
-            ))}
-          </Select>
-        </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="type">Type</Label>
+            <Select
+              id="type"
+              name="type"
+              defaultValue={defaultValues.type || ""}
+            >
+              <option value="">All types</option>
+              {jobTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </Select>
+          </div>
 
-        <div className="mb-4">
-          <Label htmlFor="city">Şehir</Label>
-          <Select id="city" name="city">
-            <option value="">Tümü</option>
-            {distinctCities.map((city: any) => (
-              <option key={city._id} value={city._id}>{city.name}</option>
-            ))}
-          </Select>
-        </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="location">Location</Label>
+            <Select
+              id="location"
+              name="location"
+              defaultValue={defaultValues.location || ""}
+            >
+              <option value="">All locations</option>
+              {distinctLocations.map((location) => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
+              ))}
+            </Select>
+          </div>
 
-        <FormSubmitButton>Filtrele</FormSubmitButton>
+          <FormSubmitButton className="w-full">Filter jobs</FormSubmitButton>
+        </div>
       </form>
     </aside>
   );
