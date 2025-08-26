@@ -1058,6 +1058,15 @@ export const MENUITEMS: any = [
         ],
       },
 
+       {
+        path: "/apps/jobportal/job",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Job2",
+      },
+
+
       {
         title: "NFT",
         type: "sub",

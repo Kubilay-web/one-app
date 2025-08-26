@@ -18,8 +18,8 @@ function getTitle({ q, type, location }: JobFilterValues) {
   const titlePrefix = q
     ? `${q} jobs`
     : type
-      ? `${type} developer jobs`
-      : "All developer jobs";
+    ? `${type} developer jobs`
+    : "All developer jobs";
 
   const titleSuffix = location ? ` in ${location}` : "";
 
@@ -45,13 +45,23 @@ async function fetchJobs(filterValues: JobFilterValues, page?: number) {
     where.title = { contains: filterValues.q, mode: "insensitive" };
   }
   if (filterValues.type) {
-    where.jobType = { name: filterValues.type };
+    where.job_type = {
+      name: { equals: filterValues.type, mode: "insensitive" },
+    };
   }
   if (filterValues.location) {
     where.OR = [
-      { city: { name: { contains: filterValues.location, mode: "insensitive" } } },
-      { state: { name: { contains: filterValues.location, mode: "insensitive" } } },
-      { country: { name: { contains: filterValues.location, mode: "insensitive" } } },
+      {
+        city: { name: { contains: filterValues.location, mode: "insensitive" } },
+      },
+      {
+        state: { name: { contains: filterValues.location, mode: "insensitive" } },
+      },
+      {
+        country: {
+          name: { contains: filterValues.location, mode: "insensitive" },
+        },
+      },
     ];
   }
 
@@ -72,6 +82,8 @@ async function fetchJobs(filterValues: JobFilterValues, page?: number) {
       state: true,
       country: true,
       jobtags: true,
+      Job_benfits: true,
+      Jobskill: true,
     },
     skip,
     take: pageSize,
@@ -89,6 +101,8 @@ export default async function Home({
   };
 
   const jobs = await fetchJobs(filterValues, page ? parseInt(page) : undefined);
+
+  
 
   return (
     <main className="m-auto my-10 max-w-5xl space-y-10 px-3">
