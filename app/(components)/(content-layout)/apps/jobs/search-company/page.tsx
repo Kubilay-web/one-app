@@ -3,9 +3,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 const SpkSelect = dynamic(
   () =>
-    import(
-      "@/shared/@spk-reusable-components/spk-packages/spk-reactselect"
-    ),
+    import("@/shared/@spk-reusable-components/spk-packages/spk-reactselect"),
   { ssr: false }
 );
 import SpkBadge from "@/shared/@spk-reusable-components/uielements/spk-badge";
@@ -16,17 +14,24 @@ import Seo from "@/shared/layouts-components/seo/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
+import { useSearchParams } from "next/navigation";
 
-const SearchCompany = ({ searchParams }) => {
+const SearchCompany = () => {
+  const searchParams = useSearchParams(); // <- hook ile searchParams alındı
+
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [filters, setFilters] = useState({
     industryTypeId: [],
+    organizationTypeId: [],
+    countryId: [],
+    stateId: [],
     cityId: [],
     companySize: [],
+    recruiterType: [],
+    jobVacancies: [],
+    employmentType: [],
   });
-
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState("");
 
@@ -45,38 +50,37 @@ const SearchCompany = ({ searchParams }) => {
     const getCompanies = async () => {
       setLoading(true);
       try {
-        const searchQuery = new URLSearchParams();
+        const query = new URLSearchParams();
 
-        // Checkbox filtrelerini ekle
         Object.entries(filters).forEach(([key, values]) =>
-          values.forEach((v) => searchQuery.append(key, v))
+          values.forEach((v) => query.append(key, v))
         );
 
-        // Anahtar kelime ve kategori
-        if (keyword) searchQuery.append("keyword", keyword);
-        if (category && category !== "all") searchQuery.append("category", category);
+        if (keyword) query.append("keyword", keyword);
+        if (category && category !== "all") query.append("category", category);
 
-        // URL parametrelerinden gelenler
-        if (searchParams.industryid)
-          searchQuery.append("industry_type_id", searchParams.industryid);
-        if (searchParams.organizationid)
-          searchQuery.append("organization_type_id", searchParams.organizationid);
-        if (searchParams.countryid)
-          searchQuery.append("country_id", searchParams.countryid);
-        if (searchParams.stateid)
-          searchQuery.append("state_id", searchParams.stateid);
-        if (searchParams.cityid)
-          searchQuery.append("city_id", searchParams.cityid);
+        // searchParams'den değerleri al
+        const industryid = searchParams.get("industryid") || "";
+        const organizationid = searchParams.get("organizationid") || "";
+        const countryid = searchParams.get("countryid") || "";
+        const stateid = searchParams.get("stateid") || "";
+        const cityid = searchParams.get("cityid") || "";
+
+        if (industryid) query.append("industry_type_id", industryid);
+        if (organizationid)
+          query.append("organization_type_id", organizationid);
+        if (countryid) query.append("country_id", countryid);
+        if (stateid) query.append("state_id", stateid);
+        if (cityid) query.append("city_id", cityid);
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/companyfilters?${searchQuery.toString()}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/companyfilters?${query.toString()}`
         );
         if (!response.ok) throw new Error("Fetch error");
-
         const data = await response.json();
         setCompanies(data);
-      } catch (error) {
-        console.error("Fetch failed:", error);
+      } catch (err) {
+        console.error(err);
         setCompanies([]);
       } finally {
         setLoading(false);
@@ -87,7 +91,7 @@ const SearchCompany = ({ searchParams }) => {
   }, [filters, keyword, category, searchParams]);
 
   const categories = [
-    { value: "all", label: "Tüm kategoriler" },
+    { value: "all", label: "All categories" },
     { value: "it", label: "Information Technology" },
     { value: "finance", label: "Finance" },
     { value: "healthcare", label: "Healthcare" },
@@ -105,24 +109,33 @@ const SearchCompany = ({ searchParams }) => {
 
       <div className="container">
         <div className="grid grid-cols-12 gap-x-6">
-          {/* Filtreler */}
+          {/* Filters */}
           <div className="xxl:col-span-4 lg:col-span-12 col-span-12">
             <div className="box custom-box products-navigation-box">
               <div className="box-body !p-0">
-                {/* Industry Type Filter */}
+                {/* Industry Filter */}
                 <div className="p-6 border-b dark:border-defaultborder/10">
                   <h6 className="font-semibold mb-0">Sektör Türü</h6>
                   <div className="px-0 py-4 pb-0">
                     {[
-                      { value: "rd", label: "Araştırma & Geliştirme", count: 2712 },
+                      {
+                        value: "rd",
+                        label: "Araştırma & Geliştirme",
+                        count: 2712,
+                      },
                       { value: "accounting", label: "Muhasebe", count: 536 },
                     ].map((item) => (
-                      <div key={item.value} className="form-check !flex items-center !mb-2">
+                      <div
+                        key={item.value}
+                        className="form-check !flex items-center !mb-2"
+                      >
                         <input
                           type="checkbox"
                           className="form-check-input me-2"
                           checked={filters.industryTypeId.includes(item.value)}
-                          onChange={() => handleFilterChange("industryTypeId", item.value)}
+                          onChange={() =>
+                            handleFilterChange("industryTypeId", item.value)
+                          }
                         />
                         <label className="form-check-label">{item.label}</label>
                         <SpkBadge
@@ -144,12 +157,17 @@ const SearchCompany = ({ searchParams }) => {
                       { value: "hyderabad", label: "Hyderabad", count: 512 },
                       { value: "banglore", label: "Banglore", count: 2186 },
                     ].map((item) => (
-                      <div key={item.value} className="form-check !flex items-center !mb-2">
+                      <div
+                        key={item.value}
+                        className="form-check !flex items-center !mb-2"
+                      >
                         <input
                           type="checkbox"
                           className="form-check-input me-2"
                           checked={filters.cityId.includes(item.value)}
-                          onChange={() => handleFilterChange("cityId", item.value)}
+                          onChange={() =>
+                            handleFilterChange("cityId", item.value)
+                          }
                         />
                         <label className="form-check-label">{item.label}</label>
                         <SpkBadge
@@ -171,12 +189,17 @@ const SearchCompany = ({ searchParams }) => {
                       { value: "0-50", label: "0-50", count: 145 },
                       { value: "50-100", label: "50-100", count: 432 },
                     ].map((item) => (
-                      <div key={item.value} className="form-check !flex items-center !mb-2">
+                      <div
+                        key={item.value}
+                        className="form-check !flex items-center !mb-2"
+                      >
                         <input
                           type="checkbox"
                           className="form-check-input me-2"
                           checked={filters.companySize.includes(item.value)}
-                          onChange={() => handleFilterChange("companySize", item.value)}
+                          onChange={() =>
+                            handleFilterChange("companySize", item.value)
+                          }
                         />
                         <label className="form-check-label">{item.label}</label>
                         <SpkBadge
@@ -214,35 +237,12 @@ const SearchCompany = ({ searchParams }) => {
                     value={category}
                     onChange={(selected) => setCategory(selected.value)}
                   />
-                  <button
-                    aria-label="button"
-                    type="button"
-                    className="ti-btn btn-wave !m-0 ti-btn-primary !rounded-s-none"
-                    onClick={() => {}} // Filtre zaten useEffect ile çalışıyor
-                  >
-                    <i className="ri-search-line"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div className="xl:col-span-12 col-span-12">
-                <div className="box">
-                  <div className="box-body">
-                    <div className="flex items-center flex-wrap gap-2">
-                      <h5 className="font-medium mb-0 flex-grow">
-                        {companies.length}{" "}
-                        <span className="font-normal text-[1.125rem]">
-                          şirket aramanızla eşleşti
-                        </span>
-                      </h5>
-                    </div>
-                  </div>
                 </div>
               </div>
 
               {loading ? (
                 <div className="col-span-12 text-center py-8">
-                  <p>Yükleniyor...</p>
+                  Yükleniyor...
                 </div>
               ) : companies.length > 0 ? (
                 companies.map((company) => (

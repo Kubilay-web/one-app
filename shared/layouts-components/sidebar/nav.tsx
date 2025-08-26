@@ -1024,6 +1024,13 @@ export const MENUITEMS: any = [
             selected: false,
             title: "Search Company",
           },
+             {
+            path: "/apps/jobs/company",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Companies",
+          },
           {
             path: "/apps/jobs/job-details",
             type: "link",

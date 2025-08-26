@@ -182,6 +182,7 @@
     "react-resizable-panels": "^3.0.4",
     "react-select": "^5.9.0",
     "react-simple-animate": "^3.5.3",
+    "react-slick": "^0.31.0",
     "react-sortablejs": "^6.1.4",
     "react-spinners": "^0.17.0",
     "react-spinners-components": "^2.0.4",
