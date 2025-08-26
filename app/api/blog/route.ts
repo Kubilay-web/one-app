@@ -1,20 +1,20 @@
-import { NextResponse } from "next/server";
+// app/api/blog/route.ts
 import db from "@/app/lib/db";
+import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
+    // Tüm blogları en yeni tarihe göre getir
     const blogs = await db.blog.findMany({
-      take: 3,
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(blogs);
+    return NextResponse.json({ blogs });
   } catch (err: any) {
+    console.error(err);
     return NextResponse.json(
       { err: err.message || "Something went wrong" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

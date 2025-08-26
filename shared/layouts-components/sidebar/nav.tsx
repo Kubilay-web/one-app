@@ -1,5 +1,3 @@
-
-
 const Dashboardicon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -224,8 +222,6 @@ const badge2 = <span className="badge bg-primary ms-2 shadow-primary">8</span>;
 const badge3 = (
   <span className="badge bg-secondary ms-2 shadow-secondary">3</span>
 );
-
-
 
 export const MENUITEMS: any = [
   {
@@ -910,8 +906,6 @@ export const MENUITEMS: any = [
         ],
       },
 
-
-            
       {
         path: "/apps/news",
         type: "link",
@@ -920,10 +914,6 @@ export const MENUITEMS: any = [
         title: "News",
       },
 
-
-
-
-      
       {
         path: "/apps/full-calendar",
         type: "link",
@@ -1007,11 +997,25 @@ export const MENUITEMS: any = [
         active: false,
         children: [
           {
-            path: "/apps/jobs/job-details",
+            path: "/apps/jobs/blog",
             type: "link",
             active: false,
             selected: false,
-            title: "Job Details",
+            title: "Blog",
+          },
+          {
+            path: "/apps/jobs/candidates",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Candidates",
+          },
+          {
+            path: "/apps/jobs/checkout",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Checkout",
           },
           {
             path: "/apps/jobs/search-company",
@@ -1019,6 +1023,13 @@ export const MENUITEMS: any = [
             active: false,
             selected: false,
             title: "Search Company",
+          },
+          {
+            path: "/apps/jobs/job-details",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Job Details",
           },
           {
             path: "/apps/jobs/search-jobs",
@@ -1058,14 +1069,13 @@ export const MENUITEMS: any = [
         ],
       },
 
-       {
+      {
         path: "/apps/jobportal/job",
         type: "link",
         active: false,
         selected: false,
         title: "Job2",
       },
-
 
       {
         title: "NFT",

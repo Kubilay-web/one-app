@@ -1667,7 +1667,7 @@ model Applyjob {
 model Blog {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   title       String   @db.String
-  slug        String   @db.String
+  slug        String   @unique
   description String   @db.String
   image       String?  @db.String
 

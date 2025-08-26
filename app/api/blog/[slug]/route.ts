@@ -5,8 +5,9 @@ export async function GET(req: Request, context: { params: { slug: string } }) {
   try {
     const { slug } = context.params;
 
+    // 🔑 slug ile sorgulama
     const blog = await db.blog.findUnique({
-      where: { id: slug },
+      where: { slug }, // id yerine slug kullan
     });
 
     if (!blog) {
