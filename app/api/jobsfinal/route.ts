@@ -1,35 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/lib/db"
+import slugify from "slugify";
 
-
-
-export async function GET(req: Request) {
+// ✅ Tüm iş ilanlarını getir
+export async function GET() {
   try {
-    const url = new URL(req.url);
-
-    // Filtreleri query parametrelerinden al
-    const categories = url.searchParams.get("categories")?.split(",") || [];
-    const jobTypes = url.searchParams.get("jobTypes")?.split(",") || [];
-    const experience = url.searchParams.get("experience")?.split(",") || [];
-    const qualifications = url.searchParams.get("qualifications")?.split(",") || [];
-    const skills = url.searchParams.get("skills")?.split(",") || [];
-    const salaryRange = url.searchParams.get("salaryRange")?.split(",").map(Number) || [];
-
-    // Prisma where objesi
-    const where: any = {};
-
-    if (categories.length) where.jobCategoryId = { in: categories };
-    if (jobTypes.length) where.jobTypeId = { in: jobTypes };
-    if (experience.length) where.jobExperienceId = { in: experience };
-    if (qualifications.length) where.educationId = { in: qualifications };
-    if (skills.length) where.Jobskill = { some: { name: { in: skills } } };
-    if (salaryRange.length === 2) {
-      where.min_salary = { gte: salaryRange[0] };
-      where.max_salary = { lte: salaryRange[1] };
-    }
-
     const jobs = await db.jobs.findMany({
-      where,
       include: {
         company: true,
         job_category: true,
@@ -55,50 +31,137 @@ export async function GET(req: Request) {
   }
 }
 
-
-
-
-
 // ✅ Yeni iş ilanı oluştur
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
 
+export function generateSlug(title: string): string {
+  const baseSlug = slugify(title);
+  const timestamp = Date.now().toString(36); // Benzersizlik için timestamp
+  return `${baseSlug}-${timestamp}`;
+}
+
+
+
+
+export async function POST(request: NextRequest) {
+  try {
+    console.log('=== JOBSFINAL API POST ÇAĞRILDI ===');
+    
+    const body = await request.json();
+    console.log('Gelen request body:', JSON.stringify(body, null, 2));
+
+    // Validasyon
+    const requiredFields = ['title', 'jobCategoryId', 'companyId'];
+    const missingFields = requiredFields.filter(field => !body[field]);
+    
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        { error: `Zorunlu alanlar eksik: ${missingFields.join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    // Slug oluştur
+    const slug = generateSlug(body.title);
+    console.log('Oluşturulan slug:', slug);
+
+    // String'den number'a dönüşüm yap
+    const minSalary = body.min_salary ? parseInt(body.min_salary) : 0;
+    const maxSalary = body.max_salary ? parseInt(body.max_salary) : 0;
+    const customSalary = body.custom_salary ? parseInt(body.custom_salary) : 0;
+    const vacancies = body.vacancies ? parseInt(body.vacancies) : 1;
+
+    console.log('Dönüştürülen değerler:', {
+      minSalary, maxSalary, customSalary, vacancies
+    });
+
+    // Prisma ile veri oluştur
     const job = await db.jobs.create({
       data: {
         title: body.title,
-        slug: body.slug,
-        vacancies: body.vacancies,
-        min_salary: body.min_salary ?? 0,
-        max_salary: body.max_salary ?? 0,
-        custom_salary: body.custom_salary ?? 0,
-        deadline: body.deadline ? new Date(body.deadline) : null,
-        description: body.description,
-        status: body.status ?? "pending",
-        apply_on: body.apply_on ?? "app",
-        apply_email: body.apply_email,
-        apply_url: body.apply_url,
-        featured: body.featured ?? false,
-        highlight: body.highlight ?? false,
-        fetaured_until: body.fetaured_until ? new Date(body.fetaured_until) : null,
-        highlight_until: body.highlight_until ? new Date(body.highlight_until) : null,
-        companyId: body.companyId,
+        slug: slug,
         jobCategoryId: body.jobCategoryId,
-        jobRoleId: body.jobRoleId,
-        jobExperienceId: body.jobExperienceId,
-        educationId: body.educationId,
-        jobTypeId: body.jobTypeId,
-        salaryTypeId: body.salaryTypeId,
-        cityId: body.cityId,
-        stateId: body.stateId,
-        countryId: body.countryId,
-        address: body.address,
+        jobExperienceId: body.jobExperienceId || null,
+        jobTypeId: body.jobTypeId || null,
+        educationId: body.educationId || null,
+        salaryTypeId: body.salaryTypeId || null,
+        vacancies: vacancies.toString(), // Modelde String olarak tanımlı
+        min_salary: minSalary, // ← NUMBER olarak
+        max_salary: maxSalary, // ← NUMBER olarak
+        custom_salary: customSalary, // ← NUMBER olarak
+        salary_mode: body.salary_mode || "custom",
+        deadline: body.deadline ? new Date(body.deadline) : null,
+        description: body.description || "",
+        apply_on: body.apply_on || "app",
+        apply_email: body.apply_email || null,
+        apply_url: body.apply_url || null,
+        featured: body.featured || false,
+        highlight: body.highlight || false,
+        companyId: body.companyId,
+        cityId: body.cityId || null,
+        stateId: body.stateId || null,
+        countryId: body.countryId || null,
+        address: body.address || "",
+        status: 'pending',
+        // Skills ilişkisi
+        ...(body.skillIds && body.skillIds.length > 0 && {
+          Jobskill: {
+            create: body.skillIds.map((skillId: string) => ({
+              skillId: skillId
+            }))
+          }
+        })
       },
+      include: {
+        company: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                displayName: true
+              }
+            }
+          }
+        },
+        job_category: true,
+        job_type: true,
+        Jobskill: {
+          include: {
+            skill: true
+          }
+        }
+      }
     });
 
+    console.log('İş ilanı başarıyla oluşturuldu:', job.id);
+    
     return NextResponse.json(job, { status: 201 });
+    
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to create job" }, { status: 500 });
+    console.error('Error creating job:', error);
+    
+    // Prisma specific errors
+    if (error instanceof Error) {
+      // Foreign key constraint hatası
+      if (error.message.includes('Foreign key constraint failed')) {
+        return NextResponse.json(
+          { error: 'Geçersiz kategori, şirket veya skill ID. Lütfen geçerli değerler seçin.' },
+          { status: 400 }
+        );
+      }
+      
+      // Unique constraint hatası (slug zaten varsa)
+      if (error.message.includes('Unique constraint failed')) {
+        return NextResponse.json(
+          { error: 'Bu başlıkta zaten bir iş ilanı var. Lütfen başlığı değiştirin.' },
+          { status: 400 }
+        );
+      }
+    }
+    
+    return NextResponse.json(
+      { error: 'İş ilanı oluşturulurken bir hata oluştu' },
+      { status: 500 }
+    );
   }
 }

@@ -1,12 +1,13 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { FaCheck, FaTimes } from "react-icons/fa";
-import toast from "react-hot-toast";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { FaCheck, FaTimes } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 export default function Register() {
   const router = useRouter();
-  const [plans, setPlans] = useState([]);
+  const [plans, setPlans] = useState<any[]>([]);
 
   useEffect(() => {
     fetchPlans();
@@ -16,15 +17,16 @@ export default function Register() {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/plan`);
       const data = await response.json();
-      if (!response.ok) toast.error(data.err);
+      if (!response.ok) toast.error(data.err || 'Failed to fetch plans');
       else setPlans(data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      toast.error('Failed to fetch plans');
     }
   };
 
-  const redirectToCheckout = (id) => {
-    router.push(`/job-portal/checkout/?id=${id}`);
+  const redirectToCheckout = (id: string) => {
+    router.push(`/apps/jobs/chekout/?id=${id}`);
   };
 
   return (
@@ -36,7 +38,7 @@ export default function Register() {
           <div
             key={plan.id}
             className={`bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between border-2 ${
-              plan.recommended ? "border-green-500 scale-105" : "border-gray-200"
+              plan.recommended ? 'border-green-500 scale-105' : 'border-gray-200'
             } transform transition hover:scale-105`}
           >
             {plan.recommended && (

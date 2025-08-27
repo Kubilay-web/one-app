@@ -1,12 +1,16 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import toast from "react-hot-toast";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import toast from 'react-hot-toast';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
-export default function CheckoutPage({ searchParams }) {
+interface CheckoutPageProps {
+  searchParams: { id?: string };
+}
+
+export default function CheckoutPage({ searchParams }: CheckoutPageProps) {
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<any[]>([]);
   const [payStatus, setPayStatus] = useState<any>({});
@@ -15,18 +19,21 @@ export default function CheckoutPage({ searchParams }) {
   const id = searchParams?.id;
 
   useEffect(() => {
-    fetchPlan();
-    fetchPaymentSettings();
-  }, []);
+    if (id) {
+      fetchPlan();
+      fetchPaymentSettings();
+    }
+  }, [id]);
 
   const fetchPlan = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/checkout/${id}`);
       const data = await res.json();
-      if (!res.ok) toast.error(data.err || "Plan fetch failed");
+      if (!res.ok) toast.error(data.err || 'Plan fetch failed');
       else setPlan(Array.isArray(data) ? data : [data]);
     } catch (err) {
       console.error(err);
+      toast.error('Plan fetch failed');
     }
   };
 
@@ -34,23 +41,24 @@ export default function CheckoutPage({ searchParams }) {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/paymentsettings`);
       const data = await res.json();
-      if (!res.ok) toast.error(data.err);
+      if (!res.ok) toast.error(data.err || 'Payment settings fetch failed');
       else setPayStatus(data.settings);
     } catch (err) {
       console.error(err);
+      toast.error('Payment settings fetch failed');
     }
   };
 
   const handlePaypal = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/company/paypalpayment/${id}`, { method: "POST" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/company/paypalpayment/${id}`, { method: 'POST' });
       const data = await res.json();
       if (data.approvalUrl) window.location.href = data.approvalUrl;
-      else toast.error("Payment failed");
+      else toast.error('Payment failed');
     } catch (err) {
       console.error(err);
-      toast.error("Payment failed");
+      toast.error('Payment failed');
     } finally {
       setLoading(false);
     }
@@ -58,20 +66,23 @@ export default function CheckoutPage({ searchParams }) {
 
   const handleStripe = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/company/stripe/${id}`, { method: "POST" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/company/stripe/${id}`, { method: 'POST' });
       const data = await res.json();
-      if (!res.ok) toast.error(data.err || "Payment failed");
+      if (!res.ok) toast.error(data.err || 'Payment failed');
       else window.location.href = data.id;
     } catch (err) {
       console.error(err);
-      toast.error("Payment failed");
+      toast.error('Payment failed');
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative w-full h-64 md:h-96 bg-cover bg-center" style={{ backgroundImage: 'url("/assets/images/jobportal/dee.jpg")' }}>
+      <div
+        className="relative w-full h-64 md:h-96 bg-cover bg-center"
+        style={{ backgroundImage: 'url("/assets/images/jobportal/dee.jpg")' }}
+      >
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute left-4 top-4 text-white">
           <h6 className="text-sm md:text-base">Home &gt; Checkout</h6>
@@ -85,14 +96,14 @@ export default function CheckoutPage({ searchParams }) {
         <div className="lg:w-1/2 bg-white p-6 rounded-xl shadow-md">
           <h3 className="text-xl font-semibold mb-6">Choose Payment Gateway</h3>
           <div className="flex flex-wrap gap-6">
-            {payStatus?.paypalStatus === "true" && (
+            {payStatus?.paypalStatus === 'true' && (
               <button onClick={handlePaypal} className="border rounded-lg p-4 hover:shadow-lg transition">
-                <Image src="/assets/images/jobportal/paypal.png" alt="PayPal" width={120} height={60} style={{ objectFit: "contain" }} />
+                <Image src="/assets/images/jobportal/paypal.png" alt="PayPal" width={120} height={60} style={{ objectFit: 'contain' }} />
               </button>
             )}
-            {payStatus?.stripeStatus === "true" && (
+            {payStatus?.stripeStatus === 'true' && (
               <button onClick={handleStripe} className="border rounded-lg p-4 hover:shadow-lg transition">
-                <Image src="/assets/images/jobportal/stripe.png" alt="Stripe" width={120} height={60} style={{ objectFit: "contain" }} />
+                <Image src="/assets/images/jobportal/stripe.png" alt="Stripe" width={120} height={60} style={{ objectFit: 'contain' }} />
               </button>
             )}
           </div>
