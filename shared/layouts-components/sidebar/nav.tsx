@@ -997,6 +997,13 @@ export const MENUITEMS: any = [
         active: false,
         children: [
           {
+            path: "/apps/jobs/main",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Jobs Main",
+          },
+          {
             path: "/apps/jobs/blog",
             type: "link",
             active: false,
