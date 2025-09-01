@@ -2,16 +2,19 @@
   "name": "mamix-ts-tailwind",
   "version": "0.1.0",
   "private": true,
+
   "scripts": {
-    "dev": "next dev",
-    "dev:server": "node --loader ts-node/esm server.ts",
-    "build": "yarn prisma generate && next build",
-    "start": "next start",
-    "lint": "next lint",
-    "postcss": "sass ./public/assets/scss/style.scss ./public/assets/css/style.css && postcss ./public/assets/css/style.css -o ./public/assets/css/style.css",
-    "sass": "sass ./public/assets/scss/:./public/assets/css/",
-    "sass-min": "sass ./public/assets/scss/:./public/assets/css/ --style compressed"
-  },
+  "dev": "next dev",
+  "dev:server": "node --loader ts-node/esm server.ts",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint",
+  "postinstall": "prisma generate",
+  "postcss": "sass ./public/assets/scss/style.scss ./public/assets/css/style.css && postcss ./public/assets/css/style.css -o ./public/assets/css/style.css",
+  "sass": "sass ./public/assets/scss/:./public/assets/css/",
+  "sass-min": "sass ./public/assets/scss/:./public/assets/css/ --style compressed"
+},
+
   "dependencies": {
     "@elastic/elasticsearch": "^9.1.0",
     "@emotion/react": "^11.14.0",

@@ -139,7 +139,7 @@ export default function Alljobs() {
   };
 
   const handleEdit = (jobId: string) => {
-    router.push(`/dashboard/job/jobdetails/?id=${jobId}`);
+    router.push(`/dashboards/jobs/jobdetails/?id=${jobId}`);
   };
 
   const handleSwitchChange = async (checked: boolean, jobId: string) => {
