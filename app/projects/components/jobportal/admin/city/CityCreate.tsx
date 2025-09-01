@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MdOutlineClear } from "react-icons/md";
-import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineClear, MdOutlineDeleteOutline } from "react-icons/md";
 import { Select } from "antd";
-import { useCityStore } from "@/app/job-portal-store/city"; // Importing the Zustand store
+import { useCityStore } from "@/app/job-portal-store/city";
 import { useCountryStore } from "@/app/job-portal-store/country";
 import { useStateStore } from "@/app/job-portal-store/state";
-import { useRouter } from "next/navigation"; // Importing useRouter
+import { useRouter } from "next/navigation";
 
 const { Option } = Select;
 
@@ -31,7 +30,7 @@ export default function CityCreate() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
   useEffect(() => {
     fetchCountries();
@@ -59,80 +58,98 @@ export default function CityCreate() {
   };
 
   return (
-    <div className="my-5">
-      <p className="m-1 p-1">Select Country</p>
-
-      <Select
-        showSearch
-        style={{ width: 500, height: 50 }}
-        placeholder="Select a country"
-        loading={loading}
-        value={selectedCountryId}
-        onChange={(value) => {
-          setSelectedCountryId(value);
-          if (updatingCity) {
-            const selectedCountry = countries.find((c) => c.id === value);
-            if (selectedCountry) {
-              setUpdatingCity({
-                ...updatingCity,
-                countryId: { id: value, name: selectedCountry.name },
-              });
+    <div className="my-6 w-full max-w-xl space-y-4 rounded-2xl bg-white p-6 shadow-md ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-700">
+      {/* Country */}
+      <div>
+        <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          Select Country
+        </p>
+        <Select
+          showSearch
+          style={{ width: "100%", height: 48 }}
+          placeholder="Select a country"
+          loading={loading}
+          value={selectedCountryId}
+          onChange={(value) => {
+            setSelectedCountryId(value);
+            if (updatingCity) {
+              const selectedCountry = countries.find((c) => c.id === value);
+              if (selectedCountry) {
+                setUpdatingCity({
+                  ...updatingCity,
+                  countryId: { id: value, name: selectedCountry.name },
+                });
+              }
             }
+          }}
+          onSearch={handleSearch}
+          filterOption={(input, option) =>
+            option?.children
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
           }
-        }}
-        onSearch={handleSearch}
-        filterOption={(input, option) =>
-          option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        }
-        className="form-control my-2 p-2"
-      >
-        {countries
-          .filter((country) =>
-            country.name.toLowerCase().includes(searchTerm.toLowerCase()),
-          )
-          .map((country) => (
-            <Option key={country.id} value={country.id}>
-              {country.name}
-            </Option>
-          ))}
-      </Select>
+          className="rounded-lg border border-gray-300 shadow-sm"
+        >
+          {countries
+            .filter((country) =>
+              country.name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            )
+            .map((country) => (
+              <Option key={country.id} value={country.id}>
+                {country.name}
+              </Option>
+            ))}
+        </Select>
+      </div>
 
-      <p className="m-1 p-1">Select State</p>
-      <Select
-        showSearch
-        style={{ width: 500, height: 60 }}
-        placeholder="Select a state"
-        loading={loading}
-        value={selectedStateId}
-        onChange={(value) => {
-          setSelectedStateId(value);
-          if (updatingCity) {
-            const selectedState = states.find((s) => s.id === value);
-            if (selectedState) {
-              setUpdatingCity({
-                ...updatingCity,
-                stateId: { id: value, statename: selectedState.statename },
-              });
+      {/* State */}
+      <div>
+        <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          Select State
+        </p>
+        <Select
+          showSearch
+          style={{ width: "100%", height: 48 }}
+          placeholder="Select a state"
+          loading={loading}
+          value={selectedStateId}
+          onChange={(value) => {
+            setSelectedStateId(value);
+            if (updatingCity) {
+              const selectedState = states.find((s) => s.id === value);
+              if (selectedState) {
+                setUpdatingCity({
+                  ...updatingCity,
+                  stateId: { id: value, statename: selectedState.statename },
+                });
+              }
             }
+          }}
+          onSearch={handleSearchs}
+          filterOption={(input, option) =>
+            option?.children
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
           }
-        }}
-        onSearch={handleSearchs}
-        filterOption={(input, option) =>
-          option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        }
-        className="form-control my-2 p-2"
-      >
-        {states
-          .filter((state) =>
-            state.statename.toLowerCase().includes(searchTerms.toLowerCase()),
-          )
-          .map((state) => (
-            <Option key={state.id} value={state.id}>
-              {state.statename}
-            </Option>
-          ))}
-      </Select>
+          className="rounded-lg border border-gray-300 shadow-sm"
+        >
+          {states
+            .filter((state) =>
+              state.statename
+                .toLowerCase()
+                .includes(searchTerms.toLowerCase())
+            )
+            .map((state) => (
+              <Option key={state.id} value={state.id}>
+                {state.statename}
+              </Option>
+            ))}
+        </Select>
+      </div>
 
+      {/* City Name */}
       <input
         type="text"
         value={updatingCity ? updatingCity?.name : name}
@@ -141,11 +158,18 @@ export default function CityCreate() {
             ? setUpdatingCity({ ...updatingCity, name: e.target.value })
             : setName(e.target.value)
         }
-        className="form-control my-2 p-2"
+        placeholder="Enter city name"
+        className="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
       />
-      <div className="d-flex justify-content-between">
+
+      {/* Actions */}
+      <div className="flex items-center justify-between gap-3">
         <button
-          className={`btn bg-${updatingCity ? "info" : "primary"} text-light`}
+          className={`flex-1 rounded-lg px-4 py-2 text-white transition ${
+            updatingCity
+              ? "bg-sky-600 hover:bg-sky-700"
+              : "bg-indigo-600 hover:bg-indigo-700"
+          }`}
           onClick={(e) => {
             e.preventDefault();
             updatingCity ? handleCityUpdate() : handleCityCreate();
@@ -155,24 +179,24 @@ export default function CityCreate() {
         </button>
 
         {updatingCity && (
-          <>
+          <div className="flex items-center gap-2">
             <button
-              className={`btn bg-danger text-light`}
+              className="rounded-lg bg-red-600 p-2 text-white hover:bg-red-700"
               onClick={(e) => {
                 e.preventDefault();
                 handleCityDelete();
               }}
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline size={20} />
             </button>
 
             <button
-              className="btn bg-success text-light"
+              className="rounded-lg bg-green-600 p-2 text-white hover:bg-green-700"
               onClick={() => setUpdatingCity(null)}
             >
-              <MdOutlineClear />
+              <MdOutlineClear size={20} />
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>

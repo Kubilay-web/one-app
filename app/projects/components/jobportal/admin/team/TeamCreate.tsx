@@ -1,9 +1,7 @@
 "use client";
 
 import { useTeamStore } from "@/app/job-portal-store/team";
-import { MdOutlineClear } from "react-icons/md";
-
-import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineClear, MdOutlineDeleteOutline } from "react-icons/md";
 
 export default function IndustryCreate() {
   const {
@@ -18,6 +16,7 @@ export default function IndustryCreate() {
 
   return (
     <div className="my-5">
+      {/* Team Name Input */}
       <input
         type="text"
         placeholder="Team name"
@@ -27,57 +26,47 @@ export default function IndustryCreate() {
             ? setUpdatingTeam({ ...updatingTeam, name: e.target.value })
             : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
       />
-      <div className="d-flex justify-content-between">
+
+      {/* Buttons */}
+      <div className="flex flex-wrap gap-3">
+        {/* Create / Update Button */}
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingTeam ? "info" : "green"} text-light`}
+          className={`px-5 py-2 rounded-lg text-white font-medium transition-colors ${
+            updatingTeam ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          }`}
           onClick={(e) => {
             e.preventDefault();
             updatingTeam ? updateTeam() : createTeam();
           }}
         >
-          {updatingTeam ? "update" : "create"}
+          {updatingTeam ? "Update" : "Create"}
         </button>
 
+        {/* Delete Button */}
         {updatingTeam && (
-          <>
-            <button
-              className={`btn bg-danger text-light`}
-              onClick={(e) => {
-                e.preventDefault();
-                deleteTeam();
-              }}
-            >
-              <MdOutlineDeleteOutline />
-            </button>
+          <button
+            className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium"
+            onClick={(e) => {
+              e.preventDefault();
+              deleteTeam();
+            }}
+          >
+            <MdOutlineDeleteOutline size={20} />
+          </button>
+        )}
 
-            <button
-              className="btn bg-success text-light"
-              onClick={() => setUpdatingTeam(null)}
-            >
-              <MdOutlineClear />
-            </button>
-          </>
+        {/* Clear Button */}
+        {updatingTeam && (
+          <button
+            className="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium"
+            onClick={() => setUpdatingTeam(null)}
+          >
+            <MdOutlineClear size={20} />
+          </button>
         )}
       </div>
     </div>
   );
 }
-
-//  const team =
-
-// [
-//     "1-2",
-//     "3-4",
-//     "5-6",
-//     "7-8",
-//     "9-10",
-//     "11-12",
-//     "13-14",
-//     "15-16",
-//     "17-18",
-//     "19-20"
-// ];

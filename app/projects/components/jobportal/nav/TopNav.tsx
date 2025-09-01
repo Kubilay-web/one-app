@@ -53,7 +53,7 @@ export default function TopNav() {
               )}
 
               {user?.rolejob === "ADMIN" ? (
-                <Link className="nav-link" href={`/dashboard/job/admin`}>
+                <Link className="nav-link" href={`/dashboards/jobs/admin`}>
                   {user?.username}({user?.rolejob})
                 </Link>
               ) : (

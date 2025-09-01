@@ -20,14 +20,14 @@ export default function AdminNav() {
       <nav className="nav justify-content-center m-3">
         <Link
           style={{
-            color: pathname === "/dashboard/job/admin" ? "white" : "black",
-            fontWeight: pathname === "/dashboard/job/admin" ? "bold" : "normal",
+            color: pathname === "/dashboards/jobs/admin" ? "white" : "black",
+            fontWeight: pathname === "/dashboards/jobs/admin" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin" ? "green" : "transparent",
+              pathname === "/dashboards/jobs/admin" ? "green" : "transparent",
             // Add any additional styles for the active state here
           }}
           className="nav-link"
-          href="/dashboard/job/admin"
+          href="/dashboards/jobs/admin"
         >
           Admin
         </Link>
@@ -35,17 +35,17 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/industry" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/industry" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/industry" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/industry" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/industry"
+              pathname === "/dashboards/jobs/admin/industry"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
           className="nav-link"
-          href="/dashboard/job/admin/industry"
+          href="/dashboards/jobs/admin/industry"
         >
           Create industry
         </Link>
@@ -53,38 +53,38 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/organization"
+              pathname === "/dashboards/jobs/admin/organization"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/organization"
+              pathname === "/dashboards/jobs/admin/organization"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/organization"
+              pathname === "/dashboards/jobs/admin/organization"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
           className="nav-link"
-          href="/dashboard/job/admin/organization"
+          href="/dashboards/jobs/admin/organization"
         >
           Add Organization
         </Link>
 
         <Link
           style={{
-            color: pathname === "/dashboard/job/admin/team" ? "white" : "black",
+            color: pathname === "/dashboards/jobs/admin/team" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/team" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/team" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/team"
+              pathname === "/dashboards/jobs/admin/team"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
           className="nav-link"
-          href="/dashboard/job/admin/team"
+          href="/dashboards/jobs/admin/team"
         >
           Team size
         </Link>
@@ -92,17 +92,17 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/country" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/country" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/country" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/country" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/country"
+              pathname === "/dashboards/jobs/admin/country"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
           className="nav-link"
-          href="/dashboard/job/admin/country"
+          href="/dashboards/jobs/admin/country"
         >
           Add Country
         </Link>
@@ -110,33 +110,33 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/state" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/state" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/state" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/state" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/state"
+              pathname === "/dashboards/jobs/admin/state"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
           className="nav-link"
-          href="/dashboard/job/admin/state"
+          href="/dashboards/jobs/admin/state"
         >
           Add State
         </Link>
 
         <Link
           style={{
-            color: pathname === "/dashboard/job/admin/city" ? "white" : "black",
+            color: pathname === "/dashboards/jobs/admin/city" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/city" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/city" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/city"
+              pathname === "/dashboards/jobs/admin/city"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/city"
+          href="/dashboards/jobs/admin/city"
           className="nav-link"
         >
           Add City
@@ -145,16 +145,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/language" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/language" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/language" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/language" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/language"
+              pathname === "/dashboards/jobs/admin/language"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/language"
+          href="/dashboards/jobs/admin/language"
           className="nav-link"
         >
           Add Language
@@ -162,16 +162,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/skill" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/skill" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/skill" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/skill" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/skill"
+              pathname === "/dashboards/jobs/admin/skill"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/skill"
+          href="/dashboards/jobs/admin/skill"
           className="nav-link"
         >
           Add Skill
@@ -180,20 +180,20 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/profession"
+              pathname === "/dashboards/jobs/admin/profession"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/profession"
+              pathname === "/dashboards/jobs/admin/profession"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/profession"
+              pathname === "/dashboards/jobs/admin/profession"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/profession"
+          href="/dashboards/jobs/admin/profession"
           className="nav-link"
         >
           Add Profession
@@ -204,16 +204,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/pricing" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/pricing" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/pricing" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/pricing" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/pricing"
+              pathname === "/dashboards/jobs/admin/pricing"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/pricing"
+          href="/dashboards/jobs/admin/pricing"
           className="nav-link"
         >
           Add Pricing
@@ -222,20 +222,20 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/paymentsettings"
+              pathname === "/dashboards/jobs/admin/paymentsettings"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/paymentsettings"
+              pathname === "/dashboards/jobs/admin/paymentsettings"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/paymentsettings"
+              pathname === "/dashboards/jobs/admin/paymentsettings"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/paymentsettings"
+          href="/dashboards/jobs/admin/paymentsettings"
           className="nav-link"
         >
           Payment Settings
@@ -244,20 +244,20 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/sitesettings"
+              pathname === "/dashboards/jobs/admin/sitesettings"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/sitesettings"
+              pathname === "/dashboards/jobs/admin/sitesettings"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/sitesettings"
+              pathname === "/dashboards/jobs/admin/sitesettings"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/sitesettings"
+          href="/dashboards/jobs/admin/sitesettings"
           className="nav-link"
         >
           Site Settings
@@ -266,16 +266,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/orders" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/orders" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/orders" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/orders" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/orders"
+              pathname === "/dashboards/jobs/admin/orders"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/orders"
+          href="/dashboards/jobs/admin/orders"
           className="nav-link"
         >
           Orders
@@ -284,20 +284,20 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/jobcategories"
+              pathname === "/dashboards/jobs/admin/jobcategories"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/jobcategories"
+              pathname === "/dashboards/jobs/admin/jobcategories"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/jobcategories"
+              pathname === "/dashboards/jobs/admin/jobcategories"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/jobcategories"
+          href="/dashboards/jobs/admin/jobcategories"
           className="nav-link"
         >
           Job_categories
@@ -306,16 +306,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/education" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/education" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/education" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/education" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/education"
+              pathname === "/dashboards/jobs/admin/education"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/education"
+          href="/dashboards/jobs/admin/education"
           className="nav-link"
         >
           education
@@ -324,16 +324,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/jobtype" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/jobtype" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/jobtype" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/jobtype" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/jobtype"
+              pathname === "/dashboards/jobs/admin/jobtype"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/jobtype"
+          href="/dashboards/jobs/admin/jobtype"
           className="nav-link"
         >
           Jobtype
@@ -342,20 +342,20 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/salarytype"
+              pathname === "/dashboards/jobs/admin/salarytype"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/salarytype"
+              pathname === "/dashboards/jobs/admin/salarytype"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/salarytype"
+              pathname === "/dashboards/jobs/admin/salarytype"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/salarytype"
+          href="/dashboards/jobs/admin/salarytype"
           className="nav-link"
         >
           Salarytype
@@ -363,14 +363,14 @@ export default function AdminNav() {
 
         <Link
           style={{
-            color: pathname === "/dashboard/job/admin/tag" ? "white" : "black",
+            color: pathname === "/dashboards/jobs/admin/tag" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/tag" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/tag" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/tag" ? "green" : "transparent",
+              pathname === "/dashboards/jobs/admin/tag" ? "green" : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/tag"
+          href="/dashboards/jobs/admin/tag"
           className="nav-link"
         >
           tag
@@ -379,16 +379,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/jobrole" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/jobrole" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/jobrole" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/jobrole" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/jobrole"
+              pathname === "/dashboards/jobs/admin/jobrole"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/jobrole"
+          href="/dashboards/jobs/admin/jobrole"
           className="nav-link"
         >
           job role
@@ -397,20 +397,20 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/jobexperience"
+              pathname === "/dashboards/jobs/admin/jobexperience"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/jobexperience"
+              pathname === "/dashboards/jobs/admin/jobexperience"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/jobexperience"
+              pathname === "/dashboards/jobs/admin/jobexperience"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/jobexperience"
+          href="/dashboards/jobs/admin/jobexperience"
           className="nav-link"
         >
           job experience
@@ -419,20 +419,20 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/jobs/create"
+              pathname === "/dashboards/jobs/admin/jobs/create"
                 ? "white"
                 : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/jobs/create"
+              pathname === "/dashboards/jobs/admin/jobs/create"
                 ? "bold"
                 : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/jobs/create"
+              pathname === "/dashboards/jobs/admin/jobs/create"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/jobs/create"
+          href="/dashboards/jobs/admin/jobs/create"
           className="nav-link"
         >
           Job Create
@@ -443,16 +443,16 @@ export default function AdminNav() {
         <Link
           style={{
             color:
-              pathname === "/dashboard/job/admin/alljobs" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/alljobs" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/alljobs" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/alljobs" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/alljobs"
+              pathname === "/dashboards/jobs/admin/alljobs"
                 ? "green"
                 : "transparent",
             // Add any additional styles for the active state here
           }}
-          href="/dashboard/job/admin/alljobs"
+          href="/dashboards/jobs/admin/alljobs"
           className="nav-link"
         >
           alljobs
@@ -462,15 +462,15 @@ export default function AdminNav() {
         <Link
           className="nav-link"
           style={{
-            color: pathname === "/dashboard/job/admin/blog" ? "white" : "black",
+            color: pathname === "/dashboards/jobs/admin/blog" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/blog" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/blog" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/blog"
+              pathname === "/dashboards/jobs/admin/blog"
                 ? "green"
                 : "transparent",
           }}
-          href="/dashboard/job/admin/blog"
+          href="/dashboards/jobs/admin/blog"
         >
           Add blog
         </Link>
@@ -479,15 +479,15 @@ export default function AdminNav() {
           className="nav-link"
           style={{
             color:
-              pathname === "/dashboard/job/admin/blogs" ? "white" : "black",
+              pathname === "/dashboards/jobs/admin/blogs" ? "white" : "black",
             fontWeight:
-              pathname === "/dashboard/job/admin/blogs" ? "bold" : "normal",
+              pathname === "/dashboards/jobs/admin/blogs" ? "bold" : "normal",
             backgroundColor:
-              pathname === "/dashboard/job/admin/blogs"
+              pathname === "/dashboards/jobs/admin/blogs"
                 ? "green"
                 : "transparent",
           }}
-          href="/dashboard/job/admin/blogs"
+          href="/dashboards/jobs/admin/blogs"
         >
           blogs
         </Link>

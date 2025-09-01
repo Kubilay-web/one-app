@@ -8,7 +8,7 @@ export default function TagList() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetchTags(); // Tag'leri yüklemek için
+    fetchTags();
   }, [fetchTags]);
 
   const filteredTags = tags?.filter((c) =>
@@ -17,45 +17,51 @@ export default function TagList() {
 
   return (
     <div className="my-5">
-      <div className="mb-3">
+      {/* Search Input */}
+      <div className="mb-4">
         <input
           type="text"
-          className="form-control"
           placeholder="Search tag"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredTags.length > 0 ? (
-            filteredTags.map((c) => (
-              <tr key={c._id}>
-                <td>{c.name}</td>
-                <td>
-                  <button
-                    className="btn btn-link bg-success text-light"
-                    onClick={() => setUpdatingTag(c)} // Tag güncellemeye başla
-                  >
-                    <FaRegEdit />
-                  </button>
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200 rounded-md">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="text-left p-3 border-b border-gray-200">Name</th>
+              <th className="text-left p-3 border-b border-gray-200">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredTags.length > 0 ? (
+              filteredTags.map((c) => (
+                <tr key={c._id} className="hover:bg-gray-50 transition-colors">
+                  <td className="p-3 border-b border-gray-200">{c.name}</td>
+                  <td className="p-3 border-b border-gray-200">
+                    <button
+                      onClick={() => setUpdatingTag(c)}
+                      className="px-3 py-1 rounded-md bg-green-500 hover:bg-green-600 text-white transition-colors"
+                    >
+                      <FaRegEdit />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={2} className="p-3 text-center text-gray-500">
+                  No tags found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="2">No tags found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

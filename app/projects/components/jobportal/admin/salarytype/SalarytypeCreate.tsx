@@ -15,7 +15,7 @@ export default function SalaryCreate() {
   } = useSalarytypeStore();
 
   return (
-    <div className="my-5">
+    <div className="my-5 space-y-4">
       <input
         type="text"
         value={updatingSalarytype ? updatingSalarytype.name : name}
@@ -27,15 +27,15 @@ export default function SalaryCreate() {
               })
             : setName(e.target.value)
         }
-        className="my-2 rounded border border-gray-300 p-2"
-        style={{ outline: "none" }}
+        className="w-full rounded border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         placeholder="Salary Type Name"
       />
 
-      <div className="d-flex justify-content-between">
+      <div className="flex flex-wrap gap-3">
         <button
-          style={{ backgroundColor: updatingSalarytype ? "#17a2b8" : "green" }}
-          className={`btn text-light rounded px-4 py-2`}
+          className={`text-white rounded px-5 py-2 transition-colors duration-200 ${
+            updatingSalarytype ? "bg-teal-500 hover:bg-teal-600" : "bg-green-500 hover:bg-green-600"
+          }`}
           onClick={(e) => {
             e.preventDefault();
             updatingSalarytype ? updateSalarytype() : createSalarytype();
@@ -47,20 +47,20 @@ export default function SalaryCreate() {
         {updatingSalarytype && (
           <>
             <button
-              className="btn bg-danger text-light rounded px-3 py-2"
+              className="bg-red-500 hover:bg-red-600 text-white rounded px-4 py-2 transition-colors duration-200"
               onClick={(e) => {
                 e.preventDefault();
                 deleteSalarytype();
               }}
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline className="inline-block" />
             </button>
 
             <button
-              className="btn bg-success text-light rounded px-3 py-2"
+              className="bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2 transition-colors duration-200"
               onClick={() => setUpdatingSalarytype(null)}
             >
-              <MdOutlineClear />
+              <MdOutlineClear className="inline-block" />
             </button>
           </>
         )}

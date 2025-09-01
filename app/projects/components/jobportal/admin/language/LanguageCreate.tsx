@@ -1,8 +1,7 @@
 "use client";
 
 import { useLanguageStore } from "@/app/job-portal-store/language";
-import { MdOutlineClear } from "react-icons/md";
-import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineClear, MdOutlineDeleteOutline } from "react-icons/md";
 
 export default function LanguageCreate() {
   const {
@@ -15,51 +14,57 @@ export default function LanguageCreate() {
     deleteLanguage,
   } = useLanguageStore();
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updatingLanguage ? updateLanguage() : createLanguage();
+  };
+
+  const handleClear = () => setUpdatingLanguage(null);
+
   return (
-    <div className="my-5">
+    <div className="my-5 w-full max-w-md mx-auto p-5 bg-white shadow-lg rounded-xl">
+      {/* Input Field */}
       <input
         type="text"
         placeholder="Language"
-        value={updatingLanguage ? updatingLanguage?.name : name}
+        value={updatingLanguage ? updatingLanguage.name : name}
         onChange={(e) =>
           updatingLanguage
             ? setUpdatingLanguage({ ...updatingLanguage, name: e.target.value })
             : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
       />
-      <div className="d-flex justify-content-between">
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-2 justify-between">
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingLanguage ? "info" : "green"} text-light`}
-          onClick={(e) => {
-            e.preventDefault();
-            updatingLanguage ? updateLanguage() : createLanguage();
-          }}
+          onClick={handleSubmit}
+          className={`flex-1 min-w-[100px] text-white font-medium py-2 px-4 rounded-lg transition ${
+            updatingLanguage ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          }`}
         >
           {updatingLanguage ? "Update" : "Create"}
         </button>
 
         {updatingLanguage && (
-          <>
+          <div className="flex gap-2">
             <button
-              className="btn bg-danger text-light"
               onClick={(e) => {
                 e.preventDefault();
                 deleteLanguage();
               }}
+              className="flex items-center justify-center p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline size={20} />
             </button>
-
             <button
-              className="btn bg-success text-light"
-              onClick={() => setUpdatingLanguage(null)}
+              onClick={handleClear}
+              className="flex items-center justify-center p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition"
             >
-              <MdOutlineClear />
+              <MdOutlineClear size={20} />
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>

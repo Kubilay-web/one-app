@@ -13,50 +13,62 @@ export default function CountryList() {
   }, []);
 
   const filteredCountries = countries?.filter((country) =>
-    country.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    country.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="my-5">
-      <div className="mb-3">
+    <div className="my-6">
+      {/* Search input */}
+      <div className="mb-4">
         <input
           type="text"
-          className="form-control"
-          placeholder="Search country"
+          placeholder="Search country..."
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCountries.length > 0 ? (
-            filteredCountries.map((country) => (
-              <tr key={country.id}>
-                <td>{country.name}</td>
-                <td>
-                  <button
-                    className="btn btn-link bg-success text-light"
-                    onClick={() => setUpdatingCountry(country)}
-                  >
-                    <FaRegEdit />
-                  </button>
+      {/* Table */}
+      <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+        <table className="min-w-full border-collapse bg-white text-left text-sm text-gray-700">
+          <thead className="bg-gray-100 text-xs uppercase text-gray-600">
+            <tr>
+              <th className="px-6 py-3">Name</th>
+              <th className="px-6 py-3 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredCountries.length > 0 ? (
+              filteredCountries.map((country) => (
+                <tr
+                  key={country.id}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  <td className="px-6 py-3 font-medium">{country.name}</td>
+                  <td className="px-6 py-3 text-center">
+                    <button
+                      className="rounded-lg bg-blue-500 p-2 text-white shadow hover:bg-blue-600"
+                      onClick={() => setUpdatingCountry(country)}
+                    >
+                      <FaRegEdit size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={2}
+                  className="px-6 py-4 text-center text-gray-500"
+                >
+                  No country found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={2}>No country found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

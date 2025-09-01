@@ -23,21 +23,19 @@ export default function EducationCreate() {
         value={updatingEducation ? updatingEducation?.name : name}
         onChange={(e) =>
           updatingEducation
-            ? setUpdatingEducation({
-                ...updatingEducation,
-                name: e.target.value,
-              })
+            ? setUpdatingEducation({ ...updatingEducation, name: e.target.value })
             : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 mb-4"
       />
 
       {/* Button Section */}
-      <div className="d-flex justify-content-between">
+      <div className="flex flex-wrap gap-3">
+        {/* Create / Update Button */}
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingEducation ? "info" : "green"} text-light`}
+          className={`rounded-lg px-4 py-2 text-white shadow ${
+            updatingEducation ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          } transition-colors`}
           onClick={(e) => {
             e.preventDefault();
             updatingEducation ? updateEducation() : createEducation();
@@ -46,27 +44,29 @@ export default function EducationCreate() {
           {updatingEducation ? "Update" : "Create"}
         </button>
 
+        {/* Delete Button */}
         {updatingEducation && (
-          <>
-            {/* Delete Education */}
-            <button
-              className="btn bg-danger text-light"
-              onClick={(e) => {
-                e.preventDefault();
-                deleteEducation();
-              }}
-            >
-              <MdOutlineDeleteOutline />
-            </button>
+          <button
+            className="flex items-center rounded-lg bg-red-500 px-4 py-2 text-white shadow hover:bg-red-600 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              deleteEducation();
+            }}
+          >
+            <MdOutlineDeleteOutline className="mr-1" />
+            Delete
+          </button>
+        )}
 
-            {/* Clear Update */}
-            <button
-              className="btn bg-success text-light"
-              onClick={() => setUpdatingEducation(null)}
-            >
-              <MdOutlineClear />
-            </button>
-          </>
+        {/* Clear Button */}
+        {updatingEducation && (
+          <button
+            className="flex items-center rounded-lg bg-gray-500 px-4 py-2 text-white shadow hover:bg-gray-600 transition-colors"
+            onClick={() => setUpdatingEducation(null)}
+          >
+            <MdOutlineClear className="mr-1" />
+            Clear
+          </button>
         )}
       </div>
     </div>

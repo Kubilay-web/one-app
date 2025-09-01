@@ -5,7 +5,12 @@ export async function GET() {
   try {
     const states = await db.state.findMany({
       orderBy: { createdAt: "desc" },
-      include: { country: true },
+      select: {
+        id: true,
+        statename: true,
+        countryId: true,
+      },
+      // include: { country: true },
     });
 
     return NextResponse.json(states);

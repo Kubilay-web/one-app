@@ -13,70 +13,78 @@ export default function JobCategoryList() {
 
   useEffect(() => {
     fetchJobcategories();
-  }, []);
+  }, [fetchJobcategories]);
 
   const filteredJobcategories = jobcategories.filter((c) =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    c.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="my-5">
-      <div className="mb-3">
+      {/* Search Input */}
+      <div className="mb-4">
         <input
           type="text"
-          className="form-control"
           placeholder="Search category"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Icon</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredJobcategories.length > 0 ? (
-            filteredJobcategories.map((c) => (
-              <tr key={c.id}>
-                <td>{c.name}</td>
-                <td>
-                  <div
-                    className="pick"
-                    style={{
-                      pointerEvents: "none",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <IconPicker
+      {/* Job Categories Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 border">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Icon
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {filteredJobcategories.length > 0 ? (
+              filteredJobcategories.map((c) => (
+                <tr key={c.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-gray-800">{c.name}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center">
+                      <IconPicker
+                        onClick={() => setUpdatingJobcategory(c)}
+                        value={c.icon}
+                        color={true}
+                        size={32}
+                        readOnly
+                      />
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      className="rounded-lg bg-green-500 px-3 py-1 text-white shadow hover:bg-green-600"
                       onClick={() => setUpdatingJobcategory(c)}
-                      value={c.icon}
-                      color={true}
-                      size={32}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-link bg-success text-light"
-                    onClick={() => setUpdatingJobcategory(c)}
-                  >
-                    <FaRegEdit />
-                  </button>
+                      aria-label={`Edit ${c.name}`}
+                    >
+                      <FaRegEdit />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={3} className="px-6 py-4 text-center text-gray-500">
+                  No job categories found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={3}>No job categories found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -14,50 +14,56 @@ export default function JobtypeList() {
   }, []);
 
   const filteredJobtypes = jobtypes.filter((j) =>
-    j.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    j.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="my-5">
-      <div className="mb-3">
+    <div className="my-5 w-full max-w-3xl mx-auto p-5 bg-white shadow-lg rounded-xl">
+      {/* Search Input */}
+      <div className="mb-4">
         <input
           type="text"
-          className="form-control"
-          placeholder="Search jobtype"
+          placeholder="Search job type"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
       </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredJobtypes.length > 0 ? (
-            filteredJobtypes.map((jobtype) => (
-              <tr key={jobtype.id}>
-                <td>{jobtype.name}</td>
-                <td>
-                  <button
-                    className="btn btn-link bg-success text-light"
-                    onClick={() => setUpdatingJobtype(jobtype)}
-                  >
-                    <FaRegEdit />
-                  </button>
+      {/* Jobtype Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto border-collapse">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="text-left px-4 py-2 border-b">Name</th>
+              <th className="text-left px-4 py-2 border-b">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredJobtypes.length > 0 ? (
+              filteredJobtypes.map((jobtype) => (
+                <tr key={jobtype.id} className="hover:bg-gray-50 transition">
+                  <td className="px-4 py-2 border-b">{jobtype.name}</td>
+                  <td className="px-4 py-2 border-b">
+                    <button
+                      onClick={() => setUpdatingJobtype(jobtype)}
+                      className="flex items-center justify-center px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+                    >
+                      <FaRegEdit size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={2} className="text-center py-4">
+                  No job type found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={2}>No jobtype found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

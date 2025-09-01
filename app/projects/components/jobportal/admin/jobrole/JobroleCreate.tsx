@@ -44,24 +44,35 @@ export default function JobroleCreate() {
         placeholder="Job Role"
         value={updatingJobrole ? updatingJobrole.name : name}
         onChange={handleInputChange}
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none"
       />
-      <div className="d-flex justify-content-between">
+
+      <div className="mt-3 flex flex-wrap gap-3">
         <button
           onClick={handleSubmit}
-          className={`btn text-light ${updatingJobrole ? "bg-info" : "bg-success"}`}
+          className={`flex-1 min-w-[100px] rounded-lg px-4 py-2 text-white shadow ${
+            updatingJobrole ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          } transition`}
         >
           {updatingJobrole ? "Update" : "Create"}
         </button>
 
         {updatingJobrole && (
           <>
-            <button className="btn bg-danger text-light" onClick={handleDelete}>
-              <MdOutlineDeleteOutline />
+            <button
+              className="flex-1 min-w-[100px] rounded-lg bg-red-500 hover:bg-red-600 text-white px-4 py-2 shadow transition"
+              onClick={handleDelete}
+            >
+              <MdOutlineDeleteOutline className="inline-block mr-2" />
+              Delete
             </button>
-            <button className="btn bg-success text-light" onClick={handleClear}>
-              <MdOutlineClear />
+
+            <button
+              className="flex-1 min-w-[100px] rounded-lg bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 shadow transition"
+              onClick={handleClear}
+            >
+              <MdOutlineClear className="inline-block mr-2" />
+              Clear
             </button>
           </>
         )}

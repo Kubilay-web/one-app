@@ -15,7 +15,7 @@ export default function ProfessionCreate() {
   } = useProfessionStore();
 
   return (
-    <div className="my-5">
+    <div className="my-5 space-y-4">
       <input
         type="text"
         value={updatingProfession ? updatingProfession.name : name}
@@ -27,18 +27,19 @@ export default function ProfessionCreate() {
               })
             : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        placeholder="Enter profession name"
+        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
-      <div className="d-flex justify-content-between">
+      <div className="flex flex-wrap gap-2">
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingProfession ? "info" : "green"} text-light`}
           onClick={(e) => {
             e.preventDefault();
             updatingProfession ? updateProfession() : createProfession();
           }}
+          className={`px-4 py-2 rounded-md text-white font-medium transition-colors duration-200 ${
+            updatingProfession ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          }`}
         >
           {updatingProfession ? "Update" : "Create"}
         </button>
@@ -46,20 +47,20 @@ export default function ProfessionCreate() {
         {updatingProfession && (
           <>
             <button
-              className="btn bg-danger text-light"
               onClick={(e) => {
                 e.preventDefault();
                 deleteProfession();
               }}
+              className="px-4 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white flex items-center justify-center"
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline size={20} />
             </button>
 
             <button
-              className="btn bg-success text-light"
               onClick={() => setUpdatingProfession(null)}
+              className="px-4 py-2 rounded-md bg-gray-500 hover:bg-gray-600 text-white flex items-center justify-center"
             >
-              <MdOutlineClear />
+              <MdOutlineClear size={20} />
             </button>
           </>
         )}

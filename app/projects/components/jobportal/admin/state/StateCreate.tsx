@@ -11,7 +11,7 @@ const { Option } = Select;
 export default function StateCreate() {
   const [loading, setLoading] = useState(false);
 
-  const { countries, fetchCountries } = useCountryStore(); // Zustand store for countries
+  const { countries, fetchCountries } = useCountryStore();
   const {
     statename,
     selectedCountryId,
@@ -22,10 +22,10 @@ export default function StateCreate() {
     createState,
     updateState,
     deleteState,
-  } = useStateStore(); // Zustand store for state
+  } = useStateStore();
 
   useEffect(() => {
-    fetchCountries(); // Fetch countries when the component mounts
+    fetchCountries();
   }, [fetchCountries]);
 
   const handleCountryChange = (value: string) => {
@@ -33,7 +33,6 @@ export default function StateCreate() {
 
     if (updatingState) {
       const selectedCountry = countries.find((c) => c.id === value);
-
       if (selectedCountry) {
         setUpdatingState({
           ...updatingState,
@@ -55,58 +54,47 @@ export default function StateCreate() {
   };
 
   const handleDelete = () => {
-    if (updatingState) {
-      deleteState();
-    }
+    if (updatingState) deleteState();
   };
 
-  const handleClear = () => {
-    setUpdatingState(null);
-  };
+  const handleClear = () => setUpdatingState(null);
 
   return (
-    <div className="my-5">
-      <div className="mb-5">
+    <div className="my-5 max-w-lg">
+      {/* Country Select */}
+      <div className="mb-4">
         <Select
-          style={{ width: 500, height: 50 }}
+          style={{ width: "100%" }}
           placeholder="Select a country"
           loading={loading}
           value={selectedCountryId}
           onChange={handleCountryChange}
+          className="rounded border border-gray-300"
         >
-          {countries &&
-            countries.map((c) => (
-              <Option key={c.id} value={c.id}>
-                {c.name}
-              </Option>
-            ))}
+          {countries?.map((c) => (
+            <Option key={c.id} value={c.id}>
+              {c.name}
+            </Option>
+          ))}
         </Select>
       </div>
 
-      <div>
-        {countries &&
-          countries.map((c) => (
-            <p key={c.id}>
-              {updatingState?.countryId?.id === c.id
-                ? updatingState?.countryId?.name
-                : ""}
-            </p>
-          ))}
-      </div>
-
+      {/* State Input */}
       <input
         type="text"
         placeholder="State name"
-        value={updatingState ? updatingState?.statename : statename}
+        value={updatingState ? updatingState.statename : statename}
         onChange={handleStateChange}
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        className="w-full mb-4 p-3 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
       />
-      <div className="d-flex justify-content-between">
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-2">
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingState ? "info" : "green"} text-light`}
           onClick={handleSave}
+          className={`flex-1 py-2 px-4 rounded text-white font-semibold ${
+            updatingState ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          } transition`}
         >
           {updatingState ? "Update" : "Create"}
         </button>
@@ -114,14 +102,19 @@ export default function StateCreate() {
         {updatingState && (
           <>
             <button
-              className={`btn bg-danger text-light`}
               onClick={handleDelete}
+              className="flex-1 py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white font-semibold transition"
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline className="inline-block mr-1" />
+              Delete
             </button>
 
-            <button className="btn bg-success text-light" onClick={handleClear}>
-              <MdOutlineClear />
+            <button
+              onClick={handleClear}
+              className="flex-1 py-2 px-4 rounded bg-gray-500 hover:bg-gray-600 text-white font-semibold transition"
+            >
+              <MdOutlineClear className="inline-block mr-1" />
+              Clear
             </button>
           </>
         )}

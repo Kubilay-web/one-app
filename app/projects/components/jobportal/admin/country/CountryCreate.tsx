@@ -1,9 +1,7 @@
 "use client";
 
 import { useCountryStore } from "@/app/job-portal-store/country";
-import { MdOutlineClear } from "react-icons/md";
-
-import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineClear, MdOutlineDeleteOutline } from "react-icons/md";
 
 export default function CountryCreate() {
   const {
@@ -11,14 +9,14 @@ export default function CountryCreate() {
     setName,
     updatingCountry,
     setUpdatingCountry,
-
     createCountry,
     updateCountry,
     deleteCountry,
   } = useCountryStore();
 
   return (
-    <div className="my-5">
+    <div className="my-6">
+      {/* Input */}
       <input
         type="text"
         value={updatingCountry ? updatingCountry?.name : name}
@@ -27,38 +25,43 @@ export default function CountryCreate() {
             ? setUpdatingCountry({ ...updatingCountry, name: e.target.value })
             : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        placeholder="Enter country name"
+        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400"
       />
-      <div className="d-flex justify-content-between">
+
+      {/* Action Buttons */}
+      <div className="mt-4 flex items-center gap-3">
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingCountry ? "info" : "green"} text-light`}
+          className={`flex-1 rounded-lg px-4 py-2 font-medium text-white shadow transition ${
+            updatingCountry
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-green-500 hover:bg-green-600"
+          }`}
           onClick={(e) => {
             e.preventDefault();
             updatingCountry ? updateCountry() : createCountry();
           }}
         >
-          {updatingCountry ? "update" : "create"}
+          {updatingCountry ? "Update" : "Create"}
         </button>
 
         {updatingCountry && (
           <>
             <button
-              className={`btn bg-danger text-light`}
+              className="rounded-lg bg-red-500 p-2 text-white shadow hover:bg-red-600"
               onClick={(e) => {
                 e.preventDefault();
                 deleteCountry();
               }}
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline size={22} />
             </button>
 
             <button
-              className="btn bg-success text-light"
+              className="rounded-lg bg-gray-500 p-2 text-white shadow hover:bg-gray-600"
               onClick={() => setUpdatingCountry(null)}
             >
-              <MdOutlineClear />
+              <MdOutlineClear size={22} />
             </button>
           </>
         )}
@@ -66,26 +69,3 @@ export default function CountryCreate() {
     </div>
   );
 }
-
-// const countries = [
-//     "Canada",
-//     "Brazil",
-//     "Japan",
-//     "Australia",
-//     "Germany",
-//     "India",
-//     "United States",
-//     "United Kingdom",
-//     "China",
-//     "South Korea",
-//     "France",
-//     "Italy",
-//     "Mexico",
-//     "Russia",
-//     "South Africa",
-//     "Spain",
-//     "Argentina",
-//     "Saudi Arabia",
-//     "Nigeria",
-//     "Indonesia"
-// ];

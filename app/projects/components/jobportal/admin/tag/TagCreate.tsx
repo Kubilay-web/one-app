@@ -1,8 +1,7 @@
 "use client";
 
 import { useTagStore } from "@/app/job-portal-store/tag";
-import { MdOutlineClear } from "react-icons/md";
-import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineClear, MdOutlineDeleteOutline } from "react-icons/md";
 
 export default function TagCreate() {
   const {
@@ -17,6 +16,7 @@ export default function TagCreate() {
 
   return (
     <div className="my-5">
+      {/* Tag Input */}
       <input
         type="text"
         placeholder="Tag Name"
@@ -26,38 +26,42 @@ export default function TagCreate() {
             ? setUpdatingTag({ ...updatingTag, name: e.target.value })
             : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
       />
-      <div className="d-flex justify-content-between">
+
+      {/* Buttons */}
+      <div className="flex flex-wrap gap-3">
+        {/* Create / Update Button */}
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingTag ? "info" : "green"} text-light`}
           onClick={(e) => {
             e.preventDefault();
-            updatingTag ? updateTag() : createTag(); // Eğer güncellenen tag varsa, güncellenir, yoksa yeni tag oluşturulur
+            updatingTag ? updateTag() : createTag();
           }}
+          className={`px-5 py-2 rounded-md text-white ${
+            updatingTag ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          } transition-colors duration-200`}
         >
           {updatingTag ? "Update" : "Create"}
         </button>
 
+        {/* Delete & Clear Buttons */}
         {updatingTag && (
           <>
             <button
-              className="btn bg-danger text-light"
               onClick={(e) => {
                 e.preventDefault();
-                deleteTag(); // Tag silme işlemi
+                deleteTag();
               }}
+              className="px-4 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition-colors duration-200"
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline className="inline-block text-lg" />
             </button>
 
             <button
-              className="btn bg-success text-light"
               onClick={() => setUpdatingTag(null)}
+              className="px-4 py-2 rounded-md bg-gray-500 hover:bg-gray-600 text-white transition-colors duration-200"
             >
-              <MdOutlineClear />
+              <MdOutlineClear className="inline-block text-lg" />
             </button>
           </>
         )}

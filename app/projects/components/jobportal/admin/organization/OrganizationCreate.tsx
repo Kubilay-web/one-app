@@ -1,9 +1,7 @@
 "use client";
 
 import { useOrganizationStore } from "@/app/job-portal-store/organization";
-import { MdOutlineClear } from "react-icons/md";
-
-import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineClear, MdOutlineDeleteOutline } from "react-icons/md";
 
 export default function IndustryCreate() {
   const {
@@ -17,7 +15,7 @@ export default function IndustryCreate() {
   } = useOrganizationStore();
 
   return (
-    <div className="my-5">
+    <div className="my-5 w-full max-w-lg mx-auto bg-white shadow-md rounded-lg p-6">
       <input
         type="text"
         placeholder="Organization name"
@@ -30,68 +28,43 @@ export default function IndustryCreate() {
               })
             : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
       />
-      <div className="d-flex justify-content-between">
+
+      <div className="flex flex-wrap gap-3 justify-between">
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${
-            updatingOrganization ? "info" : "green"
-          } text-light`}
+          className={`flex-1 py-2 px-4 text-white font-semibold rounded-md ${
+            updatingOrganization ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          } transition-colors`}
           onClick={(e) => {
             e.preventDefault();
             updatingOrganization ? updateOrganization() : createOrganization();
           }}
         >
-          {updatingOrganization ? "update" : "create"}
+          {updatingOrganization ? "Update" : "Create"}
         </button>
 
         {updatingOrganization && (
-          <>
+          <div className="flex gap-3">
             <button
-              className={`btn bg-danger text-light`}
+              className="flex items-center justify-center p-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 deleteOrganization();
               }}
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline size={20} />
             </button>
 
             <button
-              className="btn bg-success text-light"
+              className="flex items-center justify-center p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition-colors"
               onClick={() => setUpdatingOrganization(null)}
             >
-              <MdOutlineClear />
+              <MdOutlineClear size={20} />
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
   );
 }
-
-// const organizations = [
-
-//     "Google",
-//     "Amazon",
-//     "Microsoft",
-//     "Apple",
-//     "Facebook",
-//     "IBM",
-//     "Tesla",
-//     "Netflix",
-//     "Salesforce",
-//     "Adobe",
-//     "Intel",
-//     "Cisco",
-//     "Oracle",
-//     "Spotify",
-//     "LinkedIn",
-//     "Uber",
-//     "Twitter",
-//     "Airbnb",
-//     "PayPal",
-//     "Square"
-// ];

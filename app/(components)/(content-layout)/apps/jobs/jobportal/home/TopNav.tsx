@@ -51,7 +51,7 @@ export default function TopNav() {
                 )}
                 {user?.rolejob === "ADMIN" && (
                   <Link
-                    href={`/dashboard/job/admin`}
+                    href={`/dashboards/jobs/admin`}
                     className="text-gray-700 hover:text-green-600 font-medium transition-colors"
                   >
                     {user.username} ({user.rolejob})
@@ -131,7 +131,7 @@ export default function TopNav() {
                 )}
                 {user?.rolejob === "ADMIN" && (
                   <Link
-                    href={`/dashboard/job/admin`}
+                    href={`/dashboards/jobs/admin`}
                     className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md"
                   >
                     {user.username} ({user.rolejob})

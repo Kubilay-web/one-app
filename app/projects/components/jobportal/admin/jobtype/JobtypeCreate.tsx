@@ -31,44 +31,49 @@ export default function JobtypeCreate() {
   const handleClear = () => setUpdatingJobtype(null);
 
   return (
-    <div className="my-5">
-      <input
-        type="text"
-        value={updatingJobtype ? updatingJobtype.name : name}
-        onChange={handleChange}
-        className="form-control my-2 p-2"
-        placeholder="Enter job type name"
-        style={{ outline: "none" }}
-      />
+    <div className="my-5 w-full max-w-md mx-auto p-5 bg-white shadow-lg rounded-xl">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          type="text"
+          value={updatingJobtype ? updatingJobtype.name : name}
+          onChange={handleChange}
+          placeholder="Enter job type name"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        />
 
-      <div className="d-flex justify-content-between mt-2">
-        <button
-          className={`btn text-light ${updatingJobtype ? "bg-info" : "bg-success"}`}
-          onClick={handleSubmit}
-        >
-          {updatingJobtype ? "Update" : "Create"}
-        </button>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-3">
+          <button
+            type="submit"
+            className={`w-full md:w-auto px-6 py-2 rounded-lg font-semibold text-white transition ${
+              updatingJobtype ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            }`}
+          >
+            {updatingJobtype ? "Update" : "Create"}
+          </button>
 
-        {updatingJobtype && (
-          <div className="d-flex gap-2">
-            <button
-              className="btn bg-danger text-light"
-              onClick={(e) => {
-                e.preventDefault();
-                deleteJobtype();
-              }}
-            >
-              <MdOutlineDeleteOutline />
-            </button>
-            <button
-              className="btn text-light bg-secondary"
-              onClick={handleClear}
-            >
-              <MdOutlineClear />
-            </button>
-          </div>
-        )}
-      </div>
+          {updatingJobtype && (
+            <div className="flex gap-3 w-full md:w-auto">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteJobtype();
+                }}
+                className="flex items-center justify-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
+              >
+                <MdOutlineDeleteOutline size={20} />
+              </button>
+              <button
+                type="button"
+                onClick={handleClear}
+                className="flex items-center justify-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition"
+              >
+                <MdOutlineClear size={20} />
+              </button>
+            </div>
+          )}
+        </div>
+      </form>
     </div>
   );
 }

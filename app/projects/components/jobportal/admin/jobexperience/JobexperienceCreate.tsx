@@ -38,42 +38,45 @@ export default function JobExperienceCreate() {
   };
 
   return (
-    <div className="my-5">
+    <form className="my-5 flex flex-col gap-4" onSubmit={handleSubmit}>
       <input
         type="text"
+        placeholder="Enter job experience name"
         value={updatingJobexperience ? updatingJobexperience.name : name}
         onChange={handleChange}
-        className="my-2 p-2"
-        style={{ outline: "none" }}
-        placeholder="Enter job experience name"
+        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400"
       />
 
-      <div className="d-flex justify-content-between mt-2 gap-2">
+      <div className="flex flex-wrap gap-3">
         <button
-          className="btn text-light"
-          style={{
-            backgroundColor: updatingJobexperience ? "#0dcaf0" : "green",
-          }}
-          onClick={handleSubmit}
+          type="submit"
+          className={`px-4 py-2 rounded-lg text-white font-medium shadow ${
+            updatingJobexperience ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          } transition`}
         >
           {updatingJobexperience ? "Update" : "Create"}
         </button>
 
         {updatingJobexperience && (
           <>
-            <button className="btn bg-danger text-light" onClick={handleDelete}>
-              <MdOutlineDeleteOutline />
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium shadow transition"
+            >
+              <MdOutlineDeleteOutline size={20} />
             </button>
 
             <button
-              className="btn bg-success text-light"
+              type="button"
               onClick={() => setUpdatingJobexperience(null)}
+              className="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium shadow transition"
             >
-              <MdOutlineClear />
+              <MdOutlineClear size={20} />
             </button>
           </>
         )}
       </div>
-    </div>
+    </form>
   );
 }

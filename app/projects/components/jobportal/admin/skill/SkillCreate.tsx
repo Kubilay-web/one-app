@@ -1,8 +1,7 @@
 "use client";
 
 import { useSkillStore } from "@/app/job-portal-store/skill";
-import { MdOutlineClear } from "react-icons/md";
-import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineClear, MdOutlineDeleteOutline } from "react-icons/md";
 
 export default function SkillCreate() {
   const {
@@ -13,58 +12,55 @@ export default function SkillCreate() {
     createSkill,
     updateSkill,
     deleteSkill,
-  } = useSkillStore(); // Zustand store'unu kullanıyoruz
+  } = useSkillStore();
 
   return (
     <div className="my-5">
       {/* Skill Name Input */}
       <input
         type="text"
-        value={updatingSkill ? updatingSkill?.name : name}
-        onChange={
-          (e) =>
-            updatingSkill
-              ? setUpdatingSkill({ ...updatingSkill, name: e.target.value }) // Skill güncelleniyorsa, updatingSkill güncellenir
-              : setName(e.target.value) // Aksi takdirde, name değeri değişir
+        value={updatingSkill ? updatingSkill.name : name}
+        onChange={(e) =>
+          updatingSkill
+            ? setUpdatingSkill({ ...updatingSkill, name: e.target.value })
+            : setName(e.target.value)
         }
-        className="my-2 p-2"
-        style={{ outline: "none" }}
+        placeholder="Enter Skill Name"
+        className="w-full mb-4 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
-      <div className="d-flex justify-content-between">
+      <div className="flex flex-wrap gap-3">
         {/* Create or Update Button */}
         <button
-          style={{ backgroundColor: "green" }}
-          className={`btn bg-${updatingSkill ? "info" : "green"} text-light`}
           onClick={(e) => {
             e.preventDefault();
-            updatingSkill ? updateSkill() : createSkill(); // Güncelleniyorsa update, değilse create işlemi yapılır
+            updatingSkill ? updateSkill() : createSkill();
           }}
+          className={`px-5 py-2 rounded-lg text-white ${
+            updatingSkill ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+          } transition-colors duration-200`}
         >
-          {updatingSkill ? "Update" : "Create"}{" "}
-          {/* Buton metni, güncelleme durumuna göre değişir */}
+          {updatingSkill ? "Update" : "Create"}
         </button>
 
-        {/* Delete and Clear Buttons (Only if updatingSkill exists) */}
+        {/* Delete and Clear Buttons */}
         {updatingSkill && (
           <>
-            {/* Delete Skill Button */}
             <button
-              className={`btn bg-danger text-light`}
               onClick={(e) => {
                 e.preventDefault();
-                deleteSkill(); // Skill silinir
+                deleteSkill();
               }}
+              className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors duration-200 flex items-center justify-center"
             >
-              <MdOutlineDeleteOutline />
+              <MdOutlineDeleteOutline size={20} />
             </button>
 
-            {/* Clear Updating Skill Button */}
             <button
-              className="btn bg-success text-light"
-              onClick={() => setUpdatingSkill(null)} // UpdatingSkill sıfırlanır
+              onClick={() => setUpdatingSkill(null)}
+              className="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white transition-colors duration-200 flex items-center justify-center"
             >
-              <MdOutlineClear />
+              <MdOutlineClear size={20} />
             </button>
           </>
         )}
