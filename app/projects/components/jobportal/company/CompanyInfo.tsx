@@ -8,8 +8,8 @@ export default function CompanyInfo() {
   const [name, setName] = useState("");
   const [vision, setVision] = useState("");
   const [bio, setBio] = useState("");
-  const [logo, setLogo] = useState(null);
-  const [banner, setBanner] = useState(null);
+  const [logo, setLogo] = useState<any>(null);
+  const [banner, setBanner] = useState<any>(null);
 
   const [loading, setLoading] = useState(false);
   const [loadings, setLoadings] = useState(false);
@@ -21,7 +21,7 @@ export default function CompanyInfo() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/company/register`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/company/register`
       );
       const data = await response.json();
       if (!response.ok) throw new Error(data.err);
@@ -42,7 +42,7 @@ export default function CompanyInfo() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -60,7 +60,7 @@ export default function CompanyInfo() {
             logo,
             banner,
           }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -77,13 +77,13 @@ export default function CompanyInfo() {
     }
   };
 
-  const handleUpload = async (e) => {
+  const handleUpload = async (e: any) => {
     const file = e.target.files[0];
     setLoadings(true);
     ImageResizer.imageFileResizer(
       file,
       1280,
-      7200,
+      720,
       "JPEG",
       100,
       0,
@@ -93,39 +93,36 @@ export default function CompanyInfo() {
           {
             method: "POST",
             body: JSON.stringify({ logo: uri }),
-          },
+          }
         );
         const data = await res.json();
         setLogo(data);
         toast.success("Logo uploaded");
         setLoadings(false);
       },
-      "base64",
+      "base64"
     );
   };
 
   const handleDelete = async () => {
     setLoadings(true);
-    await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/company/upload/image`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ public_id: logo.public_id }),
-      },
-    );
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/company/upload/image`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ public_id: logo.public_id }),
+    });
     setLogo(null);
     toast.success("Logo deleted");
     setLoadings(false);
   };
 
-  const handleUploadBanner = async (e) => {
+  const handleUploadBanner = async (e: any) => {
     const file = e.target.files[0];
     setLoadings(true);
     ImageResizer.imageFileResizer(
       file,
       1280,
-      7200,
+      720,
       "JPEG",
       100,
       0,
@@ -135,14 +132,14 @@ export default function CompanyInfo() {
           {
             method: "POST",
             body: JSON.stringify({ banner: uri }),
-          },
+          }
         );
         const data = await res.json();
         setBanner(data);
         toast.success("Banner uploaded");
         setLoadings(false);
       },
-      "base64",
+      "base64"
     );
   };
 
@@ -154,114 +151,118 @@ export default function CompanyInfo() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ public_id: banner.public_id }),
-      },
+      }
     );
     setBanner(null);
     toast.success("Banner deleted");
     setLoadings(false);
   };
 
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
-
   return (
-    <main>
-      <div className="container">
-        <div className="row d-flex justify-content-center align-items-center h-auto">
-          <div className="col p-5 shadow">
-            <h2 className="mb-4 text-center">Company Info</h2>
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+      <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8">
+        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-8">
+          Company Info
+        </h2>
 
-            <form onSubmit={handleSubmit}>
-              <div className="form-group mb-3 text-center">
-                <label
-                  className={`btn btn-primary col-12 ${loading ? "disabled" : ""}`}
-                >
-                  {loading ? "Processing..." : "Upload Logo"}
-                  <input
-                    type="file"
-                    hidden
-                    accept="image/*"
-                    onChange={handleUpload}
-                  />
-                </label>
-                {logo?.secure_url && (
-                  <div>
-                    <Image
-                      src={logo.secure_url}
-                      alt="Logo"
-                      width="500"
-                      height="300"
-                    />
-                    <button type="button" onClick={handleDelete}>
-                      ❌
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="form-group mb-3 text-center">
-                <label
-                  className={`btn btn-primary col-12 ${loading ? "disabled" : ""}`}
-                >
-                  {loading ? "Processing..." : "Upload Banner"}
-                  <input
-                    type="file"
-                    hidden
-                    accept="image/*"
-                    onChange={handleUploadBanner}
-                  />
-                </label>
-                {banner?.secure_url && (
-                  <div>
-                    <Image
-                      src={banner.secure_url}
-                      alt="Banner"
-                      width="500"
-                      height="300"
-                    />
-                    <button type="button" onClick={handleDeleteBanner}>
-                      ❌
-                    </button>
-                  </div>
-                )}
-              </div>
-
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Logo Upload */}
+          <div className="text-center">
+            <label className="w-full flex flex-col items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg shadow cursor-pointer hover:bg-blue-700 transition">
+              {loadings ? "Processing..." : "Upload Logo"}
               <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="form-control mb-3"
-                placeholder="Company Name"
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleUpload}
+                disabled={loadings}
               />
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                className="form-control mb-3"
-                placeholder="Company Bio"
-                rows={3}
-              />
-              <textarea
-                value={vision}
-                onChange={(e) => setVision(e.target.value)}
-                className="form-control mb-3"
-                placeholder="Company Vision"
-                rows={3}
-              />
-
-              <button
-                type="submit"
-                className="btn btn-success"
-                disabled={loading}
-              >
-                {loading ? "Saving..." : "Submit"}
-              </button>
-            </form>
+            </label>
+            {logo?.secure_url && (
+              <div className="mt-4 flex flex-col items-center gap-2">
+                <Image
+                  src={logo.secure_url}
+                  alt="Logo"
+                  width="300"
+                  height="200"
+                  className="rounded-lg shadow"
+                />
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  ❌ Delete Logo
+                </button>
+              </div>
+            )}
           </div>
-        </div>
+
+          {/* Banner Upload */}
+          <div className="text-center">
+            <label className="w-full flex flex-col items-center justify-center px-4 py-3 bg-indigo-600 text-white rounded-lg shadow cursor-pointer hover:bg-indigo-700 transition">
+              {loadings ? "Processing..." : "Upload Banner"}
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleUploadBanner}
+                disabled={loadings}
+              />
+            </label>
+            {banner?.secure_url && (
+              <div className="mt-4 flex flex-col items-center gap-2">
+                <Image
+                  src={banner.secure_url}
+                  alt="Banner"
+                  width="500"
+                  height="250"
+                  className="rounded-lg shadow"
+                />
+                <button
+                  type="button"
+                  onClick={handleDeleteBanner}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  ❌ Delete Banner
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Inputs */}
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Company Name"
+          />
+
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Company Bio"
+            rows={3}
+          />
+
+          <textarea
+            value={vision}
+            onChange={(e) => setVision(e.target.value)}
+            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Company Vision"
+            rows={3}
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? "Saving..." : "Submit"}
+          </button>
+        </form>
       </div>
     </main>
   );

@@ -4,92 +4,102 @@ import { useSession } from "@/app/SessionProvider";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
-import { useEffect } from "react";
-
-// Role-based redirection in Next.js can be implemented to
-// ensure that users are directed to appropriate pages based
-//  on their roles or permissions. This is commonly done
-//   in web
 
 export default function TopNav() {
   const { user } = useSession();
-  const queryClient = useQueryClient(); // Burada useQueryClient doğru şekilde kullanılıyor
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Companies", href: "/job-portal/companies" },
+    { name: "Candidates", href: "/job-portal/candidates" },
+    { name: "Search Jobs", href: "/job-portal/jobs" },
+    { name: "Pricing", href: "/pricing" },
+  ];
 
   return (
-    <>
-      <nav className="nav justify-content-between shadow">
-        <Link className="nav-link mt-2" href="/">
-          Home
+    <nav className="bg-white shadow-md px-4 md:px-10 py-3 flex flex-wrap md:flex-nowrap items-center justify-between  top-0 z-50">
+      {/* Logo / Home */}
+      <div className="flex items-center space-x-4">
+        <Link href="/" className="text-lg md:text-xl font-bold text-green-600">
+          JobPortal
         </Link>
-        <div className="d-flex align-items-center">
-          <Link className="nav-link" href="/job-portal/companies">
-            Companies
-          </Link>
-          <Link className="nav-link" href="/job-portal/candidates">
-            Candidates
-          </Link>
-          <Link className="nav-link" href="/job-portal/jobs">
-            Search jobs
-          </Link>
-          <Link className="nav-link" href="/pricing">
-            Pricing
-          </Link>
-
-          {user ? (
-            <>
-              {user?.rolejob === "CANDIDATE" ? (
-                <Link className="nav-link" href={`/dashboard/job/candidate`}>
-                  {user?.username}({user?.rolejob})
-                </Link>
-              ) : (
-                ""
-              )}
-
-              {user?.rolejob === "ADMIN" ? (
-                <Link className="nav-link" href={`/dashboards/jobs/admin`}>
-                  {user?.username}({user?.rolejob})
-                </Link>
-              ) : (
-                ""
-              )}
-
-              {user?.rolejob === "COMPANY" ? (
-                <Link className="nav-link" href={`/dashboard/job/company`}>
-                  {user?.username}({user?.rolejob})
-                </Link>
-              ) : (
-                ""
-              )}
-
-              <a
-                className="nav-link pointer-job"
-                onClick={() => {
-                  queryClient.clear();
-                  logout();
-                }}
-              >
-                Logout
-              </a>
-            </>
-          ) : (
-            <>
-              <Link className="nav-link" href="/login">
-                Login
-              </Link>
-              <Link className="nav-link" href="/register">
-                Register
-              </Link>
-            </>
-          )}
+        <div className="hidden md:flex space-x-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-gray-700 hover:text-green-600 transition-colors"
+            >
+              {item.name}
+            </Link>
+          ))}
         </div>
-      </nav>
-    </>
+      </div>
+
+      {/* User Actions */}
+      <div className="flex items-center space-x-3 mt-2 md:mt-0">
+        {user ? (
+          <>
+            {user?.rolejob === "CANDIDATE" && (
+              <Link
+                href={`/dashboard/job/candidate`}
+                className="px-3 py-1 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+              >
+                {user?.username} ({user?.rolejob})
+              </Link>
+            )}
+
+            {user?.rolejob === "ADMIN" && (
+              <Link
+                href={`/dashboards/jobs/admin`}
+                className="px-3 py-1 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+              >
+                {user?.username} ({user?.rolejob})
+              </Link>
+            )}
+
+            {user?.rolejob === "COMPANY" && (
+              <Link
+                href={`/dashboard/job/company`}
+                className="px-3 py-1 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+              >
+                {user?.username} ({user?.rolejob})
+              </Link>
+            )}
+
+            <button
+              onClick={() => {
+                queryClient.clear();
+                logout();
+              }}
+              className="px-3 py-1 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              href="/login"
+              className="px-3 py-1 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
+            >
+              Login
+            </Link>
+            <Link
+              href="/register"
+              className="px-3 py-1 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+            >
+              Register
+            </Link>
+          </>
+        )}
+      </div>
+
+      {/* Mobile Menu Button */}
+      <div className="md:hidden flex items-center">
+        {/* Buraya istersen hamburger menü eklenebilir */}
+      </div>
+    </nav>
   );
 }

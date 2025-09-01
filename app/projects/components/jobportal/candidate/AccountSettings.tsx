@@ -17,21 +17,14 @@ export default function Account() {
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
-  // Zustand stores
-  const {
-    countries,
-    fetchCountriesPublic,
-    setUpdatingCountry: setCountryId,
-  } = useCountryStore();
-
+  const { countries, fetchCountriesPublic, setUpdatingCountry: setCountryId } =
+    useCountryStore();
   const { states, fetchStatesPublic, setSelectedCountryId, setStates } =
     useStateStore();
-
   const { cities, fetchCitiesPublic, setSelectedStateId, setCities } =
     useCityStore();
 
   useEffect(() => {
-    // Initialize data
     fetchCountriesPublic();
     fetchStatesPublic();
     fetchCitiesPublic();
@@ -41,13 +34,9 @@ export default function Account() {
   const fetchAccountData = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/account`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/account`
       );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch account data");
-      }
-
+      if (!response.ok) throw new Error("Failed to fetch account data");
       const data = await response.json();
 
       setSelectedCountry(data?.country?.id || "");
@@ -63,29 +52,15 @@ export default function Account() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log("Submitting:", {
-      country: selectedCountry,
-      state: selectedState,
-      city: selectedCity,
-      phone_one: primaryPhone,
-      phone_two: secondaryPhone,
-      address,
-      email,
-    });
-
     try {
       setLoadings(true);
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/account`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             countryId: selectedCountry,
             stateId: selectedState,
@@ -95,16 +70,11 @@ export default function Account() {
             address,
             email,
           }),
-        },
+        }
       );
-
       const data = await response.json();
-
-      if (!response.ok) {
-        toast.error(data.err);
-      } else {
-        toast.success("Profile updated successfully");
-      }
+      if (!response.ok) toast.error(data.err);
+      else toast.success("Profile updated successfully");
     } catch (err) {
       console.error(err);
       toast.error("An error occurred while updating profile");
@@ -113,7 +83,7 @@ export default function Account() {
     }
   };
 
-  const handleCountryChange = async (e) => {
+  const handleCountryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const countryId = e.target.value;
     setSelectedCountry(countryId);
     setSelectedState("");
@@ -121,254 +91,135 @@ export default function Account() {
     setCountryId(countryId);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/state`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ countryId }),
-        },
-      );
-
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/state`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ countryId }),
+      });
       const data = await response.json();
-
-      if (!response.ok) {
-        toast.error("Failed to fetch states");
-      } else {
-        setStates(data);
-      }
+      if (!response.ok) toast.error("Failed to fetch states");
+      else setStates(data);
     } catch (error) {
       console.error(error);
       toast.error("Error fetching states");
     }
   };
 
-  const handleStateChange = async (e) => {
+  const handleStateChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const stateId = e.target.value;
     setSelectedState(stateId);
     setSelectedCity("");
     setSelectedStateId(stateId);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/city`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ stateId }),
-        },
-      );
-
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/city`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stateId }),
+      });
       const data = await response.json();
-
-      if (!response.ok) {
-        toast.error("Failed to fetch cities");
-      } else {
-        setCities(data);
-      }
+      if (!response.ok) toast.error("Failed to fetch cities");
+      else setCities(data);
     } catch (error) {
       console.error("Error fetching cities:", error);
       toast.error("Error fetching cities");
     }
   };
 
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
-
   return (
-    <main>
-      <div className="container">
-        <div className="row d-flex justify-content-center align-items-center h-auto">
-          <div className="col p-5 shadow">
-            <h2 className="mb-2">Location</h2>
+    <main className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Location</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <select
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">Select a country</option>
+              {countries.map((country) => (
+                <option key={country.id} value={country.id}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
 
-            <form onSubmit={handleSubmit}>
-              <div className="row">
-                <div className="col-md-4">
-                  <select
-                    className="mb-4"
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #ccc",
-                      backgroundColor: "#fff",
-                      color: "#333",
-                      fontSize: "15px",
-                      outline: "none",
-                      appearance: "none",
-                    }}
-                    value={selectedCountry}
-                    onChange={handleCountryChange}
-                  >
-                    <option value="">Select a country</option>
-                    {countries.map((country) => (
-                      <option key={country.id} value={country.id}>
-                        {country.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            <select
+              value={selectedState}
+              onChange={handleStateChange}
+              disabled={!selectedCountry}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-100"
+            >
+              <option value="">Select a state</option>
+              {states.map((state) => (
+                <option key={state.id} value={state.id}>
+                  {state.statename}
+                </option>
+              ))}
+            </select>
 
-                <div className="col-md-4">
-                  <select
-                    className="mb-4"
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #ccc",
-                      backgroundColor: "#fff",
-                      color: "#333",
-                      fontSize: "15px",
-                      outline: "none",
-                      appearance: "none",
-                    }}
-                    value={selectedState}
-                    onChange={handleStateChange}
-                    disabled={!selectedCountry}
-                  >
-                    <option value="">Select a state</option>
-                    {states.map((state) => (
-                      <option key={state.id} value={state.id}>
-                        {state.statename}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="col-md-4">
-                  <select
-                    className="mb-4"
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #ccc",
-                      backgroundColor: "#fff",
-                      color: "#333",
-                      fontSize: "15px",
-                      appearance: "none",
-                      outline: "none",
-                    }}
-                    value={selectedCity}
-                    onChange={(e) => setSelectedCity(e.target.value)}
-                    disabled={!selectedState}
-                  >
-                    <option value="">Select a city</option>
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <textarea
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  border: "2px solid #ccc",
-                  backgroundColor: "#fff",
-                  color: "#333",
-                  fontSize: "15px",
-                  appearance: "none",
-                  outline: "none",
-                }}
-                className="mb-4"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Address"
-              />
-
-              <h2 className="mb-5">Contact details</h2>
-              <div className="row">
-                <div className="col-md-6">
-                  <input
-                    placeholder="Primary phone"
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #ccc",
-                      backgroundColor: "#fff",
-                      color: "#333",
-                      fontSize: "15px",
-                      appearance: "none",
-                      outline: "none",
-                    }}
-                    type="tel"
-                    className="mb-4"
-                    value={primaryPhone}
-                    onChange={(e) => setPrimaryPhone(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    placeholder="Secondary phone"
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #ccc",
-                      backgroundColor: "#fff",
-                      color: "#333",
-                      fontSize: "15px",
-                      appearance: "none",
-                      outline: "none",
-                    }}
-                    type="tel"
-                    className="mb-4"
-                    value={secondaryPhone}
-                    onChange={(e) => setSecondaryPhone(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <input
-                placeholder="Email"
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  border: "2px solid #ccc",
-                  backgroundColor: "#fff",
-                  color: "#333",
-                  fontSize: "15px",
-                  appearance: "none",
-                  outline: "none",
-                }}
-                type="email"
-                className="mb-4"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <button
-                type="submit"
-                disabled={loadings}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#007bff",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                {loadings ? "Please wait..." : "Save changes"}
-              </button>
-            </form>
-
-            <AccountPassword />
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              disabled={!selectedState}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-100"
+            >
+              <option value="">Select a city</option>
+              {cities.map((city) => (
+                <option key={city.id} value={city.id}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
           </div>
+
+          <textarea
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Address"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+
+          <h2 className="text-2xl font-semibold my-4 text-gray-800">Contact Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="tel"
+              placeholder="Primary phone"
+              value={primaryPhone}
+              onChange={(e) => setPrimaryPhone(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <input
+              type="tel"
+              placeholder="Secondary phone"
+              value={secondaryPhone}
+              onChange={(e) => setSecondaryPhone(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+
+          <button
+            type="submit"
+            disabled={loadings}
+            className={`w-full py-2 mt-2 rounded-lg text-white font-medium ${
+              loadings ? "bg-green-300 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+            }`}
+          >
+            {loadings ? "Please wait..." : "Save changes"}
+          </button>
+        </form>
+
+        <div className="mt-6">
+          <AccountPassword />
         </div>
       </div>
     </main>

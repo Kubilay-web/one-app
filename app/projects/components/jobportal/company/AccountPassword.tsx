@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Register() {
@@ -49,44 +49,45 @@ export default function Register() {
     }
   };
 
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
-
   return (
-    <main>
-      <div className="container">
-        <div className="row d-flex justify-content-center align-items-center vh-100">
-          <div className="col p-5 shadow">
-            <h2 className="m-4 text-center">Password Update</h2>
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
+        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+          Password Update
+        </h2>
 
-            <form onSubmit={handleSubmit}>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mb-4"
-                style={{ outline: "none" }}
-                placeholder="Enter your password"
-              />
-
-              <input
-                type="password"
-                value={cpassword}
-                onChange={(e) => setCpassword(e.target.value)}
-                className="mb-4"
-                style={{ outline: "none" }}
-                placeholder="Enter your new password"
-              />
-
-              <br />
-              <button type="submit">Submit</button>
-            </form>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Password */}
+          <div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700 placeholder-gray-400"
+              placeholder="Enter your password"
+            />
           </div>
-        </div>
+
+          {/* Confirm Password */}
+          <div>
+            <input
+              type="password"
+              value={cpassword}
+              onChange={(e) => setCpassword(e.target.value)}
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700 placeholder-gray-400"
+              placeholder="Confirm your new password"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? "Updating..." : "Submit"}
+          </button>
+        </form>
       </div>
     </main>
   );

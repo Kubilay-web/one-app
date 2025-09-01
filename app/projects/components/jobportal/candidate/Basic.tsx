@@ -1,7 +1,5 @@
 "use client";
 
-import "bootstrap/dist/css/bootstrap.min.css"; // global import
-
 import { useState, useEffect } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
@@ -24,13 +22,12 @@ export default function Basic() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/basic`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/basic`
         );
         if (!response.ok) throw new Error("Failed to fetch");
 
         const data = await response.json();
         const profile = Array.isArray(data) && data.length > 0 ? data[0] : {};
-        console.log("Fetched data:", data);
 
         setFullname(profile.full_name || "");
         setTitle(profile.title || "");
@@ -42,7 +39,7 @@ export default function Basic() {
                 public_id: profile.image_public_id,
                 secure_url: profile.image_secure_url,
               }
-            : null,
+            : null
         );
         setDob(profile.birth_date ? moment(profile.birth_date) : null);
         setCV(profile.cv || "");
@@ -75,7 +72,7 @@ export default function Basic() {
             website,
             cv,
           }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -115,7 +112,6 @@ export default function Basic() {
       });
 
       const data = await res.json();
-
       if (res.ok && data.secure_url) {
         setCV(data.secure_url);
         setPdfname(data.original_filename);
@@ -149,7 +145,7 @@ export default function Basic() {
               method: "POST",
               body: JSON.stringify({ logo: uri }),
               headers: { "Content-Type": "application/json" },
-            },
+            }
           );
           const data = await res.json();
           setLogo(data);
@@ -161,7 +157,7 @@ export default function Basic() {
           setLoading(false);
         }
       },
-      "base64",
+      "base64"
     );
   };
 
@@ -170,14 +166,11 @@ export default function Basic() {
 
     try {
       setLoading(true);
-      await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/upload/image`,
-        {
-          method: "PUT",
-          body: JSON.stringify({ public_id: logo.public_id }),
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/upload/image`, {
+        method: "PUT",
+        body: JSON.stringify({ public_id: logo.public_id }),
+        headers: { "Content-Type": "application/json" },
+      });
       setLogo(null);
       toast.success("Image deleted");
     } catch (err) {
@@ -188,136 +181,111 @@ export default function Basic() {
     }
   };
 
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
-
   return (
-    <main className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-lg-8 col-md-10 col-sm-12 bg-light rounded p-4 shadow-lg">
-          <h2 className="mb-4 text-center">Basic Profile</h2>
+    <main className="min-h-screen bg-gray-50 py-10 px-4">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6 space-y-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800">Basic Profile</h2>
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label">Upload Resume (PDF)</label>
-              <div className="d-flex">
-                <input
-                  type="file"
-                  accept=".pdf"
-                  className="form-control"
-                  onChange={handleFileChange}
-                />
-                <button
-                  className="btn btn-success ms-2"
-                  onClick={handleUploadpdf}
-                  type="button"
-                >
-                  Upload
-                </button>
-              </div>
-              {pdfname && <p className="mt-2">Uploaded: {pdfname}</p>}
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Upload Picture</label>
-              <input
-                type="file"
-                className="form-control"
-                accept="image/*"
-                onChange={handleUpload}
-                disabled={loading}
-              />
-              {logo?.secure_url && (
-                <div className="mt-3">
-                  <img
-                    src={logo.secure_url}
-                    alt="Uploaded"
-                    className="img-fluid rounded"
-                    style={{ maxHeight: "200px" }}
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-outline-danger btn-sm mt-2"
-                    onClick={handleDelete}
-                  >
-                    ❌ Delete Image
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Date of Birth</label>
-              <DatePicker
-                onChange={(date) => setDob(date)}
-                value={dob}
-                style={{ width: "100%", height: "38px" }}
-                format="YYYY-MM-DD"
-                allowClear
-              />
-            </div>
-
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                className="form-control"
-                id="fullname"
-                placeholder="Full Name"
-                value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
-              />
-              <label htmlFor="fullname">Full Name</label>
-            </div>
-
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                className="form-control"
-                id="title"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <label htmlFor="title">Title</label>
-            </div>
-
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                className="form-control"
-                id="experience"
-                placeholder="Experience"
-                value={experience}
-                onChange={(e) => setExperience(e.target.value)}
-              />
-              <label htmlFor="experience">Experience Label</label>
-            </div>
-
-            <div className="form-floating mb-4">
-              <input
-                type="text"
-                className="form-control"
-                id="website"
-                placeholder="Website"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-              />
-              <label htmlFor="website">Website</label>
-            </div>
-
+        {/* Upload Resume */}
+        <div className="space-y-2">
+          <label className="block text-gray-700 font-medium">Upload Resume (PDF)</label>
+          <div className="flex gap-2">
+            <input
+              type="file"
+              accept=".pdf"
+              className="flex-1 px-3 py-2 border rounded-md"
+              onChange={handleFileChange}
+            />
             <button
-              type="submit"
-              className="btn btn-primary w-100"
-              disabled={loading}
+              type="button"
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              onClick={handleUploadpdf}
             >
-              {loading ? "Submitting..." : "Submit"}
+              Upload
             </button>
-          </form>
+          </div>
+          {pdfname && <p className="text-sm text-gray-600">Uploaded: {pdfname}</p>}
         </div>
+
+        {/* Upload Picture */}
+        <div className="space-y-2">
+          <label className="block text-gray-700 font-medium">Upload Picture</label>
+          <input
+            type="file"
+            accept="image/*"
+            className="w-full px-3 py-2 border rounded-md"
+            onChange={handleUpload}
+            disabled={loading}
+          />
+          {logo?.secure_url && (
+            <div className="mt-2 space-y-2">
+              <img src={logo.secure_url} alt="Uploaded" className="w-40 h-40 object-cover rounded-md" />
+              <button
+                type="button"
+                className="px-3 py-1 text-red-600 border border-red-600 rounded-md hover:bg-red-50"
+                onClick={handleDelete}
+              >
+                ❌ Delete Image
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Date of Birth */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Date of Birth</label>
+          <DatePicker
+            onChange={(date) => setDob(date)}
+            value={dob}
+            className="w-full px-3 py-2 border rounded-md"
+            format="YYYY-MM-DD"
+            allowClear
+          />
+        </div>
+
+        {/* Text Inputs */}
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={fullname}
+            onChange={(e) => setFullname(e.target.value)}
+            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
+          />
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
+          />
+          <input
+            type="text"
+            placeholder="Experience Label"
+            value={experience}
+            onChange={(e) => setExperience(e.target.value)}
+            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
+          />
+          <input
+            type="text"
+            placeholder="Website"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          disabled={loading}
+          className={`w-full py-2 rounded-md text-white font-medium ${
+            loading ? "bg-green-300 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+          }`}
+        >
+          {loading ? "Submitting..." : "Submit"}
+        </button>
       </div>
     </main>
   );

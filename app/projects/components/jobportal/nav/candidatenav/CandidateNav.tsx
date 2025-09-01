@@ -2,137 +2,37 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+
 export default function CandidateNav() {
   const pathname = usePathname();
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
+
+  const navItems = [
+    { name: "Candidate", href: "/dashboards/jobs/candidate" },
+    { name: "My Profile", href: "/dashboards/jobs/candidate/my-profile" },
+    { name: "Applied Jobs", href: "/dashboards/jobs/candidate/myjobs" },
+    { name: "Saved Jobs", href: "/dashboards/jobs/candidate/savedjobs" },
+    { name: "Delete Account", href: "/dashboards/jobs/candidate/deleteaccount" },
+    { name: "Logout", href: "/dashboards/jobs/candidate/logout" },
+  ];
+
   return (
-    <>
-      <nav className="nav justify-content-center mb-3">
-        <Link
-          className="nav-link"
-          style={{
-            color: pathname === "/dashboard/job/candidate" ? "white" : "black",
-            fontWeight:
-              pathname === "/dashboard/job/candidate" ? "bold" : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/candidate" ? "green" : "transparent",
-          }}
-          href="/dashboard/job/candidate"
-        >
-          Candidate
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/candidate/my-profile"
-                ? "white"
-                : "black",
-            fontWeight:
-              pathname === "/dashboard/job/candidate/my-profile"
-                ? "bold"
-                : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/candidate/my-profile"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/candidate/my-profile"
-        >
-          My Profile
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/candidate/myjobs"
-                ? "white"
-                : "black",
-            fontWeight:
-              pathname === "/dashboard/job/candidate/myjobs"
-                ? "bold"
-                : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/candidate/myjobs"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/candidate/myjobs"
-        >
-          Applied Jobs
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/candidate/savedjobs"
-                ? "white"
-                : "black",
-            fontWeight:
-              pathname === "/dashboard/job/candidate/savedjobs"
-                ? "bold"
-                : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/candidate/savedjobs"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/candidate/savedjobs"
-        >
-          Saved Jobs
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/candidate/deleteaccount"
-                ? "white"
-                : "black",
-            fontWeight:
-              pathname === "/dashboard/job/candidate/deleteaccount"
-                ? "bold"
-                : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/candidate/deleteaccount"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/candidate/deleteaccount"
-        >
-          Delete Account
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/candidate/logout"
-                ? "white"
-                : "black",
-            fontWeight:
-              pathname === "/dashboard/job/candidate/logout"
-                ? "bold"
-                : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/candidate/logout"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/candidate/logout"
-        >
-          Logout
-        </Link>
-      </nav>
-    </>
+    <nav className="flex flex-wrap justify-center gap-2 md:gap-4 mb-4 mt-5">
+      {navItems.map((item) => {
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`px-4 py-2 rounded-lg text-sm md:text-base font-medium transition-colors ${
+              isActive
+                ? "bg-green-600 text-white font-bold"
+                : "bg-gray-100 text-gray-700 hover:bg-green-200 hover:text-green-800"
+            }`}
+          >
+            {item.name}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

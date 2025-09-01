@@ -1,115 +1,49 @@
 "use client";
-import Link from "next/link";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Basic from "@/app/projects/components/jobportal/candidate/Basic";
 import Profile from "./Profile";
 import AccountSettings from "./AccountSettings";
 import ExperienceEdu from "./ExperienceEdu";
 
 export default function Navigation() {
-  const [activeTab, setActiveTab] = useState("nav-home");
+  const [activeTab, setActiveTab] = useState("basic");
 
-  const handleTabClick = (tabId) => {
-    setActiveTab(tabId);
-  };
-
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
+  const tabs = [
+    { id: "basic", label: "Basic", component: <Basic /> },
+    { id: "profile", label: "Profile", component: <Profile /> },
+    { id: "experience", label: "Experience & Education", component: <ExperienceEdu /> },
+    { id: "account", label: "Account Settings", component: <AccountSettings /> },
+  ];
 
   return (
-    <div>
-      <nav>
-        <div className="nav nav-tabs" id="nav-tab" role="tablist">
+    <div className="w-full">
+      {/* Tab Buttons */}
+      <div className="flex flex-wrap gap-2 justify-start mb-4 border-b border-gray-200">
+        {tabs.map((tab) => (
           <button
-            className={`nav-link m-4 ${activeTab === "nav-home" ? "active-tab" : ""}`}
-            id="nav-home-tab"
-            onClick={() => handleTabClick("nav-home")}
-            type="button"
-            role="tab"
-            aria-controls="nav-home"
-            aria-selected={activeTab === "nav-home" ? "true" : "false"}
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${
+              activeTab === tab.id
+                ? "bg-green-600 text-white shadow-md"
+                : "bg-gray-100 text-gray-700 hover:bg-green-100"
+            }`}
           >
-            Basic
+            {tab.label}
           </button>
+        ))}
+      </div>
 
-          <button
-            className={`nav-link m-4 ${activeTab === "nav-profile" ? "active-tab" : ""}`}
-            id="nav-profile-tab"
-            onClick={() => handleTabClick("nav-profile")}
-            type="button"
-            role="tab"
-            aria-controls="nav-profile"
-            aria-selected={activeTab === "nav-profile" ? "true" : "false"}
-          >
-            Profile
-          </button>
-
-          <button
-            className={`nav-link m-4 ${activeTab === "nav-contact" ? "active-tab" : ""}`}
-            id="nav-contact-tab"
-            onClick={() => handleTabClick("nav-contact")}
-            type="button"
-            role="tab"
-            aria-controls="nav-contact"
-            aria-selected={activeTab === "nav-contact" ? "true" : "false"}
-          >
-            Experience &Education
-          </button>
-
-          <button
-            className={`nav-link m-4 ${activeTab === "nav-account" ? "active-tab" : ""}`}
-            id="nav-contact-tab"
-            onClick={() => handleTabClick("nav-account")}
-            type="button"
-            role="tab"
-            aria-controls="nav-account"
-            aria-selected={activeTab === "nav-account" ? "true" : "false"}
-          >
-            Account Settings
-          </button>
-        </div>
-      </nav>
-      <div className="tab-content p-3" id="nav-tabContent">
-        <div
-          className={`tab-pane fade ${activeTab === "nav-home" ? "show active" : ""}`}
-          id="nav-home"
-          role="tabpanel"
-          aria-labelledby="nav-home-tab"
-        >
-          <Basic />
-        </div>
-
-        <div
-          className={`tab-pane fade m-1 ${activeTab === "nav-profile" ? "show active" : ""}`}
-          id="nav-profile"
-          role="tabpanel"
-          aria-labelledby="nav-profile-tab"
-        >
-          <Profile />
-        </div>
-
-        <div
-          className={`tab-pane fade m-1 ${activeTab === "nav-contact" ? "show active" : ""}`}
-          id="nav-contact"
-          role="tabpanel"
-          aria-labelledby="nav-contact-tab"
-        >
-          <ExperienceEdu />
-        </div>
-
-        <div
-          className={`tab-pane fade m-1 ${activeTab === "nav-account" ? "show active" : ""}`}
-          id="nav-account"
-          role="tabpanel"
-          aria-labelledby="nav-contact-tab"
-        >
-          <AccountSettings />
-        </div>
+      {/* Tab Content */}
+      <div className="bg-white shadow rounded-b-lg p-4">
+        {tabs.map(
+          (tab) =>
+            activeTab === tab.id && (
+              <div key={tab.id} className="w-full transition-all duration-300">
+                {tab.component}
+              </div>
+            )
+        )}
       </div>
     </div>
   );

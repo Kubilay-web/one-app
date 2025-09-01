@@ -1,8 +1,6 @@
 // components/Navigation.js
 "use client";
-import Link from "next/link";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CompanyInfo from "./CompanyInfo";
 import FoundingInfo from "./FoundingInfo";
 import AccountSetting from "./AccountSetting";
@@ -11,83 +9,56 @@ import AccountPassword from "./AccountPassword";
 export default function Navigation() {
   const [activeTab, setActiveTab] = useState("nav-home");
 
-  const handleTabClick = (tabId) => {
+  const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
   };
 
-  useEffect(() => {
-    import("bootstrap/dist/css/bootstrap.min.css");
-    import(
-      "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
-    );
-  }, []);
-
   return (
-    <div>
-      <nav>
-        <div className="nav nav-tabs" id="nav-tab" role="tablist">
-          <button
-            className={`nav-link m-4 ${activeTab === "nav-home" ? "active-tab" : ""}`}
-            id="nav-home-tab"
-            onClick={() => handleTabClick("nav-home")}
-            type="button"
-            role="tab"
-            aria-controls="nav-home"
-            aria-selected={activeTab === "nav-home" ? "true" : "false"}
-          >
-            Company info
-          </button>
-          <button
-            className={`nav-link m-4 ${activeTab === "nav-profile" ? "active-tab" : ""}`}
-            id="nav-profile-tab"
-            onClick={() => handleTabClick("nav-profile")}
-            type="button"
-            role="tab"
-            aria-controls="nav-profile"
-            aria-selected={activeTab === "nav-profile" ? "true" : "false"}
-          >
-            Founding info
-          </button>
-          <button
-            className={`nav-link m-4 ${activeTab === "nav-contact" ? "active-tab" : ""}`}
-            id="nav-contact-tab"
-            onClick={() => handleTabClick("nav-contact")}
-            type="button"
-            role="tab"
-            aria-controls="nav-contact"
-            aria-selected={activeTab === "nav-contact" ? "true" : "false"}
-          >
-            Account Setting
-          </button>
-        </div>
-      </nav>
-      <div className="tab-content p-3" id="nav-tabContent">
-        <div
-          className={`tab-pane fade ${activeTab === "nav-home" ? "show active" : ""}`}
-          id="nav-home"
-          role="tabpanel"
-          aria-labelledby="nav-home-tab"
+    <div className="w-full">
+      {/* Tabs */}
+      <div className="flex flex-col sm:flex-row border-b border-gray-200 mb-6">
+        <button
+          className={`px-4 py-2 sm:mr-4 mb-2 sm:mb-0 rounded-t-lg font-medium transition-colors duration-300 ${
+            activeTab === "nav-home"
+              ? "bg-white border border-b-0 border-gray-300 text-blue-600"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          }`}
+          onClick={() => handleTabClick("nav-home")}
         >
-          <CompanyInfo />
-        </div>
-        <div
-          className={`tab-pane fade m-1 ${activeTab === "nav-profile" ? "show active" : ""}`}
-          id="nav-profile"
-          role="tabpanel"
-          aria-labelledby="nav-profile-tab"
+          Company info
+        </button>
+        <button
+          className={`px-4 py-2 sm:mr-4 mb-2 sm:mb-0 rounded-t-lg font-medium transition-colors duration-300 ${
+            activeTab === "nav-profile"
+              ? "bg-white border border-b-0 border-gray-300 text-blue-600"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          }`}
+          onClick={() => handleTabClick("nav-profile")}
         >
-          <FoundingInfo />
-        </div>
-        <div
-          className={`tab-pane fade m-1 ${activeTab === "nav-contact" ? "show active" : ""}`}
-          id="nav-contact"
-          role="tabpanel"
-          aria-labelledby="nav-contact-tab"
+          Founding info
+        </button>
+        <button
+          className={`px-4 py-2 rounded-t-lg font-medium transition-colors duration-300 ${
+            activeTab === "nav-contact"
+              ? "bg-white border border-b-0 border-gray-300 text-blue-600"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          }`}
+          onClick={() => handleTabClick("nav-contact")}
         >
-          <AccountSetting />
+          Account Setting
+        </button>
+      </div>
 
-          <AccountPassword />
-        </div>
+      {/* Tab Content */}
+      <div className="bg-white border border-gray-300 rounded-b-lg p-6 shadow-sm">
+        {activeTab === "nav-home" && <CompanyInfo />}
+        {activeTab === "nav-profile" && <FoundingInfo />}
+        {activeTab === "nav-contact" && (
+          <div className="space-y-4">
+            <AccountSetting />
+            <AccountPassword />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -2,98 +2,37 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 export default function CompanyNav() {
   const pathname = usePathname();
+
+  const links = [
+    { href: "/dashboard/job/company", label: "Company" },
+    { href: "/dashboard/job/company/profile", label: "Profile" },
+    { href: "/dashboard/job/company/job", label: "Create Jobs" },
+    { href: "/dashboard/job/company/companyjob", label: "All Jobs" },
+    { href: "/dashboard/job/company/orders", label: "Orders" },
+  ];
+
   return (
-    <>
-      <nav className="nav justify-content-center mb-3">
-        {/* Company Links */}
-        <Link
-          className="nav-link"
-          style={{
-            color: pathname === "/dashboard/job/company" ? "white" : "black",
-            fontWeight:
-              pathname === "/dashboard/job/company" ? "bold" : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/company" ? "green" : "transparent",
-          }}
-          href="/dashboard/job/company"
-        >
-          Company
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/company/profile" ? "white" : "black",
-            fontWeight:
-              pathname === "/dashboard/job/company/profile" ? "bold" : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/company/profile"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/company/profile"
-        >
-          Profile
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/company/job" ? "white" : "black",
-            fontWeight:
-              pathname === "/dashboard/job/company/job" ? "bold" : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/company/job"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/company/job"
-        >
-          Create Jobs
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/company/companyjob"
-                ? "white"
-                : "black",
-            fontWeight:
-              pathname === "/dashboard/job/company/companyjob"
-                ? "bold"
-                : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/company/companyjob"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/company/companyjob"
-        >
-          All Jobs
-        </Link>
-
-        <Link
-          className="nav-link"
-          style={{
-            color:
-              pathname === "/dashboard/job/company/orders" ? "white" : "black",
-            fontWeight:
-              pathname === "/dashboard/job/company/orders" ? "bold" : "normal",
-            backgroundColor:
-              pathname === "/dashboard/job/company/orders"
-                ? "green"
-                : "transparent",
-          }}
-          href="/dashboard/job/company/orders"
-        >
-          Orders
-        </Link>
-      </nav>
-    </>
+    <nav className="flex flex-wrap justify-center gap-2 mb-6 mt-8">
+      {links.map(({ href, label }) => {
+        const isActive = pathname === href;
+        return (
+          <Link
+            key={href}
+            href={href}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+              ${
+                isActive
+                  ? "bg-green-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-700"
+              }`}
+          >
+            {label}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }
