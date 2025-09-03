@@ -4427,6 +4427,13 @@
     "@stream-io/escape-string-regexp" "^5.0.1"
     lodash.deburr "^4.1.0"
 
+"@stripe/react-stripe-js@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-4.0.0.tgz#4f47d7711202a327ded4ac2f8f40d827e0e7c806"
+  integrity sha512-bsvABsGzdfXMD914fUNlse3QJMqQzOC1522KEO6lbYUAX6lgzqZ5h2vgVRqQc3hAIChukWfrVt9qpKzqn2JHpw==
+  dependencies:
+    prop-types "^15.7.2"
+
 "@stripe/stripe-js@^7.8.0":
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-7.8.0.tgz#01390d31030f04b64a7ff13adcccbafd615c7b77"

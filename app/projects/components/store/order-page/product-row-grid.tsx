@@ -1,4 +1,4 @@
-import ProductStatusTag from "@/components/shared/product-status";
+import ProductStatusTag from "@/app/projects/components/shared/product-status";
 import { ProductStatus } from "@/app/lib/types";
 import { OrderItem } from "@prisma/client";
 import Image from "next/image";
