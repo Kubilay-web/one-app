@@ -1,4 +1,4 @@
-import { useCartStore } from "@/cart-store/useCartStore";
+import { useCartStore } from "@/app/cart-store/useCartStore";
 import useFromStore from "@/app/hooks/useFromStore";
 import { CartProductType } from "@/app/lib/types";
 import { Size } from "@prisma/client";

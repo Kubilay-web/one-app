@@ -1,3 +1,4 @@
+//React, Nextjs
 import Image from "next/image";
 
 // Import Swiper React components
@@ -19,7 +20,6 @@ export default function ProductCardImageSwiper({
   images: ProductVariantImage[];
 }) {
   const swiperRef = useRef<any>(null);
-
   useEffect(() => {
     if (swiperRef.current && swiperRef.current.swiper) {
       swiperRef.current.swiper.autoplay.stop();
@@ -35,14 +35,12 @@ export default function ProductCardImageSwiper({
         swiperRef.current.swiper.slideTo(0);
       }}
     >
-      {/* Removed key={images.id} here, as it is not needed */}
       <Swiper ref={swiperRef} modules={[Autoplay]} autoplay={{ delay: 500 }}>
-        {images.map((img, index) => (
-          // Using `index` as a fallback key if `img.id` is not available
-          <SwiperSlide key={img.id || index}> 
+        {images.map((img) => (
+          <SwiperSlide key={img.id}>
             <Image
               src={img.url}
-              alt="Product image"
+              alt=""
               width={400}
               height={400}
               className="block h-[200px] w-48 object-cover sm:w-[192px]"

@@ -1,6 +1,6 @@
 "use client";
-import OrderStatusTag from "../../shared/order-status";
-import PaymentStatusTag from "../../shared/payment-status";
+import OrderStatusTag from "@/app/projects/components/shared/order-status";
+import PaymentStatusTag from "@/app/projects/components/shared/payment-status";
 import { Button } from "@/app/projects/components/ui/button";
 import { OrderFulltType, OrderStatus, PaymentStatus } from "@/app/lib/types";
 import { ChevronLeft, ChevronRight, Download, Printer } from "lucide-react";

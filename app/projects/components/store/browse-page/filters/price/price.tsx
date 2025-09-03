@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState, useEffect } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import Input from "../../../ui/input";
+import Input from "@/app/projects/components/store/ui/input";
 
 const PriceFilter: FC = () => {
   const searchParams = useSearchParams();

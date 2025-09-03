@@ -37,7 +37,7 @@ const StoreCard: FC<Props> = ({ store }) => {
   if (!user) return null;
 
   const handleStoreFollow = async () => {
-    if (!user) router.push("/sign-in");
+    if (!user) router.push("/");
     try {
       const res = await followStore(id);
       setFollowing(res);

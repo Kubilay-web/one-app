@@ -6,7 +6,7 @@ import {
 } from "@/app/lib/types";
 import { useEffect, useState } from "react";
 import Pagination from "../../shared/pagination";
-import { getUserReviews } from "@/queries/profile";
+import { getUserReviews } from "@/app/queries/profile";
 import ReviewCard from "../../cards/review";
 import ReviewsHeader from "./reviews-header";
 

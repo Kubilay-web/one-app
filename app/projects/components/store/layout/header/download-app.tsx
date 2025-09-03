@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 // Assets
-// import PlayStoreImg from "@/public/assets/icons/google-play.webp";
-// import AppStoreImg from "@/public/assets/icons/app-store.webp";
+import PlayStoreImg from "@/public/assets/icons/google-play.webp";
+import AppStoreImg from "@/public/assets/icons/app-store.webp";
 import { AppIcon } from "@/app/projects/components/store/icons";
 
 export default function DownloadApp() {
@@ -37,13 +37,13 @@ export default function DownloadApp() {
                     href=""
                     className="grid place-items-center rounded-3xl bg-black px-4 py-3"
                   >
-                    {/* <Image src={AppStoreImg} alt="App store" /> */}
+                    <Image src={AppStoreImg} alt="App store" />
                   </Link>
                   <Link
                     href=""
                     className="grid place-items-center rounded-3xl bg-black px-4 py-3"
                   >
-                    {/* <Image src={PlayStoreImg} alt="Play store" /> */}
+                    <Image src={PlayStoreImg} alt="Play store" />
                   </Link>
                 </div>
               </div>

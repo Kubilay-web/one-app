@@ -15,7 +15,7 @@ import {
 import ImageUpload from "@/app/projects/components/dashboard/shared/image-upload";
 import Input from "@/app/projects/components/store/ui/input";
 import { Textarea } from "@/app/projects/components/store/ui/textarea";
-import { applySeller } from "@/queries/store";
+import { applySeller } from "@/app/queries/store";
 import toast from "react-hot-toast";
 
 export default function Step3({

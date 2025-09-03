@@ -7,7 +7,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Pagination from "../../shared/pagination";
-import { getUserPayments } from "@/queries/profile";
+import { getUserPayments } from "@/app/queries/profile";
 import PaymentTableHeader from "./payment-table-header";
 
 export default function PaymentsTable({

@@ -21,7 +21,7 @@ export default function Search() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (pathname !== "/browse") {
-      push(`/browse?search=${searchQuery}`);
+      push(`/apps/shop/browse?search=${searchQuery}`);
     } else {
       if (!searchQuery) {
         params.delete("search");

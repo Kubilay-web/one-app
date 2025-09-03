@@ -44,26 +44,26 @@ const menu = [
   {
     title: "Wishlist",
     icon: <Heart />,
-    link: "/profile/wishlist",
+    link: "/apps/shop/profile/wishlist",
   },
   {
     title: "Following",
     icon: <Rss />,
-    link: "/profile/following/1",
+    link: "/apps/shop/profile/following/1",
   },
   {
     title: "Viewed",
     icon: <Eye />,
-    link: "/profile/history/1",
+    link: "/apps/shop/profile/history/1",
   },
   {
     title: "Coupons",
     icon: <Puzzle />,
-    link: "/profile/coupons",
+    link: "/apps/shop/profile/coupons",
   },
   {
     title: "Shopping credit",
     icon: <WalletCards />,
-    link: "/profile/credit",
+    link: "/apps/shop/profile/credit",
   },
 ];

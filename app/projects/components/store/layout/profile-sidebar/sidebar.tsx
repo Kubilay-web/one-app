@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 export default function ProfileSidebar() {
   const pathname = usePathname();
-  const path = pathname.split("/profile/")[1];
+  const path = pathname.split("/apps/shop/profile/")[1];
   const path_trim = path ? path.split("/")[0] : null;
   return (
     <div>
@@ -61,34 +61,34 @@ export default function ProfileSidebar() {
 const menu = [
   {
     title: "Overview",
-    link: "/profile",
+    link: "/apps/shop/profile",
   },
   {
     title: "Orders",
-    link: "/profile/orders",
+    link: "/apps/shop/profile/orders",
   },
   {
     title: "Payment",
-    link: "/profile/payment",
+    link: "/apps/shop/profile/payment",
   },
   {
     title: "Shipping address",
-    link: "/profile/addresses",
+    link: "/apps/shop/profile/addresses",
   },
   {
     title: "Reviews",
-    link: "/profile/reviews",
+    link: "/apps/shop/profile/reviews",
   },
   {
     title: "History",
-    link: "/profile/history/1",
+    link: "/apps/shop/profile/history/1",
   },
   {
     title: "Wishlist",
-    link: "/profile/wishlist/1",
+    link: "/apps/shop/profile/wishlist/1",
   },
   {
     title: "Following",
-    link: "/profile/following/1",
+    link: "/apps/shop/profile/following/1",
   },
 ];

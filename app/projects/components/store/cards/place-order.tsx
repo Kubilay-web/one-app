@@ -36,7 +36,7 @@ const PlaceOrderCard: FC<Props> = ({
       if (order) {
         emptyCart();
         await emptyUserCart();
-        push(`/order/${order.orderId}`);
+        push(`/apps/shop/order/${order.orderId}`);
       }
     }
     setLoading(false);
@@ -44,12 +44,12 @@ const PlaceOrderCard: FC<Props> = ({
 
   let discountedAmount = 0;
   const applicableStoreItems = cartData.cartItems.filter(
-    (item) => item.storeId === coupon?.storeId,
+    (item) => item.storeId === coupon?.storeId
   );
 
   const storeSubTotal = applicableStoreItems.reduce(
     (acc, item) => acc + item.price * item.quantity + item.shippingFee,
-    0,
+    0
   );
 
   if (coupon) {
@@ -59,7 +59,7 @@ const PlaceOrderCard: FC<Props> = ({
   return (
     <div className="sticky top-4 max-h-max lg:ml-5 lg:w-[380px]">
       <div className="relative bg-white px-6 py-4">
-        <h1 className="mb-4 text-2xl font-bold text-gray-900">Summary</h1>
+        <h1 className="mb-4 text-xl font-bold text-gray-900">Summary</h1>
         <Info title="Subtotal" text={`${subTotal.toFixed(2)}`} />
         <Info title="Shipping Fees" text={`+${shippingFees.toFixed(2)}`} />
         <Info title="Taxes" text="+0.00" />
@@ -117,7 +117,7 @@ const PlaceOrderCard: FC<Props> = ({
       <div className="mt-2 bg-white p-4">
         <Button onClick={() => handlePlaceOrder()}>
           {loading ? (
-            <PulseLoader size={5} color="#fff" />
+            <PulseLoader size={5} color="" />
           ) : (
             <span>Place order</span>
           )}
@@ -153,7 +153,7 @@ const Info = ({
         {
           "font-bold": isBold,
           "border-b-0": noBorder,
-        },
+        }
       )}
     >
       <h2 className="overflow-hidden text-ellipsis whitespace-nowrap break-normal">

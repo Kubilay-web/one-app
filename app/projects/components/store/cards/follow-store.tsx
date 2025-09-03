@@ -22,7 +22,7 @@ const FollowStore: FC<Props> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const handleStoreFollow = async () => {
-    if (!user.isSignedIn) router.push("/sign-in");
+    if (!user.isSignedIn) router.push("/");
     try {
       setLoading(true);
       const res = await followStore(id);

@@ -16,7 +16,7 @@ const CartHeader: FC<Props> = ({
   setSelectedItems,
 }) => {
   const removeMultipleFromCart = useCartStore(
-    (state) => state.removeMultipleFromCart
+    (state) => state.removeMultipleFromCart,
   );
 
   const cartLength = cartItems.length;
@@ -28,8 +28,8 @@ const CartHeader: FC<Props> = ({
         (selected) =>
           selected.productId === item.productId &&
           selected.variantId === item.variantId &&
-          selected.sizeId === item.sizeId
-      )
+          selected.sizeId === item.sizeId,
+      ),
     );
     setSelectedItems(areAllSelected ? [] : cartItems);
   };
@@ -44,15 +44,60 @@ const CartHeader: FC<Props> = ({
             (item) =>
               item.productId === selected.productId &&
               item.variantId === selected.variantId &&
-              item.sizeId === selected.sizeId
-          )
-      )
+              item.sizeId === selected.sizeId,
+          ),
+      ),
     );
   };
 
   return (
-    <div className="box-header">
-      <div className="box-title">Cart Items {cartItems.length}</div>
+    <div className="bg-white py-4">
+      <div>
+        <div className="g-white px-6">
+          <div className="flex items-center text-2xl font-bold text-[#222]">
+            <h1>Cart ({cartLength})</h1>
+          </div>
+        </div>
+        <div className="flex justify-between bg-white px-6 pt-4">
+          <div className="flex w-full items-center justify-start">
+            <label
+              className="m-0 mr-2 inline-flex cursor-pointer list-none items-center p-0 align-middle text-sm leading-6 text-gray-900"
+              onClick={() => handleSelectAll()}
+            >
+              <span className="inline-flex cursor-pointer p-0.5 leading-8">
+                <span
+                  className={cn(
+                    "flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 bg-white leading-8 hover:border-orange-background",
+                    {
+                      "border-orange-background":
+                        cartLength > 0 && selectedLength === cartLength,
+                    },
+                  )}
+                >
+                  {cartLength > 0 && selectedLength === cartLength && (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-background">
+                      <Check className="mt-0.5 w-3.5 text-white" />
+                    </span>
+                  )}
+                </span>
+              </span>
+              <span className="select-none px-2 leading-8">
+                Select all products
+              </span>
+            </label>
+            {selectedLength > 0 && (
+              <div
+                className="cursor-pointer border-l border-l-[#ebebeb] pl-4"
+                onClick={() => removeSelectedFromCart()}
+              >
+                <div className="text-sm font-semibold leading-5 text-[#3170ee]">
+                  Delete all selected products
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

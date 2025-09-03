@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { salaryRanges } from "@/lib/utils";
+import { salaryRanges } from "@/app/lib/utils";
 import { useRouter } from "next/navigation";
 import { useCountryStore } from "@/app/job-portal-store/country";
 import { useCityStore } from "@/app/job-portal-store/city";

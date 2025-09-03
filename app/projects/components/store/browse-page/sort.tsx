@@ -60,11 +60,11 @@ export default function ProductSort() {
                 {/* Trigger */}
                 <div className="h-9 w-[190px] md:w-[227px]">
                   <div className="relative inline-flex w-full">
-                    {/* <div className="relative hidden md:block">
+                    <div className="relative hidden md:block">
                       <span className="duration-[20ms] absolute top-0 flex h-full w-[70px] items-center justify-center transition-all">
                         <label htmlFor="">Sort by</label>
                       </span>
-                    </div> */}
+                    </div>
                     <input
                       type="text"
                       disabled

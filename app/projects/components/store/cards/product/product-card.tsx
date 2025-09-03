@@ -39,7 +39,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
       >
         <div className="relative h-full w-full">
           <Link
-            href={`/product/${slug}?variant=${variantSlug}`}
+            href={`/apps/shop/product/${slug}?variant=${variantSlug}`}
             className="relative inline-block w-full overflow-hidden"
           >
             {/* Images Swiper */}
@@ -75,7 +75,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
           />
           <div className="flex-items flex gap-x-1">
             <Button>
-              <Link href={`/product/${slug}/${variantSlug}`}>Add to cart</Link>
+              <Link href={`/apps/shop/product/${slug}/${variantSlug}`}>Add to cart</Link>
             </Button>
             <Button
               variant="black"

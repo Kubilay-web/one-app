@@ -1,5 +1,5 @@
-import { getAllCategories } from "@/queries/category";
-import { getAllOfferTags } from "@/queries/offer-tag";
+import { getAllCategories } from "@/app/queries/category";
+import { getAllOfferTags } from "@/app/queries/offer-tag";
 import CategoriesHeaderContainer from "./container";
 
 export default async function CategoriesHeader() {

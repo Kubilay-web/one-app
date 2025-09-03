@@ -1,5 +1,5 @@
 "use client";
-import { capturePayPalPayment, createPayPalPayment } from "@/queries/paypal";
+import { capturePayPalPayment, createPayPalPayment } from "@/app/queries/paypal";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";

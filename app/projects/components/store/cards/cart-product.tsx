@@ -2,7 +2,6 @@ import { useCartStore } from "@/app/cart-store/useCartStore";
 import { CartProductType, Country } from "@/app/lib/types";
 import { cn } from "@/app/lib/utils";
 import { addToWishlist } from "@/app/queries/user";
-import Spktables from "@/shared/@spk-reusable-components/tables/spk-tables";
 import {
   Check,
   ChevronRight,
@@ -136,11 +135,11 @@ const CartProduct: FC<Props> = ({
   }, [quantity, shippingFee, userCountry, shippingInfo.totalFee, stock]);
 
   const selected = selectedItems.find(
-    (p) => unique_id === `${p.productId}-${p.variantId}-${p.sizeId}`
+    (p) => unique_id === `${p.productId}-${p.variantId}-${p.sizeId}`,
   );
 
   const { updateProductQuantity, removeFromCart } = useCartStore(
-    (state) => state
+    (state) => state,
   );
 
   const handleSelectProduct = () => {
@@ -149,7 +148,7 @@ const CartProduct: FC<Props> = ({
         (item) =>
           item.productId === product.productId &&
           item.variantId === product.variantId &&
-          item.sizeId === product.sizeId
+          item.sizeId === product.sizeId,
       );
       return exists
         ? prev.filter((item) => item !== product) // Remove if exists
@@ -180,126 +179,171 @@ const CartProduct: FC<Props> = ({
   };
 
   return (
-    <div className="box-body !p-0">
-      <div className="table-responsive">
-        <Spktables
-          tableClass="ti-custom-table ti-custom-table-head w-full"
-          header={[
-            { title: "Product Name" },
-            { title: "Price" },
-            { title: "Quantity" },
-            { title: "Total" },
-            { title: "Action" },
-          ]}
-        >
-          {selectedItems.map((idx: any) => (
-            <tr key={idx.id}>
-              <td>
-                <div className="flex items-center">
-                  <div className="me-3">
-                    <span className="avatar avatar-xxl bg-light">
-                      <Image fill src={idx.image} alt="" />
-                    </span>
-                  </div>
-                  <div>
-                    <div className="mb-1 text-[0.875rem] font-semibold">
-                      <Link scroll={false} href="#!">
-                        {idx.title}
-                      </Link>
-                    </div>
-                    <div className="mb-1">
-                      <span className="me-1">Size:</span>
-                      <span className="font-semibold text-textmuted dark:text-textmuted/50">
-                        {idx.Size}
+    <div
+      className={cn("bordet-t-[#ebebeb] select-none border-t bg-white px-6", {
+        "bg-red-100": stock === 0,
+      })}
+    >
+      <div className="py-4">
+        <div className="relative flex self-start">
+          {/* Image */}
+          <div className="flex items-center">
+            {stock > 0 && (
+              <label
+                htmlFor={unique_id}
+                className="mr-2 inline-flex cursor-pointer items-center p-0 align-middle text-sm leading-6 text-gray-900"
+              >
+                <span className="inline-flex cursor-pointer p-0.5 leading-8">
+                  <span
+                    className={cn(
+                      "flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 bg-white leading-8 hover:border-orange-background",
+                      {
+                        "border-orange-background": selected,
+                      },
+                    )}
+                  >
+                    {selected && (
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-background">
+                        <Check className="mt-0.5 w-3.5 text-white" />
                       </span>
-                    </div>
-                    <div className="mb-1">
-                      <span className="me-1">Color:</span>
-                      <span className="font-semibold text-textmuted dark:text-textmuted/50">
-                        {idx.color}
-                        {idx.color === "Blue" ? (
-                          <span className="badge bg-secondary text-white ms-3">
-                            25% discount
-                          </span>
+                    )}
+                  </span>
+                </span>
+                <input
+                  type="checkbox"
+                  id={unique_id}
+                  hidden
+                  onChange={() => handleSelectProduct()}
+                />
+              </label>
+            )}
+            <Link href={`/apps/shop/product/${productSlug}?variant=${variantSlug}`}>
+              <div className="relative m-0 ml-2 mr-4 h-28 w-28 rounded-lg bg-gray-200">
+                <Image
+                  src={image}
+                  alt={name}
+                  height={200}
+                  width={200}
+                  className="h-full w-full rounded-md object-cover"
+                />
+              </div>
+            </Link>
+          </div>
+          {/* Info */}
+          <div className="w-0 min-w-0 flex-1">
+            {/* Title - Actions */}
+            <div className="flex w-[calc(100%-48px)] items-start overflow-hidden whitespace-nowrap">
+              <Link
+                href={`/apps/shop/product/${productSlug}?variant=${variantSlug}`}
+                className="inline-block overflow-hidden overflow-ellipsis whitespace-nowrap text-sm"
+              >
+                {name} · {variantName}
+              </Link>
+              <div className="absolute right-0 top-0">
+                <span
+                  className="mr-2.5 inline-block cursor-pointer"
+                  onClick={() => handleaddToWishlist()}
+                >
+                  <Heart className="w-4 hover:stroke-orange-seconadry" />
+                </span>
+                <span
+                  className="inline-block cursor-pointer"
+                  onClick={() => removeFromCart(product)}
+                >
+                  <Trash className="w-4 hover:stroke-orange-seconadry" />
+                </span>
+              </div>
+            </div>
+            {/* Style - size */}
+            <div className="my-1">
+              <button className="relative h-[24px] max-w-full cursor-pointer whitespace-normal rounded-xl bg-gray-100 px-2.5 py-0 text-xs font-bold leading-4 text-main-primary outline-0">
+                <span className="flex flex-wrap items-center justify-between">
+                  <div className="inline-block max-w-[95%] overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                    {size}
+                  </div>
+                  <span className="ml-0.5">
+                    <ChevronRight className="w-3" />
+                  </span>
+                </span>
+              </button>
+            </div>
+            {/* Price - Delivery */}
+            <div className="relative mt-2 flex flex-col gap-y-2 sm:flex-row sm:items-center sm:justify-between">
+              {stock > 0 ? (
+                <div>
+                  <span className="inline-block break-all">
+                    ${price.toFixed(2)} x {quantity} = ${totalPrice.toFixed(2)}
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <span className="inline-block break-all text-sm text-red-500">
+                    Out of stock
+                  </span>
+                </div>
+              )}
+              {/* Quantity changer */}
+              <div className="text-xs">
+                <div className="inline-flex list-none items-center text-sm leading-6 text-gray-900">
+                  <div
+                    className="grid h-6 w-6 cursor-pointer place-items-center rounded-full bg-gray-100 text-xs leading-6 hover:bg-gray-200"
+                    onClick={() => updateProductQuantityHandler("remove")}
+                  >
+                    <Minus className="w-3 stroke-[#555]" />
+                  </div>
+                  <input
+                    type="text"
+                    value={quantity}
+                    min={1}
+                    max={stock}
+                    className="m-1 h-6 w-[32px] border-none bg-transparent text-center font-bold leading-6 tracking-normal text-gray-900 outline-none"
+                  />
+                  <div
+                    className="grid h-6 w-6 cursor-pointer place-items-center rounded-full bg-gray-100 text-xs leading-6 hover:bg-gray-200"
+                    onClick={() => updateProductQuantityHandler("add")}
+                  >
+                    <Plus className="w-3 stroke-[#555]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Shipping info */}
+            {stock > 0 && (
+              <div className="mt-1 cursor-pointer text-xs text-[#999]">
+                <div className="mb-1 flex items-center">
+                  <span>
+                    <Truck className="inline-block w-4 text-[#01A971]" />
+                    {shippingInfo.totalFee > 0 ? (
+                      <span className="ml-1 text-[#01A971]">
+                        {shippingMethod === "ITEM" ? (
+                          <>
+                            ${shippingInfo.initialFee} (first item)
+                            {quantity > 1
+                              ? `+ 
+                              ${quantity - 1} item(s) x $${extraShippingFee} 
+                              (additional items)`
+                              : " x 1"}
+                            = ${shippingInfo.totalFee.toFixed(2)}
+                          </>
+                        ) : shippingMethod === "WEIGHT" ? (
+                          <>
+                            ${shippingFee} x {shippingInfo.weight}kg x&nbsp;
+                            {quantity} {quantity > 1 ? "items" : "item"} = $
+                            {shippingInfo.totalFee.toFixed(2)}
+                          </>
                         ) : (
-                          <span className="badge bg-success/[0.15] text-success ms-3">
-                            In Offer
-                          </span>
+                          <>Fixed Fee : ${shippingInfo.totalFee.toFixed(2)}</>
                         )}
                       </span>
-                    </div>
-                  </div>
+                    ) : (
+                      <span className="ml-1 text-[#01A971]">Free Delivery</span>
+                    )}
+                  </span>
                 </div>
-              </td>
-              <td>
-                <div className="font-semibold text-[0.875rem]">
-                  {idx.newpr}{" "}
-                </div>
-              </td>
-              <td className="product-quantity-container">
-                <div className="input-group border !rounded-[0.3125rem] rounded !flex-nowrap dark:border-defaultborder/10">
-                  <button
-                       onClick={()=>updateProductQuantityHandler("remove")}
-                    className="ti-btn ti-btn-icon !w-[1.5rem] ti-btn-light !m-0 input-group-text flex-grow !border-0 product-quantity-minus"
-                  >
-                    <i className="ri-subtract-line"></i>
-                  </button>
-                  <input
-                    defaultValue={idx.quantity}
-                    type="text"
-                    className="form-control form-control-sm border-0 text-center !w-full"
-                    aria-label="quantity"
-                    id="product-quantity"
-                  />
-                  <button
-                    onClick={()=>updateProductQuantityHandler("add")}
-                    className="ti-btn ti-btn-icon !w-[1.5rem] ti-btn-light !m-0 input-group-text flex-grow !border-0 product-quantity-plus"
-                  >
-                    <i className="ri-add-line"></i>
-                  </button>
-                </div>
-              </td>
-              <td>
-                <div className="text-[0.875rem] font-semibold">
-                  {idx.newpr}{" "}
-                </div>
-              </td>
-              <td>
-                <div className="hs-tooltip ti-main-tooltip">
-                  <Link
-                    scroll={false}
-                    href="/ecommerce/customer/wishlist"
-                    className="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-success me-2"
-                  >
-                    <i className="ri-heart-line"></i>
-                    <span
-                      className="hs-tooltip-content  ti-main-tooltip-content !py-1 !px-2 !bg-black !text-[0.75rem] !rounded-sm !font-medium !text-white shadow-sm"
-                      role="tooltip"
-                    >
-                      Add To Wishlist
-                    </span>
-                  </Link>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip">
-                  <Link
-                    onClick={() => removeFromCart(idx.id)}
-                    scroll={false}
-                    href="#!"
-                    className="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-danger btn-delete"
-                  >
-                    <i className="ri-delete-bin-line"></i>
-                    <span
-                      className="hs-tooltip-content  ti-main-tooltip-content !py-1 !px-2 !bg-black !text-[0.75rem] !rounded-sm !font-medium !text-white shadow-sm"
-                      role="tooltip"
-                    >
-                      Remove From cart
-                    </span>
-                  </Link>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </Spktables>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

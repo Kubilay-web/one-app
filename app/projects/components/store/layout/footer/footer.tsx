@@ -1,4 +1,4 @@
-import { getSubcategories } from "@/queries/subCategory";
+import { getSubcategories } from "@/app/queries/subCategory";
 import Contact from "./contact";
 import Links from "./links";
 import Newsletter from "./newsletter";

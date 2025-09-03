@@ -1,37 +1,26 @@
-"use client";  // This ensures the component is rendered on the client-side
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserMenu from "./user-menu/user-menu";
 import Cart from "./cart";
 import DownloadApp from "./download-app";
 import Search from "./search/search";
-import CountryLanguageCurrencySelector from "./country-lang-curr-selector";
+import { cookies } from "next/headers";
 import { Country } from "@prisma/client";
+import CountryLanguageCurrencySelector from "./country-lang-curr-selector";
 
 export default function Header() {
-  const [userCountry, setUserCountry] = useState<Country>({
+  const cookieStore = cookies();
+  const userCountryCookie = cookieStore.get("userCountry");
+
+  let userCountry: Country = {
     name: "",
     city: "",
     code: "",
     region: "",
-  });
+  };
 
-  useEffect(() => {
-    // Read cookies client-side after the component mounts
-    const userCountryCookie = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("userCountry="));
-
-    if (userCountryCookie) {
-      try {
-        const countryData = JSON.parse(userCountryCookie.split("=")[1]);
-        setUserCountry(countryData);  // Set the userCountry state
-      } catch (err) {
-        console.error("Invalid userCountry cookie:", err);
-      }
-    }
-  }, []);  // Empty dependency array ensures this runs once when the component mounts
+  if (userCountryCookie) {
+    userCountry = JSON.parse(userCountryCookie.value) as Country;
+  }
 
   return (
     <div className="bg-gradient-to-r from-slate-500 to-slate-800">

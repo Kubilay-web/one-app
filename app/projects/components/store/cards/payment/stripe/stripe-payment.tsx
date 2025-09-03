@@ -9,7 +9,7 @@ import { FormEvent, useEffect, useState } from "react";
 import {
   createStripePayment,
   createStripePaymentIntent,
-} from "@/queries/stripe";
+} from "@/app/queries/stripe";
 export default function StripePayment({ orderId }: { orderId: string }) {
   const router = useRouter();
   const stripe = useStripe();

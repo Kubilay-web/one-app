@@ -2,7 +2,7 @@
 
 import { SimpleProduct } from "@/app/lib/types";
 import Image from "next/image";
-import UserImg from "@/public/assets/images/default-user.avif";
+import UserImg from "../../../../../../../public/assets/images/default-user.avif";
 import Link from "next/link";
 import { Button } from "../../../ui/button";
 import MainSwiper from "../../../shared/swiper";

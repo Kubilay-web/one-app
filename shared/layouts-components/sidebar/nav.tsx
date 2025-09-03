@@ -1249,6 +1249,97 @@ export const MENUITEMS: any = [
         ],
       },
 
+      //
+
+      {
+        title: "Shop",
+        type: "sub",
+        active: false,
+        children: [
+          
+          {
+            path: "/apps/shop",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Shop Main",
+          },
+          {
+            path: "/apps/shop/browse",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Browse",
+          },
+          {
+            path: "/apps/shop/cart",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Cart",
+          },
+          {
+            path: "/apps/shop/checkout",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Checkout",
+          },
+
+          {
+            title: "Profile",
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/apps/shop/profile/overview",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Overview",
+              },
+              {
+                path: "/apps/shop/profile/orders",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Orders",
+              },
+              {
+                path: "/apps/shop/profile/payment",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Payment",
+              },
+              {
+                path: "/apps/shop/profile/addresses",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Addresses",
+              },
+              {
+                path: "/apps/shop/profile/reviews",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Reviews",
+              },
+            ],
+          },
+
+          {
+            path: "/apps/shop/seller/apply",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Seller Apply",
+          },
+        ],
+      },
+      //
+
       {
         title: "Forum",
         type: "sub",

@@ -2,7 +2,7 @@
 import { FeaturedCategoryType } from "@/app/lib/types";
 import CategoryCard from "./category-card";
 import { useEffect, useState } from "react";
-import { getHomeFeaturedCategories } from "@/queries/home";
+import { getHomeFeaturedCategories } from "@/app/queries/home";
 
 export default function FeaturedCategories() {
   const [categories, setCategories] = useState<FeaturedCategoryType[]>();
