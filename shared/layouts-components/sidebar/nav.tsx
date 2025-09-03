@@ -676,6 +676,64 @@ export const MENUITEMS: any = [
       // },
 
       {
+        title: "NewsPortal",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/dashboards/newsportal",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "NewsPortal Main",
+          },
+          {
+            path: "/dashboards/newsportal/addwriter",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Add Writer",
+          },
+          {
+            path: "/dashboards/newsportal/createnews",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Create News",
+          },
+          {
+            path: "/dashboards/newsportal/news",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "News",
+          },
+          {
+            path: "/dashboards/newsportal/profile",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Profile",
+          },
+          {
+            path: "/dashboards/newsportal/writer",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Writer",
+          },
+          {
+            path: "/dashboards/newsportal/writers",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Writers",
+          },
+        ],
+      },
+
+      {
         path: "/dashboards/hrm",
         type: "link",
         active: false,
@@ -1256,7 +1314,6 @@ export const MENUITEMS: any = [
         type: "sub",
         active: false,
         children: [
-          
           {
             path: "/apps/shop",
             type: "link",
