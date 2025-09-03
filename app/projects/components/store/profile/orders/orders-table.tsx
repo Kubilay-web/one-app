@@ -1,6 +1,6 @@
 "use client";
-import OrderStatusTag from "@/components/shared/order-status";
-import PaymentStatusTag from "@/components/shared/payment-status";
+import OrderStatusTag from "@/app/projects/components/shared/order-status";
+import PaymentStatusTag from "@/app/projects/components/shared/payment-status";
 import {
   OrderStatus,
   OrderTableDateFilter,
@@ -12,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Pagination from "../../shared/pagination";
-import { getUserOrders } from "@/queries/profile";
+import { getUserOrders } from "@/app/queries/profile";
 import OrderTableHeader from "./order-table-header";
 
 export default function OrdersTable({
