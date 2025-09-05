@@ -22,23 +22,25 @@ enum RoleJob {
 }
 
 model User {
-  id                    String         @id @map("_id")  // MongoDB'de _id otomatik oluşturulur
-  username              String         @unique
-  displayName           String
-  email                 String?        @unique
-  passwordHash          String?
-  googleId              String?        @unique
-  avatarUrl             String?
-  bio                   String?
+  id           String  @id @map("_id") // MongoDB'de _id otomatik oluşturulur
+  username     String  @unique
+  displayName  String
+  email        String? @unique
+  passwordHash String?
+  googleId     String? @unique
+  avatarUrl    String?
+  bio          String?
 
-  image                String?       
-  location             String?        
-  portfolio            String?       
+  image     String?
+  location  String?
+  portfolio String?
 
+  events       Event[]
+  integrations Integration[]
+  availability Availability?
+  meetings     Meeting[]
 
-
-  reputation           Int?           @default(0)  
-
+  reputation Int? @default(0)
 
   role                  Role           @default(USER)
   rolejob               RoleJob        @default(CANDIDATE)
@@ -49,60 +51,51 @@ model User {
   likes                 Like[]         @relation("UserLikes")
   bookmarks             Bookmark[]     @relation("UserBookmarks")
   comments              Comment[]      @relation("UserComments")
-  notificationsSent     Notification[] @relation("Issuer")  // Kullanıcının gönderdiği bildirimler
-  notificationsReceived Notification[] @relation("Recipient")  // Kullanıcının aldığı bildirimler
+  notificationsSent     Notification[] @relation("Issuer") // Kullanıcının gönderdiği bildirimler
+  notificationsReceived Notification[] @relation("Recipient") // Kullanıcının aldığı bildirimler
 
-  createdAt             DateTime       @default(now())
-  updatedAt             DateTime?       @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
-  stores Store[] @relation("UserStores")
+  stores          Store[]              @relation("UserStores")
   followingStores UserFollowingStore[]
-  reviews Review[] @relation("ReviewToUser")
+  reviews         Review[]             @relation("ReviewToUser")
 
-  cart Cart? @relation("UserCart")
+  cart              Cart?             @relation("UserCart")
   shippingAddresses ShippingAddress[] @relation("UserShippingAddresses")
 
-  orders Order[] @relation("UserOrders")
-  wishlist Wishlist[] @relation("WishlistToUser")
-  payments PaymentDetails[] @relation("PaymentDetailsToUser")
+  orders          Order[]          @relation("UserOrders")
+  wishlist        Wishlist[]       @relation("WishlistToUser")
+  payments        PaymentDetails[] @relation("PaymentDetailsToUser")
   couponRelations CouponToUser[]
 
-  @@map("users")
-
-  Company Company[]
-  Candidate Candidate[]
-  QuestionForum QuestionForum[]
-  AnswerForum AnswerForum[]
-  VoteForum VoteForum[]
+  Company         Company[]
+  Candidate       Candidate[]
+  QuestionForum   QuestionForum[]
+  AnswerForum     AnswerForum[]
+  VoteForum       VoteForum[]
   CollectionForum CollectionForum[]
-  Interaction InteractionForum[]
-  Writer Writer[]
-  
+  Interaction     InteractionForum[]
+  Writer          Writer[]
 
-  sentMessages Messages[] @relation("sentMessages")
-  receivedMessages Messages[] @relation("receivedMessages")
-  OnlineUser OnlineUser[]
+  sentMessages     Messages[]   @relation("sentMessages")
+  receivedMessages Messages[]   @relation("receivedMessages")
+  OnlineUser       OnlineUser[]
+
+  @@map("users")
 }
 
-
-
 model CouponToUser {
-  id        String  @id @default(cuid()) @map("_id")
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
-  couponId  String
-  coupon    Coupon  @relation(fields: [couponId], references: [id])
+  id       String @id @default(cuid()) @map("_id")
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  couponId String
+  coupon   Coupon @relation(fields: [couponId], references: [id])
 
   @@unique([userId, couponId])
   @@index([userId])
   @@index([couponId])
 }
-
-
-
-
-
-
 
 model Session {
   id        String   @id @map("_id") // MongoDB'deki _id'yi haritalamak için @map("_id")
@@ -114,41 +107,41 @@ model Session {
 }
 
 model Post {
-  id        String     @id @default(cuid()) @map("_id") // MongoDB'deki _id'yi haritalamak için @map("_id")
-  content   String
-  userId    String
-  user      User       @relation("UserPosts", fields: [userId], references: [id])
+  id      String @id @default(cuid()) @map("_id") // MongoDB'deki _id'yi haritalamak için @map("_id")
+  content String
+  userId  String
+  user    User   @relation("UserPosts", fields: [userId], references: [id])
 
-  createdAt DateTime   @default(now())
+  createdAt DateTime @default(now())
 
-  attachments    Media[]    @relation("PostMedia") // Post ile Media ilişkisi
-  comments  Comment[]  @relation("PostComments") // Post ile Comment ilişkisi
-  likes     Like[]     @relation("PostLikes") // Post ile Like ilişkisi
-  bookmarks Bookmark[] @relation("PostBookmarks") // Post ile Bookmark ilişkisi
+  attachments   Media[]        @relation("PostMedia") // Post ile Media ilişkisi
+  comments      Comment[]      @relation("PostComments") // Post ile Comment ilişkisi
+  likes         Like[]         @relation("PostLikes") // Post ile Like ilişkisi
+  bookmarks     Bookmark[]     @relation("PostBookmarks") // Post ile Bookmark ilişkisi
   notifications Notification[] @relation("PostNotifications") // Post ile bildirim ilişkisi
 
   @@map("posts")
 }
 
 model Follow {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB için ObjectId kullanılır
-  followerId   String
-  follower     User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
-  followingId  String
-  following    User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+  id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB için ObjectId kullanılır
+  followerId  String
+  follower    User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
   @@map("follows")
 }
 
 model Media {
-  id       String    @id @default(cuid()) @map("_id")  // MongoDB'deki _id'yi haritalamak için @map("_id")
-  postId   String?
-  post     Post?     @relation("PostMedia", fields: [postId], references: [id], onDelete: SetNull)  // Post ile Media arasında ilişki
-  type     MediaType
-  url      String
+  id     String    @id @default(cuid()) @map("_id") // MongoDB'deki _id'yi haritalamak için @map("_id")
+  postId String?
+  post   Post?     @relation("PostMedia", fields: [postId], references: [id], onDelete: SetNull) // Post ile Media arasında ilişki
+  type   MediaType
+  url    String
 
-  createdAt DateTime @default(now())  // Medyanın oluşturulma zamanı
+  createdAt DateTime @default(now()) // Medyanın oluşturulma zamanı
 
   @@map("post_media")
 }
@@ -159,44 +152,44 @@ enum MediaType {
 }
 
 model Comment {
-  id        String   @id @default(cuid()) @map("_id") // MongoDB'ye uygun _id
-  content   String
-  userId    String
-  user      User     @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
-  postId    String
-  post      Post     @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+  id      String @id @default(cuid()) @map("_id") // MongoDB'ye uygun _id
+  content String
+  userId  String
+  user    User   @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
+  postId  String
+  post    Post   @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())  // Yorumun oluşturulma zamanı
+  createdAt DateTime @default(now()) // Yorumun oluşturulma zamanı
 
   @@map("comments")
 }
 
 model Like {
-  id      String   @id @default(cuid()) @map("_id")  // MongoDB'ye uygun _id
-  userId  String
-  user    User     @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade)
-  postId  String
-  post    Post     @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid()) @map("_id") // MongoDB'ye uygun _id
+  userId String
+  user   User   @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade)
+  postId String
+  post   Post   @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, postId])  // Her kullanıcı bir postu yalnızca bir kez beğenebilir
+  @@unique([userId, postId]) // Her kullanıcı bir postu yalnızca bir kez beğenebilir
   @@map("likes")
 }
 
 model Bookmark {
-  id     String @id @default(cuid()) @map("_id")  // MongoDB'deki _id'yi haritalamak için @map("_id")
+  id     String @id @default(cuid()) @map("_id") // MongoDB'deki _id'yi haritalamak için @map("_id")
   userId String
   user   User   @relation("UserBookmarks", fields: [userId], references: [id], onDelete: Cascade)
   postId String
   post   Post   @relation("PostBookmarks", fields: [postId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())  // Bookmark'un oluşturulma zamanı
+  createdAt DateTime @default(now()) // Bookmark'un oluşturulma zamanı
 
-  @@unique([userId, postId])  // Her kullanıcı bir postu yalnızca bir kez kaydedebilir
+  @@unique([userId, postId]) // Her kullanıcı bir postu yalnızca bir kez kaydedebilir
   @@map("bookmarks")
 }
 
 model Notification {
-  id          String           @id @default(cuid()) @map("_id")  // MongoDB'ye uygun _id ekliyoruz
+  id          String           @id @default(cuid()) @map("_id") // MongoDB'ye uygun _id ekliyoruz
   recipientId String
   recipient   User             @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
   issuerId    String
@@ -217,38 +210,34 @@ enum NotificationType {
   COMMENT
 }
 
-
 model Category {
-  id        String   @id @default(cuid()) @map("_id") 
-  name      String
-  image     String
-  url       String @unique
-  featured  Boolean  @default(false)
+  id       String  @id @default(cuid()) @map("_id")
+  name     String
+  image    String
+  url      String  @unique
+  featured Boolean @default(false)
 
+  subCategories SubCategory[] @relation("CategoryToSubcategory")
 
- subCategories SubCategory[] @relation("CategoryToSubcategory")
-
- products Product[] @relation("CategoryToProduct")
+  products Product[] @relation("CategoryToProduct")
 
   createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
   updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
 
-   @@map("categories")
+  @@map("categories")
 }
 
-
-
 model SubCategory {
-  id        String   @id @default(cuid()) @map("_id") 
-  name      String
-  image     String
-  url       String @unique
-  featured  Boolean  @default(false)
+  id       String  @id @default(cuid()) @map("_id")
+  name     String
+  image    String
+  url      String  @unique
+  featured Boolean @default(false)
 
-  categoryId String 
-  category Category @relation("CategoryToSubcategory",fields: [categoryId],references: [id])
+  categoryId String
+  category   Category @relation("CategoryToSubcategory", fields: [categoryId], references: [id])
 
-  product Product[] @relation("SubCategoryToProduct") 
+  product Product[] @relation("SubCategoryToProduct")
 
   createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
   updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
@@ -257,7 +246,6 @@ model SubCategory {
   @@map("subcategories")
 }
 
-
 enum StoreStatus {
   PENDING
   ACTIVE
@@ -265,56 +253,51 @@ enum StoreStatus {
   DISABLED
 }
 
-
 model Store {
-  id                    String   @id @default(cuid()) @map("_id")
-  name                  String
-  description           String  
-  email                 String   @unique
-  phone                 String
-  url                   String   @unique
-  logo                  String
-  cover                 String
-  status                StoreStatus @default(PENDING)
-  averageRating        Float    @default(0)
-  featured             Boolean  @default(false)
-  returnPolicy         String @default("Return in 30 days.")
-  defaultShippingService String @default("International Delivery")
-  defaultShippingFeePerItem Float @default(0)
-  defaultShippingFeeForAdditionalItem Float @default(0)
-  defaultShippingFeePerKg Float @default(0)
-  defaultShippingFeeFixed Float @default(0)
-  defaultDeliveryTimeMin  Int @default(7)
-  defaultDeliveryTimeMax  Int @default(31)
+  id                                  String      @id @default(cuid()) @map("_id")
+  name                                String
+  description                         String
+  email                               String      @unique
+  phone                               String
+  url                                 String      @unique
+  logo                                String
+  cover                               String
+  status                              StoreStatus @default(PENDING)
+  averageRating                       Float       @default(0)
+  featured                            Boolean     @default(false)
+  returnPolicy                        String      @default("Return in 30 days.")
+  defaultShippingService              String      @default("International Delivery")
+  defaultShippingFeePerItem           Float       @default(0)
+  defaultShippingFeeForAdditionalItem Float       @default(0)
+  defaultShippingFeePerKg             Float       @default(0)
+  defaultShippingFeeFixed             Float       @default(0)
+  defaultDeliveryTimeMin              Int         @default(7)
+  defaultDeliveryTimeMax              Int         @default(31)
 
-  createdAt DateTime @default(now()) 
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId String
-  user User @relation("UserStores",fields: [userId],references: [id])
+  userId    String
+  user      User     @relation("UserStores", fields: [userId], references: [id])
 
   products Product[] @relation("StoreToProduct")
 
-  shippingRates ShippingRate[] @relation("StoreShippingRates")
-  followers UserFollowingStore[]
-  cartItems CartItem[] @relation("CartItemToStore")
-  orderGroups OrderGroup[] @relation("OrderGroupToStore")
-  coupons Coupon[] @relation("CouponToStore")
-
+  shippingRates ShippingRate[]       @relation("StoreShippingRates")
+  followers     UserFollowingStore[]
+  cartItems     CartItem[]           @relation("CartItemToStore")
+  orderGroups   OrderGroup[]         @relation("OrderGroupToStore")
+  coupons       Coupon[]             @relation("CouponToStore")
 
   @@index([userId])
-
   @@map("store")
-
 }
-
 
 model UserFollowingStore {
   id      String @id @default(cuid()) @map("_id")
   userId  String
   storeId String
 
-  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@unique([userId, storeId])
   @@index([userId])
@@ -322,172 +305,77 @@ model UserFollowingStore {
   @@map("user_following_store")
 }
 
-
-
 enum ShippingFeeMethod {
   ITEM
   WEIGHT
   FIXED
 }
 
+model Product {
+  id                String            @id @default(cuid()) @map("_id")
+  name              String
+  description       String
+  slug              String            @unique
+  brand             String
+  rating            Float             @default(0)
+  sales             Int               @default(0)
+  numReviews        Int               @default(0)
+  shippingFeeMethod ShippingFeeMethod @default(ITEM)
+  views             Int               @default(0)
 
-model Product{
-    id                    String   @id @default(cuid()) @map("_id")
-    name String 
-    description String 
-    slug String @unique
-    brand String
-    rating Float @default(0)
-    sales Int @default(0)
-    numReviews Int @default(0)
-    shippingFeeMethod ShippingFeeMethod @default(ITEM)
-    views Int @default(0)
-
-   freeShipping FreeShipping? @relation("ProductFreeShipping")
-   freeShippingForAllCountries Boolean @default(false)
-
+  freeShipping                FreeShipping? @relation("ProductFreeShipping")
+  freeShippingForAllCountries Boolean       @default(false)
 
   createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
   updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
 
   storeId String
-  store Store @relation("StoreToProduct",fields: [storeId],references: [id])
+  store   Store  @relation("StoreToProduct", fields: [storeId], references: [id])
 
-  variants ProductVariant[] @relation("ProductToProductVariant")
-  specs Spec[] @relation("ProductSpec")
-  questions Question[] @relation("ProductQuestion")
+  variants  ProductVariant[] @relation("ProductToProductVariant")
+  specs     Spec[]           @relation("ProductSpec")
+  questions Question[]       @relation("ProductQuestion")
 
-  reviews Review[] @relation("ReviewToProduct")
+  reviews  Review[]   @relation("ReviewToProduct")
   wishlist Wishlist[] @relation("WishlistToProduct")
 
+  categoryId String
+  category   Category @relation("CategoryToProduct", fields: [categoryId], references: [id])
 
-    categoryId String
-  category Category @relation("CategoryToProduct",fields: [categoryId],references: [id])
+  subCategoryId String
+  subCategory   SubCategory @relation("SubCategoryToProduct", fields: [subCategoryId], references: [id])
 
-      subCategoryId String
-  subCategory SubCategory @relation("SubCategoryToProduct",fields: [subCategoryId],references: [id])
-
-   offerTagId String?
+  offerTagId String?
   offerTag   OfferTag? @relation("OfferTagToProduct", fields: [offerTagId], references: [id])
 
   @@index([storeId])
   @@index([categoryId])
   @@index([subCategoryId])
-    @@index([offerTagId])
-
+  @@index([offerTagId])
 }
 
+model ProductVariant {
+  id                 String  @id @default(cuid()) @map("_id")
+  variantName        String
+  variantDescription String?
+  variantImage       String
+  slug               String  @unique
+  isSale             Boolean @default(false)
+  saleEndDate        String?
+  keywords           String
+  sku                String
+  sales              Int     @default(0)
+  weight             Float
 
-model ProductVariant{
-   id                    String   @id @default(cuid()) @map("_id")
-   variantName String
-   variantDescription String?
-   variantImage String
-   slug String @unique
-   isSale Boolean @default(false)
-   saleEndDate String?
-   keywords String
-   sku String
-   sales Int @default(0)
-   weight Float
-
-   productId String
-   product Product @relation("ProductToProductVariant",fields: [productId],references: [id])
-
-
-   sizes Size[] @relation("ProductVariantSizes")
-   images ProductVariantImage[] @relation("ProductVariantToVariantImage")
-    colors Color[] @relation("ProductVariantColors")
-
-    specs Spec[] @relation("ProductVariantSpec")
-    wishlist Wishlist[] @relation("WishlistToProductVariant")
-   
-
-   createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
-  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
-
-   @@index([productId])
-
-}
-
-
-model Size{
-  id                    String   @id @default(cuid()) @map("_id")
-  size String
-  quantity Int
-  price Float
-  discount Float @default(0)
-
-  wishlist Wishlist[] @relation("WishlistToSize")
-
-  productVariantId String
-  productVariant ProductVariant @relation("ProductVariantSizes",fields: [productVariantId],references: [id]) 
-
-     createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
-  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
-
-  @@index([productVariantId])
-
-}
-
-
-model ProductVariantImage{
-   id                    String   @id @default(cuid()) @map("_id")
-   url String
-   alt String @default("")
-
-   productVariantId String
-   productVariant ProductVariant @relation("ProductVariantToVariantImage",fields: [productVariantId],references: [id])
-
-  createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
-  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
-
-   @@index([productVariantId])
-
-}
-
-
-model Color{
-  id                    String   @id @default(cuid()) @map("_id")
-  name String
-
-  productVariantId String
-   productVariant ProductVariant @relation("ProductVariantColors",fields: [productVariantId],references: [id])
-
-
-       createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
-  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
-
-  @@index([productVariantId])
-
-}
-
-
-model Spec{
-  id                    String   @id @default(cuid()) @map("_id")
-  name String
-  value String
-  productId String?
-  product Product? @relation("ProductSpec",fields: [productId],references: [id],onDelete:Cascade)
-
-  variantId String?
-  variant ProductVariant? @relation("ProductVariantSpec",fields: [variantId],references: [id],onDelete:Cascade)
-
-  createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
-  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
-
-@@index([productId])
-@@index([variantId])
-}
-
-
-
-model Question{
-  id                    String   @id @default(cuid()) @map("_id")
-  question String
-  answer String
   productId String
-  product Product @relation("ProductQuestion",fields: [productId],references: [id],onDelete:Cascade)
+  product   Product @relation("ProductToProductVariant", fields: [productId], references: [id])
+
+  sizes  Size[]                @relation("ProductVariantSizes")
+  images ProductVariantImage[] @relation("ProductVariantToVariantImage")
+  colors Color[]               @relation("ProductVariantColors")
+
+  specs    Spec[]     @relation("ProductVariantSpec")
+  wishlist Wishlist[] @relation("WishlistToProductVariant")
 
   createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
   updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
@@ -495,56 +383,123 @@ model Question{
   @@index([productId])
 }
 
+model Size {
+  id       String @id @default(cuid()) @map("_id")
+  size     String
+  quantity Int
+  price    Float
+  discount Float  @default(0)
 
-model Country{
-   id                    String   @id @default(cuid()) @map("_id")
-   name String @unique
-   code String @unique
+  wishlist Wishlist[] @relation("WishlistToSize")
 
-   shippingRates ShippingRate[] @relation("CountryShippingRates")
-   freeShippingCountries FreeShippingCountry[] @relation("FreeShippingToCountry")
-   shippingAddresses ShippingAddress[] @relation("CountryToShippingAddress")
+  productVariantId String
+  productVariant   ProductVariant @relation("ProductVariantSizes", fields: [productVariantId], references: [id])
 
   createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
   updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
 
- 
+  @@index([productVariantId])
 }
 
+model ProductVariantImage {
+  id  String @id @default(cuid()) @map("_id")
+  url String
+  alt String @default("")
 
-model ShippingRate{
-   id                    String   @id @default(cuid()) @map("_id")
+  productVariantId String
+  productVariant   ProductVariant @relation("ProductVariantToVariantImage", fields: [productVariantId], references: [id])
 
-  shippingService String 
-  shippingFeePerItem Float 
-  shippingFeeForAdditionalItem Float 
-  shippingFeePerKg Float 
-  shippingFeeFixed Float 
-  deliveryTimeMin  Int 
-  deliveryTimeMax  Int
-  returnPolicy String 
+  createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
+  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
+
+  @@index([productVariantId])
+}
+
+model Color {
+  id   String @id @default(cuid()) @map("_id")
+  name String
+
+  productVariantId String
+  productVariant   ProductVariant @relation("ProductVariantColors", fields: [productVariantId], references: [id])
+
+  createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
+  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
+
+  @@index([productVariantId])
+}
+
+model Spec {
+  id        String   @id @default(cuid()) @map("_id")
+  name      String
+  value     String
+  productId String?
+  product   Product? @relation("ProductSpec", fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId String?
+  variant   ProductVariant? @relation("ProductVariantSpec", fields: [variantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
+  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
+
+  @@index([productId])
+  @@index([variantId])
+}
+
+model Question {
+  id        String  @id @default(cuid()) @map("_id")
+  question  String
+  answer    String
+  productId String
+  product   Product @relation("ProductQuestion", fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
+  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
+
+  @@index([productId])
+}
+
+model Country {
+  id   String @id @default(cuid()) @map("_id")
+  name String @unique
+  code String @unique
+
+  shippingRates         ShippingRate[]        @relation("CountryShippingRates")
+  freeShippingCountries FreeShippingCountry[] @relation("FreeShippingToCountry")
+  shippingAddresses     ShippingAddress[]     @relation("CountryToShippingAddress")
+
+  createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
+  updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
+}
+
+model ShippingRate {
+  id String @id @default(cuid()) @map("_id")
+
+  shippingService              String
+  shippingFeePerItem           Float
+  shippingFeeForAdditionalItem Float
+  shippingFeePerKg             Float
+  shippingFeeFixed             Float
+  deliveryTimeMin              Int
+  deliveryTimeMax              Int
+  returnPolicy                 String
 
   countryId String
-  country Country @relation("CountryShippingRates",fields: [countryId],references: [id])
+  country   Country @relation("CountryShippingRates", fields: [countryId], references: [id])
 
   storeId String
-  store Store @relation("StoreShippingRates",fields: [storeId],references: [id])
-
+  store   Store  @relation("StoreShippingRates", fields: [storeId], references: [id])
 
   createdAt DateTime @default(now()) // CreatedAt zamanını otomatik olarak ayarlıyoruz
   updatedAt DateTime @updatedAt // UpdatedAt otomatik olarak güncelleniyor
 
   @@index([countryId])
   @@index([storeId])
-
 }
 
-
-
 model OfferTag {
- id                    String   @id @default(cuid()) @map("_id")
+  id   String @id @default(cuid()) @map("_id")
   name String
-  url  String  @unique
+  url  String @unique
 
   products Product[] @relation("OfferTagToProduct")
 
@@ -552,11 +507,10 @@ model OfferTag {
   updatedAt DateTime @default(now()) @updatedAt
 }
 
-
-model FreeShipping{
-   id                    String   @id @default(cuid()) @map("_id")
-   productId String @unique
-   product Product @relation("ProductFreeShipping",fields: [productId],references: [id],onDelete:Cascade) 
+model FreeShipping {
+  id        String  @id @default(cuid()) @map("_id")
+  productId String  @unique
+  product   Product @relation("ProductFreeShipping", fields: [productId], references: [id], onDelete: Cascade)
 
   eligableCountries FreeShippingCountry[] @relation("FreeShippingCountries")
 
@@ -564,149 +518,133 @@ model FreeShipping{
   updatedAt DateTime @default(now()) @updatedAt
 }
 
+model FreeShippingCountry {
+  id             String       @id @default(cuid()) @map("_id")
+  freeShippingId String
+  freeShipping   FreeShipping @relation("FreeShippingCountries", fields: [freeShippingId], references: [id], onDelete: Cascade)
 
-
-model FreeShippingCountry{
-   id                    String   @id @default(cuid()) @map("_id")
-   freeShippingId String 
-   freeShipping FreeShipping @relation("FreeShippingCountries",fields: [freeShippingId],references: [id],onDelete:Cascade) 
-
-   countryId String 
-   country Country @relation("FreeShippingToCountry",fields: [countryId],references: [id],onDelete:Cascade)
+  countryId String
+  country   Country @relation("FreeShippingToCountry", fields: [countryId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-   @@index([freeShippingId]) 
-   @@index([countryId])
+  @@index([freeShippingId])
+  @@index([countryId])
 }
-
 
 model Review {
-  id          String   @id @default(cuid()) @map("_id")
-  variant     String
+  id           String  @id @default(cuid()) @map("_id")
+  variant      String
   variantImage String?
-  review      String
-  rating      Float
-  color       String
-  size        String
-  quantity    String
-  likes       Int      @default(0)
+  review       String
+  rating       Float
+  color        String
+  size         String
+  quantity     String
+  likes        Int     @default(0)
 
-  images      ReviewImage[] @relation("ReviewToReviewImage")
-  userId      String
-  user        User @relation("ReviewToUser", fields: [userId], references: [id])
-  productId   String
-  product     Product @relation("ReviewToProduct", fields: [productId], references: [id])
+  images    ReviewImage[] @relation("ReviewToReviewImage")
+  userId    String
+  user      User          @relation("ReviewToUser", fields: [userId], references: [id])
+  productId String
+  product   Product       @relation("ReviewToProduct", fields: [productId], references: [id])
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
-
-  @@index([userId])
-  @@index([productId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([productId, userId, variant]) // Ensures only one review per user, product and variant
+  @@index([userId])
+  @@index([productId])
 }
 
-
-model ReviewImage{
-  id                    String   @id @default(cuid()) @map("_id")
-  url String
-  alt String @default("")
+model ReviewImage {
+  id       String @id @default(cuid()) @map("_id")
+  url      String
+  alt      String @default("")
   reviewId String
-  review Review @relation("ReviewToReviewImage",fields: [reviewId],references: [id],onDelete:Cascade)
-  
+  review   Review @relation("ReviewToReviewImage", fields: [reviewId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([reviewId])
 }
 
+model Cart {
+  id     String @id @default(cuid()) @map("_id")
+  userId String @unique
+  user   User   @relation("UserCart", fields: [userId], references: [id], onDelete: Cascade)
 
-model Cart{
-id                    String   @id @default(cuid()) @map("_id")
-userId String @unique
-user User @relation("UserCart",fields: [userId],references: [id],onDelete:Cascade)
+  couponId String?
+  coupon   Coupon? @relation("CouponToCart", fields: [couponId], references: [id])
 
-couponId String?
-coupon Coupon? @relation("CouponToCart",fields: [couponId],references: [id])
+  cartItems    CartItem[] @relation("CartToCartItem")
+  shippingFees Float      @default(0)
+  subTotal     Float
+  total        Float
 
-cartItems CartItem[] @relation("CartToCartItem")
-shippingFees Float @default(0)
-subTotal Float
-total Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-
-
-createdAt DateTime @default(now())
-updatedAt DateTime @default(now()) @updatedAt
-
-@@index([couponId])
+  @@index([couponId])
 }
 
+model CartItem {
+  id          String @id @default(cuid()) @map("_id")
+  productId   String
+  variantId   String
+  sizeId      String
+  productSlug String
+  variantSlug String
+  sku         String
+  name        String
+  image       String
+  size        String
+  price       Float
+  quantity    Int    @default(1)
+  shippingFee Float  @default(0)
+  totalPrice  Float
 
-model CartItem{
-id                    String   @id @default(cuid()) @map("_id")
-productId String
-variantId String
-sizeId String
-productSlug String
-variantSlug String
-sku String
-name String
-image String
-size String
-price Float
-quantity Int @default(1)
-shippingFee Float @default(0)
-totalPrice Float
+  cartId String
+  cart   Cart   @relation("CartToCartItem", fields: [cartId], references: [id], onDelete: Cascade)
 
-cartId String
-cart Cart @relation("CartToCartItem",fields: [cartId],references: [id],onDelete:Cascade)
+  storeId String
+  store   Store  @relation("CartItemToStore", fields: [storeId], references: [id], onDelete: Cascade)
 
-storeId String
-store Store @relation("CartItemToStore",fields: [storeId],references: [id],onDelete:Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-
-
-
-createdAt DateTime @default(now())
-updatedAt DateTime @default(now()) @updatedAt
-
-@@index([cartId])
-@@index([storeId])
+  @@index([cartId])
+  @@index([storeId])
 }
 
+model ShippingAddress {
+  id        String  @id @default(cuid()) @map("_id")
+  firstName String
+  lastName  String
+  phone     String
+  address1  String
+  address2  String?
+  state     String
+  city      String
+  zip_code  String
+  default   Boolean @default(false)
 
-model ShippingAddress{
-id                    String   @id @default(cuid()) @map("_id")
-firstName String
-lastName String
-phone String
-address1 String
-address2 String?
-state String
-city String
-zip_code String
-default Boolean @default(false)
+  orders Order[] @relation("ShippingAddressToOrder")
 
-orders Order[] @relation("ShippingAddressToOrder")
+  userId String
+  user   User   @relation("UserShippingAddresses", fields: [userId], references: [id])
 
-userId String
-user User @relation("UserShippingAddresses",fields: [userId],references: [id])
+  countryId String
+  country   Country @relation("CountryToShippingAddress", fields: [countryId], references: [id])
 
-countryId String
-country Country @relation("CountryToShippingAddress",fields: [countryId],references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-
-
-createdAt DateTime @default(now())
-updatedAt DateTime @default(now()) @updatedAt
-
-@@index([countryId])
-@@index([userId])
+  @@index([countryId])
+  @@index([userId])
 }
-
 
 enum OrderStatus {
   Pending
@@ -722,7 +660,6 @@ enum OrderStatus {
   PartiallyShipped
   OnHold
 }
-
 
 enum PaymentStatus {
   Pending
@@ -740,75 +677,62 @@ enum PaymentMethod {
   Stripe
 }
 
+model Order {
+  id           String @id @default(cuid()) @map("_id")
+  shippingFees Float
+  subTotal     Float
+  total        Float
 
-model Order{
-id                    String   @id @default(cuid()) @map("_id")
-shippingFees Float
-subTotal Float
-total Float
+  groups OrderGroup[] @relation("OrderGroupToOrder")
 
-groups OrderGroup[] @relation("OrderGroupToOrder")
+  orderStatus   OrderStatus   @default(Pending)
+  paymentStatus PaymentStatus @default(Pending)
 
-orderStatus OrderStatus @default(Pending)
-paymentStatus PaymentStatus @default(Pending)
+  paymentMethod  PaymentMethod?
+  paymentDetails PaymentDetails? @relation("PaymentDetailsToOrder")
 
-paymentMethod PaymentMethod?  
-paymentDetails PaymentDetails? @relation("PaymentDetailsToOrder")
+  shippingAddressId String
+  shippingAddress   ShippingAddress @relation("ShippingAddressToOrder", fields: [shippingAddressId], references: [id])
 
+  userId String
+  user   User   @relation("UserOrders", fields: [userId], references: [id])
 
-shippingAddressId String
-shippingAddress ShippingAddress @relation("ShippingAddressToOrder",fields: [shippingAddressId],references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-userId String
-user User @relation("UserOrders",fields: [userId],references: [id])
-
-
-
-
-createdAt DateTime @default(now())
-updatedAt DateTime @default(now()) @updatedAt
-
-@@index([shippingAddressId])
-@@index([userId])
-
+  @@index([shippingAddressId])
+  @@index([userId])
 }
 
+model OrderGroup {
+  id     String      @id @default(cuid()) @map("_id")
+  status OrderStatus @default(Pending)
 
-model OrderGroup{
-id                    String   @id @default(cuid()) @map("_id")
-status OrderStatus @default(Pending)
+  items OrderItem[] @relation("OrderItemToGroup")
 
+  shippingService     String
+  shippingDeliveryMin Int
+  shippingDeliveryMax Int
+  shippingFees        Float
+  subTotal            Float
+  total               Float
 
-items OrderItem[] @relation("OrderItemToGroup")
+  orderId String
+  order   Order  @relation("OrderGroupToOrder", fields: [orderId], references: [id])
 
-shippingService String
-shippingDeliveryMin Int
-shippingDeliveryMax Int
-shippingFees Float
-subTotal Float
-total Float
+  storeId String
+  store   Store  @relation("OrderGroupToStore", fields: [storeId], references: [id])
 
-orderId String
-order Order @relation("OrderGroupToOrder",fields: [orderId],references: [id])
+  couponId String?
+  coupon   Coupon? @relation("CouponToOrderGroup", fields: [couponId], references: [id])
 
-storeId String
-store Store @relation("OrderGroupToStore",fields: [storeId],references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-
-couponId String?
-coupon Coupon? @relation("CouponToOrderGroup",fields: [couponId],references: [id])
-
-
-createdAt DateTime @default(now())
-updatedAt DateTime @default(now()) @updatedAt
-
-@@index([orderId])
-@@index([storeId])
-@@index([couponId])
+  @@index([orderId])
+  @@index([storeId])
+  @@index([couponId])
 }
-
-
-
 
 enum ProductStatus {
   /// Product has been added to the order but no action taken yet
@@ -854,46 +778,37 @@ enum ProductStatus {
   AwaitingPickup
 }
 
-
-
-
-
-
 model OrderItem {
-id                    String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
-productId String
-variantId String
-sizeId String
+  productId String
+  variantId String
+  sizeId    String
 
-productSlug String
-variantSlug String
-sku String
-name String
-image String
-size String
-quantity Int @default(1)
-shippingFee Float @default(0)
-price Float
-totalPrice Float
+  productSlug String
+  variantSlug String
+  sku         String
+  name        String
+  image       String
+  size        String
+  quantity    Int    @default(1)
+  shippingFee Float  @default(0)
+  price       Float
+  totalPrice  Float
 
-orderGroupId String
-orderGroup OrderGroup @relation("OrderItemToGroup",fields: [orderGroupId],references: [id],onDelete:Cascade)
+  orderGroupId String
+  orderGroup   OrderGroup @relation("OrderItemToGroup", fields: [orderGroupId], references: [id], onDelete: Cascade)
 
-status ProductStatus @default(Pending)
+  status ProductStatus @default(Pending)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-createdAt DateTime @default(now())
-updatedAt DateTime @default(now()) @updatedAt
-
-@@index([orderGroupId])
+  @@index([orderGroupId])
 }
 
-
-
-
 model Wishlist {
-id                    String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
   userId String
   user   User   @relation("WishlistToUser", fields: [userId], references: [id], onDelete: Cascade)
@@ -916,104 +831,81 @@ id                    String   @id @default(cuid()) @map("_id")
   @@index([sizeId])
 }
 
-
-
 model Coupon {
-  id                    String   @id @default(cuid()) @map("_id")
-  code String @unique
+  id        String @id @default(cuid()) @map("_id")
+  code      String @unique
   startDate String
-  endDate String
-  discount Int
-
+  endDate   String
+  discount  Int
 
   storeId String
-  store Store @relation("CouponToStore",fields: [storeId],references: [id],onDelete: Cascade)
+  store   Store  @relation("CouponToStore", fields: [storeId], references: [id], onDelete: Cascade)
 
-  orders OrderGroup[] @relation("CouponToOrderGroup")
+  orders        OrderGroup[]   @relation("CouponToOrderGroup")
   userRelations CouponToUser[]
-
 
   carts Cart[] @relation("CouponToCart")
 
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 
   @@index([storeId])
-
 }
 
-
-
 model PaymentDetails {
-  
-  id                    String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
   paymentInetntId String
-  paymentMethod String
-  status String
-  amount Float
-  currency String
-
+  paymentMethod   String
+  status          String
+  amount          Float
+  currency        String
 
   orderId String @unique
-  order Order @relation("PaymentDetailsToOrder",fields: [orderId],references: [id],onDelete: Cascade) 
+  order   Order  @relation("PaymentDetailsToOrder", fields: [orderId], references: [id], onDelete: Cascade)
 
   userId String
-  user User @relation("PaymentDetailsToUser",fields: [userId],references: [id],onDelete: Cascade)
-
+  user   User   @relation("PaymentDetailsToUser", fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-
 
   @@index([userId])
 }
 
-
 // Job Portal models
 
-
 model Industry {
-  id                    String   @id @default(cuid()) @map("_id")
+  id        String   @id @default(cuid()) @map("_id")
   name      String   @db.String
   slug      String   @unique @db.String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-
   Company Company[]
 }
-
-
 
 model Organization {
-  id                    String   @id @default(cuid()) @map("_id")
-  name  String @unique @db.String
-  slug  String @db.String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid()) @map("_id")
+  name      String    @unique @db.String
+  slug      String    @db.String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Company   Company[]
 
-  @@map("organizations") 
-  Company Company[]
+  @@map("organizations")
 }
-
-
 
 model Team {
-  id                    String   @id @default(cuid()) @map("_id")
-  name      String   @unique @db.String
-  slug      String   @db.String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid()) @map("_id")
+  name      String    @unique @db.String
+  slug      String    @db.String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Company   Company[]
 
   @@map("teams")
-  Company Company[]
 }
-
-
 
 model CountryJob {
   id        String   @id @default(cuid()) @map("_id")
@@ -1021,97 +913,84 @@ model CountryJob {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  states    State[]  @relation("CountryStates")
-  cities    City[]   @relation("CountryCities") 
-
-
+  states    State[]     @relation("CountryStates")
+  cities    City[]      @relation("CountryCities")
+  Jobs      Jobs[]
+  Candidate Candidate[]
+  Company   Company[]
 
   @@map("countries")
-  Jobs Jobs[]
-  Candidate Candidate[]
-  Company Company[]
 }
 
 model State {
-  id         String      @id @default(cuid()) @map("_id")
-  statename  String      @unique @db.String
-  countryId  String      @map("countryId")
-  country    CountryJob  @relation("CountryStates", fields: [countryId], references: [id])
-  cities     City[]      @relation("StateCities") 
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id        String      @id @default(cuid()) @map("_id")
+  statename String      @unique @db.String
+  countryId String      @map("countryId")
+  country   CountryJob  @relation("CountryStates", fields: [countryId], references: [id])
+  cities    City[]      @relation("StateCities")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Company   Company[]
+  Jobs      Jobs[]
+  Candidate Candidate[]
 
   @@map("states")
-  Company Company[]
-  Jobs Jobs[]
-  Candidate Candidate[]
 }
-
 
 model City {
-  id         String      @id @default(cuid()) @map("_id")
-  name       String  
-  stateId    String? 
-  countryId  String?  
-  state      State?   @relation("StateCities", fields: [stateId], references: [id]) 
-  country    CountryJob? @relation("CountryCities", fields: [countryId], references: [id]) 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt 
-
-  @@map("cities") 
-  Company Company[]
-  Jobs Jobs[]
+  id        String      @id @default(cuid()) @map("_id")
+  name      String
+  stateId   String?
+  countryId String?
+  state     State?      @relation("StateCities", fields: [stateId], references: [id])
+  country   CountryJob? @relation("CountryCities", fields: [countryId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Company   Company[]
+  Jobs      Jobs[]
   Candidate Candidate[]
+
+  @@map("cities")
 }
-
-
 
 model Language {
-  id         String      @id @default(cuid()) @map("_id")
+  id        String   @id @default(cuid()) @map("_id")
   name      String   @db.String
   slug      String   @unique @db.String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-
-
 model Skill {
-  id         String      @id @default(cuid()) @map("_id")
+  id        String   @id @default(cuid()) @map("_id")
   name      String   @unique @db.String
   slug      String   @db.String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   Jobskill Jobskill[]
 }
 
-
-
 model Profession {
-  id         String      @id @default(cuid()) @map("_id")
-  name      String   @unique  
-  slug      String   @unique 
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt 
+  id        String   @id @default(cuid()) @map("_id")
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-
-
 model Jobtype {
-  id         String      @id @default(cuid()) @map("_id")
-  name      String 
+  id        String   @id @default(cuid()) @map("_id")
+  name      String
   slug      String   @unique
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   Jobs Jobs[]
 }
 
-
-
 model Salarytype {
-  id         String      @id @default(cuid()) @map("_id")
+  id        String   @id @default(cuid()) @map("_id")
   name      String   @db.String
   slug      String   @unique @db.String
   createdAt DateTime @default(now())
@@ -1119,7 +998,6 @@ model Salarytype {
 
   Jobs Jobs[]
 }
-
 
 model Jobcategory {
   id        String   @id @default(cuid()) @map("_id")
@@ -1132,42 +1010,35 @@ model Jobcategory {
   Jobs Jobs[]
 }
 
-
-
 model Educationid {
   id        String   @id @default(cuid()) @map("_id")
-  name  String @db.String
-  slug  String @unique @db.String
+  name      String   @db.String
+  slug      String   @unique @db.String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   Jobs Jobs[]
 }
-
-
 
 model Tag {
   id        String   @id @default(cuid()) @map("_id")
-  name      String @unique @db.String
-  slug      String @unique @db.String
+  name      String   @unique @db.String
+  slug      String   @unique @db.String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-   jobtags   Jobtag[]
+  jobtags Jobtag[]
 }
-
 
 model Jobrole {
   id        String   @id @default(cuid()) @map("_id")
-  name  String @unique
-  slug  String
+  name      String   @unique
+  slug      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   Jobs Jobs[]
 }
-
-
 
 model JobexperienceId {
   id        String   @id @default(cuid()) @map("_id")
@@ -1175,55 +1046,51 @@ model JobexperienceId {
   slug      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Jobs      Jobs[]
 
   @@map("jobexperience_id") // MongoDB koleksiyon ismi
-  Jobs Jobs[]
 }
 
-
-
-
 model Company {
-  id                 String   @id @default(cuid()) @map("_id")
-  userId             String @unique
-  name               String
-  slug               String   @unique
-  bio                String?
-  vision             String?
-  logoPublicId       String   @default("")
-  logoSecureUrl      String   @default("")
-  bannerPublicId     String   @default("")
-  bannerSecureUrl    String   @default("")
+  id              String  @id @default(cuid()) @map("_id")
+  userId          String  @unique
+  name            String
+  slug            String  @unique
+  bio             String?
+  vision          String?
+  logoPublicId    String  @default("")
+  logoSecureUrl   String  @default("")
+  bannerPublicId  String  @default("")
+  bannerSecureUrl String  @default("")
 
-  industryTypeId      String? 
-  organizationTypeId  String? 
-  teamTypeId          String?
-  email               String?  @unique
-  phone               String?
-  establishmentDate   DateTime?
-  website             String?
-  totalViews          Int      @default(0)
-  address             String?
-  cityId              String?
-  stateId             String?
-  countryId           String?
-  mapLink             String?
-  isProfileVerified   Boolean  @default(false)
-  documentVerifiedAt  DateTime?
-  profileCompletion   Boolean  @default(false)
-  visibility          Boolean  @default(false)
+  industryTypeId     String?
+  organizationTypeId String?
+  teamTypeId         String?
+  email              String?   @unique
+  phone              String?
+  establishmentDate  DateTime?
+  website            String?
+  totalViews         Int       @default(0)
+  address            String?
+  cityId             String?
+  stateId            String?
+  countryId          String?
+  mapLink            String?
+  isProfileVerified  Boolean   @default(false)
+  documentVerifiedAt DateTime?
+  profileCompletion  Boolean   @default(false)
+  visibility         Boolean   @default(false)
 
+  user             User          @relation(fields: [userId], references: [id])
+  industryType     Industry?     @relation(fields: [industryTypeId], references: [id])
+  organizationType Organization? @relation(fields: [organizationTypeId], references: [id])
+  teamType         Team?         @relation(fields: [teamTypeId], references: [id])
+  city             City?         @relation(fields: [cityId], references: [id])
+  state            State?        @relation(fields: [stateId], references: [id])
+  country          CountryJob?   @relation(fields: [countryId], references: [id])
 
-  user              User     @relation(fields: [userId], references: [id])
-  industryType      Industry? @relation(fields: [industryTypeId], references: [id])
-  organizationType  Organization? @relation(fields: [organizationTypeId], references: [id])
-  teamType          Team?     @relation(fields: [teamTypeId], references: [id])
-  city              City?     @relation(fields: [cityId], references: [id])
-  state             State?    @relation(fields: [stateId], references: [id])
-  country           CountryJob?  @relation(fields: [countryId], references: [id])
-
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   Jobs Jobs[]
 
@@ -1236,12 +1103,10 @@ model Company {
   Userplan Userplan[]
 }
 
-
 enum SalaryMode {
   range
   custom
 }
-
 
 enum JobStatus {
   active
@@ -1255,177 +1120,165 @@ enum ApplyOn {
   custom_url
 }
 
-
 model Jobs {
-  id                 String   @id @default(cuid()) @map("_id")
-  company           Company?   @relation(fields: [companyId], references: [id])
-  companyId         String?    
+  id        String   @id @default(cuid()) @map("_id")
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
 
-  job_category      Jobcategory? @relation(fields: [jobCategoryId], references: [id])
-  jobCategoryId     String?     
+  job_category  Jobcategory? @relation(fields: [jobCategoryId], references: [id])
+  jobCategoryId String?
 
-  job_role          Jobrole?   @relation(fields: [jobRoleId], references: [id])
-  jobRoleId         String?   
+  job_role  Jobrole? @relation(fields: [jobRoleId], references: [id])
+  jobRoleId String?
 
-  job_experience    JobexperienceId? @relation(fields: [jobExperienceId], references: [id])
-  jobExperienceId   String?         
+  job_experience  JobexperienceId? @relation(fields: [jobExperienceId], references: [id])
+  jobExperienceId String?
 
-  education         Educationid? @relation(fields: [educationId], references: [id])
-  educationId       String?      
+  education   Educationid? @relation(fields: [educationId], references: [id])
+  educationId String?
 
-  job_type          Jobtype?    @relation(fields: [jobTypeId], references: [id])
-  jobTypeId         String?     
+  job_type  Jobtype? @relation(fields: [jobTypeId], references: [id])
+  jobTypeId String?
 
-  salary_type       Salarytype? @relation(fields: [salaryTypeId], references: [id])
-  salaryTypeId      String?     
+  salary_type  Salarytype? @relation(fields: [salaryTypeId], references: [id])
+  salaryTypeId String?
 
-  title             String      @unique
-  slug              String      @unique
-  vacancies         String      @unique
+  title     String @unique
+  slug      String @unique
+  vacancies String @unique
 
-  min_salary        Int         @default(0)
-  max_salary        Int         @default(0)
-  custom_salary     Int         @default(0)
+  min_salary    Int @default(0)
+  max_salary    Int @default(0)
+  custom_salary Int @default(0)
 
-  deadline          DateTime?
+  deadline DateTime?
 
-  description       String?
+  description String?
 
-  status            JobStatus   @default(pending)
+  status JobStatus @default(pending)
 
-  apply_on          ApplyOn     @default(app)
-  apply_email       String?
-  apply_url         String?
+  apply_on    ApplyOn @default(app)
+  apply_email String?
+  apply_url   String?
 
-  featured          Boolean     @default(false)
-  highlight         Boolean     @default(false)
+  featured  Boolean @default(false)
+  highlight Boolean @default(false)
 
-  fetaured_until    DateTime?
-  highlight_until   DateTime?
+  fetaured_until  DateTime?
+  highlight_until DateTime?
 
-  jobcount          Int         @default(0)
-  total_views       Int         @default(0)
+  jobcount    Int @default(0)
+  total_views Int @default(0)
 
-  city              City?       @relation(fields: [cityId], references: [id])
-  cityId            String?    
+  city   City?   @relation(fields: [cityId], references: [id])
+  cityId String?
 
-  state             State?      @relation(fields: [stateId], references: [id])
-  stateId           String?
+  state   State?  @relation(fields: [stateId], references: [id])
+  stateId String?
 
-  country           CountryJob?    @relation(fields: [countryId], references: [id])
-  countryId         String?   
+  country   CountryJob? @relation(fields: [countryId], references: [id])
+  countryId String?
 
-  address           String?
+  address String?
 
-  salary_mode       SalaryMode  @default(custom)
+  salary_mode SalaryMode @default(custom)
 
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  jobtags   Jobtag[]
+  jobtags Jobtag[]
 
   Job_benfits Job_benfits[]
 
   Jobskill Jobskill[]
 
-
-
   Jobbookmark Jobbookmark[]
 
   Applyjob Applyjob[]
-  
 }
 
-
 model Jobtag {
- id                 String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
-  job       Jobs     @relation(fields: [jobId], references: [id])
-  jobId     String  
+  job   Jobs   @relation(fields: [jobId], references: [id])
+  jobId String
 
-  tag       Tag      @relation(fields: [tagId], references: [id])
-  tagId     String   
+  tag   Tag    @relation(fields: [tagId], references: [id])
+  tagId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-
 model Benfits {
-   id                 String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
-  company    Company?  @relation(fields: [companyId], references: [id])
-  companyId  String?   
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
 
-  name       String[]  @db.String
+  name String[] @db.String
 
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   Job_benfits Job_benfits[]
 }
 
-
 model Job_benfits {
-  id                 String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
-  job         Jobs     @relation(fields: [jobId], references: [id])
-  jobId       String   
+  job   Jobs   @relation(fields: [jobId], references: [id])
+  jobId String
 
-  benfit      Benfits  @relation(fields: [benfitsId], references: [id])
-  benfitsId   String   
+  benfit    Benfits @relation(fields: [benfitsId], references: [id])
+  benfitsId String
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
 
 model Jobskill {
-   id                 String   @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) @map("_id")
 
-  job        Jobs     @relation(fields: [jobId], references: [id])
-  jobId      String   
+  job   Jobs   @relation(fields: [jobId], references: [id])
+  jobId String
 
-  skill      Skill    @relation(fields: [skillId], references: [id])
-  skillId    String 
+  skill   Skill  @relation(fields: [skillId], references: [id])
+  skillId String
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-
 
 model Plan {
-  id               String   @id @default(cuid()) @map("_id")
-  leble            String     @map("label") 
-  price            Float
-  joblimit         Int        @map("job_limit")
-  featuredjoblimit Int        @map("featured_job_limit")
-  highlightjoblimit Int       @map("highlight_job_limit")
-  recommended      Boolean    @default(false)
-  frontendshow     Boolean    @default(false) @map("frontend_show")
-  profileverify    Boolean    @default(false) @map("profile_verify")
-  home             Boolean    @default(false)
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt @map("updated_at")
+  id                String   @id @default(cuid()) @map("_id")
+  leble             String   @map("label")
+  price             Float
+  joblimit          Int      @map("job_limit")
+  featuredjoblimit  Int      @map("featured_job_limit")
+  highlightjoblimit Int      @map("highlight_job_limit")
+  recommended       Boolean  @default(false)
+  frontendshow      Boolean  @default(false) @map("frontend_show")
+  profileverify     Boolean  @default(false) @map("profile_verify")
+  home              Boolean  @default(false)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
   userPlans UserPlan[]
+  OrderJob  OrderJob[]
+  Userplan  Userplan[]
 
   @@map("plans")
-  OrderJob OrderJob[]
-  Userplan Userplan[]
 }
 
-
-
 model UserPlan {
-  id                 String  @id @default(cuid()) @map("_id")
+  id                String   @id @default(cuid()) @map("_id")
   companyId         String   @map("company_id")
   planId            String   @map("plan_id")
-  jobLimit          Int      @map("job_limit") @default(0)
-  featuredJobLimit  Int      @map("featured_job_limit") @default(0)
-  highlightJobLimit Int      @map("highlight_job_limit") @default(0)
-  profileVerify     Int      @map("profile_verify") @default(0)
+  jobLimit          Int      @default(0) @map("job_limit")
+  featuredJobLimit  Int      @default(0) @map("featured_job_limit")
+  highlightJobLimit Int      @default(0) @map("highlight_job_limit")
+  profileVerify     Int      @default(0) @map("profile_verify")
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
@@ -1434,8 +1287,6 @@ model UserPlan {
 
   @@map("userplans")
 }
-
-
 
 enum Gender {
   male
@@ -1452,52 +1303,50 @@ enum Status {
   not_available
 }
 
-
-
 model Candidate {
-  id                 String  @id @default(cuid()) @map("_id")
-  user               User?    @relation(fields: [userId], references: [id])
-  userId             String? @unique 
+  id     String  @id @default(cuid()) @map("_id")
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
 
-  professionIds      String[]
+  professionIds String[]
 
-  experience_lable   String?
+  experience_lable String?
 
-  skill_id           String[]
+  skill_id String[]
 
-  image_public_id    String?
-  image_secure_url   String?
+  image_public_id  String?
+  image_secure_url String?
 
-  title              String?
-  full_name          String?
-  slug               String?
-  email              String?
-  phone_one          String?
-  phone_two          String?
-  birth_date         DateTime?
-  website            String?
-  cv                 String?
-  bio                String?
+  title      String?
+  full_name  String?
+  slug       String?
+  email      String?
+  phone_one  String?
+  phone_two  String?
+  birth_date DateTime?
+  website    String?
+  cv         String?
+  bio        String?
 
-  gender             Gender?
-  marital_status     MaritalStatus?
-  address            String?
+  gender         Gender?
+  marital_status MaritalStatus?
+  address        String?
 
-  city               City?    @relation(fields: [cityId], references: [id])
-  cityId             String?  
+  city   City?   @relation(fields: [cityId], references: [id])
+  cityId String?
 
-  state              State?   @relation(fields: [stateId], references: [id])
-  stateId            String?  
+  state   State?  @relation(fields: [stateId], references: [id])
+  stateId String?
 
-  country            CountryJob? @relation(fields: [countryId], references: [id])
-  countryId          String?  
+  country   CountryJob? @relation(fields: [countryId], references: [id])
+  countryId String?
 
   status             Status?
-  profile_completion Boolean  @default(false)
-  visibility         Boolean  @default(false)
+  profile_completion Boolean @default(false)
+  visibility         Boolean @default(false)
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   CandidateSkill CandidateSkill[]
 
@@ -1507,41 +1356,34 @@ model Candidate {
 
   JobEducation JobEducation[]
 
-
-  
-
   Jobbookmark Jobbookmark[]
 
   Applyjob Applyjob[]
 }
 
-
-
 model CandidateSkill {
-  id                 String  @id @default(cuid()) @map("_id")
-  candidateId String   
-  skillIds    String[] 
+  id          String   @id @default(cuid()) @map("_id")
+  candidateId String
+  skillIds    String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidate Candidate @relation(fields: [candidateId], references: [id])
 }
-
 
 model CandidateLanguage {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  candidateId  String   
-  langIds      String[] 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  candidateId String
+  langIds     String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  candidate    Candidate @relation(fields: [candidateId], references: [id])
+  candidate Candidate @relation(fields: [candidateId], references: [id])
 }
 
-
 model Experience {
-  id                 String  @id @default(cuid()) @map("_id")
-  candidate_id      String    
+  id                String    @id @default(cuid()) @map("_id")
+  candidate_id      String
   candidate         Candidate @relation(fields: [candidate_id], references: [id])
   company           String
   department        String
@@ -1549,45 +1391,38 @@ model Experience {
   start             DateTime?
   end               DateTime?
   responsibilities  String
-  currently_working Boolean?   @default(false)
+  currently_working Boolean?  @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }
 
-
-
 model JobEducation {
-  id                 String  @id @default(cuid()) @map("_id")
-  candidate   Candidate  @relation(fields: [candidate_id], references: [id])
+  id           String    @id @default(cuid()) @map("_id")
+  candidate    Candidate @relation(fields: [candidate_id], references: [id])
   candidate_id String
 
-  level       String
-  degree      String
-  year        String? 
-  notes       String
+  level  String
+  degree String
+  year   String?
+  notes  String
 
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-
-
 model PaymentSettings {
-  id                 String  @id @default(cuid()) @map("_id")
+  id        String   @id @default(cuid()) @map("_id")
   settings  Json     @default("{}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-
-
 model SiteSettings {
-  id                 String  @id @default(cuid()) @map("_id")
- settings Json     @default("{}")
- createdAt DateTime @default(now())
+  id        String   @id @default(cuid()) @map("_id")
+  settings  Json     @default("{}")
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 enum PaymentStatusJob {
   paid
@@ -1595,11 +1430,10 @@ enum PaymentStatusJob {
   pending
 }
 
-
 model OrderJob {
- id                 String  @id @default(cuid()) @map("_id")
-  company_id       String
-  plan_id          String
+  id         String @id @default(cuid()) @map("_id")
+  company_id String
+  plan_id    String
 
   package_name     String
   transaction_id   String
@@ -1610,155 +1444,138 @@ model OrderJob {
   default_amount   String
   payment_status   PaymentStatusJob?
 
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  company          Company  @relation(fields: [company_id], references: [id])
-  plan             Plan     @relation(fields: [plan_id], references: [id])
+  company Company @relation(fields: [company_id], references: [id])
+  plan    Plan    @relation(fields: [plan_id], references: [id])
 }
-
-
 
 model Userplan {
- id                 String  @id @default(cuid()) @map("_id")
-  company_id           String
-  plan_id              String
+  id         String @id @default(cuid()) @map("_id")
+  company_id String
+  plan_id    String
 
-  job_limit            Int
-  featured_job_limit   Int
-  highlight_job_limit  Int
-  profile_verify       Int      @default(0)
+  job_limit           Int
+  featured_job_limit  Int
+  highlight_job_limit Int
+  profile_verify      Int @default(0)
 
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  company              Company  @relation(fields: [company_id], references: [id])
-  plan                 Plan     @relation(fields: [plan_id], references: [id])
+  company Company @relation(fields: [company_id], references: [id])
+  plan    Plan    @relation(fields: [plan_id], references: [id])
 }
-
-
 
 model Jobbookmark {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  candidate    Candidate @relation(fields: [candidateId], references: [id])
-  candidateId  String    
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String
 
-  job          Jobs      @relation(fields: [jobId], references: [id])
-  jobId        String    
+  job   Jobs   @relation(fields: [jobId], references: [id])
+  jobId String
 
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-
 
 model Applyjob {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  candidate    Candidate @relation(fields: [candidateId], references: [id])
-  candidateId  String   
-  job          Jobs      @relation(fields: [jobId], references: [id])
-  jobId        String   
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String
+  job         Jobs      @relation(fields: [jobId], references: [id])
+  jobId       String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-
-
 model Blog {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String   @db.String
-  slug        String   @unique
-  description String   @db.String
-  image       String?  @db.String
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String  @db.String
+  slug        String  @unique
+  description String  @db.String
+  image       String? @db.String
 
-  createdAt   DateTime @default(now()) @map("createdAt")
-  updatedAt   DateTime @updatedAt @map("updatedAt")
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
 
   @@map("blogs")
 }
 
-
 //StackOverflow Models
 
-
 model QuestionForum {
-  id            String             @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  content       String
-  views         Int                @default(0)
-  answers       Int                @default(0)
-  upvotes       Int                @default(0)
-  downvotes     Int                @default(0)
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  views     Int    @default(0)
+  answers   Int    @default(0)
+  upvotes   Int    @default(0)
+  downvotes Int    @default(0)
 
-  UserId        String?
-  user          User?              @relation(fields: [UserId], references: [id])
+  UserId String?
+  user   User?   @relation(fields: [UserId], references: [id])
 
-  tagQuestions  TagQuestionForum[]
+  tagQuestions TagQuestionForum[]
 
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   AnswerForum     AnswerForum[]
   CollectionForum CollectionForum[]
 }
 
-
-
 model TagQuestionForum {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  tagId       String        @db.ObjectId
-  tag         TagForum      @relation(fields: [tagId], references: [id])
+  tagId String   @db.ObjectId
+  tag   TagForum @relation(fields: [tagId], references: [id])
 
-  questionId  String        @db.ObjectId
-  question    QuestionForum @relation(fields: [questionId], references: [id])
+  questionId String        @db.ObjectId
+  question   QuestionForum @relation(fields: [questionId], references: [id])
 
-  createdAt   DateTime      @default(now())
+  createdAt DateTime @default(now())
 }
 
-
-
-
-
 model AnswerForum {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  content     String
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
 
-  UserId    String          
-  user      User            @relation(fields: [UserId], references: [id])
+  UserId String
+  user   User   @relation(fields: [UserId], references: [id])
 
-  questionId  String          @db.ObjectId
-  question    QuestionForum   @relation(fields: [questionId], references: [id])
+  questionId String        @db.ObjectId
+  question   QuestionForum @relation(fields: [questionId], references: [id])
 
-  upvotes     Int             @default(0)
-  downvotes   Int             @default(0)
+  upvotes   Int @default(0)
+  downvotes Int @default(0)
 
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model TagForum {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  name        String           @unique
+  id           String             @id @default(auto()) @map("_id") @db.ObjectId
+  name         String             @unique
   tagQuestions TagQuestionForum[]
 
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-
 model VoteForum {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  userId    String     @map("userId")       
-  user      User            @relation(fields: [userId], references: [id])
+  userId String @map("userId")
+  user   User   @relation(fields: [userId], references: [id])
 
-  actionId    String          @db.ObjectId
-  actionType  ActionType
-  voteType    VoteType
+  actionId   String     @db.ObjectId
+  actionType ActionType
+  voteType   VoteType
 
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ActionType {
@@ -1772,31 +1589,31 @@ enum VoteType {
 }
 
 model CollectionForum {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  userId    String         
-  user      User            @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  questionId  String          @db.ObjectId
-  question    QuestionForum   @relation(fields: [questionId], references: [id])
+  questionId String        @db.ObjectId
+  question   QuestionForum @relation(fields: [questionId], references: [id])
 
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model InteractionForum {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  userId      String          
-  user        User            @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  action      String
+  action String
 
-  actionId    String          @db.ObjectId
-  actionType  ActionTypeInteraction
+  actionId   String                @db.ObjectId
+  actionType ActionTypeInteraction
 
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ActionTypeInteraction {
@@ -1804,9 +1621,7 @@ enum ActionTypeInteraction {
   answer
 }
 
-
 // Newsportal models ---------------------------------------------------------
-
 
 model Writer {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -1819,15 +1634,12 @@ model Writer {
   Image Image[]
 }
 
-
-
-
 model News {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  writerId    String   
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  writerId    String
   writerName  String
   title       String
-  slug        String  @unique  
+  slug        String   @unique
   image       String
   category    String
   description String   @default("")
@@ -1840,109 +1652,187 @@ model News {
   @@map("news")
 }
 
-
-
-
 model Image {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  writerId  String  @db.ObjectId
-  url       String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  writerId String @db.ObjectId
+  url      String
 
-  writer    Writer   @relation(fields: [writerId], references: [id])
-  
+  writer Writer @relation(fields: [writerId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("images")
 }
 
-
-
-
 ////////////////////////////
 
-
-
-
 model Messages {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  senderId        String   
-  receiverId      String  
-  sender          User     @relation("sentMessages", fields: [senderId], references: [id])
-  receiver        User     @relation("receivedMessages", fields: [receiverId], references: [id])
-  type            MessageType  @default(text)
-  message         String
-  messageStatus   String   @default("sent")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  senderId      String
+  receiverId    String
+  sender        User        @relation("sentMessages", fields: [senderId], references: [id])
+  receiver      User        @relation("receivedMessages", fields: [receiverId], references: [id])
+  type          MessageType @default(text)
+  message       String
+  messageStatus String      @default("sent")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 enum MessageType {
   text
   image
   video
-  audio   
+  audio
 }
-
 
 model OnlineUser {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   userId      String   @unique
   socketId    String
   connectedAt DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+//Calendar
+
+
+
+enum IntegrationProviderEnum {
+  GOOGLE
+  ZOOM
+  MICROSOFT
+}
+
+enum IntegrationAppTypeEnum {
+  GOOGLE_MEET_AND_CALENDAR
+  ZOOM_MEETING
+  OUTLOOK_CALENDAR
+}
+
+enum IntegrationCategoryEnum {
+  CALENDAR_AND_VIDEO_CONFERENCING
+  VIDEO_CONFERENCING
+  CALENDAR
+}
+
+model Integration {
+  id            String                    @id @default(auto()) @map("_id") @db.ObjectId
+  provider      IntegrationProviderEnum
+  category      IntegrationCategoryEnum
+  app_type      IntegrationAppTypeEnum
+  access_token  String
+  refresh_token String?
+  expiry_date   BigInt?
+  metadata      Json
+  isConnected   Boolean                   @default(true)
+
+  userId        String                   
+  user          User                      @relation(fields: [userId], references: [id])
+
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+
+  @@unique([userId, app_type]) 
+}
+
+
+
+enum EventLocationEnumType {
+  GOOGLE_MEET_AND_CALENDAR
+  ZOOM_MEETING
+}
+
+model Event {
+  id           String               @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  duration     Int                  @default(30)
+  slug         String
+  isPrivate    Boolean              @default(false)
+  locationType EventLocationEnumType
+
+  userId       String              
+  user         User                 @relation(fields: [userId], references: [id])
+
+  meetings     Meeting[]
+
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
 }
 
 
 
 
 
+model Availability {
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  timeGap   Int               @default(30)
+
+  userId    String            @unique
+  user      User              @relation(fields: [userId], references: [id])
+
+  days      DayAvailability[]
+
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+
+
+enum DayOfWeekEnum {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+model DayAvailability {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  day            DayOfWeekEnum
+  startTime      DateTime
+  endTime        DateTime
+  isAvailable    Boolean       @default(true)
+
+  availabilityId String        @db.ObjectId
+  availability   Availability  @relation(fields: [availabilityId], references: [id])
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
 
 
 
 
+enum MeetingStatus {
+  SCHEDULED
+  CANCELLED
+}
 
+model Meeting {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
 
+  guestName       String
+  guestEmail      String
+  additionalInfo  String?
+  startTime       DateTime
+  endTime         DateTime
+  meetLink        String
+  calendarEventId String
+  calendarAppType String
 
+  status          MeetingStatus @default(SCHEDULED)
 
+  userId          String       
+  user            User          @relation(fields: [userId], references: [id])
 
+  eventId         String        @db.ObjectId
+  event           Event         @relation(fields: [eventId], references: [id])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
