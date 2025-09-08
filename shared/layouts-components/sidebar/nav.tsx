@@ -1449,6 +1449,14 @@ export const MENUITEMS: any = [
       },
 
       {
+        path: "/apps/facebook/pages/home",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Social2",
+      },
+
+      {
         path: "/apps/full-calendar",
         type: "link",
         active: false,
