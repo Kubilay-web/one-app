@@ -31,7 +31,6 @@ const Layout = ({ children, }: any) => {
                     <Footer />
                 </div>
                 <Backtotop />
-                <PrelineScript />
             </div>
         </Fragment>
     )

@@ -1,12 +1,12 @@
+
 import { Feeling, LiveVideo, Photo } from "../../svg";
-import UserMenu from "../header/userMenu/page";
 import "./style.css";
-export default function CreatePost({ user }) {
+export default function CreatePost({ user, setVisible }) {
   return (
     <div className="createPost">
       <div className="createPost_header">
         <img src={user?.avatarUrl} alt="" />
-        <div className="open_post hover2">
+        <div className="open_post hover2" onClick={() => setVisible(true)}  >
           What's on your mind, {user?.username}
         </div>
       </div>

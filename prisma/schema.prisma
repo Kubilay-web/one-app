@@ -82,6 +82,15 @@ model User {
   receivedMessages Messages[]   @relation("receivedMessages")
   OnlineUser       OnlineUser[]
 
+
+  //Facebook Social
+
+
+  postsocial    PostSocial[]
+  commentssocial CommentSocial[]
+
+  //Facebook Social
+
   @@map("users")
 }
 
@@ -1836,3 +1845,36 @@ model Meeting {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 }
+
+
+
+//Social Facebook
+
+
+
+
+model PostSocial {
+  id         String    @id @map("_id") @default(auto()) @db.ObjectId
+  type       String?   // "profilePicture" | "cover" | null
+  text       String?
+  images     String[]  @default([])  // Array of image URLs
+  background String?
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String    
+  comments   CommentSocial[]
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model CommentSocial {
+  id        String   @id @map("_id") @default(auto()) @db.ObjectId
+  comment   String?
+  image     String?
+  commentBy User     @relation(fields: [commentById], references: [id])
+  commentById String 
+  commentAt DateTime @default(now())
+  post      PostSocial     @relation(fields: [postId], references: [id])
+  postId    String   @db.ObjectId
+}
+
