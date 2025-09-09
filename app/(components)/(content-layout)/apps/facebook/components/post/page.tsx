@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import "./style.css";
 import Moment from "react-moment";
