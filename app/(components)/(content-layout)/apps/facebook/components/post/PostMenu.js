@@ -1,6 +1,21 @@
 import { useRef, useState } from "react";
+import {
+  FaThumbtack,
+  FaSave,
+  FaEdit,
+  FaBell,
+  FaDownload,
+  FaExpand,
+  FaLock,
+  FaTrashAlt,
+  FaRegCalendarAlt,
+  FaSync,
+  FaArchive,
+  FaFlag,
+} from "react-icons/fa"; // react-icons'dan ikonlar
 import MenuItem from "./MenuItem";
 import useOnClickOutside from "../../helpers/clickOutside";
+
 export default function PostMenu({
   postUserId,
   userId,
@@ -10,52 +25,69 @@ export default function PostMenu({
   const [test, setTest] = useState(postUserId === userId ? true : false);
   const menu = useRef(null);
   useOnClickOutside(menu, () => setShowMenu(false));
+
   return (
     <ul className="post_menu" ref={menu}>
-      {test && <MenuItem icon="pin_icon" title="Pin Post" />}
+      {/* Pin Post: Eğer kullanıcı postu paylaşan kişiyle aynıysa */}
+      {test && <MenuItem icon={<FaThumbtack />} title="Pin Post" />}
+
+      {/* Save Post */}
       <MenuItem
-        icon="save_icon"
+        icon={<FaSave />}
         title="Save Post"
         subtitle="Add this to your saved items."
       />
+
       <div className="line"></div>
-      {test && <MenuItem icon="edit_icon" title="Edit Post" />}
+
+      {/* Edit Post: Eğer kullanıcı postu paylaşan kişiyle aynıysa */}
+      {test && <MenuItem icon={<FaEdit />} title="Edit Post" />}
+
+      {/* Eğer kullanıcı postu paylaşan kişiyle aynı değilse, bildirim açma seçeneği */}
       {!test && (
         <MenuItem
-          icon="turnOnNotification_icon"
+          icon={<FaBell />}
           title="Turn on notifications for this post"
         />
       )}
-      {imagesLength && <MenuItem icon="download_icon" title="Download" />}
-      {imagesLength && (
-        <MenuItem icon="fullscreen_icon" title="Enter Fullscreen" />
+
+      {/* Resim varsa, indir ve fullscreen seçenekleri */}
+      {imagesLength > 0 && (
+        <>
+          <MenuItem icon={<FaDownload />} title="Download" />
+          <MenuItem icon={<FaExpand />} title="Enter Fullscreen" />
+        </>
       )}
-      {test && <MenuItem img="/facebook/icons/lock.png" title="Edit audience" />}
+
+      {/* Kullanıcı postu paylaşan kişiyle aynıysa, diğer seçenekler */}
+      {test && (
+        <MenuItem img="/facebook/icons/lock.png" title="Edit audience" />
+      )}
       {test && (
         <MenuItem
-          icon="turnOffNotifications_icon"
+          icon={<FaBell />}
           title="Turn off notifications for this post"
         />
       )}
-      {test && <MenuItem icon="delete_icon" title="Turn off translations" />}
-      {test && <MenuItem icon="date_icon" title="Edit Date" />}
-      {test && (
-        <MenuItem icon="refresh_icon" title="Refresh share attachment" />
-      )}
-      {test && <MenuItem icon="archive_icon" title="Move to archive" />}
+      {test && <MenuItem icon={<FaTrashAlt />} title="Turn off translations" />}
+      {test && <MenuItem icon={<FaRegCalendarAlt />} title="Edit Date" />}
+      {test && <MenuItem icon={<FaSync />} title="Refresh share attachment" />}
+      {test && <MenuItem icon={<FaArchive />} title="Move to archive" />}
       {test && (
         <MenuItem
-          icon="trash_icon"
+          icon={<FaTrashAlt />}
           title="Move to trash"
-          subtitle="items in your trash are deleted after 30 days"
+          subtitle="Items in your trash are deleted after 30 days"
         />
       )}
+
+      {/* Eğer kullanıcı postu paylaşan kişiyle aynı değilse, raporlama seçeneği */}
       {!test && <div className="line"></div>}
       {!test && (
         <MenuItem
-          img="/facebook/icons/report.png"
+          icon={<FaFlag />}
           title="Report post"
-          subtitle="i'm concerned about this post"
+          subtitle="I'm concerned about this post"
         />
       )}
     </ul>

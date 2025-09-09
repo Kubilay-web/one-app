@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import Link from "next/link"
+import Link from "next/link";
 import "./style.css";
 import Moment from "react-moment";
 import { Dots, Public } from "../../svg";
@@ -59,18 +59,18 @@ export default function Post({ post, user }) {
       ) : (
         <>
           <div className="post_text">{post.text}</div>
-          {post.images && post.images.length && (
+          {post.images && post.images.length > 0 && (
             <div
               className={
                 post.images.length === 1
                   ? "grid_1"
                   : post.images.length === 2
-                  ? "grid_2"
-                  : post.images.length === 3
-                  ? "grid_3"
-                  : post.images.length === 4
-                  ? "grid_4"
-                  : post.images.length >= 5 && "grid_5"
+                    ? "grid_2"
+                    : post.images.length === 3
+                      ? "grid_3"
+                      : post.images.length === 4
+                        ? "grid_4"
+                        : post.images.length >= 5 && "grid_5"
               }
             >
               {post.images.slice(0, 5).map((image, i) => (
@@ -129,7 +129,7 @@ export default function Post({ post, user }) {
       {showMenu && (
         <PostMenu
           userId={user.id}
-          postUserId={post.user._id}
+          postUserId={post.user.id}
           imagesLength={post?.images?.length}
           setShowMenu={setShowMenu}
         />

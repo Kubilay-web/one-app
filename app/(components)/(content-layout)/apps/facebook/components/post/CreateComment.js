@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import Picker from "emoji-picker-react";
+import { FaSmile, FaCamera, FaGif, FaStickerMule } from "react-icons/fa"; // Import icons
+import { FaTimes } from "react-icons/fa";
+import { MdGif } from "react-icons/md";
+
 export default function CreateComment({ user }) {
   const [picker, setPicker] = useState(false);
   const [text, setText] = useState("");
@@ -8,18 +12,21 @@ export default function CreateComment({ user }) {
   const [cursorPosition, setCursorPosition] = useState();
   const textRef = useRef(null);
   const imgInput = useRef(null);
+
   useEffect(() => {
     textRef.current.selectionEnd = cursorPosition;
   }, [cursorPosition]);
-  const handleEmoji = (e, { emoji }) => {
+
+  const handleEmoji = (emojiObject) => {
     const ref = textRef.current;
     ref.focus();
     const start = text.substring(0, ref.selectionStart);
     const end = text.substring(ref.selectionStart);
-    const newText = start + emoji + end;
+    const newText = start + emojiObject.emoji + end; // emojiObject.emoji mevcut
     setText(newText);
-    setCursorPosition(start.length + emoji.length);
+    setCursorPosition(start.length + emojiObject.emoji.length);
   };
+
   const handleImage = (e) => {
     let file = e.target.files[0];
     if (
@@ -41,10 +48,11 @@ export default function CreateComment({ user }) {
       setCommentImage(event.target.result);
     };
   };
+
   return (
     <div className="create_comment_wrap">
       <div className="create_comment">
-        <img src={user?.picture} alt="" />
+        <img src={user?.avatarUrl} alt="" />
         <div className="comment_input_wrap">
           {picker && (
             <div className="comment_emoji_picker">
@@ -75,34 +83,33 @@ export default function CreateComment({ user }) {
           />
           <div
             className="comment_circle_icon hover2"
-            onClick={() => {
-              setPicker((prev) => !prev);
-            }}
+            onClick={() => setPicker((prev) => !prev)}
           >
-            <i className="emoji_icon"></i>
+            <FaSmile /> {/* Emoji icon */}
           </div>
           <div
             className="comment_circle_icon hover2"
             onClick={() => imgInput.current.click()}
           >
-            <i className="camera_icon"></i>
+            <FaCamera /> {/* Camera icon */}
           </div>
           <div className="comment_circle_icon hover2">
-            <i className="gif_icon"></i>
+            <MdGif /> {/* Gif icon */}
           </div>
           <div className="comment_circle_icon hover2">
-            <i className="sticker_icon"></i>
+            <FaStickerMule /> {/* Sticker icon */}
           </div>
         </div>
       </div>
+
       {commentImage && (
         <div className="comment_img_preview">
-          <img src={commentImage} alt="" />
+          <img src={commentImage} alt="comment image" />
           <div
             className="small_white_circle"
             onClick={() => setCommentImage("")}
           >
-            <i className="exit_icon"></i>
+            <FaTimes />
           </div>
         </div>
       )}

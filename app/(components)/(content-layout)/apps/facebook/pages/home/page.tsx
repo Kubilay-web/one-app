@@ -10,7 +10,7 @@ import RightHome from "../../components/home/right";
 import Stories from "../../components/home/stories/page";
 import Post from "../../components/post/page";
 import "./style.css";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 export default function Home() {
@@ -40,8 +40,8 @@ export default function Home() {
 
   return (
     <div className="home">
-      {visible && <CreatePostPopup user={user} setVisible={setVisible} />}
       <Toaster position="top-right" reverseOrder={false} />
+      {visible && <CreatePostPopup user={user} setVisible={setVisible} />}
       <Header />
       <div className="middle-container">
         <div className="home_middle">
@@ -53,7 +53,7 @@ export default function Home() {
             <CreatePost user={user} setVisible={setVisible} />
             <div className="posts">
               {posts.map((post) => (
-                <Post key={post.id} post={post} />
+                <Post key={post.id} post={post} user={user} />
               ))}
             </div>
           </div>
