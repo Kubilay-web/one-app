@@ -12,6 +12,8 @@ export default function Post({ post, user }) {
   const [visible, setVisible] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
+  console.log("post---->",post)
+
   return (
     <div className="post">
       <div className="post_header">

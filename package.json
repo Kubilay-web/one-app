@@ -181,6 +181,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-dragula": "^1.1.17",
     "react-dropdown-select": "^4.11.4",
+    "react-easy-crop": "^5.5.0",
     "react-fa-icon-picker": "^1.0.3",
     "react-fast-marquee": "^1.6.5",
     "react-filepond": "^7.1.3",

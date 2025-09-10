@@ -82,12 +82,13 @@ model User {
   receivedMessages Messages[]   @relation("receivedMessages")
   OnlineUser       OnlineUser[]
 
-
   //Facebook Social
 
-
-  postsocial    PostSocial[]
+  postsocial     PostSocial[]
   commentssocial CommentSocial[]
+
+  FriendRequestSocial  FriendRequest[] @relation("UserFriendsFriend")
+  FriendRequestSocials FriendRequest[] @relation("UserFriendsUser")
 
   //Facebook Social
 
@@ -1706,8 +1707,6 @@ model OnlineUser {
 
 //Calendar
 
-
-
 enum IntegrationProviderEnum {
   GOOGLE
   ZOOM
@@ -1727,7 +1726,7 @@ enum IntegrationCategoryEnum {
 }
 
 model Integration {
-  id            String                    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String                  @id @default(auto()) @map("_id") @db.ObjectId
   provider      IntegrationProviderEnum
   category      IntegrationCategoryEnum
   app_type      IntegrationAppTypeEnum
@@ -1735,18 +1734,16 @@ model Integration {
   refresh_token String?
   expiry_date   BigInt?
   metadata      Json
-  isConnected   Boolean                   @default(true)
+  isConnected   Boolean                 @default(true)
 
-  userId        String                   
-  user          User                      @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  createdAt     DateTime                  @default(now())
-  updatedAt     DateTime                  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@unique([userId, app_type]) 
+  @@unique([userId, app_type])
 }
-
-
 
 enum EventLocationEnumType {
   GOOGLE_MEET_AND_CALENDAR
@@ -1754,41 +1751,35 @@ enum EventLocationEnumType {
 }
 
 model Event {
-  id           String               @id @default(auto()) @map("_id") @db.ObjectId
+  id           String                @id @default(auto()) @map("_id") @db.ObjectId
   title        String
   description  String?
-  duration     Int                  @default(30)
+  duration     Int                   @default(30)
   slug         String
-  isPrivate    Boolean              @default(false)
+  isPrivate    Boolean               @default(false)
   locationType EventLocationEnumType
 
-  userId       String              
-  user         User                 @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  meetings     Meeting[]
+  meetings Meeting[]
 
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-
-
-
 
 model Availability {
-  id        String            @id @default(auto()) @map("_id") @db.ObjectId
-  timeGap   Int               @default(30)
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  timeGap Int    @default(30)
 
-  userId    String            @unique
-  user      User              @relation(fields: [userId], references: [id])
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 
-  days      DayAvailability[]
+  days DayAvailability[]
 
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-
 
 enum DayOfWeekEnum {
   SUNDAY
@@ -1801,21 +1792,18 @@ enum DayOfWeekEnum {
 }
 
 model DayAvailability {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  day            DayOfWeekEnum
-  startTime      DateTime
-  endTime        DateTime
-  isAvailable    Boolean       @default(true)
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  day         DayOfWeekEnum
+  startTime   DateTime
+  endTime     DateTime
+  isAvailable Boolean       @default(true)
 
-  availabilityId String        @db.ObjectId
-  availability   Availability  @relation(fields: [availabilityId], references: [id])
+  availabilityId String       @db.ObjectId
+  availability   Availability @relation(fields: [availabilityId], references: [id])
 
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-
-
 
 enum MeetingStatus {
   SCHEDULED
@@ -1823,7 +1811,7 @@ enum MeetingStatus {
 }
 
 model Meeting {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
   guestName       String
   guestEmail      String
@@ -1834,47 +1822,51 @@ model Meeting {
   calendarEventId String
   calendarAppType String
 
-  status          MeetingStatus @default(SCHEDULED)
+  status MeetingStatus @default(SCHEDULED)
 
-  userId          String       
-  user            User          @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  eventId         String        @db.ObjectId
-  event           Event         @relation(fields: [eventId], references: [id])
+  eventId String @db.ObjectId
+  event   Event  @relation(fields: [eventId], references: [id])
 
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-
 
 //Social Facebook
 
-
-
-
 model PostSocial {
-  id         String    @id @map("_id") @default(auto()) @db.ObjectId
-  type       String?   // "profilePicture" | "cover" | null
+  id         String          @id @default(auto()) @map("_id") @db.ObjectId
+  type       String? // "profilePicture" | "cover" | null
   text       String?
-  images     String[]  @default([])  // Array of image URLs
+  images     String[]        @default([]) // Array of image URLs
   background String?
-  user       User      @relation(fields: [userId], references: [id])
-  userId     String    
+  user       User            @relation(fields: [userId], references: [id])
+  userId     String
   comments   CommentSocial[]
 
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CommentSocial {
-  id        String   @id @map("_id") @default(auto()) @db.ObjectId
-  comment   String?
-  image     String?
-  commentBy User     @relation(fields: [commentById], references: [id])
-  commentById String 
-  commentAt DateTime @default(now())
-  post      PostSocial     @relation(fields: [postId], references: [id])
-  postId    String   @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  comment     String?
+  image       String?
+  commentBy   User       @relation(fields: [commentById], references: [id])
+  commentById String
+  commentAt   DateTime   @default(now())
+  post        PostSocial @relation(fields: [postId], references: [id])
+  postId      String     @db.ObjectId
 }
 
+model FriendRequest {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  friendId  String
+  status    String // 'pending', 'accepted', etc.
+  createdAt DateTime @default(now())
+  user      User     @relation("UserFriendsUser", fields: [userId], references: [id])
+  friend    User     @relation("UserFriendsFriend", fields: [friendId], references: [id])
+}
