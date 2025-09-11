@@ -1,8 +1,12 @@
+"use client";
+
 import { useRef, useState } from "react";
+import { AiOutlineClose } from "react-icons/ai"; // exit icon
+import { FiPlus } from "react-icons/fi"; // plus icon
+import { BiImage } from "react-icons/bi"; // frame icon
 import "./style.css";
 import UpdateProfilePicture from "./UpdateProfilePicture";
 import { useSession } from "@/app/SessionProvider";
-import { IoExitOutline, IoAddCircleOutline, IoImagesOutline  } from "react-icons/io5"; // Add React Icons
 
 export default function ProfilePicture({ username, setShow, pRef, photos }) {
   const popup = useRef(null);
@@ -13,12 +17,7 @@ export default function ProfilePicture({ username, setShow, pRef, photos }) {
 
   const handleImage = (e) => {
     let file = e.target.files[0];
-    if (
-      file.type !== "image/jpeg" &&
-      file.type !== "image/png" &&
-      file.type !== "image/webp" &&
-      file.type !== "image/gif"
-    ) {
+    if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) {
       setError(`${file.name} format is not supported.`);
       return;
     } else if (file.size > 1024 * 1024 * 5) {
@@ -45,25 +44,27 @@ export default function ProfilePicture({ username, setShow, pRef, photos }) {
       <div className="postBox pictureBox" ref={popup}>
         <div className="box_header">
           <div className="small_circle" onClick={() => setShow(false)}>
-            <IoExitOutline size={24} /> {/* Replace exit icon with React Icon */}
+            <AiOutlineClose size={20} />
           </div>
           <span>Update profile picture</span>
         </div>
+
         <div className="update_picture_wrap">
           <div className="update_picture_buttons">
             <button
               className="light_blue_btn"
               onClick={() => refInput.current.click()}
             >
-              <IoAddCircleOutline size={20} className="filter_blue" /> {/* Upload icon */}
+              <FiPlus size={18} />
               Upload photo
             </button>
             <button className="gray_btn">
-              <IoImagesOutline  size={20} /> {/* Add frame icon */}
+              <BiImage size={18} />
               Add frame
             </button>
           </div>
         </div>
+
         {error && (
           <div className="postError comment_error">
             <div className="postError_error">{error}</div>
@@ -72,35 +73,8 @@ export default function ProfilePicture({ username, setShow, pRef, photos }) {
             </button>
           </div>
         )}
-        <div className="old_pictures_wrap scrollbar">
-          <h4>your profile pictures</h4>
-          <div className="old_pictures">
-            {(photos || [])
-              .filter((img) => img.folder === `${user.username}/profile_pictures`)
-              .map((photo) => (
-                <img
-                  src={photo.secure_url}
-                  key={photo.public_id}
-                  alt=""
-                  onClick={() => setImage(photo.secure_url)}
-                />
-              ))}
-          </div>
-          <h4>other pictures</h4>
-          <div className="old_pictures">
-            {(photos || [])
-              .filter((img) => img.folder !== `${user.username}/profile_pictures`)
-              .map((photo) => (
-                <img
-                  src={photo.secure_url}
-                  key={photo.public_id}
-                  alt=""
-                  onClick={() => setImage(photo.secure_url)}
-                />
-              ))}
-          </div>
-        </div>
       </div>
+
       {image && (
         <UpdateProfilePicture
           setImage={setImage}

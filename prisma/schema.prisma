@@ -82,15 +82,19 @@ model User {
   receivedMessages Messages[]   @relation("receivedMessages")
   OnlineUser       OnlineUser[]
 
-  //Facebook Social
+  //Facebook Social2
 
+  cover String? 
   postsocial     PostSocial[]
   commentssocial CommentSocial[]
 
   FriendRequestSocial  FriendRequest[] @relation("UserFriendsFriend")
   FriendRequestSocials FriendRequest[] @relation("UserFriendsUser")
+  FollowSocial FollowSocial[] @relation("FollowerRelation")
+  FollowSocials FollowSocial[] @relation("FollowingRelation")
+  UserDetails UserDetails[]
 
-  //Facebook Social
+  //Facebook Social2
 
   @@map("users")
 }
@@ -1834,7 +1838,7 @@ model Meeting {
   updatedAt DateTime @updatedAt
 }
 
-//Social Facebook
+//Social2 Facebook
 
 model PostSocial {
   id         String          @id @default(auto()) @map("_id") @db.ObjectId
@@ -1870,3 +1874,37 @@ model FriendRequest {
   user      User     @relation("UserFriendsUser", fields: [userId], references: [id])
   friend    User     @relation("UserFriendsFriend", fields: [friendId], references: [id])
 }
+
+
+model UserDetails {
+  id           String  @id @map("_id") @default(auto()) @db.ObjectId
+  userId       String  @unique
+  biosocial    String?
+  otherName    String?
+  job          String?
+  workplace    String?
+  highSchool   String?
+  college      String?
+  currentCity  String?
+  hometown     String?
+  relationship String? 
+  instagram    String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("userDetails")
+}
+
+
+
+model FollowSocial {
+  id        String @id @map("_id") @default(auto()) @db.ObjectId
+  followerId String 
+  followingId String
+
+  follower User @relation("FollowerRelation", fields: [followerId], references: [id])
+  following User @relation("FollowingRelation", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+

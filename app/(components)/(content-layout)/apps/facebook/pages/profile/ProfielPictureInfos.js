@@ -5,6 +5,7 @@ import { FaCamera } from "react-icons/fa"; // Camera icon
 import { FaPlus } from "react-icons/fa"; // Plus icon
 import { FaPen } from "react-icons/fa"; // Edit icon
 import ProfilePicture from "../../components/profielPicture/page";
+import Friendship from "./Friendship";
 
 export default function ProfielPictureInfos({
   profile,
@@ -15,6 +16,7 @@ export default function ProfielPictureInfos({
   const [show, setShow] = useState(false);
   const pRef = useRef(null);
 
+  
   return (
     <div className="profile_img_wrap">
       {show && <ProfilePicture setShow={setShow} pRef={pRef} photos={photos} />}
@@ -53,7 +55,7 @@ export default function ProfielPictureInfos({
       
       {/* Show buttons if the user is not a visitor */}
       {visitor ? (
-        ""
+        <Friendship profileid={profile.id}/>
       ) : (
         <div className="profile_w_right">
           <div className="blue_btn">

@@ -1,19 +1,14 @@
 import axios from "axios";
 
-export const uploadImages = async (formData, path, token) => {
+// Cloudinary upload (unsigned upload veya backend signed olabilir)
+export const uploadImages = async (formData) => {
   try {
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/uploadImages`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "content-type": "multipart/form-data",
-        },
-      }
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      formData
     );
-    return data;
-  } catch (error) {
-    return error.response.data.message;
+    return res.data; // secure_url vs. döner
+  } catch (err) {
+    throw new Error(err.response?.data?.error?.message || "Upload başarısız");
   }
 };

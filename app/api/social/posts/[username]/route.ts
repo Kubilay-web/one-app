@@ -3,23 +3,28 @@ import db from "@/app/lib/db"; // Prisma client'ını import et
 // GET isteği işleme fonksiyonu
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: { username: string } }
 ) {
-  const { userId } = params; // URL parametresinden userId al
+  const { username } = params; // URL parametresinden userId al
 
   try {
     // Kullanıcının tüm PostSocial verilerini al
+
     const posts = await db.postSocial.findMany({
-      where: { userId: userId }, // userId'ye göre filtrele
+      where: {
+        user: {
+          username: username, // User tablosundaki username'e göre filtre
+        },
+      },
       select: {
-        images: true, // Sadece images alanını al
+        images: true,
       },
     });
 
     // Eğer kullanıcıya ait post yoksa
     if (posts.length === 0) {
       return new Response(
-        JSON.stringify({ message: "Kullanıcıya ait post bulunamadı" }),
+        JSON.stringify({ message: "No images available yet" }),
         {
           status: 404,
         }

@@ -1,3 +1,7 @@
+"use client";
+
+import { FaGlobeAmericas, FaTimes, FaCheck } from "react-icons/fa";
+
 export default function Bio({
   infos,
   handleChange,
@@ -34,26 +38,28 @@ export default function Bio({
           onChange={handleChange}
         ></textarea>
       )}
+
       {!detail && <div className="remaining">{max} characters remaining</div>}
+
       <div className="flex">
         <div className="flex flex_left">
-          <i className="public_icon"></i>Public
+          <FaGlobeAmericas className="public_icon" /> Public
         </div>
         <div className="flex flex_right">
           <button
-            className="gray_btn"
+            className="gray_btn flex items-center gap-1"
             onClick={() => (!detail ? setShowBio(false) : setShow(false))}
           >
-            Cancel
+            <FaTimes /> Cancel
           </button>
           <button
-            className="blue_btn"
+            className="blue_btn flex items-center gap-1"
             onClick={() => {
               updateDetails();
               setShow(false);
             }}
           >
-            Save
+            <FaCheck /> Save
           </button>
         </div>
       </div>

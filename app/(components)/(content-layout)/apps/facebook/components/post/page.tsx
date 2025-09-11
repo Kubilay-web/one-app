@@ -51,6 +51,8 @@ export default function Post({ post, user }) {
           <Dots color="#828387" />
         </div>
       </div>
+
+      
       {post.background ? (
         <div
           className="post_bg"
@@ -87,6 +89,9 @@ export default function Post({ post, user }) {
           )}
         </>
       )}
+
+
+
       <div className="post_infos">
         <div className="reacts_count">
           <div className="reacts_count_imgs"></div>

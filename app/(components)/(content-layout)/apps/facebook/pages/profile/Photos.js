@@ -1,25 +1,22 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function Photos({ token, user }) {
+export default function Photos({ token, user, username }) {
   const [loading, setLoading] = useState(false); // Yükleniyor durumu
   const [error, setError] = useState(''); // Hata mesajı
   const [photos, setPhotos] = useState([]); // Fotoğraflar
 
-  const id = user.id; // Kullanıcı ID'si
-
-  console.log(id);
 
   useEffect(() => {
     getPhotos(); // Kullanıcı ID'sine göre fotoğrafları çek
-  }, [id]);
+  }, []);
 
   // Fotoğrafları API'den çekme fonksiyonu
   const getPhotos = async () => {
     setLoading(true); // Yükleniyor durumuna geç
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/posts/${id}`, // API'den fotoğrafları al
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/posts/${username}`, // API'den fotoğrafları al
         {
           headers: {
             Authorization: `Bearer ${token}`, // Bearer token'ı ekle

@@ -12,6 +12,7 @@
 }
 
 
+
 .pictureBox {
   width: 700px !important;
 
@@ -197,6 +198,3 @@
     transform: translateX(-2rem);
   }
 }
-
-
-

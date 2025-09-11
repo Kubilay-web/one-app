@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import Bio from "./Bio";
+import { FaUserTie, FaGraduationCap, FaHome, FaHeart, FaInstagram, FaPlus, FaPen } from "react-icons/fa";
 
 export default function Detail({
   img,
@@ -13,22 +16,33 @@ export default function Detail({
   rel,
 }) {
   const [show, setShow] = useState(false);
+
+  // img string'lerini React Icons ile eşleştiriyoruz
+  const icons = {
+    job: <FaUserTie />,
+    studies: <FaGraduationCap />,
+    home: <FaHome />,
+    relationship: <FaHeart />,
+    instagram: <FaInstagram />,
+  };
+
   return (
     <div>
-      <div className="add_details_flex " onClick={() => setShow(true)}>
+      <div className="add_details_flex" onClick={() => setShow(true)}>
         {value ? (
-          <div className="info_profile ">
-            <img src={`../../../icons/${img}.png`} alt="" />
+          <div className="info_profile">
+            {icons[img] || <FaUserTie />} {/* default icon */}
             {value}
-            <i className="edit_icon"></i>
+            <FaPen className="edit_icon" />
           </div>
         ) : (
           <>
-            <i className="rounded_plus_icon"></i>
+            <FaPlus className="rounded_plus_icon" />
             <span className="underline">Add {text}</span>
           </>
         )}
       </div>
+
       {show && (
         <Bio
           placeholder={placeholder}
