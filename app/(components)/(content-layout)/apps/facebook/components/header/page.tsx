@@ -38,7 +38,7 @@ export default function Header() {
     setShowUserMenu(false);
   });
   return (
-    <header className="header">
+    <header className="header-social">
       <div className="header_left">
         <Link href="/" className="header_logo">
           <div className="circle">
@@ -81,7 +81,8 @@ export default function Header() {
         </Link>
       </div>
       <div className="header_right">
-        <Link href="/apps/facebook/pages/profile" className="profile_link hover1">
+
+        <Link href={`/apps/facebook/pages/profile/${user.username}`} className="profile_link hover1">
           <img src={user?.avatarUrl} alt="" />
           <span>{user?.username}</span>
         </Link>

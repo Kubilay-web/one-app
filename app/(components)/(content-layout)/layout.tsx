@@ -32,6 +32,7 @@ const Layout = ({ children, }: any) => {
                 </div>
                 <Backtotop />
             </div>
+            <PrelineScript/>
         </Fragment>
     )
 

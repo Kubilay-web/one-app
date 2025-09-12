@@ -93,6 +93,7 @@ model User {
   FollowSocial FollowSocial[] @relation("FollowerRelation")
   FollowSocials FollowSocial[] @relation("FollowingRelation")
   UserDetails UserDetails[]
+  React React[]
 
   //Facebook Social2
 
@@ -1852,6 +1853,8 @@ model PostSocial {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  React React[]
 }
 
 model CommentSocial {
@@ -1874,6 +1877,7 @@ model FriendRequest {
   user      User     @relation("UserFriendsUser", fields: [userId], references: [id])
   friend    User     @relation("UserFriendsFriend", fields: [friendId], references: [id])
 }
+
 
 
 model UserDetails {
@@ -1908,3 +1912,25 @@ model FollowSocial {
   @@unique([followerId, followingId])
 }
 
+
+enum ReactType {
+  like
+  love
+  haha
+  sad
+  angry
+  wow
+}
+
+
+model React {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  react    ReactType
+  postRef  PostSocial     @relation(fields: [postRefId], references: [id])
+  postRefId String  @db.ObjectId
+  reactBy  User     @relation(fields: [reactById], references: [id])
+  reactById String  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

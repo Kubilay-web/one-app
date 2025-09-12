@@ -47,7 +47,7 @@ export default function ProfilePage({ setVisible }) {
         );
 
         if (res.data.ok === false) {
-          router.push("/apps/facebook"); // Profil yoksa yönlendir
+          router.push("/apps/facebook/facebook/pages/home"); // Profil yoksa yönlendir
         } else {
           setProfile(res.data);
         }

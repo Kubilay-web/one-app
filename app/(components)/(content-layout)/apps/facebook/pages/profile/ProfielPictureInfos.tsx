@@ -1,12 +1,9 @@
-"use client";
+"use client"
 
 import { useRef, useState } from "react";
-import { FaCamera } from "react-icons/fa"; // Camera icon
-import { FaPlus } from "react-icons/fa"; // Plus icon
-import { FaPen } from "react-icons/fa"; // Edit icon
-import ProfilePicture from "../../components/profielPicture/page";
+import ProfilePicture from "../../components/profielPicture/page"
 import Friendship from "./Friendship";
-
+import Link from "next/link"
 export default function ProfielPictureInfos({
   profile,
   visitor,
@@ -15,12 +12,9 @@ export default function ProfielPictureInfos({
 }) {
   const [show, setShow] = useState(false);
   const pRef = useRef(null);
-
-  
   return (
     <div className="profile_img_wrap">
       {show && <ProfilePicture setShow={setShow} pRef={pRef} photos={photos} />}
-      
       <div className="profile_w_left">
         <div className="profile_w_img">
           <div
@@ -31,39 +25,58 @@ export default function ProfielPictureInfos({
               backgroundImage: `url(${profile.avatarUrl})`,
             }}
           ></div>
-          
-          {/* Show camera icon if the user is not a visitor */}
           {!visitor && (
             <div
               className="profile_circle hover1"
               onClick={() => setShow(true)}
             >
-              <FaCamera className="camera_filled_icon" />
+              <i className="camera_filled_icon"></i>
             </div>
           )}
         </div>
-        
         <div className="profile_w_col">
           <div className="profile_name">
             {profile.username}
             <div className="othername">{othername && `(${othername})`}</div>
           </div>
-          <div className="profile_friend_count"></div>
-          <div className="profile_friend_imgs"></div>
+          <div className="profile_friend_count">
+            {profile?.friends && (
+              <div className="profile_card_count">
+                {profile?.friends.length === 0
+                  ? ""
+                  : profile?.friends.length === 1
+                  ? "1 Friend"
+                  : `${profile?.friends.length} Friends`}
+              </div>
+            )}
+          </div>
+          <div className="profile_friend_imgs">
+            {profile?.friends &&
+              profile.friends.slice(0, 6).map((friend, i) => (
+                <Link href={`/apps/facebook/pages/profile/${friend.username}`} key={i}>
+                  <img
+                    src={friend.avatarUrl}
+                    alt=""
+                    style={{
+                      transform: `translateX(${-i * 7}px)`,
+                      zIndex: `${i}`,
+                    }}
+                  />
+                </Link>
+              ))}
+          </div>
         </div>
       </div>
-      
-      {/* Show buttons if the user is not a visitor */}
       {visitor ? (
-        <Friendship profileid={profile.id}/>
+        <Friendship friendshipp={profile?.friendship} profileid={profile.id} />
       ) : (
         <div className="profile_w_right">
           <div className="blue_btn">
-            <FaPlus className="invert" />
+            <img src="../../../icons/plus.png" alt="" className="invert" />
             <span>Add to story</span>
           </div>
           <div className="gray_btn">
-            {/* <FaPen className="edit_icon" /> */}
+            <i className="edit_icon"></i>
             <span>Edit profile</span>
           </div>
         </div>

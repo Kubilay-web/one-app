@@ -23,6 +23,6 @@
       "@/*": ["./*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","server.ts", "app/(components)/(content-layout)/apps/facebook/components/profielPicture/page.tsx", "app/(components)/(content-layout)/apps/facebook/components/header/userMenu/DisplayAccessibility.js", "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/AddToYourPost.js", "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/EmojiPickerBackgrounds.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","server.ts", "app/(components)/(content-layout)/apps/facebook/components/profielPicture/page.tsx", "app/(components)/(content-layout)/apps/facebook/components/header/userMenu/DisplayAccessibility.js", "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/AddToYourPost.js", "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/EmojiPickerBackgrounds.js", "app/(components)/(content-layout)/apps/facebook/pages/profile/Friendship.js"],
   "exclude": ["node_modules"]
 }

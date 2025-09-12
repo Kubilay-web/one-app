@@ -55,7 +55,7 @@
   border-radius: 10px;
   box-shadow: 0 12px 28px 0 var(--shadow-1), 0 2px 4px 0 var(--shadow-2),
     inset 0 0 0 px var(--shadow-inset);
-  z-index: 99999;
+   z-index: 99999;
 }
 .open_cover_menu_item {
   display: flex;
@@ -74,7 +74,7 @@
   justify-content: space-between;
   padding: 0 1rem;
   margin-bottom: -2.8rem;
-  z-index: 1;
+   z-index: 1; 
 }
 .profile_w_left {
   display: flex;
@@ -83,7 +83,7 @@
 }
 .profile_w_img {
   position: relative;
-  z-index: 9999;
+   z-index: 9999; 
 }
 .profile_w_bg {
   width: 180px;
@@ -366,7 +366,7 @@
   border-bottom-left-radius: 8px;
 }
 .save_changes_cover {
-  z-index: 999999999;
+   z-index: 999999999;
   position: fixed;
   left: 0;
   display: flex;
@@ -510,7 +510,7 @@
   top: 54px;
 }
 .friendship {
-  z-index: 9;
+   z-index: 9; 
   display: flex;
   align-items: center;
   gap: 10px;

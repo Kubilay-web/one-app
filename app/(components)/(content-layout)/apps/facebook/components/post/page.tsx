@@ -18,7 +18,7 @@ export default function Post({ post, user }) {
     <div className="post">
       <div className="post_header">
         <Link
-          href={`/profile/${post.user.username}`}
+          href={`/apps/facebook/pages/profile/${post.user.username}`}
           className="post_header_left"
         >
           <img src={post.user.avatarUrl} alt="" />
@@ -103,7 +103,7 @@ export default function Post({ post, user }) {
         </div>
       </div>
       <div className="post_actions">
-        <ReactsPopup visible={visible} setVisible={setVisible} />
+        <ReactsPopup visible={visible} setVisible={setVisible} postId={post.id} />
         <div
           className="post_action hover1"
           onMouseOver={() => {

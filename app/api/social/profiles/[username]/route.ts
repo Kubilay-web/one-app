@@ -1,21 +1,20 @@
-import db from "@/app/lib/db"; // Prisma client'ı doğru import et
+import db from "@/app/lib/db";
+import { validateRequest } from "@/app/auth";
 
-// GET isteği işleme fonksiyonu
 export async function GET(
   req: Request,
   { params }: { params: { username: string } }
 ) {
-  const { username } = params; // URL parametresinden kullanıcı adı al
+  const { username } = params;
 
   try {
-    // Kullanıcıyı `username` ile bul ve ilişkili `posts` ve `comments`'larını al
+    // Kullanıcıyı bul
     const profile = await db.user.findUnique({
-      where: { username: username },
+      where: { username },
       include: {
         postsocial: {
-          // PostSocial'ı dahil et
           include: {
-            comments: true, // PostSocial'lara ait CommentSocial'ları dahil et
+            comments: true,
             user: true,
           },
         },
@@ -28,8 +27,29 @@ export async function GET(
       });
     }
 
-    return new Response(JSON.stringify(profile), { status: 200 });
+    // Arkadaşları çek (status: accepted)
+    const friendsAsUser = await db.friendRequest.findMany({
+      where: { userId: profile.id, status: "accepted" },
+      include: { friend: true },
+    });
+
+    const friendsAsFriend = await db.friendRequest.findMany({
+      where: { friendId: profile.id, status: "accepted" },
+      include: { user: true },
+    });
+
+    // Tek bir arrayde birleştir
+    const friends = [
+      ...friendsAsUser.map((f) => f.friend),
+      ...friendsAsFriend.map((f) => f.user),
+    ];
+
+    return new Response(
+      JSON.stringify({ ...profile, friends }),
+      { status: 200 }
+    );
   } catch (error) {
+    console.error(error);
     return new Response(JSON.stringify({ message: error.message }), {
       status: 500,
     });

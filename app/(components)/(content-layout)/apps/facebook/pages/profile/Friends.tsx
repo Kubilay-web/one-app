@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Friends({ friends }) {
   return (
     <div className="profile_card">
@@ -10,15 +12,22 @@ export default function Friends({ friends }) {
           {friends.length === 0
             ? ""
             : friends.length === 1
-            ? "1 Photo"
-            : `${friends.length} photos`}
+            ? "1 Friend"
+            : `${friends.length} Friends`}
         </div>
       )}
       <div className="profile_card_grid">
         {friends &&
-          friends
-            .slice(0, 9)
-            .map((friend) => <div className="profile_photo_card"></div>)}
+          friends.slice(0, 9).map((friend, i) => (
+            <Link
+              href={`/apps/facebook/pages/profile/${friend.username}`}
+              className={friend.username ? "profile_photo_card" : undefined}
+              key={i}
+            >
+              <img src={friend.avatarUrl} alt="" />
+              <span>{friend.username}</span>
+            </Link>
+          ))}
       </div>
     </div>
   );
