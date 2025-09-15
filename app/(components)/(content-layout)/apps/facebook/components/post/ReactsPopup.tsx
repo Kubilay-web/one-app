@@ -1,8 +1,7 @@
-"use client"
-
+"use client";
 
 import { useState } from "react";
-import {reactPost} from "../../functions/post";
+import { reactPost } from "../../functions/post";
 import { useSession } from "@/app/SessionProvider";
 
 const reactsArray = [
@@ -31,12 +30,8 @@ const reactsArray = [
     image: "/facebook/reacts/angry.gif",
   },
 ];
-export default function ReactsPopup({ visible, setVisible, postId }) {
- 
- const {user}= useSession();
-  const reactHandler = async(type) =>{
-    reactPost(postId,type)
-  }
+export default function ReactsPopup({ visible, setVisible, reactHandler }) {
+  const { user } = useSession();
 
   return (
     <>
@@ -55,7 +50,11 @@ export default function ReactsPopup({ visible, setVisible, postId }) {
           }}
         >
           {reactsArray.map((react, i) => (
-            <div className="react" key={i}       onClick={() => reactHandler(react.name)}>
+            <div
+              className="react"
+              key={i}
+              onClick={() => reactHandler(react.name)}
+            >
               <img src={react.image} alt="" />
             </div>
           ))}

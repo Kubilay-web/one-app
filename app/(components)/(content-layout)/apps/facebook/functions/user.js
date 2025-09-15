@@ -140,12 +140,11 @@ export const deleteRequest = async (id, token) => {
     return error.response.data.message;
   }
 };
+
 export const search = async (searchTerm, token) => {
   try {
-    const { data } = await axios.post(
+    const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/search/${searchTerm}`,
-      {},
-
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -154,15 +153,15 @@ export const search = async (searchTerm, token) => {
     );
     return data;
   } catch (error) {
-    return error.response.data.message;
+    return error?.response?.data?.message || error.message || "Bir hata oluştu.";
   }
 };
+
 export const addToSearchHistory = async (searchUser, token) => {
   try {
     const { data } = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/addtosearchhistory`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/searchhistory/add`,
       { searchUser },
-
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -171,14 +170,14 @@ export const addToSearchHistory = async (searchUser, token) => {
     );
     return data;
   } catch (error) {
-    return error.response.data.message;
+    return error?.response?.data?.message || error.message || "Bir hata oluştu.";
   }
 };
-export const getSearchHistory = async (token) => {
+
+export const getSearchHistory = async (token, userId) => {
   try {
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/getsearchhistory`,
-
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/searchhistory/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -187,15 +186,15 @@ export const getSearchHistory = async (token) => {
     );
     return data;
   } catch (error) {
-    return error.response.data.message;
+    return error?.response?.data?.message || error.message || "Bir hata oluştu.";
   }
 };
+
 export const removeFromSearch = async (searchUser, token) => {
   try {
     const { data } = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/removefromsearch`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/searchhistory/remove`,
       { searchUser },
-
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -204,9 +203,12 @@ export const removeFromSearch = async (searchUser, token) => {
     );
     return data;
   } catch (error) {
-    return error.response.data.message;
+    return error?.response?.data?.message || error.message || "Bir hata oluştu.";
   }
 };
+
+
+
 export const getFriendsPageInfos = async (token) => {
   try {
     const { data } = await axios.get(

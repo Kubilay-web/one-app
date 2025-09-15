@@ -1,5 +1,6 @@
 import db from "@/app/lib/db";
 import { validateRequest } from "@/app/auth";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
@@ -48,26 +49,100 @@ export async function POST(req) {
 
 
 
-export async function GET(req) {
+// export async function GET(req) {
+//   try {
+//     const posts = await db.postSocial.findMany({
+//       orderBy: { createdAt: "desc" },
+//       include: {
+//         user: true, // postu paylaşan kullanıcı bilgisi
+//         comments: {
+//           include: {
+//             commentBy: true, // commentById üzerinden tüm user bilgilerini getir
+//           },
+//         },
+//       },
+//     });
+
+//     return new Response(JSON.stringify(posts), {
+//       status: 200,
+//       headers: { "Content-Type": "application/json" },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return new Response(JSON.stringify({ message: error.message }), {
+//       status: 500,
+//       headers: { "Content-Type": "application/json" },
+//     });
+//   }
+// }
+
+
+
+
+export async function GET(req: Request) {
   try {
-    const posts = await db.postSocial.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: true, // kullanıcı bilgisi dahil
-        comments: true,
+    // 1. Kullanıcı oturumunu al
+    const { user } = await validateRequest();
+    if (!user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = user.id;
+
+    // 2. Kullanıcının takip ettiklerini getir
+    const followingRelations = await db.followSocial.findMany({
+      where: {
+        followerId: userId,
+      },
+      select: {
+        followingId: true,
       },
     });
 
-    return new Response(JSON.stringify(posts), {
+    const followingIds = followingRelations.map((rel) => rel.followingId);
+
+    // 3. Takip edilen kullanıcıların ve kullanıcının kendi postlarını al
+    const allPosts = await db.postSocial.findMany({
+      where: {
+        userId: {
+          in: [...followingIds, userId], // hem takip ettikleri hem kendisi
+        },
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            avatarUrl: true,
+            cover: true,
+          },
+        },
+        comments: {
+          include: {
+            commentBy: {
+              select: {
+                id: true,
+                username: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+        React: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20,
+    });
+
+    return NextResponse.json(allPosts, {
       status: 200,
-      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ message: error.message }), {
+    console.error("[GET_POSTS_ERROR]", error);
+    return NextResponse.json({ message: "Server error", error: error.message }, {
       status: 500,
-      headers: { "Content-Type": "application/json" },
     });
   }
 }
-

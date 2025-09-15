@@ -5,14 +5,71 @@ import "./style.css";
 import Moment from "react-moment";
 import { Dots, Public } from "../../svg";
 import ReactsPopup from "./ReactsPopup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateComment from "./CreateComment";
 import PostMenu from "./PostMenu";
+import { getReacts, reactPost } from "../../functions/post";
+import Comment from "./Comment";
+
 export default function Post({ post, user }) {
   const [visible, setVisible] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [reacts, setReacts] = useState([]);
+  const [check, setCheck] = useState();
+  const [total, setTotal] = useState(0);
+  const [comments, setComments] = useState(post?.comments || []);
+  const [count, setCount] = useState(1);
 
-  console.log("post---->",post)
+  useEffect(() => {
+    getPostReacts();
+  }, [post]);
+
+  useEffect(() => {
+    setComments(post?.comments || []);
+  }, [post]);
+
+  const getPostReacts = async () => {
+    const res = await getReacts(post.id, user.token);
+    setReacts(res.reacts);
+    setCheck(res.check);
+    setTotal(res.total);
+  };
+
+  const reactHandler = async (type) => {
+    reactPost(post.id, type, user.token);
+    if (check === type) {
+      setCheck(undefined);
+      let index = reacts.findIndex((x) => x.react === check);
+      if (index !== -1) {
+        reacts[index].count = reacts[index].count - 1;
+        setReacts([...reacts]);
+        setTotal((prev) => prev - 1);
+      }
+    } else {
+      setCheck(type);
+      let index = reacts.findIndex((x) => x.react === type);
+      let index1 = reacts.findIndex((x) => x.react === check);
+      if (index !== -1) {
+        reacts[index].count = reacts[index].count + 1;
+        setReacts([...reacts]);
+        setTotal((prev) => prev + 1);
+      }
+      if (index1 !== -1) {
+        reacts[index1].count = reacts[index1].count - 1;
+        setReacts([...reacts]);
+        setTotal((prev) => prev - 1);
+      }
+    }
+  };
+
+  // Yeni yorum geldiğinde güncellemek için callback
+  const handleNewComment = (newComment) => {
+    setComments((prev) => [newComment, ...prev]);
+  };
+
+  const showMore = () => {
+    setCount((prev) => prev + 3);
+  };
 
   return (
     <div className="post">
@@ -23,19 +80,7 @@ export default function Post({ post, user }) {
         >
           <img src={post.user.avatarUrl} alt="" />
           <div className="header_col">
-            <div className="post_profile_name">
-              {post.user.username}
-              {/* <div className="updated_p">
-                {post.type == "profilePicture" &&
-                  `updated ${
-                    post.user.gender === "male" ? "his" : "her"
-                  } profile picture`}
-                {post.type == "cover" &&
-                  `updated ${
-                    post.user.gender === "male" ? "his" : "her"
-                  } cover picture`}
-              </div> */}
-            </div>
+            <div className="post_profile_name">{post.user.username}</div>
             <div className="post_profile_privacy_date">
               <Moment fromNow interval={30}>
                 {post.createdAt}
@@ -52,7 +97,6 @@ export default function Post({ post, user }) {
         </div>
       </div>
 
-      
       {post.background ? (
         <div
           className="post_bg"
@@ -90,20 +134,38 @@ export default function Post({ post, user }) {
         </>
       )}
 
-
-
       <div className="post_infos">
         <div className="reacts_count">
-          <div className="reacts_count_imgs"></div>
-          <div className="reacts_count_num"></div>
+          <div className="reacts_count_imgs">
+            {reacts &&
+              reacts
+                .slice(0, 3)
+                .map((react) =>
+                  react.count > 0 ? (
+                    <img
+                      key={react.react}
+                      src={`/facebook/reacts/${react.react}.svg`}
+                      alt={react.react}
+                      style={{ width: "20px" }}
+                    />
+                  ) : null
+                )}
+          </div>
+          <div className="reacts_count_num">{total > 0 && total}</div>
         </div>
         <div className="to_right">
-          <div className="comments_count">13 comments</div>
+          <div className="comments_count">{comments?.length} comments</div>
           <div className="share_count">1 share</div>
         </div>
       </div>
+
       <div className="post_actions">
-        <ReactsPopup visible={visible} setVisible={setVisible} postId={post.id} />
+        <ReactsPopup
+          visible={visible}
+          setVisible={setVisible}
+          reactHandler={reactHandler}
+        />
+
         <div
           className="post_action hover1"
           onMouseOver={() => {
@@ -116,10 +178,37 @@ export default function Post({ post, user }) {
               setVisible(false);
             }, 500);
           }}
+          onClick={() => reactHandler(check ? check : "like")}
         >
-          <i className="like_icon"></i>
-          <span>Like</span>
+          {check ? (
+            <img
+              src={`/facebook/reacts/${check}.svg`}
+              alt=""
+              className="small_react"
+              style={{ width: "18px" }}
+            />
+          ) : (
+            <i className="like_icon"></i>
+          )}
+          <span
+            style={{
+              color: `${
+                check === "like"
+                  ? "#4267b2"
+                  : check === "love"
+                    ? "#f63459"
+                    : ["haha", "sad", "wow"].includes(check)
+                      ? "#f7b125"
+                      : check === "angry"
+                        ? "#e4605a"
+                        : ""
+              }`,
+            }}
+          >
+            {check ? check : "Like"}
+          </span>
         </div>
+
         <div className="post_action hover1">
           <i className="comment_icon"></i>
           <span>Comment</span>
@@ -129,16 +218,38 @@ export default function Post({ post, user }) {
           <span>Share</span>
         </div>
       </div>
+
       <div className="comments_wrap">
         <div className="comments_order"></div>
-        <CreateComment user={user} />
+        <CreateComment
+          postId={post.id}
+          user={user}
+          onNewComment={handleNewComment}
+        />
+
+        {comments &&
+          comments
+            .sort((a, b) => {
+              return new Date(b.commentAt) - new Date(a.commentAt);
+            })
+            .slice(0, count)
+            .map((comment, i) => <Comment comment={comment} key={i} />)}
+        {count < comments.length && (
+          <div className="view_comments" onClick={() => showMore()}>
+            View more comments
+          </div>
+        )}
       </div>
+
       {showMenu && (
         <PostMenu
           userId={user.id}
           postUserId={post.user.id}
           imagesLength={post?.images?.length}
           setShowMenu={setShowMenu}
+          token={user.token}
+          postId={post.id}
+          images={post?.images}
         />
       )}
     </div>

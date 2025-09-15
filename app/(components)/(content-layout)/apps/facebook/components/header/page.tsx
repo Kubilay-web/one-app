@@ -25,6 +25,7 @@ import UserMenu from "./userMenu/page";
 import { useSession } from "@/app/SessionProvider";
 export default function Header() {
   const { user } = useSession()
+  const userId=user.id;
   const color = "#65676b";
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [showAllMenu, setShowAllMenu] = useState(false);
@@ -60,7 +61,7 @@ export default function Header() {
         </div>
       </div>
       {showSearchMenu && (
-        <SearchMenu color={color} setShowSearchMenu={setShowSearchMenu} />
+        <SearchMenu color={color} setShowSearchMenu={setShowSearchMenu} userId token={user.token} />
       )}
       <div className="header_middle">
         <Link href="/" className="middle_icon active-social">

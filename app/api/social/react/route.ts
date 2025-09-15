@@ -51,42 +51,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  try {
-    const url = new URL(req.url);
-    const postId = url.searchParams.get("postId");
-    const {user} =  await validateRequest() ;
 
-    if (!postId) return NextResponse.json({ message: "Missing postId" }, { status: 400 });
-
-    // Post için tüm reactları al
-    const reactsArray = await db.react.findMany({
-      where: { postRefId: postId },
-    });
-
-    const grouped = reactsArray.reduce((acc: any, r) => {
-      acc[r.react] = acc[r.react] || [];
-      acc[r.react].push(r);
-      return acc;
-    }, {});
-
-    const reacts = ["like", "love", "haha", "sad", "wow", "angry"].map((type) => ({
-      react: type,
-      count: grouped[type]?.length || 0,
-    }));
-
-    const userReact = user
-      ? await db.react.findFirst({
-          where: { postRefId: postId, reactById: user.id },
-        })
-      : null;
-
-    return NextResponse.json({
-      reacts,
-      check: userReact?.react || null,
-      total: reactsArray.length,
-    });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
-  }
-}

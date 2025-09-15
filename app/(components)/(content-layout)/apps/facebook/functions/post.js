@@ -53,7 +53,7 @@ export const reactPost = async (postId, react, token) => {
 export const getReacts = async (postId, token) => {
   try {
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/react`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/react/${postId}`,
 
       {
         headers: {
@@ -68,8 +68,8 @@ export const getReacts = async (postId, token) => {
 };
 export const comment = async (postId, comment, image, token) => {
   try {
-    const { data } = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/comment`,
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/comment`,
       {
         postId,
         comment,
@@ -87,12 +87,11 @@ export const comment = async (postId, comment, image, token) => {
     return error.response.data.message;
   }
 };
-export const savePost = async (postId, token) => {
+export const savePost = async (postId, token, userId) => {
   try {
-    const { data } = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/savePost/${postId}`,
-      {},
-
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/savepost/${postId}`,
+      { userId },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -107,7 +106,7 @@ export const savePost = async (postId, token) => {
 export const deletePost = async (postId, token) => {
   try {
     const { data } = await axios.delete(
-      `${process.env.REACT_APP_BACKEND_URL}/deletePost/${postId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/delete/${postId}`,
 
       {
         headers: {

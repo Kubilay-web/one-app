@@ -25,12 +25,13 @@ const uploadToCloudinary = async (file) => {
   return data.secure_url;
 };
 
-export default function CreatePostPopup({ user, setVisible }) {
+export default function CreatePostPopup({ user,setVisible }) {
   const [text, setText] = useState("");
   const [showPrev, setShowPrev] = useState(false);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [background, setBackground] = useState("");
+  
 
   // Image upload
   const handleImages = async (files) => {
@@ -62,6 +63,8 @@ export default function CreatePostPopup({ user, setVisible }) {
         user.id,       // userId
         user.token     // token
       );
+
+
       setBackground("");
       setText("");
       setImages([]);

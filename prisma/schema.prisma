@@ -94,10 +94,14 @@ model User {
   FollowSocials FollowSocial[] @relation("FollowingRelation")
   UserDetails UserDetails[]
   React React[]
+  SavedPost SavedPost[]
+  UserSearch UserSearch[]
+  UserSearchs UserSearch[] @relation("SearchedUserRelation")
 
   //Facebook Social2
 
   @@map("users")
+
 }
 
 model CouponToUser {
@@ -1855,6 +1859,8 @@ model PostSocial {
   updatedAt DateTime @updatedAt
 
   React React[]
+
+  SavedPost SavedPost[]
 }
 
 model CommentSocial {
@@ -1933,4 +1939,34 @@ model React {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+
+
+
+model SavedPost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  post      PostSocial @relation(fields: [postId], references: [id])
+  postId    String   @db.ObjectId
+  savedAt   DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String  
+
+  @@unique([userId, postId]) 
+}
+
+
+
+model UserSearch {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   
+
+  searchedUser   User     @relation("SearchedUserRelation", fields: [searchedUserId], references: [id])
+  searchedUserId String 
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, searchedUserId])  // Aynı kullanıcı için aynı aranan kullanıcı duplicasyonu engeller
 }

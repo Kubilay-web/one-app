@@ -22,6 +22,10 @@ export default function Home() {
   // Postları tutacak state
   const [posts, setPosts] = useState([]);
 
+  const handleAddNewPost = (createPost) => {
+    setPosts((prev) => [createPost, ...prev]); // Yeni postu en başa ekle
+  };
+
   // Sayfa yüklendiğinde postları çek
   useEffect(() => {
     const fetchPosts = async () => {
@@ -41,7 +45,13 @@ export default function Home() {
   return (
     <div className="home">
       <Toaster position="top-right" reverseOrder={false} />
-      {visible && <CreatePostPopup user={user} setVisible={setVisible} />}
+      {visible && (
+        <CreatePostPopup
+          user={user}
+          setVisible={setVisible}
+          onPostCreated={handleAddNewPost}
+        />
+      )}
       <Header />
       <div className="middle-container">
         <div className="home_middle">
@@ -52,8 +62,8 @@ export default function Home() {
             <Stories />
             <CreatePost user={user} setVisible={setVisible} />
             <div className="posts">
-              {posts.map((post) => (
-                <Post key={post.id} post={post} user={user} />
+              {posts.map((post, index) => (
+                <Post key={post.id || index} post={post} user={user} />
               ))}
             </div>
           </div>
