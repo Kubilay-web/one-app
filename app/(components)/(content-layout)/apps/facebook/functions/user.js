@@ -212,7 +212,7 @@ export const removeFromSearch = async (searchUser, token) => {
 export const getFriendsPageInfos = async (token) => {
   try {
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/getFriendsPageInfos`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/getfriendinfos`,
 
       {
         headers: {

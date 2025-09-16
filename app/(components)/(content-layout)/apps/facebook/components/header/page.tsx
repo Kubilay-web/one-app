@@ -67,7 +67,7 @@ export default function Header() {
         <Link href="/" className="middle_icon active-social">
           <HomeActive />
         </Link>
-        <Link href="/" className="middle_icon hover1">
+        <Link href="/apps/facebook/pages/friends" className="middle_icon hover1">
           <Friends color={color} />
         </Link>
         <Link href="/" className="middle_icon hover1">
