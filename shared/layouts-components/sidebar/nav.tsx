@@ -228,11 +228,53 @@ export const MENUITEMS: any = [
     menutitle: "MAIN",
   },
   {
-    title: "Dashboards",
+    title: "Home",
     icon: Dashboardicon,
     type: "sub",
     active: false,
     children: [
+      {
+        path: "/home/facebook/pages/home",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Facebook",
+      },
+      {
+        path: "/home/social",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Social",
+      },
+      {
+        path: "/home/chat",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Chat",
+      },
+      {
+        path: "/home/shop",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Shop",
+      },
+      {
+        path: "/home/jobs/main",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Jobs",
+      },
+      {
+        path: "/home/forum",
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Forum",
+      },
       {
         path: "/dashboards/sales",
         type: "link",
@@ -792,7 +834,7 @@ export const MENUITEMS: any = [
     ],
   },
   {
-    menutitle: "Web Apps",
+    menutitle: "Admin Panels",
   },
   {
     title: "Apps",
@@ -1431,7 +1473,7 @@ export const MENUITEMS: any = [
             title: "Community",
           },
           {
-            path: "/apps/forum/jobs",
+            path: "/apps/jobs",
             type: "link",
             active: false,
             selected: false,
@@ -1626,14 +1668,6 @@ export const MENUITEMS: any = [
       },
 
       {
-        path: "/apps/jobportal/job",
-        type: "link",
-        active: false,
-        selected: false,
-        title: "Job2",
-      },
-
-      {
         title: "NFT",
         type: "sub",
         active: false,
@@ -1769,7 +1803,7 @@ export const MENUITEMS: any = [
   //   ],
   // },
   {
-    menutitle: "PAGES",
+    menutitle: "Professional Pano",
   },
   // {
   //   icon: Authenticationicon, title: " Authentication",badgetxt: badge2, type: "sub", active: false, selected: false, children: [
