@@ -1,13 +1,15 @@
+"use client"
 
 import { ChevronDown, LogOutIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Separator } from "./ui/separator";
 import { SidebarTrigger } from "./ui/sidebar";
+import { useSession } from "@/app/SessionProvider";
 
 const Header = () => {
 
-
+const {user}=useSession()
   return (
     <header className="flex min-h-12 pt-3 pb-4 shrink-0 items-center transition-[width,height] ease-linear">
       <div className="w-full flex items-center justify-between !px-4">
@@ -22,7 +24,7 @@ const Header = () => {
             <button className="flex items-center gap-2 !cursor-pointer">
               <Avatar className="!active:border-1 active:border-primary">
                 <AvatarFallback className="bg-[#e7edf6] uppercase">
-                  {user?.name?.charAt(0)}
+                  {user?.username?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <ChevronDown className="w-4 h-4 !fill-black" />
@@ -44,7 +46,7 @@ const Header = () => {
             >
               <div className="!pb-2">
                 <div className="flex flex-col !p-[8px_16px] text-xl font-bold">
-                  <h3 className="capitalize">{user?.name}</h3>
+                  <h3 className="capitalize">{user?.username}</h3>
                   <p className="text-[#476788] !text-sm !font-normal">
                     Teams free trial
                   </p>

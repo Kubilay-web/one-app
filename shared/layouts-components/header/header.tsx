@@ -529,7 +529,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
               <div className="header-element">
                 <div className="horizontal-logo">
                   <div className="header-logo relative">
-                    <img
+                    <Image fill 
                       src="/assets/images/logo.png"
                       alt="logo"
                       className="desktop-logo"
