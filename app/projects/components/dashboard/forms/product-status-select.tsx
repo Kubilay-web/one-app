@@ -1,7 +1,7 @@
 import ProductStatusTag from "@/app/projects/components/shared/product-status";
 import { useToast } from "@/app/projects/components/ui/use-toast";
 import { ProductStatus } from "@/app/lib/types";
-import { updateOrderGroupStatus, updateOrderItemStatus } from "@/queries/order";
+import { updateOrderGroupStatus, updateOrderItemStatus } from "@/app/queries/order";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 
