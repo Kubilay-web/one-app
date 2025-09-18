@@ -35,7 +35,7 @@ import { Button } from "@/app/projects/components/ui/button";
 import { Input } from "@/app/projects/components/ui/input";
 
 // Queries
-import { upsertCoupon } from "@/queries/coupon";
+import { upsertCoupon } from "@/app/queries/coupon";
 
 // Utils
 import { v4 } from "uuid";
