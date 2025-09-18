@@ -4,39 +4,30 @@ import path from "path";
 const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
-  // `output` ile ilgili ayar, yalnızca statik dışa aktarma yapılırken kullanılmalıdır.
-  // output: "export", // Bu satır sadece build işlemi için gerekli. Yayınlama sırasında aktif edilmelidir.
-
   trailingSlash: false,
 
-  // Base path ve assetPrefix ayarları, prod ortamında aktif edilebilir.
-  // basePath: isProd ? "/tailwind/app-router/mamix-ts/preview" : undefined,
-  // assetPrefix: isProd ? "/tailwind/app-router/mamix-ts/preview" : undefined,
-
   typescript: {
-    ignoreBuildErrors: true, // TypeScript hatalarını build sırasında görmezden gel
+    ignoreBuildErrors: true,
   },
 
   eslint: {
-    ignoreDuringBuilds: true, // ESLint hatalarını build sırasında görmezden gel
+    ignoreDuringBuilds: true,
   },
-
-  // images: {
-  //   unoptimized: true, // Resimlerin optimize edilmemesi gerektiğini belirtiyor
-  //   path: "/",
-  // },
 
   sassOptions: {
-    includePaths: [path.join(__dirname, "public/assets/scss")], // Sass dosyalarını dahil etme
-    silenceDeprecations: ["legacy-js-api"], // Eski API uyarılarını susturma
-    quietDeps: true, // Bağımlılık uyarılarını susturma
+    includePaths: [path.join(__dirname, "public/assets/scss")],
+    silenceDeprecations: ["legacy-js-api"],
+    quietDeps: true,
   },
 
-  reactStrictMode: false, // React Strict Mode'u devre dışı bırak
+  reactStrictMode: false,
+
+  productionBrowserSourceMaps: false, // source map üretimini kapat
 
   webpack(config, { isServer }) {
     if (!isServer) {
-      config.cache = false; // Webpack cache'i devre dışı bırak
+      config.optimization.minimize = false; // RAM kullanımı azalt
+      config.cache = false; // cache kapalı
     }
     return config;
   },
@@ -45,7 +36,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/social/hashtag/:tag",
-        destination: "/social/search?q=%23:tag", // Hashtag yönlendirmesi
+        destination: "/social/search?q=%23:tag",
       },
     ];
   },
@@ -64,6 +55,14 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true,
   },
+
+  // Opsiyonel olarak eklenebilir:
+  // experimental: {
+  //   memoryManagement: true,
+  // },
+
+  // Eğer SSR yoksa:
+  // output: "export",
 };
 
 export default nextConfig;

@@ -4,13 +4,16 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { ThemeChanger } from "@/shared/redux/action";
 import store from "@/shared/redux/store";
 import { connect } from "react-redux";
-import { MENUITEMS } from "../sidebar/nav";
+import { getMenuItems } from "../sidebar/nav";
 import Image from "next/image";
 import nextConfig from "@/next.config";
 import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import router from "next/router";
 import { useSession } from "@/app/SessionProvider";
+import { Menu } from "@/app/(components)/(content-layout)/home/facebook/svg";
+import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
+import "./style.css"
 
 const Header = ({ local_varaiable, ThemeChanger }: any) => {
   const { user } = useSession();
@@ -25,6 +28,9 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
       document.exitFullscreen();
     }
   };
+
+  const [showAllMenu, setShowAllMenu] = useState(false);
+  const allmenu = useRef(null);
 
   useEffect(() => {
     const fullscreenChangeHandler = () => {
@@ -529,7 +535,8 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
               <div className="header-element">
                 <div className="horizontal-logo">
                   <div className="header-logo relative">
-                    <Image fill 
+                    <Image
+                      fill
                       src="/assets/images/logo.png"
                       alt="logo"
                       className="desktop-logo"
@@ -628,7 +635,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                               href={`${e.path}/`}
                               className="search-result-item"
                               onClick={() => {
-                                setShowa(false), setInputValue("");
+                                (setShowa(false), setInputValue(""));
                               }}
                             >
                               {e.title}
@@ -1294,6 +1301,18 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                 {/* <!-- End::header-link --> */}
               </li>
               {/* <!-- End Full screen --> */}
+
+              <div className="circle_icon hover1" ref={allmenu}>
+                <div
+                  onClick={() => {
+                    setShowAllMenu((prev) => !prev);
+                  }}
+                >
+                  <Menu />
+                </div>
+
+                {showAllMenu && <AllMenu />}
+              </div>
 
               {/* <!-- Header Profile --> */}
               <div className="header-element md:!px-[0.5rem] px-2 ti-dropdown hs-dropdown !items-center [--placement:bottom-right] rtl:[--placement:bottom-left]">
