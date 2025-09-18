@@ -26,7 +26,7 @@ import {
 import { Input } from "@/app/projects/components/ui/input";
 import { Button } from "@/app/projects/components/ui/button";
 import { NumberInput, Textarea } from "@tremor/react";
-import { updateStoreDefaultShippingDetails } from "@/queries/store";
+import { updateStoreDefaultShippingDetails } from "@/app/queries/store";
 
 import { v4 } from "uuid";
 import { useToast } from "@/app/projects/components/ui/use-toast";

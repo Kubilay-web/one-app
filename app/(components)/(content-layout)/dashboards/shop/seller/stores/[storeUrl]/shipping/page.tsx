@@ -1,9 +1,9 @@
-import StoreDefaultShippingDetails from "@/components/dashboard/forms/store-default-shipping-details";
-import DataTable from "@/components/ui/data-table";
+import StoreDefaultShippingDetails from "@/app/projects/components/dashboard/forms/store-default-shipping-details";
+import DataTable from "@/app/projects/components/ui/data-table";
 import {
   getStoreDefaultShippingDetails,
   getStoreShippingRates,
-} from "@/queries/store";
+} from "@/app/queries/store";
 import { redirect } from "next/navigation";
 import React from "react";
 import { columns } from "./columns";

@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // Schema
 import { StoreFormSchema } from "@/app/lib/validation";
-import { upsertStore } from "@/queries/store";
+import { upsertStore } from "@/app/queries/store";
 
 // UI Components
 import { AlertDialog } from "@/app/projects/components/ui/alert-dialog";

@@ -33,7 +33,7 @@ import { CountryWithShippingRatesType } from "@/app/lib/types";
 import { NumberInput } from "@tremor/react";
 import { Textarea } from "@/app/projects/components/ui/textarea";
 
-import { upsertShippingRate } from "@/queries/store";
+import { upsertShippingRate } from "@/app/queries/store";
 
 interface ShippingRateDetailsProps {
   data?: CountryWithShippingRatesType;
