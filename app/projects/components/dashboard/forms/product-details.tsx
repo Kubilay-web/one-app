@@ -1040,7 +1040,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                   <div>
                     <p className="mt-4 flex pb-3 text-sm text-main-secondary dark:text-gray-400">
                       <Dot className="-me-1" />
-                      If not select the countries you want to ship this product
+                      If not selects the countries you want to ship this product
                       to for free
                     </p>
                   </div>
