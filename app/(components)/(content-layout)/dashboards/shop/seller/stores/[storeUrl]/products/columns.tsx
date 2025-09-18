@@ -16,31 +16,31 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@/app/projects/components/ui/alert-dialog";
+import { Button } from "@/app/projects/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/projects/components/ui/dropdown-menu";
 
 // Hooks and utilities
-import { useToast } from "@/components/ui/use-toast";
-import { useModal } from "@/providers/modal-provider";
+import { useToast } from "@/app/projects/components/ui/use-toast";
+import { useModal } from "@/app/projects/components/providers/modal-provider";
 
 // Lucide icons
 import { CopyPlus, FilePenLine, MoreHorizontal, Trash } from "lucide-react";
 
 // Queries
-import { deleteProduct } from "@/queries/product";
+import { deleteProduct } from "@/app/queries/product";
 
 // Tanstack React Table
 import { ColumnDef } from "@tanstack/react-table";
 
 // Types
-import { StoreProductType } from "@/lib/types";
+import { StoreProductType } from "@/app/lib/types";
 import Link from "next/link";
 
 export const columns: ColumnDef<StoreProductType>[] = [
