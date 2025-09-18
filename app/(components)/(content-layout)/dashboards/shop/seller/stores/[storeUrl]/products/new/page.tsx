@@ -1,8 +1,8 @@
-import ProductDetails from "@/components/dashboard/forms/product-details";
-import { getAllCategories } from "@/queries/category";
-import { getAllOfferTags } from "@/queries/offer-tag";
+import ProductDetails from "@/app/projects/components/dashboard/forms/product-details";
+import { getAllCategories } from "@/app/queries/category";
+import { getAllOfferTags } from "@/app/queries/offer-tag";
 import React from "react";
-import db from "@/lib/db";
+import db from "@/app/lib/db";
 
 export default async function SellerNewProductsPage({
   params,

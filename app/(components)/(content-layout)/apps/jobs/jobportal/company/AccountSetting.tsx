@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { UserInfo } from "@/queries/user";
+import { UserInfo } from "@/app/queries/user";
 
 export default function Register() {
   const [user, setUser] = useState<any>(null);
