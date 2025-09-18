@@ -1,4 +1,4 @@
-import { MENUITEMS } from "@/shared/layouts-components/sidebar/nav";
+import { getMenuItems } from "@/shared/layouts-components/sidebar/nav";
 import store from "@/shared/redux/store";
 
 
@@ -97,7 +97,7 @@ function closeMenu() {
             closeMenudata(item.children);
         });
     };
-    closeMenudata(MENUITEMS);
+    closeMenudata(getMenuItems);
 }
 
 export const updateNavStyle = (actionType: any, toggledState: any, actionfunction: any) => {
