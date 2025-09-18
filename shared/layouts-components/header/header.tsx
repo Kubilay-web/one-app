@@ -11,9 +11,9 @@ import { logout } from "@/app/(components)/(authentication-layout)/authenticatio
 import { useQueryClient } from "@tanstack/react-query";
 import router from "next/router";
 import { useSession } from "@/app/SessionProvider";
-// import { Menu } from "@/app/(components)/(content-layout)/home/facebook/svg";
-// import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
-// import "./style.css"
+import { Menu } from "@/app/(components)/(content-layout)/home/facebook/svg";
+import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
+import "./style.css"
 
 const Header = ({ local_varaiable, ThemeChanger }: any) => {
   const { user } = useSession();
@@ -279,7 +279,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
 
     const i: any = [];
     const allElement2: any = [];
-    MENUITEMS.forEach((mainLevel: any) => {
+    getMenuItems.forEach((mainLevel: any) => {
       if (mainLevel.children) {
         setShowa(true);
         mainLevel.children.forEach((subLevel: any) => {
