@@ -37,7 +37,7 @@ import { Input } from "@/app/projects/components/ui/input";
 import ImageUpload from "../shared/image-upload";
 
 // Queries
-import { upsertSubCategory } from "@/queries/subCategory";
+import { upsertSubCategory } from "@/app/queries/subCategory";
 
 // Utils
 import { v4 } from "uuid";

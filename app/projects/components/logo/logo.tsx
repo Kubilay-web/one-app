@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FC } from "react";
-import LogoImg from "../../../public/logo.png";
+import LogoImg from "../../../../public/logo.png";
 
 interface LogoProps {
   width: string;

@@ -28,7 +28,7 @@ import {
 import { FilePlus2, Search } from "lucide-react";
 
 // Modal provider hook
-import { useModal } from "@/providers/modal-provider";
+import { useModal } from "../providers/modal-provider";
 import Link from "next/link";
 
 // Props interface for the table component

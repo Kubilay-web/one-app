@@ -35,7 +35,7 @@ import { Button } from "@/app/projects/components/ui/button";
 import { Input } from "@/app/projects/components/ui/input";
 
 // Queries
-import { upsertOfferTag } from "@/queries/offer-tag";
+import { upsertOfferTag } from "@/app/queries/offer-tag";
 
 // Utils
 import { v4 } from "uuid";

@@ -6,7 +6,7 @@ import SidebarNavAdmin from "./nav-admin";
 import {
   adminDashboardSidebarOptions,
   SellerDashboardSidebarOptions,
-} from "@/constants/data";
+} from "@/app/constants/data";
 import { Store } from "@prisma/client";
 import SidebarNavSeller from "./nav-seller";
 import StoreSwitcher from "./store-switcher";

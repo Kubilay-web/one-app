@@ -27,7 +27,7 @@ import { Input } from "@/app/projects/components/ui/input";
 import { Button } from "@/app/projects/components/ui/button";
 import { Checkbox } from "@/app/projects/components/ui/checkbox";
 import ImageUpload from "../shared/image-upload";
-import { upsertCategory } from "@/queries/category";
+import { upsertCategory } from "@/app/queries/category";
 
 import { v4 } from "uuid";
 import { useToast } from "@/app/projects/components/ui/use-toast";
