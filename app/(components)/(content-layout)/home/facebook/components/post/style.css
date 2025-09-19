@@ -5,11 +5,11 @@
 .post {
   position: relative;
   width: 685px;
-  background: var(--bg-primary);
+  background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 1px 2px var(--shadow-1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   user-select: none;
-  color: var(--color-primary);
+  color: #050505;
   margin-bottom: 10px;
 }
 .post_header {
@@ -42,7 +42,7 @@
   line-height: 19px;
 }
 .updated_p {
-  color: var(--color-secondary);
+  color: #65676b;
   font-weight: normal;
 }
 .post_profile_privacy_date {
@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   font-size: 12px;
-  color: var(--color-secondary);
+  color: #65676b;
 }
 .post_bg {
   height: 500px;
@@ -213,7 +213,6 @@
 .grid_5 .img-1 {
   width: 100%;
   grid-column: auto / span 3;
-
   grid-row-start: 1;
   grid-row-end: 2;
   height: 305px;
@@ -222,7 +221,6 @@
 .grid_5 .img-2 {
   width: 100%;
   grid-column: auto / span 2;
-
   grid-row-start: 2;
   grid-row-end: 3;
   height: 305px;
@@ -231,7 +229,6 @@
 .grid_5 .img-3 {
   width: 100%;
   grid-column: auto / span 2;
-
   grid-row-start: 2;
   grid-row-end: 3;
   height: 305px;
@@ -282,13 +279,13 @@
 }
 .reacts_count_num {
   font-size: 14px;
-  color: var(--color-secondary);
+  color: #65676b;
 }
 .to_right {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--color-secondary);
+  color: #65676b;
   font-size: 15px;
 }
 .comments_count:hover,
@@ -301,8 +298,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   padding: 0 8px 5px 8px;
-  border-top: 1px solid var(--bg-third);
-  border-bottom: 1px solid var(--bg-third);
+  border-top: 1px solid #ced0d4;
+  border-bottom: 1px solid #ced0d4;
   margin: 0 10px;
   padding: 5px 0;
 }
@@ -317,7 +314,7 @@
   border-radius: 5px;
 }
 .post_action span {
-  color: var(--color-secondary);
+  color: #65676b;
   font-weight: 600;
   font-size: 14px;
   transform: translateY(-1px);
@@ -328,11 +325,11 @@
   align-items: center;
   position: absolute;
   top: -3.4rem;
-  background: var(--bg-primary);
+  background: #ffffff;
   padding: 5px 15px;
   border-radius: 50px;
   gap: 8px;
-  box-shadow: 0 1px 2px var(--shadow-1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .react {
   cursor: pointer;
@@ -368,7 +365,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  background: var(--bg-forth);
+  background: #f0f2f5;
   border-radius: 50px;
   padding-right: 10px;
 }
@@ -378,7 +375,7 @@
   flex: 1;
   height: 35px;
   padding: 0 10px;
-  color: var(--color-primary);
+  color: #050505;
   background: transparent;
 }
 .comment_circle_icon {
@@ -413,9 +410,9 @@
 /*-----create comment-----*/
 /*------Post menu------*/
 .post_menu {
-  background: var(--bg-primary);
+  background: #ffffff;
   width: 300px;
-  box-shadow: 1px 0 2px var(--shadow-1);
+  box-shadow: 1px 0 2px rgba(0,0,0,0.2);
   border-radius: 10px;
   position: absolute;
   top: 3.1rem;
@@ -461,7 +458,7 @@
   left: 0;
   height: 300px;
   width: 100%;
-  background: var(--bg-third);
+  background: #ced0d4;
 }
 .post_updated_bg img {
   width: 100%;
@@ -474,7 +471,7 @@
   height: 420px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--bg-primary);
+  border: 3px solid #ffffff;
 }
 .post_cover_wrap {
   width: 100%;
@@ -506,7 +503,7 @@
   object-fit: cover;
 }
 .comment_wrap {
-  background: var(--bg-forth);
+  background: #f0f2f5;
   padding: 5px 15px;
   border-radius: 50px;
 }
@@ -516,7 +513,7 @@
   gap: 10px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-secondary);
+  color: #65676b;
   margin-left: 10px;
 }
 .view_comments {
@@ -524,7 +521,7 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  color: var(--color-secondary);
+  color: #65676b;
 }
 .view_comments:hover {
   text-decoration: underline;

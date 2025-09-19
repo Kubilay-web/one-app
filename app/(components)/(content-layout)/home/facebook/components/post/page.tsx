@@ -3,13 +3,19 @@
 import Link from "next/link";
 import "./style.css";
 import Moment from "react-moment";
-import { Dots, Public } from "../../svg";
-import ReactsPopup from "./ReactsPopup";
 import { useEffect, useState } from "react";
+import ReactsPopup from "./ReactsPopup";
 import CreateComment from "./CreateComment";
 import PostMenu from "./PostMenu";
 import { getReacts, reactPost } from "../../functions/post";
 import Comment from "./Comment";
+
+// React Icons
+import { BsThreeDots } from "react-icons/bs";
+import { GoGlobe } from "react-icons/go";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
+import { FaRegCommentAlt } from "react-icons/fa";
+import { RiShareForwardLine } from "react-icons/ri";
 
 export default function Post({ post, user }) {
   const [visible, setVisible] = useState(false);
@@ -85,7 +91,7 @@ export default function Post({ post, user }) {
               <Moment fromNow interval={30}>
                 {post.createdAt}
               </Moment>
-              . <Public color="#828387" />
+              . <GoGlobe className="text-gray-500" size={14} />
             </div>
           </div>
         </Link>
@@ -93,7 +99,7 @@ export default function Post({ post, user }) {
           className="post_header_right hover1"
           onClick={() => setShowMenu((prev) => !prev)}
         >
-          <Dots color="#828387" />
+          <BsThreeDots className="text-gray-500" size={20} />
         </div>
       </div>
 
@@ -113,12 +119,12 @@ export default function Post({ post, user }) {
                 post.images.length === 1
                   ? "grid_1"
                   : post.images.length === 2
-                    ? "grid_2"
-                    : post.images.length === 3
-                      ? "grid_3"
-                      : post.images.length === 4
-                        ? "grid_4"
-                        : post.images.length >= 5 && "grid_5"
+                  ? "grid_2"
+                  : post.images.length === 3
+                  ? "grid_3"
+                  : post.images.length === 4
+                  ? "grid_4"
+                  : post.images.length >= 5 && "grid_5"
               }
             >
               {post.images.slice(0, 5).map((image, i) => (
@@ -188,7 +194,7 @@ export default function Post({ post, user }) {
               style={{ width: "18px" }}
             />
           ) : (
-            <i className="like_icon"></i>
+            <AiOutlineLike className="text-gray-600" size={18} />
           )}
           <span
             style={{
@@ -196,12 +202,12 @@ export default function Post({ post, user }) {
                 check === "like"
                   ? "#4267b2"
                   : check === "love"
-                    ? "#f63459"
-                    : ["haha", "sad", "wow"].includes(check)
-                      ? "#f7b125"
-                      : check === "angry"
-                        ? "#e4605a"
-                        : ""
+                  ? "#f63459"
+                  : ["haha", "sad", "wow"].includes(check)
+                  ? "#f7b125"
+                  : check === "angry"
+                  ? "#e4605a"
+                  : ""
               }`,
             }}
           >
@@ -210,11 +216,11 @@ export default function Post({ post, user }) {
         </div>
 
         <div className="post_action hover1">
-          <i className="comment_icon"></i>
+          <FaRegCommentAlt className="text-gray-600" size={18} />
           <span>Comment</span>
         </div>
         <div className="post_action hover1">
-          <i className="share_icon"></i>
+          <RiShareForwardLine className="text-gray-600" size={18} />
           <span>Share</span>
         </div>
       </div>

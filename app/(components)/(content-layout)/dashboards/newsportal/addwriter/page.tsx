@@ -1,11 +1,10 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-// import storeContext from "@/context/storeContext";
 
 const AddWriter = () => {
   const [loader, setLoader] = useState(false);
@@ -43,21 +42,24 @@ const AddWriter = () => {
   };
 
   return (
-    <div className="rounded-md bg-white">
-      <div className="flex justify-between p-4">
-        <h2 className="text-xl font-semibold">Add Writers</h2>
+    <div className="rounded-md bg-white shadow-md">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 gap-2 sm:gap-0 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-700">Add Writers</h2>
         <Link
           href="/dashboard/writers"
-          className="rounded-md bg-blue-500 px-3 py-[6px] text-white hover:bg-blue-800"
+          className="rounded-md bg-blue-500 px-4 py-2 text-white text-center hover:bg-blue-800 transition"
         >
           Writers
         </Link>
       </div>
 
+      {/* Form */}
       <div className="p-4">
         <form onSubmit={submit}>
-          <div className="mb-3 grid grid-cols-2 gap-x-8">
-            <div className="flex flex-col gap-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* PenName */}
+            <div className="flex flex-col gap-2">
               <label
                 htmlFor="name"
                 className="text-md font-semibold text-gray-600"
@@ -71,12 +73,13 @@ const AddWriter = () => {
                 type="text"
                 placeholder="Name"
                 name="penName"
-                className="h-10 rounded-md border border-gray-300 px-3 py-2 outline-0 focus:border-blue-500"
                 id="name"
+                className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
-            <div className="flex flex-col gap-y-2">
+            {/* Category */}
+            <div className="flex flex-col gap-2">
               <label
                 htmlFor="category"
                 className="text-md font-semibold text-gray-600"
@@ -89,7 +92,7 @@ const AddWriter = () => {
                 required
                 name="category"
                 id="category"
-                className="h-10 rounded-md border border-gray-300 px-3 py-2 outline-0 focus:border-blue-500"
+                className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">--- Select Category ---</option>
                 <option value="Education">Education</option>
@@ -103,10 +106,12 @@ const AddWriter = () => {
             </div>
           </div>
 
-          <div className="mt-4">
+          {/* Submit */}
+          <div className="mt-4 flex justify-start">
             <button
+              type="submit"
               disabled={loader}
-              className="rounded-md bg-blue-500 px-3 py-[6px] text-white hover:bg-blue-800"
+              className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-800 transition disabled:opacity-60"
             >
               {loader ? "Loading..." : "Add Writer"}
             </button>

@@ -22,7 +22,7 @@ const Sidebar = ({ user }) => {
   console.log("role--->", role);
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-[250px] bg-[#dadaff]">
+    <div className="h-screen w-[250px] bg-[#dadaff]">
       <div className="flex h-[70px] items-center justify-center">
         <Link href="/">
           <Image
