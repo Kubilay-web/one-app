@@ -98,8 +98,10 @@ const Profile = async ({ params }: RouteParams) => {
             fallbackClassName="text-6xl font-bold"
           />
           <div className="mt-3">
-            <h2 className="h2-bold text-dark100_light900">{displayName}</h2>
-            <p className="paragraph-regular text-dark200_light800">
+            <h2 className="h2-bold text-[#1E293B] dark:text-[#F1F5F9]">
+              {displayName}
+            </h2>
+            <p className="paragraph-regular text-[#334155] dark:text-[#CBD5E1]">
               @{username || "unknown"}
             </p>
 
@@ -124,7 +126,7 @@ const Profile = async ({ params }: RouteParams) => {
             </div>
 
             {bio && (
-              <p className="paragraph-regular text-dark400_light800 mt-3">
+              <p className="paragraph-regular text-[#475569] dark:text-[#94A3B8] mt-3">
                 {bio}
               </p>
             )}
@@ -133,7 +135,7 @@ const Profile = async ({ params }: RouteParams) => {
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
           <Link href={`/forum/profile/edit`}>
-            <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 min-w-44 px-4 py-3">
+            <Button className="paragraph-medium btn-secondary text-[#1E293B] dark:text-[#F8FAFC] min-h-12 min-w-44 px-4 py-3">
               Edit Profile
             </Button>
           </Link>
@@ -185,8 +187,8 @@ const Profile = async ({ params }: RouteParams) => {
                     <AnswerCard
                       key={answer.id}
                       {...answer}
-                      upvotes={answer.upvotes} // ❗ sayısal değer
-                      downvotes={answer.downvotes} // ❗ sayısal değer
+                      upvotes={answer.upvotes}
+                      downvotes={answer.downvotes}
                       question={answer.question}
                       content={answer.content.slice(0, 100)}
                       containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"

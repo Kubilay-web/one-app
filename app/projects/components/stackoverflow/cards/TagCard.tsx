@@ -86,8 +86,11 @@ const TagCard = ({
           <i
             className={cn(
               iconClass,
+                  
               "text-2xl  dark:text-gray-300"
             )}
+
+
             aria-hidden="true"
           />
         </div>

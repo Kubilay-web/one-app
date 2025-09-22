@@ -11,41 +11,36 @@ import Pagination from "@/app/projects/components/stackoverflow/Pagination";
 const Community = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;
 
-  // Eğer query parametresi boşsa, boş bir değer gönderiyoruz
-  const queryParam = query ? query : ""; // Boş query yerine boş string gönderiliyor.
-  const filterParam = filter ? filter : undefined; // Eğer filter yoksa, filter parametresi gönderilmiyor.
+  const queryParam = query ? query : "";
+  const filterParam = filter ? filter : undefined;
 
   try {
-    // URLSearchParams oluşturuyoruz
     const params = new URLSearchParams({
       page: String(page || 1),
       pageSize: String(pageSize || 10),
-      query: queryParam, // query parametresi boş gönderiliyor.
+      query: queryParam,
     });
 
-    // Eğer filter varsa URL'ye ekliyoruz
     if (filterParam) {
       params.append("filter", filterParam);
     }
 
-    // API'ye yapılan istek
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/forumuser/community?${params.toString()}`,
     );
 
     const result = await response.json();
-    console.log("result------>", result);
-
     if (!response.ok) {
       throw new Error(result.message || "Bir hata oluştu.");
     }
 
     const { users, isNext } = result.data;
-    console.log("users", users);
 
     return (
       <div>
-        <h1 className="h1-bold text-dark100_light900">All Users</h1>
+        <h1 className="h1-bold text-[#1E293B] dark:text-[#F1F5F9]">
+          All Users
+        </h1>
 
         <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
           <LocalSearch
@@ -80,10 +75,12 @@ const Community = async ({ searchParams }: RouteParams) => {
         <Pagination page={page} isNext={isNext} />
       </div>
     );
-  } catch (error) {
+  } catch (error: any) {
     return (
       <div>
-        <h1 className="h1-bold text-dark100_light900">All Users</h1>
+        <h1 className="h1-bold text-[#1E293B] dark:text-[#F1F5F9]">
+          All Users
+        </h1>
 
         <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
           <LocalSearch

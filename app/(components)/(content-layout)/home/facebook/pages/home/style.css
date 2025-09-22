@@ -10,6 +10,8 @@
   justify-content:center;
   flex-wrap: wrap;
   gap: 10px;
+  width: 100%;
+  height:100vh;
 }
 
 .home_middle {
@@ -97,10 +99,10 @@
     display: none;
   }
   .createPost {
-    width: 110%;
+    width: 100%;
   }
   .stories {
-    width: 113%;
+    width: 100%;
   }
   .home_middle {
     margin-left: 9%;
@@ -133,8 +135,8 @@
     display: none;
   }
   .home_middle {
-    position: absolute;
-    margin-left: 0;
+    margin:auto;
+    height:100vh;
   }
   .stories,
   .createPost {

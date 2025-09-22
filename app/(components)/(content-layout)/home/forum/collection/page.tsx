@@ -1,4 +1,3 @@
-// Add this at the top of your file
 "use client"; // This makes the component client-side
 
 import QuestionCard from "@/app/projects/components/stackoverflow/cards/QuestionCard";
@@ -61,7 +60,9 @@ const Collection = () => {
 
   return (
     <>
-      <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
+      <h1 className="h1-bold text-[#1E293B] dark:text-[#F1F5F9]">
+        Saved Questions
+      </h1>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
