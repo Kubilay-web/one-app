@@ -83,7 +83,7 @@ export default function Header() {
       </div>
       <div className="header_right">
 
-        <Link href={`/apps/facebook/pages/profile/${user.username}`} className="profile_link hover1">
+        <Link href={`/home/facebook/pages/profile/${user.username}`} className="profile_link hover1">
           <img src={user?.avatarUrl} alt="" />
           <span>{user?.username}</span>
         </Link>

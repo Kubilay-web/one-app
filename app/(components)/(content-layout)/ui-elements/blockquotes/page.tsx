@@ -193,7 +193,7 @@ const Blockquotes: FC<BlockquotesProps> = () => {
 							<footer className="mt-6">
 								<div className="flex items-center">
 									<div className="flex-shrink-0">
-										<Image fill className="h-10 w-10 rounded-full custom-image" src="../../assets/images/faces/1.jpg"
+										<Image fill className="h-10 w-10 mr-3 rounded-full custom-image" src="../../assets/images/faces/1.jpg"
 											alt="Image Description" />
 									</div>
 									<div className="ltr:ml-4 rtl:mr-4">

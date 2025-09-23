@@ -1218,9 +1218,35 @@ ul.active-customers-list li.ti-list-group-item {
 .main-header-container .header-content-right {
   @apply flex items-stretch my-auto;
 }
+
+
+
+@media (max-width: 600px) {
+ .main-header-container .header-content-left, .main-header-container .header-content-right {
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+    align-items: center ;
+}
+
+
+}
+
 .main-header-container .header-element {
   @apply flex items-stretch;
 }
+
+@media (max-width: 400px) {
+.main-header-container .header-element {
+    display: flex;
+    align-items: stretch;
+    width:45px;
+}
+
+
+}
+
+
 .main-header-container .header-link {
   @apply flex items-center py-0 px-[0.5rem];
 }

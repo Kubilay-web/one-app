@@ -20,7 +20,7 @@ export default function Friends({ friends }) {
         {friends &&
           friends.slice(0, 9).map((friend, i) => (
             <Link
-              href={`/apps/facebook/pages/profile/${friend.username}`}
+              href={`/home/facebook/pages/profile/${friend.username}`}
               className={friend.username ? "profile_photo_card" : undefined}
               key={i}
             >

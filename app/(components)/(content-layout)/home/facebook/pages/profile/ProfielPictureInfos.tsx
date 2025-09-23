@@ -53,7 +53,7 @@ export default function ProfielPictureInfos({
           <div className="profile_friend_imgs">
             {profile?.friends &&
               profile.friends.slice(0, 6).map((friend, i) => (
-                <Link href={`/apps/facebook/pages/profile/${friend.username}`} key={i}>
+                <Link href={`/home/facebook/pages/profile/${friend.username}`} key={i}>
                   <img
                     src={friend.avatarUrl}
                     alt=""

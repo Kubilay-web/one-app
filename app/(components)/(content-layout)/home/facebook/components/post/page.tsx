@@ -81,7 +81,7 @@ export default function Post({ post, user }) {
     <div className="post">
       <div className="post_header">
         <Link
-          href={`/apps/facebook/pages/profile/${post.user.username}`}
+          href={`/home/facebook/pages/profile/${post.user.username}`}
           className="post_header_left"
         >
           <img src={post.user.avatarUrl} alt="" />

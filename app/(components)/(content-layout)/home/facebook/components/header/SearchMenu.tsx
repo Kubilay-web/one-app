@@ -133,7 +133,7 @@ export default function SearchMenu({
         {results.length > 0 &&
           results.map((user) => (
             <Link
-              href={`/apps/facebook/pages/profile/${user.username}`}
+              href={`/home/facebook/pages/profile/${user.username}`}
               className="search_user_item hover1"
               onClick={() => addToSearchHistoryHandler(user.id)}
               key={user.id}
