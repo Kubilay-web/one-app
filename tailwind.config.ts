@@ -20,6 +20,7 @@ module.exports = {
       xl: "1200px",
       xxl: "1400px",
       xxxl: "1800px",
+     'custom': '1376px'
     },
     borderRadius: {
       none: "0",

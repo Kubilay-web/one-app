@@ -25,7 +25,7 @@ import UserMenu from "./userMenu/page";
 import { useSession } from "@/app/SessionProvider";
 export default function Header() {
   const { user } = useSession()
-  const userId=user.id;
+  const userId= user.id;
   const color = "#65676b";
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [showAllMenu, setShowAllMenu] = useState(false);

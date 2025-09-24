@@ -5,8 +5,8 @@ import Image from "next/image";
 
 const Writerindex = () => {
   return (
-    <div className="mt-6">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="mt-6 general-writer-container">
+      <div className="grid writer-container grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[
           { title: "Writer Total News", value: 50, color: "text-red-500" },
           { title: "Writer Pending News", value: 55, color: "text-purple-500" },
@@ -27,7 +27,7 @@ const Writerindex = () => {
         ))}
       </div>
 
-      <div className="mt-8 rounded-lg bg-white p-6 shadow-md">
+      <div className="mt-8 rounded-lg bg-white p-6 shadow-md writer-table">
         <div className="flex items-center justify-between border-b border-gray-500 pb-4">
           <h2 className="text-xl font-bold text-gray-600">Recent News</h2>
           <Link

@@ -13,6 +13,7 @@ import { Button } from "@/app/projects/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
+import "./style.css"
 
 const Sidebar = ({ user }) => {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ const Sidebar = ({ user }) => {
   console.log("role--->", role);
 
   return (
-    <div className="h-screen w-[250px] bg-[#dadaff]">
+    <div className="h-screen general-sidebar w-[250px] bg-[#dadaff]">
       <div className="flex h-[70px] items-center justify-center">
         <Link href="/">
           <Image

@@ -48,7 +48,7 @@ export default function Writers() {
   };
 
   return (
-    <div className="rounded-lg bg-white shadow-md">
+    <div className="rounded-lg bg-white shadow-md writers-container">
       <div className="flex items-center justify-between border-b border-gray-400 px-6 py-4">
         <h2 className="text-2xl font-semibold text-gray-800">Writers</h2>
         <Link

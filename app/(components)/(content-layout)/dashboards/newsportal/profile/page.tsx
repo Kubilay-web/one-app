@@ -35,7 +35,7 @@ const Profile = async () => {
             type="text"
             value={user.username}
             // onChange={(e) => setName(e.target.value)}
-            className="text-xl font-semibold"
+            className="text-lg font-semibold w-[100px]"
             placeholder="Name"
           />
 
@@ -46,7 +46,7 @@ const Profile = async () => {
             type="email"
             value={user.email}
             // onChange={(e) => setEmail(e.target.value)}
-            className="text-xl font-semibold"
+            className="text-lg email-input font-semibold"
             placeholder="Email"
           />
 

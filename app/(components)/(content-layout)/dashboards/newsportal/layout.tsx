@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { UserInfo } from "@/app/queries/user";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // useRouter for client-side navigation
+import "./style.css"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
@@ -35,9 +36,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-w-screen min-h-screen flex bg-slate-400">
+    <div className="min-h-screen general-news flex bg-slate-400">
       <Sidebar user={user} />
-      <div className="min-h-[100vh] w-[calc(100vw-268px)]">
+      <div>
         {/* <Header /> */}
         <div className="p-4">
           <div className="pt-[85px]">{children}</div>
