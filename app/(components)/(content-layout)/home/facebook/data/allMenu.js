@@ -2,122 +2,122 @@ export const menu = [
   {
     name: "Campus",
     icon: "campus",
-    description: "A unique, exclusive space for college students on Facebook.",
+    description: "",
   },
   {
     name: "Events",
     icon: "events",
     description:
-      "Organize or find events and other things to do online and nearby.",
+      "",
   },
   {
     name: "Find Friends",
     icon: "friends",
-    description: "Search for friends or people you may know.",
+    description: "",
   },
   {
     name: "Groups",
     icon: "groups",
-    description: "Connect with people who share your interests.",
+    description: "",
   },
   {
     name: "News Feed",
     icon: "feed",
-    description: "See relevant posts from people and Pages you follow.",
+    description: "",
   },
   {
     name: "Pages",
     icon: "pages",
-    description: "Discover and connect with businesses on Facebook.",
+    description: "",
   },
   {
     name: "Gaming Video",
     icon: "gaming",
-    description: "Watch and connect with your favorite games and streamers.",
+    description: "",
   },
   {
     name: "Play Games",
     icon: "play",
-    description: "Play your favorite games.",
+    description: "",
   },
   {
     name: "Watch",
     icon: "watch",
     description:
-      "A video destination personalized to your interests and connections.",
+      "",
   },
   {
     name: "Facebook Pay",
     icon: "pay",
-    description: "A seamless, secure way to pay on the apps you already use.",
+    description: "",
   },
   {
     name: "Marketplace",
     icon: "marketplace",
-    description: "Buy and sell in your community.",
+    description: "",
   },
   {
     name: "Recent Ad Activity",
     icon: "recent",
-    description: "See all the ads you interacted with on Facebook.",
+    description: "",
   },
   {
     name: "Memories",
     icon: "memories",
-    description: "Browse your old photos, videos and posts on Facebook.",
+    description: "",
   },
   {
     name: "Saved",
     icon: "saved",
-    description: "Find posts, photos and videos that you saved for later.",
+    description: "",
   },
   {
     name: "Weather",
     icon: "weather",
     description:
-      "Check your local forecast and sign up for daily weather notifications.",
+      "",
   },
   {
     name: "Ads",
     icon: "ads",
-    description: "Create, manage and track the performance of your ads.",
+    description: "",
   },
   {
     name: "Jobs",
     icon: "jobs",
-    description: "Find a job that's right for you.",
+    description: "",
   },
   {
     name: "Climate science center",
     icon: "climate",
-    description: "Learn about climate change and its effects.",
+    description: "",
   },
   {
     name: "COVID-19 Information Center",
     icon: "covid",
     description:
-      "See the latest prevention tips, community resources and updates from health organizations.",
+      "",
   },
   {
     name: "Community Help",
     icon: "community",
     description:
-      "Get involved in your community by creating a drive, requesting or offering help or volunteering.",
+      "",
   },
   {
     name: "Fundraisers",
     icon: "fundraisers",
-    description: "Donate and raise money for nonprofits and personal causes.",
+    description: "",
   },
   {
     name: "Messenger",
     icon: "messenger",
-    description: "Chat instantly with your friends and connections.",
+    description: "",
   },
   {
     name: "Messenger Kids",
     icon: "messkids",
-    description: "Let kids message with close friends and family.",
+    description: "",
   },
 ];
 export const create = [
