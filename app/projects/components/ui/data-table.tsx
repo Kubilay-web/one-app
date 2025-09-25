@@ -82,7 +82,7 @@ export default function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn(filterValue)?.setFilterValue(event.target.value)
             }
-            className="h-12"
+            className="h-12 w-28 sm:w-auto"
           />
         </div>
         <div className="flex gap-x-2">
@@ -115,7 +115,7 @@ export default function DataTable<TData, TValue>({
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border bg-background">
+      <div className="rounded-lg border bg-background w-[610px]">
         <Table className="">
           {/* Table header */}
           {!noHeader && (

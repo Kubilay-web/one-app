@@ -14,12 +14,12 @@ export default async function AdminCategoriesPage() {
       heading=""
       actionButtonText={
         <>
-          <Plus size={15} />
+          <Plus className="plus" size={15} />
           Create category
         </>
       }
       modalChildren={<CategoryDetails />}
-      newTabLink="/dashboard/admin/categories/new"
+      newTabLink="/dashboards/shop/admin/categories/new"
       filterValue="name"
       data={categories}
       searchPlaceholder="Search category name..."

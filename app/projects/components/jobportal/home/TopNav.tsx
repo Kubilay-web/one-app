@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession } from "@/app/SessionProvider";
 import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useQueryClient } from "@tanstack/react-query";
+import "./style.css"
 
 export default function TopNav() {
   const { user } = useSession();
@@ -11,8 +12,8 @@ export default function TopNav() {
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 nav-job-container">
+        <div className="flex justify-between h-16 items-center nav-job">
           {/* Left Links */}
           <div className="flex space-x-4">
             <Link href="/" className="text-gray-700 hover:text-green-500 font-medium">

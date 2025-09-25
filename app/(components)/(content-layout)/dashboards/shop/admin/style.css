@@ -1,0 +1,21 @@
+.shop-container{
+    width: 100%;
+    height:100vh;
+    display: flex;
+}
+
+@media only screen and (max-width: 1221px) {
+  .shop-container {
+    display:flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 501px) {
+  .shop-sub-container {
+    width: 100vw;
+  }
+}
