@@ -274,6 +274,7 @@
     "@types/react": "^19",
     "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19",
+    "depcheck": "^1.4.7",
     "eslint-config-next": "^15.4.5",
     "postcss": "^8.5.1",
     "prisma": "^6.13.0",

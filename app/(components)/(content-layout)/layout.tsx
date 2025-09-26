@@ -22,7 +22,8 @@ const Layout = ({ children, }: any) => {
                 <Loader />
                 <div className='page'>
                     <Header />
-                    <Sidebar />
+                     <Sidebar /> 
+
                     <div className='content main-index'>
                         <div className='main-content'>
                             {children}

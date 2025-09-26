@@ -5,6 +5,7 @@ import ChatListHeader from "./ChatListHeader";
 import SearchBar from "./SearchBar";
 import List from "./List";
 import ContactsList from "./ContactsList";
+import "./style.css";
 
 function ChatList() {
   const [showContactList, setShowContactList] = useState(false); // State to toggle between views
@@ -15,7 +16,7 @@ function ChatList() {
   };
 
   return (
-    <div className="bg-colors-panel-header-background h-[100vh] flex flex-col max-h-screen z-20">
+    <div className="bg-colors-panel-header-background panel-container h-[100vh] flex flex-col max-h-screen z-20">
       {!showContactList ? (
         <>
           {" "}

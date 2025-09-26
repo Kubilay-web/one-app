@@ -1,5 +1,5 @@
 .home {
-  min-height: 100vh;
+  min-height: auto;
   background: var(--bg-secondary);
 }
 
@@ -11,7 +11,7 @@
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
-  height:100vh;
+  height:auto;
 }
 
 .home_middle {
@@ -136,7 +136,7 @@
   }
   .home_middle {
     margin:auto;
-    height:100vh;
+    height:auto;
   }
   .stories,
   .createPost {

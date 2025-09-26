@@ -42,7 +42,7 @@ export default function Friends() {
 
   return (
     <>
-      <Header page="friends" />
+      {/* <Header page="friends" /> */}
       <div className="friends">
         <div className="friends_left">
           <div className="friends_left_header">

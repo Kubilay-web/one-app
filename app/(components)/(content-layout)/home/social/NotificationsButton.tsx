@@ -31,7 +31,7 @@ export default function NotificationsButton({
       title="Notifications"
       asChild
     >
-      <Link href="/social/notifications">
+      <Link href="/home/social/notifications">
         <div className="relative">
           <Bell />
           {!!data.unreadCount && (

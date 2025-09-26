@@ -17,7 +17,7 @@ export default function Notification({ notification }: NotificationProps) {
     FOLLOW: {
       message: `${notification.issuer.displayName} followed you`,
       icon: <User2 className="size-7 text-primary" />,
-      href: `/social/users/${notification.issuer.username}`,
+      href: `/home/social/users/${notification.issuer.username}`,
     },
     COMMENT: {
       message: `${notification.issuer.displayName} commented on your post`,

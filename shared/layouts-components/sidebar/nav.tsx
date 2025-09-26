@@ -236,14 +236,39 @@ export const getMenuItems = (user) => [
     type: "sub",
     active: false,
     children: [
-      //facebook
-      {
-        path: "/home/facebook/pages/home",
-        type: "link",
-        active: false,
-        selected: false,
+
+          {
         title: "Facebook",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/home/facebook/pages/home",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+          {
+            path: "/home/facebook/pages/friends",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Friends",
+          },
+          {
+            path: `/home/facebook/pages/profile/${user.username}`,
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Profile",
+          },
+        ],
       },
+     
+
+      
       //
 
       {

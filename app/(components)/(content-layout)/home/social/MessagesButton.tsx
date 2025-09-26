@@ -27,7 +27,7 @@ export default function MessagesButton({ initialState }: MessagesButtonProps) {
       title="Messages"
       asChild
     >
-      <Link href="/social/chat">
+      <Link href="/home/social/chat">
         <div className="relative">
           <Mail />
           {!!data.unreadCount && (

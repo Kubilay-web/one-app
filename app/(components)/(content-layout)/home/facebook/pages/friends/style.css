@@ -36,3 +36,22 @@
 .active_friends {
   background: var(--bg-secondary);
 }
+
+
+
+@media only screen and (max-width: 720px) {
+ .friends {
+  display: flex;
+  flex-direction: column;
+}
+
+.friends_right {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  top: 56px;
+  left: 360px;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+}
+}
