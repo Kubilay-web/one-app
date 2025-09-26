@@ -559,13 +559,7 @@ export const getMenuItems = (user) => [
         title: "News",
       },
 
-
-           {
-        title: "Business",
-        type: "sub",
-        active: false,
-        children: [
-                {
+                 {
         title: "Real Estate",
         type: "sub",
         active: false,
@@ -621,6 +615,14 @@ export const getMenuItems = (user) => [
           },
         ],
       },
+
+
+           {
+        title: "Business",
+        type: "sub",
+        active: false,
+        children: [
+     
 
          {
         title: "CRM",
