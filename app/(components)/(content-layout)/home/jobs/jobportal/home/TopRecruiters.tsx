@@ -89,7 +89,7 @@ export default function TopRecruiters() {
               <span>{recruiter.location}</span>
             </div>
 
-            <div className="text-green-600 font-medium text-sm">
+            <div className="text-blue-600 font-medium text-sm">
               {recruiter.jobAvailability} jobs available
             </div>
           </div>

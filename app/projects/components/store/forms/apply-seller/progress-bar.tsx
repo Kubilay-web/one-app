@@ -16,7 +16,7 @@ export default function ProgressBar({ step }: { step: number }) {
         </div>
         <div className="mr-2 w-full flex-1 rounded-full bg-white">
           <div
-            className="h-2 rounded-full bg-green-500 text-center text-white"
+            className="h-2 rounded-full bg-blue-500 text-center text-white"
             style={{ width: `${(step / 4) * 100}%` }}
           />
         </div>

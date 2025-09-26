@@ -44,7 +44,7 @@ export default function SkillList() {
                   <td className="py-2 px-4 border-b">
                     <button
                       onClick={() => setUpdatingSkill(c)}
-                      className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200 flex items-center justify-center"
+                      className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200 flex items-center justify-center"
                     >
                       <FaRegEdit />
                     </button>

@@ -49,7 +49,7 @@ export default function OrganizationList() {
                   <td className="py-3 px-6">{org.name}</td>
                   <td className="py-3 px-6">
                     <button
-                      className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
+                      className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
                       onClick={() => setUpdatingOrganization(org)}
                     >
                       <FaRegEdit size={16} />

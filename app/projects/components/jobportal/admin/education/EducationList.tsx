@@ -48,7 +48,7 @@ export default function EducationList() {
                   <td className="px-6 py-4 text-gray-700">{education.name}</td>
                   <td className="px-6 py-4">
                     <button
-                      className="flex items-center rounded-lg bg-green-500 px-3 py-1 text-white shadow hover:bg-green-600 transition-colors"
+                      className="flex items-center rounded-lg bg-blue-500 px-3 py-1 text-white shadow hover:bg-blue-600 transition-colors"
                       onClick={() => setUpdatingEducation(education)}
                     >
                       <FaRegEdit className="mr-1" />

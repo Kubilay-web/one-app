@@ -34,7 +34,7 @@ export default function EducationCreate() {
         {/* Create / Update Button */}
         <button
           className={`rounded-lg px-4 py-2 text-white shadow ${
-            updatingEducation ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingEducation ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           } transition-colors`}
           onClick={(e) => {
             e.preventDefault();

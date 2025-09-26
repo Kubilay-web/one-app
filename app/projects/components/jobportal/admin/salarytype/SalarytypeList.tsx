@@ -52,7 +52,7 @@ export default function SalaryList() {
                   <td className="p-3">{c.name}</td>
                   <td className="p-3">
                     <button
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition-colors"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition-colors"
                       onClick={() => setUpdatingSalarytype(c)}
                     >
                       <FaRegEdit />

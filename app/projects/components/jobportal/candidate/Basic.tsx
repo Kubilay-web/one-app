@@ -198,7 +198,7 @@ export default function Basic() {
             />
             <button
               type="button"
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-green-700"
               onClick={handleUploadpdf}
             >
               Upload
@@ -281,7 +281,7 @@ export default function Basic() {
           onClick={handleSubmit}
           disabled={loading}
           className={`w-full py-2 rounded-md text-white font-medium ${
-            loading ? "bg-green-300 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+            loading ? "bg-green-300 cursor-not-allowed" : "bg-blue-600 hover:bg-green-700"
           }`}
         >
           {loading ? "Submitting..." : "Submit"}

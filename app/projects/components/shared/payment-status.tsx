@@ -16,7 +16,7 @@ const paymentStatusStyles: {
   },
   [PaymentStatus.Paid]: {
     bgColor: "bg-green-100",
-    textColor: "text-green-800",
+    textColor: "text-blue-800",
     label: "Paid",
   },
   [PaymentStatus.Failed]: {

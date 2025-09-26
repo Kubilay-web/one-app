@@ -49,7 +49,7 @@ export default function StateList() {
                 </div>
                 <button
                   onClick={() => setUpdatingState(state)}
-                  className="p-2 bg-green-500 hover:bg-green-600 text-white rounded transition"
+                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded transition"
                 >
                   <FaRegEdit />
                 </button>

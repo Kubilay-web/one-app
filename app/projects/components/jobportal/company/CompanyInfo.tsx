@@ -258,7 +258,7 @@ export default function CompanyInfo() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-green-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? "Saving..." : "Submit"}
           </button>

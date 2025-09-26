@@ -421,9 +421,9 @@ const Colors = () => {
 
                             <div className="flex-grow p-4 bg-green-400">green-400</div>
 
-                            <div className="flex-grow p-4 bg-green-500">green-500</div>
+                            <div className="flex-grow p-4 bg-blue-500">green-500</div>
 
-                            <div className="flex-grow p-4 bg-green-600 text-white">green-600</div>
+                            <div className="flex-grow p-4 bg-blue-600 text-white">green-600</div>
 
                             <div className="flex-grow p-4 bg-green-700 text-white">green-700</div>
 

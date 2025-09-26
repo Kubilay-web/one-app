@@ -35,7 +35,7 @@ export default function CountryCreate() {
           className={`flex-1 rounded-lg px-4 py-2 font-medium text-white shadow transition ${
             updatingCountry
               ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-green-500 hover:bg-green-600"
+              : "bg-blue-500 hover:bg-blue-600"
           }`}
           onClick={(e) => {
             e.preventDefault();

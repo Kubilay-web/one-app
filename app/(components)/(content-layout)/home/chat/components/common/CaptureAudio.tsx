@@ -42,7 +42,7 @@ function CaptureAudio({ onAudioCapture }: CaptureAudioProps) {
     <button
       onClick={recording ? stopRecording : startRecording}
       className={`p-2 rounded-full ${
-        recording ? "bg-red-500" : "bg-green-500"
+        recording ? "bg-red-500" : "bg-blue-500"
       } text-white`}
     >
       {recording ? <FaStop /> : <FaMicrophone />}

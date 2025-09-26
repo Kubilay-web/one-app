@@ -32,7 +32,7 @@ export default function PopularJobsSection() {
               key={index}
               className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer"
             >
-              <div className="text-green-600 text-3xl mb-3">
+              <div className="text-blue-600 text-3xl mb-3">
                 <IconComponent />
               </div>
               <h6 className="text-gray-800 font-semibold text-sm mb-1 text-center">

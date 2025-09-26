@@ -231,7 +231,7 @@ export default function Experience() {
                       <td className="p-2"><input value={editedExperience.responsibilities} onChange={(e)=>setEditedExperience({...editedExperience, responsibilities:e.target.value})} className="input-custom"/></td>
                       <td className="p-2"><input type="checkbox" checked={editedExperience.currently_working} onChange={(e)=>setEditedExperience({...editedExperience, currently_working:e.target.checked})} className="w-5 h-5"/></td>
                       <td className="p-2 flex gap-2">
-                        <button onClick={()=>handleSaveEdit(exp.id)} className="p-2 bg-green-500 text-white rounded hover:bg-green-600"><RiSave2Line/></button>
+                        <button onClick={()=>handleSaveEdit(exp.id)} className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"><RiSave2Line/></button>
                         <button onClick={()=>setEditedExperience(null)} className="p-2 bg-gray-400 text-white rounded hover:bg-gray-500"><RiCloseLine/></button>
                       </td>
                     </>
@@ -288,7 +288,7 @@ export default function Experience() {
                       <td className="p-2"><DatePicker picker="year" value={moment(editedEducation.year)} onChange={(date)=>setEditedEducation({...editedEducation, year:date})} className="w-full"/></td>
                       <td className="p-2"><input value={editedEducation.notes} onChange={(e)=>setEditedEducation({...editedEducation, notes:e.target.value})} className="input-custom"/></td>
                       <td className="p-2 flex gap-2">
-                        <button onClick={()=>handleSaveEdited(ed.id)} className="p-2 bg-green-500 text-white rounded hover:bg-green-600"><RiSave2Line/></button>
+                        <button onClick={()=>handleSaveEdited(ed.id)} className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"><RiSave2Line/></button>
                         <button onClick={()=>setEditedEducation(null)} className="p-2 bg-gray-400 text-white rounded hover:bg-gray-500"><RiCloseLine/></button>
                       </td>
                     </>

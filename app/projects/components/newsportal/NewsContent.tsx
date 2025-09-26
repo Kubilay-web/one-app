@@ -185,7 +185,7 @@ const NewsContent = () => {
                       {n.status === "active" && (
                         <span
                           onClick={() => update_status("deactive", n._id)}
-                          className="cursor-pointer rounded-md bg-green-200 px-2 py-[2px] text-xs text-green-800"
+                          className="cursor-pointer rounded-md bg-green-200 px-2 py-[2px] text-xs text-blue-800"
                         >
                           {res.loader && res.id === n._id
                             ? "Loading.."

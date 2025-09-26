@@ -36,8 +36,8 @@ const statusStyles: {
     label: "Out for Delivery",
   },
   [OrderStatus.Delivered]: {
-    bgColor: "bg-green-100 dark:bg-green-500/10",
-    textColor: "text-green-800 dark:text-green-500",
+    bgColor: "bg-green-100 dark:bg-blue-500/10",
+    textColor: "text-blue-800 dark:text-blue-500",
     label: "Delivered",
   },
   [OrderStatus.Cancelled]: {

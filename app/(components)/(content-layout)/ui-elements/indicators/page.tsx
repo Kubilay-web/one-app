@@ -54,7 +54,7 @@ const Indicators: FC<IndicatorsProps> = () => {
                                     <span className="text-defaulttextcolor dark:text-defaulttextcolor/80">Yellow</span>
                                 </div>
                                 <div className="inline-flex items-center">
-                                    <span className="w-2 h-2 inline-block bg-green-600 rounded-full me-2"></span>
+                                    <span className="w-2 h-2 inline-block bg-blue-600 rounded-full me-2"></span>
                                     <span className="text-defaulttextcolor dark:text-defaulttextcolor/80">Green</span>
                                 </div>
                                 <div className="inline-flex items-center">

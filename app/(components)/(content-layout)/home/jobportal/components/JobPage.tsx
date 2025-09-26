@@ -64,7 +64,7 @@ export default function JobPage({
               {applicationLink ? (
                 <Link
                   href={applicationLink}
-                  className="text-green-500 hover:underline"
+                  className="text-blue-500 hover:underline"
                 >
                   {companyName}
                 </Link>

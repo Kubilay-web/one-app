@@ -79,7 +79,7 @@ export default function JobCategoryCreate() {
       <div className="flex flex-wrap gap-3">
         <button
           className={`flex-1 rounded-lg px-4 py-2 font-semibold text-white shadow ${
-            updatingJobcategory ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingJobcategory ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           }`}
           onClick={(e) => {
             e.preventDefault();

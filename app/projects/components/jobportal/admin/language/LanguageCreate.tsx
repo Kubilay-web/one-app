@@ -41,7 +41,7 @@ export default function LanguageCreate() {
         <button
           onClick={handleSubmit}
           className={`flex-1 min-w-[100px] text-white font-medium py-2 px-4 rounded-lg transition ${
-            updatingLanguage ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingLanguage ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           }`}
         >
           {updatingLanguage ? "Update" : "Create"}

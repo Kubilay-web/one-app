@@ -44,7 +44,7 @@ export default function IndustryCreate() {
             }
           }}
           className={`flex items-center justify-center rounded-lg px-4 py-2 font-medium text-white shadow ${
-            updatingIndustry ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingIndustry ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           } transition-colors`}
         >
           {updatingIndustry ? "Update" : "Create"}

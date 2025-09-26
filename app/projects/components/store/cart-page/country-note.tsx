@@ -9,7 +9,7 @@ export default function CountryNote({ country }: { country: string }) {
       </div>
       <div className="w-full pl-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm leading-none text-green-700">
+          <p className="text-sm leading-none text-blue-700">
             Shipping fees are calculated based on your current country (
             {country}). <br />
             shipping fees will always automatically update to reflect your

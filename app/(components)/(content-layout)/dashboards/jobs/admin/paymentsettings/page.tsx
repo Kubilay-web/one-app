@@ -37,7 +37,7 @@ export default function PaymentSettings() {
                 key={tab.id}
                 className={`w-full text-left px-4 py-2 rounded-md font-medium border transition ${
                   activeTab === tab.id
-                    ? "bg-green-500 text-white border-green-500"
+                    ? "bg-blue-500 text-white border-blue-500"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-green-100"
                 }`}
                 onClick={() => handleTabChange(tab.id)}

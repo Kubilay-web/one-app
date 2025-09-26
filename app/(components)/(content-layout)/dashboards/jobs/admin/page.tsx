@@ -40,11 +40,11 @@ export default function Admin() {
   return (
     <div className="px-4 py-6 max-w-7xl mx-auto">
       <div className="text-center mb-8">
-        <hr className="border-2 border-green-500 w-1/2 mx-auto mb-2" />
-        <h2 className="text-2xl font-bold bg-green-500 text-white py-2 rounded">
+        <hr className="border-2 border-blue-500 w-1/2 mx-auto mb-2" />
+        <h2 className="text-2xl font-bold bg-blue-500 text-white py-2 rounded">
           Admin Dashboard
         </h2>
-        <hr className="border-2 border-green-500 w-1/2 mx-auto mt-2" />
+        <hr className="border-2 border-blue-500 w-1/2 mx-auto mt-2" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -69,7 +69,7 @@ export default function Admin() {
         ))}
 
         {/* Extra Info Card */}
-        <div className="col-span-1 md:col-span-2 lg:col-span-3 bg-green-500 text-white rounded-lg p-5">
+        <div className="col-span-1 md:col-span-2 lg:col-span-3 bg-blue-500 text-white rounded-lg p-5">
           <h3 className="text-lg font-semibold mb-2">YOU CAN ADD MORE INFORMATION</h3>
           <p className="text-sm">Additional information can be displayed here.</p>
         </div>

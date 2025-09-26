@@ -130,7 +130,7 @@ export default function Company() {
                           job.status === "pending"
                             ? "bg-yellow-500 text-gray-900"
                             : isActive
-                            ? "bg-green-500"
+                            ? "bg-blue-500"
                             : "bg-red-500"
                         }`}
                       >

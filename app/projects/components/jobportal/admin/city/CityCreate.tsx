@@ -191,7 +191,7 @@ export default function CityCreate() {
             </button>
 
             <button
-              className="rounded-lg bg-green-600 p-2 text-white hover:bg-green-700"
+              className="rounded-lg bg-blue-600 p-2 text-white hover:bg-green-700"
               onClick={() => setUpdatingCity(null)}
             >
               <MdOutlineClear size={20} />

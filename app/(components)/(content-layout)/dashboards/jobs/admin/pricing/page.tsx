@@ -274,7 +274,7 @@ export default function Register() {
                 <div key={item.id} className="bg-white shadow rounded-lg p-4 flex flex-col justify-between">
                   <div>
                     <div className="flex flex-wrap gap-2 mb-2">
-                      {item.recommended && <span className="px-2 py-1 bg-green-500 text-white rounded text-sm">Recommended</span>}
+                      {item.recommended && <span className="px-2 py-1 bg-blue-500 text-white rounded text-sm">Recommended</span>}
                       {item.home && <span className="px-2 py-1 bg-blue-400 text-white rounded text-sm">Home</span>}
                       {item.frontendshow && <span className="px-2 py-1 bg-yellow-300 text-black rounded text-sm">Frontend Show</span>}
                     </div>
@@ -287,13 +287,13 @@ export default function Register() {
                       <li>Featured Job Limit: {item.featuredjoblimit}</li>
                       <li>Highlight Job Limit: {item.highlightjoblimit}</li>
                       <li>
-                        Recommended: {item.recommended ? <FaCheck className="text-green-500 inline" /> : <FaTimes className="text-red-500 inline" />}
+                        Recommended: {item.recommended ? <FaCheck className="text-blue-500 inline" /> : <FaTimes className="text-red-500 inline" />}
                       </li>
                       <li>
-                        Frontend Show: {item.frontendshow ? <FaCheck className="text-green-500 inline" /> : <FaTimes className="text-red-500 inline" />}
+                        Frontend Show: {item.frontendshow ? <FaCheck className="text-blue-500 inline" /> : <FaTimes className="text-red-500 inline" />}
                       </li>
                       <li>
-                        Profile Verify: {item.profileverify ? <FaCheck className="text-green-500 inline" /> : <FaTimes className="text-red-500 inline" />}
+                        Profile Verify: {item.profileverify ? <FaCheck className="text-blue-500 inline" /> : <FaTimes className="text-red-500 inline" />}
                       </li>
                     </ul>
                   </div>

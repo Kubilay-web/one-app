@@ -21,7 +21,7 @@ export default function TopNav() {
     <nav className="bg-white shadow-md px-4 md:px-10 py-3 flex flex-wrap md:flex-nowrap items-center justify-between  top-0 z-50">
       {/* Logo / Home */}
       <div className="flex items-center space-x-4">
-        <Link href="/" className="text-lg md:text-xl font-bold text-green-600">
+        <Link href="/" className="text-lg md:text-xl font-bold text-blue-600">
           JobPortal
         </Link>
         <div className="hidden md:flex space-x-4">
@@ -29,7 +29,7 @@ export default function TopNav() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-gray-700 hover:text-green-600 transition-colors"
+              className="text-gray-700 hover:text-blue-600 transition-colors"
             >
               {item.name}
             </Link>
@@ -44,7 +44,7 @@ export default function TopNav() {
             {user?.rolejob === "CANDIDATE" && (
               <Link
                 href={`/dashboard/job/candidate`}
-                className="px-3 py-1 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+                className="px-3 py-1 rounded-lg bg-green-100 text-blue-700 hover:bg-green-200 transition"
               >
                 {user?.username} ({user?.rolejob})
               </Link>
@@ -53,7 +53,7 @@ export default function TopNav() {
             {user?.rolejob === "ADMIN" && (
               <Link
                 href={`/dashboards/jobs/admin`}
-                className="px-3 py-1 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+                className="px-3 py-1 rounded-lg bg-green-100 text-blue-700 hover:bg-green-200 transition"
               >
                 {user?.username} ({user?.rolejob})
               </Link>
@@ -62,7 +62,7 @@ export default function TopNav() {
             {user?.rolejob === "COMPANY" && (
               <Link
                 href={`/dashboard/job/company`}
-                className="px-3 py-1 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+                className="px-3 py-1 rounded-lg bg-green-100 text-blue-700 hover:bg-green-200 transition"
               >
                 {user?.username} ({user?.rolejob})
               </Link>
@@ -88,7 +88,7 @@ export default function TopNav() {
             </Link>
             <Link
               href="/register"
-              className="px-3 py-1 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+              className="px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
             >
               Register
             </Link>

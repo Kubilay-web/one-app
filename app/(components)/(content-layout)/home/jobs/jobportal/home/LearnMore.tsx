@@ -14,7 +14,7 @@ export default function FeatureComponent() {
           Find Jobs That Match Your Skills and Passion – Start Your Career Search Now!
         </p>
         <div className="flex justify-center md:justify-start gap-4 flex-wrap">
-          <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all">
+          <button className="bg-blue-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all">
             Search
           </button>
           <button className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all">

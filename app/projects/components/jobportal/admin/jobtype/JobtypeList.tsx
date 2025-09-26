@@ -47,7 +47,7 @@ export default function JobtypeList() {
                   <td className="px-4 py-2 border-b">
                     <button
                       onClick={() => setUpdatingJobtype(jobtype)}
-                      className="flex items-center justify-center px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+                      className="flex items-center justify-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
                     >
                       <FaRegEdit size={18} />
                     </button>

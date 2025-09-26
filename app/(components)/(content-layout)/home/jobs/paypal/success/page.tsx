@@ -39,7 +39,7 @@ const PaymentSuccess = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white rounded-2xl shadow-lg max-w-md w-full p-8 text-center animate-fadeInUp">
         <div className="flex justify-center">
-          <div className="text-green-500 text-6xl mb-4 animate-bounce">✔</div>
+          <div className="text-blue-500 text-6xl mb-4 animate-bounce">✔</div>
         </div>
         <h1 className="text-3xl font-bold mb-4 text-gray-800">
           Payment Succesful
@@ -49,7 +49,7 @@ const PaymentSuccess = () => {
         </p>
         <a
           href="/"
-          className="inline-block bg-green-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-green-600 transition"
+          className="inline-block bg-blue-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-600 transition"
         >
           Back to Home
         </a>

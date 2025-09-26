@@ -8,7 +8,7 @@ const PaymentSuccess = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-8 text-center transform transition-all duration-500 animate-fadeInUp">
         {/* Checkmark */}
-        <div className="text-green-500 text-7xl mb-6 animate-bounce">✔</div>
+        <div className="text-blue-500 text-7xl mb-6 animate-bounce">✔</div>
 
         {/* Heading */}
         <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-800">
@@ -23,7 +23,7 @@ const PaymentSuccess = () => {
         {/* CTA Button */}
         <Link
           href="/"
-          className="inline-block bg-green-500 text-white font-semibold py-3 px-8 rounded-full hover:bg-green-600 transition"
+          className="inline-block bg-blue-500 text-white font-semibold py-3 px-8 rounded-full hover:bg-blue-600 transition"
         >
           Go to Home
         </Link>

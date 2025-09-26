@@ -52,7 +52,7 @@ export default function JobExperienceList() {
                   <td className="px-6 py-4 text-center">
                     <button
                       onClick={() => setUpdatingJobexperience(job)}
-                      className="inline-flex items-center justify-center rounded-lg bg-green-500 px-2 py-1 text-white hover:bg-green-600 transition"
+                      className="inline-flex items-center justify-center rounded-lg bg-blue-500 px-2 py-1 text-white hover:bg-blue-600 transition"
                       aria-label={`Edit ${job.name}`}
                     >
                       <FaRegEdit size={16} />

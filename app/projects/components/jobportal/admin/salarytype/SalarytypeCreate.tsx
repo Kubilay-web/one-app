@@ -34,7 +34,7 @@ export default function SalaryCreate() {
       <div className="flex flex-wrap gap-3">
         <button
           className={`text-white rounded px-5 py-2 transition-colors duration-200 ${
-            updatingSalarytype ? "bg-teal-500 hover:bg-teal-600" : "bg-green-500 hover:bg-green-600"
+            updatingSalarytype ? "bg-teal-500 hover:bg-teal-600" : "bg-blue-500 hover:bg-blue-600"
           }`}
           onClick={(e) => {
             e.preventDefault();

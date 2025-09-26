@@ -66,7 +66,7 @@ export default function JobCategoryList() {
                   </td>
                   <td className="px-6 py-4">
                     <button
-                      className="rounded-lg bg-green-500 px-3 py-1 text-white shadow hover:bg-green-600"
+                      className="rounded-lg bg-blue-500 px-3 py-1 text-white shadow hover:bg-blue-600"
                       onClick={() => setUpdatingJobcategory(c)}
                       aria-label={`Edit ${c.name}`}
                     >

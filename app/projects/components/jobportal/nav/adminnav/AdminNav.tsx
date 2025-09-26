@@ -48,8 +48,8 @@ export default function AdminNav() {
           href={link.href}
           className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
             isActive
-              ? "bg-green-600 text-white font-bold"
-              : "text-gray-700 hover:bg-green-200 hover:text-green-800"
+              ? "bg-blue-600 text-white font-bold"
+              : "text-gray-700 hover:bg-green-200 hover:text-blue-800"
           }`}
         >
           {link.label}

@@ -48,7 +48,7 @@ export default function TeamList() {
                   <td className="py-3 px-5">{team.name}</td>
                   <td className="py-3 px-5">
                     <button
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg flex items-center justify-center transition-colors"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg flex items-center justify-center transition-colors"
                       onClick={() => setUpdatingTeam(team)}
                     >
                       <FaRegEdit size={18} />

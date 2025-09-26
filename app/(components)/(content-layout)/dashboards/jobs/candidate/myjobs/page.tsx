@@ -85,7 +85,7 @@ export default function Home() {
                       ) : (
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                            isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                            isActive ? "bg-blue-500 text-white" : "bg-red-500 text-white"
                           }`}
                         >
                           {isActive ? "Active" : "Expired"}

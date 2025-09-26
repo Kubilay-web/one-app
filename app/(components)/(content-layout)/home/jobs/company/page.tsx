@@ -91,7 +91,7 @@ export default function Page() {
                       {company.isProfileVerified && (
                         <span
                           title="Verified Company"
-                          className="ml-1 text-green-500"
+                          className="ml-1 text-blue-500"
                         >
                           ✔
                         </span>

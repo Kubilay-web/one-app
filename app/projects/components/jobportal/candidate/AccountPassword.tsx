@@ -74,7 +74,7 @@ export default function Register() {
             className={`w-full py-2 rounded-lg text-white font-medium transition ${
               loading
                 ? "bg-green-300 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700"
+                : "bg-blue-600 hover:bg-green-700"
             }`}
           >
             {loading ? "Please wait..." : "Submit"}

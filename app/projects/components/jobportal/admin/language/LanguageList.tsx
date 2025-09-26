@@ -45,7 +45,7 @@ export default function LanguageList() {
                   <td className="py-3 px-4">{language.name}</td>
                   <td className="py-3 px-4">
                     <button
-                      className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-md transition"
+                      className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md transition"
                       onClick={() => setUpdatingLanguage(language)}
                     >
                       <FaRegEdit />

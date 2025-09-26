@@ -45,7 +45,7 @@ export default function JobtypeCreate() {
           <button
             type="submit"
             className={`w-full md:w-auto px-6 py-2 rounded-lg font-semibold text-white transition ${
-              updatingJobtype ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+              updatingJobtype ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
             }`}
           >
             {updatingJobtype ? "Update" : "Create"}

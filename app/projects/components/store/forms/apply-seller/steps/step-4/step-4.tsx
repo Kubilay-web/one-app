@@ -8,7 +8,7 @@ export default function Step4() {
         <div className="flex h-full w-full items-center justify-center rounded-lg bg-white p-10 shadow-sm">
           <div>
             <svg
-              className="mx-auto mb-4 h-20 w-20 text-green-500"
+              className="mx-auto mb-4 h-20 w-20 text-blue-500"
               viewBox="0 0 20 20"
               fill="currentColor"
             >

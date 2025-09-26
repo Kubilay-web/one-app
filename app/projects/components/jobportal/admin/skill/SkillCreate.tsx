@@ -37,7 +37,7 @@ export default function SkillCreate() {
             updatingSkill ? updateSkill() : createSkill();
           }}
           className={`px-5 py-2 rounded-lg text-white ${
-            updatingSkill ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingSkill ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           } transition-colors duration-200`}
         >
           {updatingSkill ? "Update" : "Create"}

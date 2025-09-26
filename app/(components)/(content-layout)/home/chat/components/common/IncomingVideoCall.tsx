@@ -56,7 +56,7 @@ function IncomingVideoCall() {
             Reject
           </button>
           <button
-            className="bg-green-500 p-1 px-3 text-sm rounded-full"
+            className="bg-blue-500 p-1 px-3 text-sm rounded-full"
             onClick={acceptCall}
           >
             Accept

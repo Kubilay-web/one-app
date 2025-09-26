@@ -115,7 +115,7 @@ export default function CheckoutPage({ searchParams }: CheckoutPageProps) {
             <div key={item.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition">
               <div className="p-6 border-b">
                 <h5 className="text-xl font-semibold mb-2">{item.leble}</h5>
-                {item.recommended && <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full text-xs">Recommended</span>}
+                {item.recommended && <span className="inline-block bg-blue-500 text-white px-3 py-1 rounded-full text-xs">Recommended</span>}
               </div>
               <div className="p-6 text-center bg-indigo-500 text-white">
                 <span className="text-3xl font-bold">${item.price}</span>
@@ -125,10 +125,10 @@ export default function CheckoutPage({ searchParams }: CheckoutPageProps) {
                 <li>Featured Job Limit: {item.featuredjoblimit}</li>
                 <li>Highlight Job Limit: {item.highlightjoblimit}</li>
                 <li>
-                  Recommended: {item.recommended ? <FaCheck className="inline text-green-500 ml-2" /> : <FaTimes className="inline text-red-500 ml-2" />}
+                  Recommended: {item.recommended ? <FaCheck className="inline text-blue-500 ml-2" /> : <FaTimes className="inline text-red-500 ml-2" />}
                 </li>
                 <li>
-                  Company Verified: {item.profileverify ? <FaCheck className="inline text-green-500 ml-2" /> : <FaTimes className="inline text-red-500 ml-2" />}
+                  Company Verified: {item.profileverify ? <FaCheck className="inline text-blue-500 ml-2" /> : <FaTimes className="inline text-red-500 ml-2" />}
                 </li>
               </ul>
             </div>

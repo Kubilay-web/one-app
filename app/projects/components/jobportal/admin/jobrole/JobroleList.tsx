@@ -50,7 +50,7 @@ export default function JobroleList() {
                   <td className="px-6 py-3">
                     <button
                       onClick={() => setUpdatingJobrole(role)}
-                      className="flex items-center justify-center rounded-lg bg-green-500 hover:bg-green-600 text-white p-2 transition"
+                      className="flex items-center justify-center rounded-lg bg-blue-500 hover:bg-blue-600 text-white p-2 transition"
                       aria-label={`Edit ${role.name}`}
                     >
                       <FaRegEdit />

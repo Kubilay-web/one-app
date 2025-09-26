@@ -52,7 +52,7 @@ export default function ProfessionList() {
                   <td className="py-3 px-4">
                     <button
                       onClick={() => setUpdatingProfession(p)}
-                      className="px-3 py-1 rounded-md bg-green-500 text-white hover:bg-green-600 transition-colors flex items-center"
+                      className="px-3 py-1 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center"
                     >
                       <FaRegEdit className="mr-1" /> Edit
                     </button>

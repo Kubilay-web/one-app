@@ -211,7 +211,7 @@ export default function Account() {
             type="submit"
             disabled={loadings}
             className={`w-full py-2 mt-2 rounded-lg text-white font-medium ${
-              loadings ? "bg-green-300 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+              loadings ? "bg-green-300 cursor-not-allowed" : "bg-blue-600 hover:bg-green-700"
             }`}
           >
             {loadings ? "Please wait..." : "Save changes"}

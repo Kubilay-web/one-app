@@ -1616,7 +1616,7 @@ export const switch8 =`//<!-- Prism Code: This code is only used for showcode pu
 export const switch9 =`//<!-- Prism Code: This code is only used for showcode purpose -->//
   <div className="space-y-4">
 <div className="flex items-center">
-    <input type="checkbox" id="hs-valid-toggle-switch" className="ti-switch shrink-0 checked:bg-none checked:bg-green-600 checked:hover:bg-green-600 checked:focus:bg-green-600 focus:border-green-600 focus:ring-green-600 dark:checked:bg-green-600
+    <input type="checkbox" id="hs-valid-toggle-switch" className="ti-switch shrink-0 checked:bg-none checked:bg-blue-600 checked:hover:bg-blue-600 checked:focus:bg-blue-600 focus:border-green-600 focus:ring-green-600 dark:checked:bg-blue-600
 
                 checked:before:bg-green-200 dark:checked:before:bg-green-200" defaultChecked/>
     <label htmlFor="hs-valid-toggle-switch" className="text-sm text-gray-500 ms-3 dark:text-white/70">Valid

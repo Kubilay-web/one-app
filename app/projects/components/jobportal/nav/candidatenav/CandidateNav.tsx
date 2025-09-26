@@ -25,8 +25,8 @@ export default function CandidateNav() {
             href={item.href}
             className={`px-4 py-2 rounded-lg text-sm md:text-base font-medium transition-colors ${
               isActive
-                ? "bg-green-600 text-white font-bold"
-                : "bg-gray-100 text-gray-700 hover:bg-green-200 hover:text-green-800"
+                ? "bg-blue-600 text-white font-bold"
+                : "bg-gray-100 text-gray-700 hover:bg-green-200 hover:text-blue-800"
             }`}
           >
             {item.name}

@@ -45,7 +45,7 @@ export default function TagList() {
                   <td className="p-3 border-b border-gray-200">
                     <button
                       onClick={() => setUpdatingTag(c)}
-                      className="px-3 py-1 rounded-md bg-green-500 hover:bg-green-600 text-white transition-colors"
+                      className="px-3 py-1 rounded-md bg-blue-500 hover:bg-blue-600 text-white transition-colors"
                     >
                       <FaRegEdit />
                     </button>

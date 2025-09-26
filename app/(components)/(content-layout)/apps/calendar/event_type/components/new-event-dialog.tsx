@@ -197,7 +197,7 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
                           "border-red-500 bg-red-50",
                         appConnected &&
                           selectedLocationType === option.value &&
-                          "border-green-500 bg-green-50"
+                          "border-blue-500 bg-green-50"
                       )}
                     >
                       {isChecking && selectedLocationType === option.value ? (

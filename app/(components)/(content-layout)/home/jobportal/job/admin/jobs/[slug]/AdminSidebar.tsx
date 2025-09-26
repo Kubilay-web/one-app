@@ -13,7 +13,7 @@ export default function AdminSidebar({ job }: AdminSidebarProps) {
   return (
     <aside className="flex w-[200px] flex-none flex-row items-center gap-2 md:flex-col md:items-stretch">
       {job.status === "active" ? (
-        <span className="text-center font-semibold text-green-500">
+        <span className="text-center font-semibold text-blue-500">
           Active
         </span>
       ) : (
@@ -34,7 +34,7 @@ function ApproveSubmissionButton({ jobId }: AdminButtonProps) {
   return (
     <form action={formAction} className="space-y-1">
       <input type="hidden" name="jobId" value={jobId} />
-      <FormSubmitButton className="w-full bg-green-500 hover:bg-green-600">
+      <FormSubmitButton className="w-full bg-blue-500 hover:bg-blue-600">
         Approve
       </FormSubmitButton>
       {formState?.error && (

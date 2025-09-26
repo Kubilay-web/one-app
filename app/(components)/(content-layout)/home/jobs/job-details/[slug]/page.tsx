@@ -451,25 +451,25 @@ const slug = params.slug;
             <div className="box-body">
               <div className="space-y-3 text-gray-700">
                 <p className="flex items-center gap-2">
-                  <FaMapMarkerAlt className="text-lg text-green-600" />
+                  <FaMapMarkerAlt className="text-lg text-blue-600" />
                   {job?.address}, {job?.city?.name}, {job?.state?.statename}{" "}
                   {job?.country?.name}
                 </p>
                 <p className="flex items-center gap-2">
-                  <FaPhoneAlt className="text-lg text-green-600" />
+                  <FaPhoneAlt className="text-lg text-blue-600" />
                   {job?.company?.phone || "Phone not available"}
                 </p>
                 <p className="flex items-center gap-2">
-                  <FaEnvelope className="text-lg text-green-600" />
+                  <FaEnvelope className="text-lg text-blue-600" />
                   {job?.company?.email || "Email not available"}
                 </p>
                 <p className="flex items-center gap-2">
-                  <MdDateRange className="text-lg text-green-600" />
+                  <MdDateRange className="text-lg text-blue-600" />
                   Published: {moment(job?.createdAt).format("DD MMM YYYY")}
                 </p>
                 {job?.deadline && (
                   <p className="flex items-center gap-2">
-                    <MdDateRange className="text-lg text-green-600" />
+                    <MdDateRange className="text-lg text-blue-600" />
                     Deadline: {moment(job?.deadline).format("DD MMM YYYY")}
                   </p>
                 )}

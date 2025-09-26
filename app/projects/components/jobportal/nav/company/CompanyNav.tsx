@@ -25,8 +25,8 @@ export default function CompanyNav() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
               ${
                 isActive
-                  ? "bg-green-600 text-white shadow-md"
-                  : "bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-700"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-blue-700"
               }`}
           >
             {label}

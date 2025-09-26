@@ -79,7 +79,7 @@ export default function CityList() {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
-                      className="rounded-lg bg-green-600 p-2 text-white transition hover:bg-green-700"
+                      className="rounded-lg bg-blue-600 p-2 text-white transition hover:bg-green-700"
                       onClick={() => handleEditCity(city)}
                     >
                       <FaRegEdit size={18} />

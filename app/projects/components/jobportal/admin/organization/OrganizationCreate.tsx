@@ -34,7 +34,7 @@ export default function IndustryCreate() {
       <div className="flex flex-wrap gap-3 justify-between">
         <button
           className={`flex-1 py-2 px-4 text-white font-semibold rounded-md ${
-            updatingOrganization ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingOrganization ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           } transition-colors`}
           onClick={(e) => {
             e.preventDefault();

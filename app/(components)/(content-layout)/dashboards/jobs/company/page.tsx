@@ -42,7 +42,7 @@ export default function Company() {
           </p>
           <hr className="my-4 border-gray-300" />
           {profileComplete ? (
-            <p className="text-lg text-green-600">
+            <p className="text-lg text-blue-600">
               ✅ Profile is complete, <span className="font-bold">{user?.username}</span>
             </p>
           ) : (

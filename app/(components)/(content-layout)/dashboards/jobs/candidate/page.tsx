@@ -57,7 +57,7 @@ export default function Candidate() {
       {/* Profile Completion */}
       <div className="bg-white shadow rounded-lg p-6 text-center">
         {profileComplete ? (
-          <p className="text-green-600 font-semibold">
+          <p className="text-blue-600 font-semibold">
             Profile is complete, {user?.username}
           </p>
         ) : (
@@ -77,7 +77,7 @@ export default function Candidate() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white shadow rounded-lg p-6 text-center">
           <h3 className="text-lg font-semibold mb-2">Applied Jobs</h3>
-          <p className="text-2xl font-bold text-green-600">{applied}</p>
+          <p className="text-2xl font-bold text-blue-600">{applied}</p>
         </div>
         <div className="bg-white shadow rounded-lg p-6 text-center">
           <h3 className="text-lg font-semibold mb-2">Saved Jobs</h3>
@@ -146,7 +146,7 @@ export default function Candidate() {
                       <td className="px-4 py-3">
                         <span
                           className={`px-2 py-1 rounded-full text-white text-sm font-semibold ${
-                            isActive ? "bg-green-500" : "bg-red-500"
+                            isActive ? "bg-blue-500" : "bg-red-500"
                           }`}
                         >
                           {isActive ? "Active" : "Expired"}

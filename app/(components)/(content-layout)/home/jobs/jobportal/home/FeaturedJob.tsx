@@ -62,7 +62,7 @@ export default function FeaturedJob() {
             onClick={() => setSelectedCategory(categoryData.category)}
             className={`px-5 py-2 rounded-lg font-semibold text-white transition-colors duration-300 ${
               selectedCategory === categoryData.category
-                ? "bg-green-600 shadow-lg"
+                ? "bg-blue-600 shadow-lg"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
@@ -105,7 +105,7 @@ export default function FeaturedJob() {
                     Posted: {job.postedDate}
                   </p>
                   <p className="text-gray-700 text-sm mb-4">{job.jobType}</p>
-                  <button className="mt-auto bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                  <button className="mt-auto bg-blue-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
                     Apply Now
                   </button>
                 </div>

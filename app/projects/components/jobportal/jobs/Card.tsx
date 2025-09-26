@@ -135,7 +135,7 @@ export default function JobsCard({ jobs }) {
         <div className="mt-1 text-gray-600">
           <span className="font-medium">{jobs?.company_id?.name}</span> ·{" "}
           <span className="inline-flex items-center gap-1">
-            <FaMapMarkerAlt className="text-green-500" />
+            <FaMapMarkerAlt className="text-blue-500" />
             {jobs?.country?.name || "Unknown"}
           </span>
         </div>
@@ -157,7 +157,7 @@ export default function JobsCard({ jobs }) {
           {skills.map((item) => (
             <span
               key={item?.skill?.id}
-              className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700"
+              className="rounded-full bg-green-100 px-3 py-1 text-sm text-blue-700"
             >
               {item?.skill?.name}
             </span>

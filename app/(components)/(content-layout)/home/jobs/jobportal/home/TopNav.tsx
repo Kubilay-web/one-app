@@ -17,25 +17,25 @@ export default function TopNav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo / Brand */}
-          <Link href="/" className="text-2xl font-bold text-green-600">
+          <Link href="/" className="text-2xl font-bold text-blue-600">
             JobPortal
           </Link>
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Home
             </Link>
-            <Link href="/job-portal/companies" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            <Link href="/job-portal/companies" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Companies
             </Link>
-            <Link href="/job-portal/candidates" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            <Link href="/job-portal/candidates" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Candidates
             </Link>
-            <Link href="/job-portal/jobs" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            <Link href="/job-portal/jobs" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Search Jobs
             </Link>
-            <Link href="/job-portal/pricing" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            <Link href="/job-portal/pricing" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Pricing
             </Link>
 
@@ -44,7 +44,7 @@ export default function TopNav() {
                 {user?.rolejob === "CANDIDATE" && (
                   <Link
                     href={`/dashboard/job/candidate`}
-                    className="text-gray-700 hover:text-green-600 font-medium transition-colors"
+                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -52,7 +52,7 @@ export default function TopNav() {
                 {user?.rolejob === "ADMIN" && (
                   <Link
                     href={`/dashboards/jobs/admin`}
-                    className="text-gray-700 hover:text-green-600 font-medium transition-colors"
+                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -60,7 +60,7 @@ export default function TopNav() {
                 {user?.rolejob === "COMPANY" && (
                   <Link
                     href={`/dashboard/job/company`}
-                    className="text-gray-700 hover:text-green-600 font-medium transition-colors"
+                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -77,10 +77,10 @@ export default function TopNav() {
               </>
             ) : (
               <>
-                <Link href="/login" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+                <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                   Login
                 </Link>
-                <Link href="/register" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+                <Link href="/register" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                   Register
                 </Link>
               </>
@@ -91,7 +91,7 @@ export default function TopNav() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="text-gray-700 hover:text-green-600 focus:outline-none"
+              className="text-gray-700 hover:text-blue-600 focus:outline-none"
             >
               {menuOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
             </button>
@@ -103,19 +103,19 @@ export default function TopNav() {
       {menuOpen && (
         <nav className="md:hidden bg-white shadow-md">
           <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
-            <Link href="/" className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Home
             </Link>
-            <Link href="/job-portal/companies" className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/job-portal/companies" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Companies
             </Link>
-            <Link href="/job-portal/candidates" className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/job-portal/candidates" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Candidates
             </Link>
-            <Link href="/job-portal/jobs" className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/job-portal/jobs" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Search Jobs
             </Link>
-            <Link href="/job-portal/pricing" className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/job-portal/pricing" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Pricing
             </Link>
 
@@ -124,7 +124,7 @@ export default function TopNav() {
                 {user?.rolejob === "CANDIDATE" && (
                   <Link
                     href={`/dashboard/job/candidate`}
-                    className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md"
+                    className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -132,7 +132,7 @@ export default function TopNav() {
                 {user?.rolejob === "ADMIN" && (
                   <Link
                     href={`/dashboards/jobs/admin`}
-                    className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md"
+                    className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -140,7 +140,7 @@ export default function TopNav() {
                 {user?.rolejob === "COMPANY" && (
                   <Link
                     href={`/dashboard/job/company`}
-                    className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md"
+                    className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -157,10 +157,10 @@ export default function TopNav() {
               </>
             ) : (
               <>
-                <Link href="/login" className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md">
+                <Link href="/login" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
                   Login
                 </Link>
-                <Link href="/register" className="block text-gray-700 hover:text-green-600 font-medium py-2 px-3 rounded-md">
+                <Link href="/register" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
                   Register
                 </Link>
               </>

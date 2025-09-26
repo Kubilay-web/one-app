@@ -38,7 +38,7 @@ export default function ProfessionCreate() {
             updatingProfession ? updateProfession() : createProfession();
           }}
           className={`px-4 py-2 rounded-md text-white font-medium transition-colors duration-200 ${
-            updatingProfession ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingProfession ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           }`}
         >
           {updatingProfession ? "Update" : "Create"}

@@ -44,7 +44,7 @@ export default function IndustryList() {
                   <td className="px-6 py-3">
                     <button
                       onClick={() => setUpdatingIndustry(c)}
-                      className="flex items-center justify-center rounded-lg bg-green-500 px-3 py-1 text-white hover:bg-green-600 transition-colors"
+                      className="flex items-center justify-center rounded-lg bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 transition-colors"
                       aria-label={`Edit ${c.name}`}
                     >
                       <FaRegEdit />

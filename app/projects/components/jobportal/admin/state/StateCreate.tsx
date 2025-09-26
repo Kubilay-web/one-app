@@ -93,7 +93,7 @@ export default function StateCreate() {
         <button
           onClick={handleSave}
           className={`flex-1 py-2 px-4 rounded text-white font-semibold ${
-            updatingState ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingState ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           } transition`}
         >
           {updatingState ? "Update" : "Create"}

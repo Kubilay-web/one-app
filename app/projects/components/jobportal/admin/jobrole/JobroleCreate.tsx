@@ -51,7 +51,7 @@ export default function JobroleCreate() {
         <button
           onClick={handleSubmit}
           className={`flex-1 min-w-[100px] rounded-lg px-4 py-2 text-white shadow ${
-            updatingJobrole ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            updatingJobrole ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
           } transition`}
         >
           {updatingJobrole ? "Update" : "Create"}

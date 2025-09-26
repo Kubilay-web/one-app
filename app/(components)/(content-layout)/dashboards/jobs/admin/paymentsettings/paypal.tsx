@@ -197,7 +197,7 @@ export default function Paypal() {
         <div className="mt-6 text-right">
           <button
             type="submit"
-            className="px-6 py-2 bg-green-500 text-white font-medium rounded-md hover:bg-green-600 transition"
+            className="px-6 py-2 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 transition"
           >
             Save Settings
           </button>

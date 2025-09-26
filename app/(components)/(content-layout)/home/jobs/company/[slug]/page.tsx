@@ -91,7 +91,7 @@ export default function CompanyViewPage() {
         </div>
         <button
           onClick={scrollToSection}
-          className="mt-4 md:mt-0 px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition"
+          className="mt-4 md:mt-0 px-6 py-2 bg-blue-600 hover:bg-green-700 text-white rounded-md transition"
         >
           Open Positions
         </button>
@@ -132,7 +132,7 @@ export default function CompanyViewPage() {
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-3">
             <h3 className="text-xl font-bold">{company.name}</h3>
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <MdLocationOn className="text-green-600" /> {company.country?.name}
+              <MdLocationOn className="text-blue-600" /> {company.country?.name}
             </p>
 
             {company.mapLink && (
@@ -145,25 +145,25 @@ export default function CompanyViewPage() {
             )}
 
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <FaIndustry className="text-green-600" /> Industry: {company.industryType?.name}
+              <FaIndustry className="text-blue-600" /> Industry: {company.industryType?.name}
             </p>
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <CgOrganisation className="text-green-600" /> Org Type: {company.organizationType?.name}
+              <CgOrganisation className="text-blue-600" /> Org Type: {company.organizationType?.name}
             </p>
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <FaAddressCard className="text-green-600" /> Established: {moment(company.establishmentDate).format("MMMM D, YYYY")}
+              <FaAddressCard className="text-blue-600" /> Established: {moment(company.establishmentDate).format("MMMM D, YYYY")}
             </p>
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <RiTeamLine className="text-green-600" /> Size: {company.teamType?.name} employees
+              <RiTeamLine className="text-blue-600" /> Size: {company.teamType?.name} employees
             </p>
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <FaAddressCard className="text-green-600" /> Address: {company.address}, {company.state?.statename}
+              <FaAddressCard className="text-blue-600" /> Address: {company.address}, {company.state?.statename}
             </p>
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <FaPhone className="text-green-600" /> Phone: {company.phone}
+              <FaPhone className="text-blue-600" /> Phone: {company.phone}
             </p>
             <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-              <MdEmail className="text-green-600" /> Email: {company.email}
+              <MdEmail className="text-blue-600" /> Email: {company.email}
             </p>
           </div>
         </div>

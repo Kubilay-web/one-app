@@ -16,19 +16,19 @@ export default function TopNav() {
         <div className="flex justify-between h-16 items-center nav-job">
           {/* Left Links */}
           <div className="flex space-x-4">
-            <Link href="/" className="text-gray-700 hover:text-green-500 font-medium">
+            <Link href="/" className="text-gray-700 hover:text-blue-500 font-medium">
               Home
             </Link>
-            <Link href="/job-portal/companies" className="text-gray-700 hover:text-green-500 font-medium">
+            <Link href="/job-portal/companies" className="text-gray-700 hover:text-blue-500 font-medium">
               Companies
             </Link>
-            <Link href="/job-portal/candidates" className="text-gray-700 hover:text-green-500 font-medium">
+            <Link href="/job-portal/candidates" className="text-gray-700 hover:text-blue-500 font-medium">
               Candidates
             </Link>
-            <Link href="/job-portal/jobs" className="text-gray-700 hover:text-green-500 font-medium">
+            <Link href="/job-portal/jobs" className="text-gray-700 hover:text-blue-500 font-medium">
               Search Jobs
             </Link>
-            <Link href="/job-portal/pricing" className="text-gray-700 hover:text-green-500 font-medium">
+            <Link href="/job-portal/pricing" className="text-gray-700 hover:text-blue-500 font-medium">
               Pricing
             </Link>
           </div>
@@ -40,7 +40,7 @@ export default function TopNav() {
                 {user.rolejob === "CANDIDATE" && (
                   <Link
                     href={`/dashboard/job/candidate`}
-                    className="text-gray-700 hover:text-green-500 font-medium"
+                    className="text-gray-700 hover:text-blue-500 font-medium"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -48,7 +48,7 @@ export default function TopNav() {
                 {user.rolejob === "ADMIN" && (
                   <Link
                     href={`/dashboards/jobs/admin`}
-                    className="text-gray-700 hover:text-green-500 font-medium"
+                    className="text-gray-700 hover:text-blue-500 font-medium"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -56,7 +56,7 @@ export default function TopNav() {
                 {user.rolejob === "COMPANY" && (
                   <Link
                     href={`/dashboard/job/company`}
-                    className="text-gray-700 hover:text-green-500 font-medium"
+                    className="text-gray-700 hover:text-blue-500 font-medium"
                   >
                     {user.username} ({user.rolejob})
                   </Link>
@@ -74,10 +74,10 @@ export default function TopNav() {
               </>
             ) : (
               <>
-                <Link href="/login" className="text-gray-700 hover:text-green-500 font-medium">
+                <Link href="/login" className="text-gray-700 hover:text-blue-500 font-medium">
                   Login
                 </Link>
-                <Link href="/register" className="text-gray-700 hover:text-green-500 font-medium">
+                <Link href="/register" className="text-gray-700 hover:text-blue-500 font-medium">
                   Register
                 </Link>
               </>
