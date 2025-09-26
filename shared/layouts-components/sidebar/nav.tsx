@@ -559,7 +559,13 @@ export const getMenuItems = (user) => [
         title: "News",
       },
 
-      {
+
+           {
+        title: "Business",
+        type: "sub",
+        active: false,
+        children: [
+                {
         title: "Real Estate",
         type: "sub",
         active: false,
@@ -616,7 +622,7 @@ export const getMenuItems = (user) => [
         ],
       },
 
-      {
+         {
         title: "CRM",
         type: "sub",
         active: false,
@@ -652,7 +658,8 @@ export const getMenuItems = (user) => [
         ],
       },
 
-      {
+
+       {
         title: "Projects",
         type: "sub",
         active: false,
@@ -681,6 +688,8 @@ export const getMenuItems = (user) => [
         ],
       },
 
+
+      
       {
         path: "/pages/todolist",
         type: "link",
@@ -765,7 +774,17 @@ export const getMenuItems = (user) => [
         ],
       },
 
+        ],
+      },
+
+
+
       {
+        title: "Finance",
+        type: "sub",
+        active: false,
+        children: [
+             {
         title: "Crypto",
         type: "sub",
         active: false,
@@ -850,6 +869,11 @@ export const getMenuItems = (user) => [
           },
         ],
       },
+        ],
+      },
+
+     
+
 
       // {
       //   path: "/dashboards/sales",
