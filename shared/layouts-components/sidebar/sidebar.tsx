@@ -704,13 +704,13 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
   const localStorageDefined: any = typeof localStorage !== "undefined";
   return (
     <Fragment>
-      {/* <div
+      <div
         id="responsive-overlay"
         ref={overlayRef}
         onClick={() => {
           menuClose();
         }}
-      ></div> */}
+      ></div>
       <aside
         ref={sidebarRef}
         className={`app-sidebar ${isSticky ? "sticky-pin" : ""}`}
@@ -782,8 +782,8 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
               </svg>
             </div>
 
-            <SidebarNew/> 
-            {/* <ul
+            {/* <SidebarNew/>  */}
+             <ul
               className="main-menu"
               ref={menuNavRef}
               onClick={() => Sideclick()}
@@ -885,7 +885,7 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
                   </li>
                 </Fragment>
               ))}
-            </ul> */}
+            </ul> 
             <div
               className="slide-right"
               id="slide-right"
