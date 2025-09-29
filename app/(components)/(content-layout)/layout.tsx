@@ -2,6 +2,7 @@
 import Footer from '@/shared/layouts-components/footer/footer';
 import Header from '@/shared/layouts-components/header/header';
 import Sidebar from '@/shared/layouts-components/sidebar/sidebar';
+import SidebarNew from '@/shared/layouts-components/sidebarnew/layouts/sidebar/page';
 import Switcher from '@/shared/layouts-components/switcher/switcher';
 import React, { Fragment, useEffect, useState } from 'react'
 import { connect } from "react-redux"
@@ -22,9 +23,9 @@ const Layout = ({ children, }: any) => {
                 <Loader />
                 <div className='page'>
                     <Header />
-                     <Sidebar /> 
-
+                      <Sidebar />  
                     <div className='content main-index'>
+                  
                         <div className='main-content'>
                             {children}
                         </div>

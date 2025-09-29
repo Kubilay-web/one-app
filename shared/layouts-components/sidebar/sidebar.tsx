@@ -11,6 +11,7 @@ import SpkOverlay from "@/shared/@spk-reusable-components/uielements/spk-overlay
 import Image from "next/image";
 import nextConfig from "@/next.config";
 import { useSession } from "@/app/SessionProvider";
+import SidebarNew from "@/shared/layouts-components/sidebarnew/layouts/sidebar/page"
 
 const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
   let { basePath } = nextConfig;
@@ -703,13 +704,13 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
   const localStorageDefined: any = typeof localStorage !== "undefined";
   return (
     <Fragment>
-      <div
+      {/* <div
         id="responsive-overlay"
         ref={overlayRef}
         onClick={() => {
           menuClose();
         }}
-      ></div>
+      ></div> */}
       <aside
         ref={sidebarRef}
         className={`app-sidebar ${isSticky ? "sticky-pin" : ""}`}
@@ -780,7 +781,9 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
                 <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
               </svg>
             </div>
-            <ul
+
+            <SidebarNew/> 
+            {/* <ul
               className="main-menu"
               ref={menuNavRef}
               onClick={() => Sideclick()}
@@ -882,7 +885,7 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
                   </li>
                 </Fragment>
               ))}
-            </ul>
+            </ul> */}
             <div
               className="slide-right"
               id="slide-right"
@@ -899,6 +902,8 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
               </svg>
             </div>
           </nav>
+
+
         </SimpleBar>
       </aside>
     </Fragment>

@@ -236,8 +236,7 @@ export const getMenuItems = (user) => [
     type: "sub",
     active: false,
     children: [
-
-          {
+      {
         title: "Facebook",
         icon: Dashboardicon,
         type: "sub",
@@ -266,9 +265,7 @@ export const getMenuItems = (user) => [
           },
         ],
       },
-     
 
-      
       //
 
       {
@@ -559,7 +556,7 @@ export const getMenuItems = (user) => [
         title: "News",
       },
 
-                 {
+      {
         title: "Real Estate",
         type: "sub",
         active: false,
@@ -616,266 +613,254 @@ export const getMenuItems = (user) => [
         ],
       },
 
-
-           {
+      {
         title: "Business",
         type: "sub",
         active: false,
         children: [
-     
+          {
+            title: "CRM",
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/home/crm/contacts",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Contacts",
+              },
+              {
+                path: "/home/crm/companies",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Companies",
+              },
+              {
+                path: "/home/crm/deals",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Deals",
+              },
+              {
+                path: "/home/crm/leads",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Leads",
+              },
+            ],
+          },
 
-         {
-        title: "CRM",
-        type: "sub",
-        active: false,
-        children: [
           {
-            path: "/home/crm/contacts",
-            type: "link",
+            title: "Projects",
+            type: "sub",
             active: false,
-            selected: false,
-            title: "Contacts",
+            children: [
+              {
+                path: "/home/projects/projects-list",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Projects List",
+              },
+              {
+                path: "/home/projects/project-overview",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Project Overview",
+              },
+              {
+                path: "/home/projects/create-project",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Create Project",
+              },
+            ],
           },
+
           {
-            path: "/home/crm/companies",
+            path: "/pages/todolist",
             type: "link",
             active: false,
             selected: false,
-            title: "Companies",
+            title: "To Do List",
           },
+
           {
-            path: "/home/crm/deals",
+            path: "/home/full-calendar",
             type: "link",
             active: false,
             selected: false,
-            title: "Deals",
+            title: "Calendar",
           },
+
           {
-            path: "/home/crm/leads",
+            title: "Invoice",
+            type: "sub",
+            menusub: true,
+            active: false,
+            selected: false,
+            children: [
+              {
+                path: "/pages/invoice/create-invoice",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Create Invoice",
+              },
+              {
+                path: "/pages/invoice/invoice-details",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Invoice Details",
+              },
+              {
+                path: "/pages/invoice/invoice-list",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Invoice List",
+              },
+            ],
+          },
+
+          {
+            path: "/pages/file-manager",
             type: "link",
             active: false,
             selected: false,
-            title: "Leads",
+            title: "File Manager",
+          },
+
+          {
+            title: "Task",
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/home/task/kanban-board",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Kanban Board",
+              },
+              {
+                path: "/home/task/list-view",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "List View",
+              },
+              {
+                path: "/home/task/task-details",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Task Details",
+              },
+            ],
           },
         ],
       },
-
-
-       {
-        title: "Projects",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/projects/projects-list",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Projects List",
-          },
-          {
-            path: "/home/projects/project-overview",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Project Overview",
-          },
-          {
-            path: "/home/projects/create-project",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Create Project",
-          },
-        ],
-      },
-
-
-      
-      {
-        path: "/pages/todolist",
-        type: "link",
-        active: false,
-        selected: false,
-        title: "To Do List",
-      },
-
-      {
-        path: "/home/full-calendar",
-        type: "link",
-        active: false,
-        selected: false,
-        title: "Calendar",
-      },
-
-      {
-        title: "Invoice",
-        type: "sub",
-        menusub: true,
-        active: false,
-        selected: false,
-        children: [
-          {
-            path: "/pages/invoice/create-invoice",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Create Invoice",
-          },
-          {
-            path: "/pages/invoice/invoice-details",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Invoice Details",
-          },
-          {
-            path: "/pages/invoice/invoice-list",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Invoice List",
-          },
-        ],
-      },
-
-      {
-        path: "/pages/file-manager",
-        type: "link",
-        active: false,
-        selected: false,
-        title: "File Manager",
-      },
-
-      {
-        title: "Task",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/task/kanban-board",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Kanban Board",
-          },
-          {
-            path: "/home/task/list-view",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "List View",
-          },
-          {
-            path: "/home/task/task-details",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Task Details",
-          },
-        ],
-      },
-
-        ],
-      },
-
-
 
       {
         title: "Finance",
         type: "sub",
         active: false,
         children: [
-             {
-        title: "Crypto",
-        type: "sub",
-        active: false,
-        children: [
           {
-            path: "/home/crypto/transactions",
-            type: "link",
+            title: "Crypto",
+            type: "sub",
             active: false,
-            selected: false,
-            title: "Transactions",
+            children: [
+              {
+                path: "/home/crypto/transactions",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Transactions",
+              },
+              {
+                path: "/home/crypto/currency-exchange",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Currency Exchange",
+              },
+              {
+                path: "/home/crypto/buy-sell",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Buy & Sell",
+              },
+              {
+                path: "/home/crypto/marketcap",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Marketcap",
+              },
+              {
+                path: "/home/crypto/wallet",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Wallet",
+              },
+            ],
           },
+
           {
-            path: "/home/crypto/currency-exchange",
-            type: "link",
+            title: "NFT",
+            type: "sub",
             active: false,
-            selected: false,
-            title: "Currency Exchange",
-          },
-          {
-            path: "/home/crypto/buy-sell",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Buy & Sell",
-          },
-          {
-            path: "/home/crypto/marketcap",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Marketcap",
-          },
-          {
-            path: "/home/crypto/wallet",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Wallet",
+            children: [
+              {
+                path: "/home/nft/market-place",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Market Place",
+              },
+              {
+                path: "/home/nft/nft-details",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "NFT Details",
+              },
+              {
+                path: "/home/nft/create-nft",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Create NFT",
+              },
+              {
+                path: "/home/nft/wallet-integration",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Wallet Integration",
+              },
+              {
+                path: "/home/nft/live-auction",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Live Auction",
+              },
+            ],
           },
         ],
       },
-
-      {
-        title: "NFT",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/nft/market-place",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Market Place",
-          },
-          {
-            path: "/home/nft/nft-details",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "NFT Details",
-          },
-          {
-            path: "/home/nft/create-nft",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Create NFT",
-          },
-          {
-            path: "/home/nft/wallet-integration",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Wallet Integration",
-          },
-          {
-            path: "/home/nft/live-auction",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Live Auction",
-          },
-        ],
-      },
-        ],
-      },
-
-     
-
 
       // {
       //   path: "/dashboards/sales",
@@ -3492,11 +3477,11 @@ export const getMenuItems = (user) => [
   },
 
   {
-      path: "/pages/reviews",
-      type: "link",
-      active: false,
-      selected: false,
-      title: "Reviews",
+    path: "/pages/reviews",
+    type: "link",
+    active: false,
+    selected: false,
+    title: "Reviews",
   },
   {
     path: "/pages/terms-conditions",
