@@ -1,13 +1,13 @@
 const ROUTES = {
-  HOME: "/forum",
-  SIGN_IN: "/sign-in",
-  SIGN_UP: "/sign-up",
-  ASK_QUESTION: "/forum/ask-question",
-  PROFILE: (id: string) => `/forum/profile/${id}`,
+  HOME: "/home/forum",
+  SIGN_IN: "/",
+  SIGN_UP: "/authentication/sign-up/cover",
+  ASK_QUESTION: "/home/forum/ask-question",
+  PROFILE: (id: string) => `/home/forum/profile/${id}`,
   QUESTION: (id: string) => `/home/forum/questions/${id}`,
-  COMMUNITY: "/forum/community",
-  COLLECTION: "/forum/collection",
-  TAG: (id: string) => `/forum/tags/${id}`,
-  TAGS: "/forum/tags",
+  COMMUNITY: "/home/forum/community",
+  COLLECTION: "/home/forum/collection",
+  TAG: (id: string) => `/home/forum/tags/${id}`,
+  TAGS: "/home/forum/tags",
 };
 export default ROUTES;
