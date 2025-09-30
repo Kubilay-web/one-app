@@ -13,6 +13,7 @@ import router from "next/router";
 import { useSession } from "@/app/SessionProvider";
 import { Menu } from "@/app/(components)/(content-layout)/home/facebook/svg";
 import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
+import Flag from "react-world-flags";
 import "./style.css"
 
 const Header = ({ local_varaiable, ThemeChanger }: any) => {
@@ -758,168 +759,104 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </svg>
                 </button>
 
-                <ul className="main-header-dropdown ti-dropdown-menu hs-dropdown-menu hidden">
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/us_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      English
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/spain_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      español
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/french_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      français
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/uae_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      عربي
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/germany_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      Deutsch
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/china_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      中国人
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/italy_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      Italiano
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4"
-                      href="#!"
-                    >
-                      <span className="avatar avatar-rounded avatar-xs leading-none me-2 custom-img">
-                        <Image
-                          fill
-                          src={`${
-                            process.env.NODE_ENV === "production"
-                              ? basePath
-                              : ""
-                          }/assets/images/flags/russia_flag.jpg`}
-                          alt="img"
-                        />
-                      </span>
-                      Русский
-                    </Link>
-                  </li>
-                </ul>
+                 <ul className="main-header-dropdown ti-dropdown-menu hs-dropdown-menu hidden">
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="US" style={{ width: "20px", height: "20px" }} />
+          </span>
+          English
+        </Link>
+      </li>
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="ES" style={{ width: "20px", height: "20px" }} />
+          </span>
+          español
+        </Link>
+      </li>
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="FR" style={{ width: "20px", height: "20px" }} />
+          </span>
+          français
+        </Link>
+      </li>
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="AE" style={{ width: "20px", height: "20px" }} />
+          </span>
+          عربي
+        </Link>
+      </li>
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="DE" style={{ width: "20px", height: "20px" }} />
+          </span>
+          Deutsch
+        </Link>
+      </li>
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="CN" style={{ width: "20px", height: "20px" }} />
+          </span>
+          中文
+        </Link>
+      </li>
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="IT" style={{ width: "20px", height: "20px" }} />
+          </span>
+          Italiano
+        </Link>
+      </li>
+      <li>
+        <Link
+          scroll={false}
+          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4"
+          href="#!"
+        >
+          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+            <Flag code="RU" style={{ width: "20px", height: "20px" }} />
+          </span>
+          Русский
+        </Link>
+      </li>
+    </ul>
               </div>
               {/* <!-- end header country --> */}
 

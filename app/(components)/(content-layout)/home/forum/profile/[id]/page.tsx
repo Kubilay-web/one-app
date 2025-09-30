@@ -17,6 +17,7 @@ import QuestionCard from "@/app/projects/components/stackoverflow/cards/Question
 import AnswerCard from "@/app/projects/components/stackoverflow/cards/AnswerCard";
 import DataRenderer from "@/app/projects/components/stackoverflow/DataRenderer";
 import { EMPTY_ANSWERS } from "@/app/constants/states";
+import "../../../style.css"
 
 const getUserQuestions = async (
   userId: string,
@@ -88,7 +89,7 @@ const Profile = async ({ params }: RouteParams) => {
   return (
     <>
       {/* -------- Profil üst bölümü -------- */}
-      <section className="flex flex-col-reverse items-start justify-between sm:flex-row">
+      <section className="flex flex-col-reverse general-forum-container items-start justify-between sm:flex-row">
         <div className="flex flex-col items-start gap-4 lg:flex-row">
           <UserAvatar
             id={userId}
