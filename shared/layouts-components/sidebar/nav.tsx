@@ -237,7 +237,7 @@ export const getMenuItems = (user) => [
     active: false,
     children: [
       {
-        title: "Facebook",
+        title: "Social",
         icon: Dashboardicon,
         type: "sub",
         active: false,
@@ -269,7 +269,7 @@ export const getMenuItems = (user) => [
       //
 
       {
-        title: "Social",
+        title: "Social2",
         icon: Dashboardicon,
         type: "sub",
         active: false,
