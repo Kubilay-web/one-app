@@ -19,16 +19,16 @@ export default function TopNav() {
             <Link href="/" className="text-gray-700 hover:text-blue-500 font-medium">
               Home
             </Link>
-            <Link href="/job-portal/companies" className="text-gray-700 hover:text-blue-500 font-medium">
+            <Link href="/home/jobs/search-company" className="text-gray-700 hover:text-blue-500 font-medium">
               Companies
             </Link>
-            <Link href="/job-portal/candidates" className="text-gray-700 hover:text-blue-500 font-medium">
+            <Link href="/home/jobs/candidates" className="text-gray-700 hover:text-blue-500 font-medium">
               Candidates
             </Link>
-            <Link href="/job-portal/jobs" className="text-gray-700 hover:text-blue-500 font-medium">
+            <Link href="/home/jobs/jobs-list" className="text-gray-700 hover:text-blue-500 font-medium">
               Search Jobs
             </Link>
-            <Link href="/job-portal/pricing" className="text-gray-700 hover:text-blue-500 font-medium">
+            <Link href="/home/jobs/pricing" className="text-gray-700 hover:text-blue-500 font-medium">
               Pricing
             </Link>
           </div>

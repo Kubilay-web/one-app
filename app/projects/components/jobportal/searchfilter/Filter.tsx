@@ -14,7 +14,7 @@ export default function Filter({ searchParams }) {
   const activeButton = "btn  btn-raised mx-1 rounded-pill";
   const button = "btn btn-raised mx-1 rounded-pill";
   console.log("searchParams", searchParams);
-  const pathname = "/job-portal/jobs";
+  const pathname = "/home/jobs/jobs-list";
   const {
     jobcatid,
     minSalary,

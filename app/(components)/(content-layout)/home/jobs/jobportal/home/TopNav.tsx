@@ -26,16 +26,16 @@ export default function TopNav() {
             <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Home
             </Link>
-            <Link href="/job-portal/companies" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/home/jobs/search-company" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Companies
             </Link>
-            <Link href="/job-portal/candidates" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/home/jobs/candidates" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Candidates
             </Link>
-            <Link href="/job-portal/jobs" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/home/jobs/jobs-list" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Search Jobs
             </Link>
-            <Link href="/job-portal/pricing" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/home/jobs/pricing" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               Pricing
             </Link>
 
@@ -106,16 +106,16 @@ export default function TopNav() {
             <Link href="/" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Home
             </Link>
-            <Link href="/job-portal/companies" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/home/jobs/search-company" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Companies
             </Link>
-            <Link href="/job-portal/candidates" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/home/jobs/candidates" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Candidates
             </Link>
-            <Link href="/job-portal/jobs" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/home/jobs/jobs-list" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Search Jobs
             </Link>
-            <Link href="/job-portal/pricing" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
+            <Link href="/home/jobs/pricing" className="block text-gray-700 hover:text-blue-600 font-medium py-2 px-3 rounded-md">
               Pricing
             </Link>
 

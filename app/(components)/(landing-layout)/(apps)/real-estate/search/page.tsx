@@ -72,7 +72,7 @@ const Search = () => {
                                             and rent your properties without any agent or commissions.</p>
                                     </div>
                                     <div className="">
-                                        <div className="input-group inline-flex gap-0 group-search xl:flex">
+                                        <div className="input-group inline-flex group-search xl:flex gap-4 mb-5">
                                             <div className="category-dropdown-wrapper ti-dropdown hs-dropdown">
                                                 <Link scroll={false} href="#!"
                                                     className="ti-btn ti-btn-lg btn-wave ti-btn-white !py-2 !bg-white dark:!bg-bodybg shadow-none leading-[2.43rem] rtl:!rounded-tr-md rtl:!rounded-br-md rtl:!rounded-tl-none rtl:!rounded-bl-none !rounded-tr-none !rounded-br-none categorydropdown !border-0 !m-0">
@@ -104,13 +104,13 @@ const Search = () => {
                                             </div>
                                             <div className="custom-form-group flex-grow">
                                                 <input type="text"
-                                                    className="form-control  shadow-none !rounded-none !border-0 border-e !border-s"
+                                                    className="form-control rounded-md  shadow-none !border-0 border-e !border-s"
                                                     placeholder="Enter Your Keyword Here.."
                                                     aria-label="Recipient's username" />
                                             </div>
                                             <div className="custom-form-group flex-grow">
                                                 <input type="text"
-                                                    className="form-control  !rounded-none shadow-none border-0 !border-e !border-s"
+                                                    className="form-control rounded-md shadow-none border-0 !border-e !border-s"
                                                     id="input-placeholder" placeholder="Search by Location..." />
                                                 <div className="custom-form-btn border-0">
                                                     <Link scroll={false} href="#!" className="gps-location"><i

@@ -38,54 +38,54 @@ const Sidebar = ({ user }) => {
       <ul className="flex flex-col gap-y-1 px-3 font-medium">
         {role === "ADMIN" ? (
           <>
-            <SidebarItem
-              href="/dashboard/newsportal/admin"
+            {/* <SidebarItem
+              href="/dashboards/newsportal/admin"
               icon={<MdDashboard />}
               label="Dashboard"
-              active={pathname === "/dashboard/newsportal/admin"}
-            />
+              active={pathname === "/dashboards/newsportal/admin"}
+            /> */}
             <SidebarItem
-              href="/dashboard/newsportal/addwriter"
+              href="/dashboards/newsportal/addwriter"
               icon={<MdDashboard />}
               label="Add Writer"
-              active={pathname === "/dashboard/newsportal/addwriter"}
+              active={pathname === "/dashboards/newsportal/addwriter"}
             />
             <SidebarItem
-              href="/dashboard/newsportal/writers"
+              href="/dashboards/newsportal/writers"
               icon={<PiUsersFill />}
               label="Writers"
-              active={pathname === "/dashboard/newsportal/writers"}
+              active={pathname === "/dashboards/newsportal/writers"}
             />
           </>
         ) : (
           <>
             <SidebarItem
-              href="/dashboard/newsportal/writer"
+              href="/dashboards/newsportal/writer"
               icon={<MdDashboard />}
               label="Dashboard"
-              active={pathname === "/dashboard/newsportal/writer"}
+              active={pathname === "/dashboards/newsportal/writer"}
             />
             <SidebarItem
-              href="/dashboard/newsportal/createnews"
+              href="/dashboards/newsportal/createnews"
               icon={<IoMdAdd />}
               label="Add News"
-              active={pathname === "/dashboard/newsportal/createnews"}
+              active={pathname === "/dashboards/newsportal/createnews"}
             />
           </>
         )}
 
         <SidebarItem
-          href="/dashboard/newsportal/news"
+          href="/dashboards/newsportal/news"
           icon={<BiNews />}
           label="News"
-          active={pathname === "/dashboard/newsportal/news"}
+          active={pathname === "/dashboards/newsportal/news"}
         />
 
         <SidebarItem
-          href="/dashboard/newsportal/profile"
+          href="/dashboards/newsportal/profile"
           icon={<FaHouseUser />}
           label="Profile"
-          active={pathname === "/dashboard/newsportal/profile"}
+          active={pathname === "/dashboards/newsportal/profile"}
         />
         {/* 
         <SidebarItem>

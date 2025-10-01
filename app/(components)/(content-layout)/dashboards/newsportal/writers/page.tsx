@@ -52,7 +52,7 @@ export default function Writers() {
       <div className="flex items-center justify-between border-b border-gray-400 px-6 py-4">
         <h2 className="text-2xl font-semibold text-gray-800">Writers</h2>
         <Link
-          href="/dashboard/writer/add"
+          href="/dashboards/newsportal/writer/add"
           className="rounded-md bg-blue-500 px-4 py-2 text-white transition duration-300 hover:bg-blue-800"
         >
           Add Writer

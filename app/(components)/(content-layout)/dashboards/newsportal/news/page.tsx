@@ -14,7 +14,7 @@ const News = async () => {
         {user?.role !== "ADMIN" && (
           <Link
             className="rounded-lg bg-blue-500 px-4 py-[8px] text-white hover:bg-blue-800"
-            href="/dashboard/news/create"
+            href="/dashboards/newsportal/news/createnews"
           >
             Create News
           </Link>

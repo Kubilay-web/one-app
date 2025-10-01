@@ -29,13 +29,13 @@ export default function TopNav() {
           Home
         </Link>
         <div className="d-flex align-items-center">
-          <Link className="nav-link" href="/job-portal/companies">
+          <Link className="nav-link" href="/home/jobs/search-company">
             Companies
           </Link>
-          <Link className="nav-link" href="/job-portal/candidates">
+          <Link className="nav-link" href="/home/jobs/candidates">
             Candidates
           </Link>
-          <Link className="nav-link" href="/job-portal/jobs">
+          <Link className="nav-link" href="/home/jobs/jobs-list">
             Search jobs
           </Link>
           <Link className="nav-link" href="/pricing">

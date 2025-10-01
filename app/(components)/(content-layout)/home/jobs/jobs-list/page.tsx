@@ -98,7 +98,7 @@ const JobsList = () => {
                         </td>
                         <td>
                           <Link
-                            href={`/apps/jobs/job-details/${job.slug}`}
+                            href={`/home/jobs/job-details/${job.slug}`}
                             className="ti-btn ti-btn-soft-primary ti-btn-sm"
                           >
                             View

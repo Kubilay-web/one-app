@@ -113,7 +113,7 @@ const EditNews = () => {
         <h2 className="text-2xl font-bold text-gray-700">Edit News</h2>
         <Link
           className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-800"
-          href="/dashboard/newsportal/news"
+          href="/dashboards/newsportal/news"
         >
           View All
         </Link>

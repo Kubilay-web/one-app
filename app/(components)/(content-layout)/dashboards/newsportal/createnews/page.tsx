@@ -128,7 +128,7 @@ const CreateNews = () => {
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-700">Add News</h2>
         <Link
-          href="/dashboard/news"
+          href="/dashboards/newsportal/news"
           className="rounded bg-blue-500 px-4 py-2 text-white transition duration-300 hover:bg-blue-800"
         >
           View All

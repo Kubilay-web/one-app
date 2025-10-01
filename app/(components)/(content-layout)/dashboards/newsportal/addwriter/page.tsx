@@ -34,7 +34,7 @@ const AddWriter = () => {
       );
       setLoader(false);
       toast.success(data.message);
-      router.push("/dashboard/newsportal/writers");
+      router.push("/dashboards/newsportal/writers");
     } catch (error: any) {
       setLoader(false);
       toast.error(error?.response?.data?.message || "Something went wrong");
@@ -47,7 +47,7 @@ const AddWriter = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 gap-2 sm:gap-0 border-b border-gray-200">
         <h2 className="text-xl font-semibold text-gray-700">Add Writers</h2>
         <Link
-          href="/dashboard/writers"
+          href="/dashboards/newsportal/writers"
           className="rounded-md bg-blue-500 px-4 py-2 text-white text-center hover:bg-blue-800 transition"
         >
           Writers

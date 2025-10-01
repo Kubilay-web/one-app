@@ -1970,3 +1970,4 @@ model UserSearch {
 
   @@unique([userId, searchedUserId])  // Aynı kullanıcı için aynı aranan kullanıcı duplicasyonu engeller
 }
+

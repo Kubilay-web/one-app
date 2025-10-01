@@ -49,7 +49,7 @@ const EditWriter = () => {
     try {
       await axios.put(`/api/writer/${id}`, state);
       setLoader(false);
-      router.push("/dashboard/newsportal/writers");
+      router.push("/dashboards/newsportal/writers");
     } catch {
       setLoader(false);
       alert("Failed to update writer");
@@ -61,7 +61,7 @@ const EditWriter = () => {
       <div className="flex justify-between p-4">
         <h2 className="text-xl font-semibold">Edit Writer</h2>
         <Link
-          href="/dashboard/newsportal/writers"
+          href="/dashboards/newsportal/writers"
           className="rounded-md bg-blue-500 px-3 py-[6px] text-white hover:bg-blue-800"
         >
           Writers

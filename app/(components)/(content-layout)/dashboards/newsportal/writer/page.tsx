@@ -31,7 +31,7 @@ const Writerindex = () => {
         <div className="flex items-center justify-between border-b border-gray-500 pb-4">
           <h2 className="text-xl font-bold text-gray-600">Recent News</h2>
           <Link
-            href="/news"
+            href="/dashboards/newsportal/news"
             className="font-semibold text-blue-500 transition duration-300 hover:text-blue-800"
           >
             View All

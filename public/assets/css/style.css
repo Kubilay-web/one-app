@@ -10074,6 +10074,19 @@ a.fg-emoji-picker-close-button {
 [data-menu-styles=light] .app-sidebar .side-menu__label {
   @apply text-menuprimecolor !important;
 }
+
+
+.app-sidebar .side-menu__label {
+    position: relative;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-size: 0.95rem !important;
+    line-height: 1;
+    font-weight:500 !important;
+    --tw-text-opacity: 1;
+    color: rgb(163 174 209 / var(--tw-text-opacity, 1));
+}
+
 [data-menu-styles=light] .app-sidebar .side-menu__icon {
   @apply text-primary fill-primary !important;
 }
@@ -10743,6 +10756,17 @@ a.fg-emoji-picker-close-button {
   @apply text-[0.8rem];
   @apply my-0;
 }
+
+.app-sidebar .slide-menu.child1 .side-menu__item, .app-sidebar .slide-menu.child2 .side-menu__item, .app-sidebar .slide-menu.child3 .side-menu__item {
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+
+
+
 .app-sidebar .slide-menu.child1 .side-menu__item:before, .app-sidebar .slide-menu.child2 .side-menu__item:before, .app-sidebar .slide-menu.child3 .side-menu__item:before {
   @apply absolute content-[""] font-remix text-[12px] -start-[4px] opacity-[0.8];
 }

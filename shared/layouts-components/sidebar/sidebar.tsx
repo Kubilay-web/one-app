@@ -13,6 +13,7 @@ import nextConfig from "@/next.config";
 import { useSession } from "@/app/SessionProvider";
 import SidebarNew from "@/shared/layouts-components/sidebarnew/layouts/sidebar/page"
 
+
 const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
   let { basePath } = nextConfig;
   const { user } = useSession();

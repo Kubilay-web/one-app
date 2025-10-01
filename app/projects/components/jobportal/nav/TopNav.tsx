@@ -11,9 +11,9 @@ export default function TopNav() {
 
   const navItems = [
     { name: "Home", href: "/" },
-    { name: "Companies", href: "/job-portal/companies" },
-    { name: "Candidates", href: "/job-portal/candidates" },
-    { name: "Search Jobs", href: "/job-portal/jobs" },
+    { name: "Companies", href: "/home/jobs/search-company" },
+    { name: "Candidates", href: "/home/jobs/candidates" },
+    { name: "Search Jobs", href: "/home/jobs/jobs-list" },
     { name: "Pricing", href: "/pricing" },
   ];
 
