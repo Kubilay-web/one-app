@@ -52,7 +52,7 @@ export default function Home() {
           onPostCreated={handleAddNewPost}
         />
       )}
-      {/* <Header /> */}
+       <Header /> 
       <div className="middle-container">
         <div className="home_middle">
           <div>

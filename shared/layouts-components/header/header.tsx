@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState, useCallback } from "react";
 import { ThemeChanger } from "@/shared/redux/action";
 import store from "@/shared/redux/store";
 import { connect } from "react-redux";
@@ -9,329 +9,33 @@ import Image from "next/image";
 import nextConfig from "@/next.config";
 import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useQueryClient } from "@tanstack/react-query";
-import router from "next/router";
 import { useSession } from "@/app/SessionProvider";
 import { Menu } from "@/app/(components)/(content-layout)/home/facebook/svg";
 import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
 import Flag from "react-world-flags";
 import "./style.css"
 
+// Arama sonucu tipi
+interface SearchUser {
+  id: string;
+  username: string;
+  email: string;
+  avatarUrl: string;
+}
+
 const Header = ({ local_varaiable, ThemeChanger }: any) => {
   const { user } = useSession();
-  const queryClient = useQueryClient(); // React Query Client
+  const queryClient = useQueryClient();
   let { basePath } = nextConfig;
-  ///****fullscreeen */
+  
+  // State'ler
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      document.documentElement.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  };
-
   const [showAllMenu, setShowAllMenu] = useState(false);
-  const allmenu = useRef(null);
-
-  useEffect(() => {
-    const fullscreenChangeHandler = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener("fullscreenchange", fullscreenChangeHandler);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", fullscreenChangeHandler);
-    };
-  }, []);
-  //Toggle-Function
-  const overlayRef: any = useRef(null);
-
-  function toggleSidebar() {
-    const theme = store.getState().reducer;
-    let sidemenuType = theme.dataNavLayout;
-    if (window.innerWidth >= 992) {
-      if (sidemenuType === "vertical") {
-        let verticalStyle = theme.dataVerticalStyle;
-        const navStyle = theme.dataNavStyle;
-        switch (verticalStyle) {
-          // closed
-          case "closed":
-            ThemeChanger({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "close-menu-close") {
-              ThemeChanger({ ...theme, toggled: "" });
-            } else {
-              ThemeChanger({ ...theme, toggled: "close-menu-close" });
-            }
-            break;
-          // icon-overlay
-          case "overlay":
-            ThemeChanger({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "icon-overlay-close") {
-              ThemeChanger({ ...theme, toggled: "", iconOverlay: "" });
-            } else {
-              if (window.innerWidth >= 992) {
-                ThemeChanger({
-                  ...theme,
-                  toggled: "icon-overlay-close",
-                  iconOverlay: "",
-                });
-              }
-            }
-            break;
-          // icon-text
-          case "icontext":
-            ThemeChanger({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "icon-text-close") {
-              ThemeChanger({ ...theme, toggled: "" });
-            } else {
-              ThemeChanger({ ...theme, toggled: "icon-text-close" });
-            }
-            break;
-          // doublemenu
-          case "doublemenu":
-            ThemeChanger({ ...theme, dataNavStyle: "" });
-            ThemeChanger({ ...theme, dataNavStyle: "" });
-            if (theme.toggled === "double-menu-open") {
-              ThemeChanger({ ...theme, toggled: "double-menu-close" });
-            } else {
-              let sidemenu = slidesArrow(".side-menu__item.active");
-              if (sidemenu) {
-                ThemeChanger({ ...theme, toggled: "double-menu-open" });
-                if (sidemenu.nextElementSibling) {
-                  sidemenu.nextElementSibling.classList.add(
-                    "double-menu-active"
-                  );
-                } else {
-                  ThemeChanger({ ...theme, toggled: "double-menu-close" });
-                }
-              }
-            }
-            break;
-          // detached
-          case "detached":
-            if (theme.toggled === "detached-close") {
-              ThemeChanger({ ...theme, toggled: "", iconOverlay: "" });
-            } else {
-              ThemeChanger({
-                ...theme,
-                toggled: "detached-close",
-                iconOverlay: "",
-              });
-            }
-
-            break;
-
-          // default
-          case "default":
-            ThemeChanger({ ...theme, toggled: "" });
-        }
-        switch (navStyle) {
-          case "menu-click":
-            if (theme.toggled === "menu-click-closed") {
-              ThemeChanger({ ...theme, toggled: "" });
-            } else {
-              ThemeChanger({ ...theme, toggled: "menu-click-closed" });
-            }
-            break;
-          // icon-overlay
-          case "menu-hover":
-            if (theme.toggled === "menu-hover-closed") {
-              ThemeChanger({ ...theme, toggled: "" });
-            } else {
-              ThemeChanger({ ...theme, toggled: "menu-hover-closed" });
-            }
-            break;
-          case "icon-click":
-            if (theme.toggled === "icon-click-closed") {
-              ThemeChanger({ ...theme, toggled: "" });
-            } else {
-              ThemeChanger({ ...theme, toggled: "icon-click-closed" });
-            }
-            break;
-          case "icon-hover":
-            if (theme.toggled === "icon-hover-closed") {
-              ThemeChanger({ ...theme, toggled: "" });
-            } else {
-              ThemeChanger({ ...theme, toggled: "icon-hover-closed" });
-            }
-            break;
-        }
-      }
-    } else {
-      if (theme.toggled === "close") {
-        ThemeChanger({ ...theme, toggled: "open" });
-
-        setTimeout(() => {
-          if (theme.toggled == "open") {
-            if (overlayRef.current) {
-              overlayRef.current.classList.remove("active");
-            }
-
-            if (overlayRef) {
-              overlayRef.classList.add("active");
-              overlayRef.addEventListener("click", () => {
-                if (overlayRef.current) {
-                  overlayRef.current.classList.remove("active");
-                  menuClose();
-                }
-              });
-            }
-          }
-
-          window.addEventListener("resize", () => {
-            if (window.screen.width >= 992) {
-              if (overlayRef.current) {
-                overlayRef.current.classList.remove("active");
-              }
-            }
-          });
-        }, 100);
-      } else {
-        ThemeChanger({ ...theme, toggled: "close" });
-      }
-    }
-  }
-
-  //MenuClose
-
-  function menuClose() {
-    const theme = store.getState().reducer;
-    if (window.innerWidth <= 992) {
-      ThemeChanger({ ...theme, toggled: "close" });
-    }
-    if (window.innerWidth >= 992) {
-      ThemeChanger({
-        ...theme,
-        toggled: local_varaiable.toggled ? local_varaiable.toggled : "",
-      });
-    }
-  }
-  const slidesArrow = (selector: any) => document.querySelector(selector);
-  //Search Functionality
-  const searchRef = useRef<HTMLInputElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  const handleClick = (event: MouseEvent) => {
-    const searchInput = searchRef.current;
-    const container = containerRef.current;
-
-    // Check if the click is outside the search input and container
-    if (
-      searchInput &&
-      container &&
-      !searchInput.contains(event.target as Node) &&
-      !container.contains(event.target as Node)
-    ) {
-      // If the click is outside, remove 'searchdrop' class
-      container.classList.remove("searchdrop");
-    } else if (
-      searchInput &&
-      container &&
-      (searchInput === event.target ||
-        searchInput.contains(event.target as Node))
-    ) {
-      // If the click is inside the search input, add 'searchdrop' class
-      container.classList.add("searchdrop");
-    }
-  };
-  const bodyRef = useRef<any>(null);
-  useEffect(() => {
-    bodyRef.current = document.body;
-    // Add event listener when the component is mounted
-    bodyRef.current.addEventListener("click", handleClick);
-
-    return () => {
-      // Clean up the event listener when the component unmounts
-      bodyRef.current.removeEventListener("click", handleClick);
-    };
-  }, []);
-
-  const searchResultRef = useRef<HTMLDivElement | null>(null);
-  const [showa, setShowa] = useState(false);
-  const [InputValue, setInputValue] = useState("");
-  const [show2, setShow2] = useState(false);
-  const [searchcolor, setsearchcolor] = useState("text-dark");
-  const [searchval, setsearchval] = useState("Type something");
-  const [NavData, setNavData] = useState([]);
-
-  useEffect(() => {
-    const clickHandler = (event: any) => {
-      if (
-        searchResultRef.current &&
-        !searchResultRef.current.contains(event.target)
-      ) {
-        searchResultRef.current.classList.add("!hidden");
-      }
-    };
-
-    document.addEventListener("click", clickHandler);
-
-    return () => {
-      // Clean up the event listener when the component unmounts
-      document.removeEventListener("click", clickHandler);
-    };
-  }, []);
-
-  const myfunction = (inputvalue: string) => {
-    if (searchResultRef.current) {
-      searchResultRef.current.classList.remove("!hidden");
-    }
-
-    const i: any = [];
-    const allElement2: any = [];
-    getMenuItems.forEach((mainLevel: any) => {
-      if (mainLevel.children) {
-        setShowa(true);
-        mainLevel.children.forEach((subLevel: any) => {
-          i.push(subLevel);
-          if (subLevel.children) {
-            subLevel.children.forEach((subLevel1: any) => {
-              i.push(subLevel1);
-              if (subLevel1.children) {
-                subLevel1.children.forEach((subLevel2: any) => {
-                  i.push(subLevel2);
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-    for (const allElement of i) {
-      if (allElement.title.toLowerCase().includes(inputvalue.toLowerCase())) {
-        if (
-          allElement.title.toLowerCase().startsWith(inputvalue.toLowerCase())
-        ) {
-          setShow2(true);
-
-          // Check if the element has a path and doesn't already exist in allElement2 before pushing
-          if (
-            allElement.path &&
-            !allElement2.some((el: any) => el.title === allElement.title)
-          ) {
-            allElement2.push(allElement);
-          }
-        }
-      }
-    }
-
-    if (!allElement2.length || inputvalue === "") {
-      if (inputvalue === "") {
-        setShow2(false);
-        setsearchval("Type something");
-        setsearchcolor("text-dark");
-      }
-      if (!allElement2.length) {
-        setShow2(false);
-        setsearchcolor("text-danger");
-        setsearchval("There is no component with this name");
-      }
-    }
-    setNavData(allElement2);
-  };
-  //
-  const initialNotifications = [
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [notifications, setNotifications] = useState([
     {
       id: 1,
       icon: "message-dots",
@@ -361,47 +65,10 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
       text3: "",
       color: "success",
       class: "",
-    },
-    {
-      id: 4,
-      icon: "gift",
-      title: "Offers",
-      text1: "20% off electronics!",
-      text2: "",
-      text3: "",
-      color: "orangemain",
-      class: "",
-    },
-    {
-      id: 5,
-      icon: "calendar",
-      title: "Events",
-      text1: "Webinar in 1 hour!",
-      text2: "",
-      text3: "",
-      color: "info",
-      class: "",
-    },
-  ];
-
-  const [notifications, setNotifications] = useState(initialNotifications); // assuming 'data' is an array of notifications
-  const [unreadCount, setUnreadCount] = useState(5); // initial unread count
-
-  const hasNotifications = notifications.length > 0;
-
-  const handleRemove1 = (id: number) => {
-    if (event) {
-      event.stopPropagation();
     }
-    // Filter out the notification by id
-    const updatedNotifications = notifications.filter(
-      (notification) => notification.id !== id
-    );
-    setNotifications(updatedNotifications);
-    setUnreadCount(unreadCount - 1); // decrease unread count
-  };
-
-  const cartProduct = [
+  ]);
+  
+  const [cartItems, setCartItems] = useState([
     {
       id: 1,
       src: "/assets/images/ecommerce/png/30.png",
@@ -423,68 +90,226 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
       newpr: "120",
       class: "cart-handbag",
       colorclass: "text-[#de8cb2]",
-    },
-    {
-      id: 3,
-      src: "/assets/images/ecommerce/png/32.png",
-      name: "Elitr Alarm Clock",
-      qty: "2",
-      color: "Sky Blue",
-      oldpr: "49",
-      newpr: "30",
-      class: "cart-alaramclock",
-      colorclass: "text-[#06a7ef]",
-    },
-    {
-      id: 4,
-      src: "/assets/images/ecommerce/png/12.png",
-      name: "Aus Polo Assn",
-      qty: "3",
-      color: " Soft Peach",
-      oldpr: "129",
-      newpr: "70",
-      class: "cart-sweatshirt",
-      colorclass: "text-[#decac1]",
-    },
-    {
-      id: 5,
-      src: "/assets/images/ecommerce/png/16.png",
-      name: "Smart Watch",
-      qty: "1",
-      color: "Crimson Red",
-      oldpr: "249",
-      newpr: "200",
-      class: "cart-smartwatch",
-      colorclass: "text-[#fb6c67]",
-    },
-  ];
+    }
+  ]);
 
-  const [cartItems, setCartItems] = useState([...cartProduct]);
-  const [cartItemCount, setCartItemCount] = useState(cartProduct.length);
-  const handleRemove = (
-    itemId: number,
-    event: { stopPropagation: () => void }
-  ) => {
-    event.stopPropagation();
-    const updatedCart = cartItems.filter((item) => item.id !== itemId);
-    setCartItems(updatedCart);
-    setCartItemCount(updatedCart.length);
+  // Refs
+  const allmenu = useRef(null);
+  const overlayRef = useRef(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const searchResultRef = useRef<HTMLDivElement>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Arama fonksiyonu
+  const searchUsers = useCallback(async (query: string) => {
+    if (query.length < 2) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/search-header?q=${encodeURIComponent(query)}&currentUserId=${user.id}`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults(data.users);
+        setShowSearchResults(true);
+      }
+    } catch (error) {
+      console.error('Search failed:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [user?.id]);
+
+  // Arama input'u değiştiğinde
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    // Debounce implementasyonu
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    searchTimeoutRef.current = setTimeout(() => {
+      if (value.length >= 2) {
+        searchUsers(value);
+      } else {
+        setSearchResults([]);
+        setShowSearchResults(false);
+      }
+    }, 300);
   };
 
+  // Arama sonuçlarını kapat
+  const closeSearchResults = () => {
+    setShowSearchResults(false);
+  };
+
+  // Tıklama dışında kapatma
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchResultRef.current &&
+        !searchResultRef.current.contains(event.target as Node) &&
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        closeSearchResults();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Fullscreen fonksiyonları
+  const toggleFullscreen = () => {
+    if (!isFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const fullscreenChangeHandler = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", fullscreenChangeHandler);
+    return () => {
+      document.removeEventListener("fullscreenchange", fullscreenChangeHandler);
+    };
+  }, []);
+
+  // Sidebar toggle fonksiyonu
+  const toggleSidebar = () => {
+    const theme = store.getState().reducer;
+    let sidemenuType = theme.dataNavLayout;
+    if (window.innerWidth >= 992) {
+      if (sidemenuType === "vertical") {
+        let verticalStyle = theme.dataVerticalStyle;
+        const navStyle = theme.dataNavStyle;
+        switch (verticalStyle) {
+          case "closed":
+            ThemeChanger({ ...theme, dataNavStyle: "" });
+            if (theme.toggled === "close-menu-close") {
+              ThemeChanger({ ...theme, toggled: "" });
+            } else {
+              ThemeChanger({ ...theme, toggled: "close-menu-close" });
+            }
+            break;
+          case "overlay":
+            ThemeChanger({ ...theme, dataNavStyle: "" });
+            if (theme.toggled === "icon-overlay-close") {
+              ThemeChanger({ ...theme, toggled: "", iconOverlay: "" });
+            } else {
+              if (window.innerWidth >= 992) {
+                ThemeChanger({
+                  ...theme,
+                  toggled: "icon-overlay-close",
+                  iconOverlay: "",
+                });
+              }
+            }
+            break;
+          case "icontext":
+            ThemeChanger({ ...theme, dataNavStyle: "" });
+            if (theme.toggled === "icon-text-close") {
+              ThemeChanger({ ...theme, toggled: "" });
+            } else {
+              ThemeChanger({ ...theme, toggled: "icon-text-close" });
+            }
+            break;
+          case "doublemenu":
+            ThemeChanger({ ...theme, dataNavStyle: "" });
+            if (theme.toggled === "double-menu-open") {
+              ThemeChanger({ ...theme, toggled: "double-menu-close" });
+            } else {
+              let sidemenu = document.querySelector(".side-menu__item.active");
+              if (sidemenu) {
+                ThemeChanger({ ...theme, toggled: "double-menu-open" });
+                if (sidemenu.nextElementSibling) {
+                  sidemenu.nextElementSibling.classList.add("double-menu-active");
+                } else {
+                  ThemeChanger({ ...theme, toggled: "double-menu-close" });
+                }
+              }
+            }
+            break;
+          case "detached":
+            if (theme.toggled === "detached-close") {
+              ThemeChanger({ ...theme, toggled: "", iconOverlay: "" });
+            } else {
+              ThemeChanger({
+                ...theme,
+                toggled: "detached-close",
+                iconOverlay: "",
+              });
+            }
+            break;
+          default:
+            ThemeChanger({ ...theme, toggled: "" });
+        }
+      }
+    } else {
+      if (theme.toggled === "close") {
+        ThemeChanger({ ...theme, toggled: "open" });
+      } else {
+        ThemeChanger({ ...theme, toggled: "close" });
+      }
+    }
+  };
+
+  // Menu close fonksiyonu
+  function menuClose() {
+    const theme = store.getState().reducer;
+    if (window.innerWidth <= 992) {
+      ThemeChanger({ ...theme, toggled: "close" });
+    }
+    if (window.innerWidth >= 992) {
+      ThemeChanger({
+        ...theme,
+        toggled: local_varaiable.toggled ? local_varaiable.toggled : "",
+      });
+    }
+  }
+
+  // Notification işlemleri
+  const handleRemoveNotification = (id: number) => {
+    setNotifications(notifications.filter(notification => notification.id !== id));
+  };
+
+  // Cart işlemleri
+  const handleRemoveCartItem = (id: number) => {
+    setCartItems(cartItems.filter(item => item.id !== id));
+  };
+
+  // Tema değiştirme
   const Toggledark = () => {
     ThemeChanger({
       ...local_varaiable,
       class: local_varaiable.class == "dark" ? "light" : "dark",
-      dataHeaderStyles:
-        local_varaiable.class == "dark" ? "transparent" : "transparent",
+      dataHeaderStyles: local_varaiable.class == "dark" ? "transparent" : "transparent",
       dataMenuStyles: local_varaiable.class == "dark" ? "light" : "dark",
-      // "dataMenuStyles": local_varaiable.dataNavLayout == 'horizontal' ? local_varaiable.class == 'dark' ? 'light' : 'dark'
     });
 
     const theme = store.getState().reducer;
 
     if (local_varaiable.class == "dark") {
-      console.log("Switching to light theme");
       ThemeChanger({
         ...theme,
         bodyBg: "",
@@ -517,22 +342,20 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
         <nav className="main-header" aria-label="Global">
           <div className="main-header-container ">
             <div className="header-content-left">
-              {/* <!-- Start::header-element --> */}
-
+              {/* Sidebar Toggle */}
               <div className="header-element !items-center">
-                {/* <!-- Start::header-link --> */}
                 <Link
                   scroll={false}
                   aria-label="Hide Sidebar"
-                  className="sidemenu-toggle animated-arrow  hor-toggle horizontal-navtoggle inline-flex items-center"
+                  className="sidemenu-toggle animated-arrow hor-toggle horizontal-navtoggle inline-flex items-center"
                   onClick={() => toggleSidebar()}
                   href="#!"
                 >
                   <span></span>
                 </Link>
-                {/* <!-- End::header-link --> */}
               </div>
 
+              {/* Logo */}
               <div className="header-element">
                 <div className="horizontal-logo">
                   <div className="header-logo relative">
@@ -542,17 +365,15 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       alt="logo"
                       className="desktop-logo"
                     />
-
                     <div style={{ width: "90px", height: "auto" }}>
                       <Image
                         fill
                         src="/assets/images/logo.png"
                         alt="logo"
                         className="toggle-logo"
-                        style={{ objectFit: "contain" }} // or 'cover', depending on the effect you want
+                        style={{ objectFit: "contain" }}
                       />
                     </div>
-
                     <Image
                       fill
                       src="/assets/images/logo.png"
@@ -586,70 +407,73 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </div>
                 </div>
               </div>
-              {/* <!-- End::header-element --> */}
 
-              {/* <!-- Start::header-element --> */}
-
-              {/* <!-- End::header-element --> */}
-
-              {/* <!-- Start::header-element --> */}
+              {/* Arama Bölümü */}
               <div
                 ref={containerRef}
-                className="autoComplete_wrapper  header-element header-search md:!block !hidden my-auto relative"
+                className="autoComplete_wrapper header-element header-search md:!block !hidden my-auto relative"
                 id="search-modal"
               >
-                {/* <!-- Start::header-link --> */}
                 <input
                   type="text"
                   className="header-search-bar form-control"
                   id="header-search"
-                  placeholder="Search for Results..."
+                  placeholder="Search for people..."
                   autoComplete="off"
                   autoCapitalize="off"
-                  onClick={() => {}}
                   ref={searchRef}
-                  defaultValue={InputValue}
-                  onChange={(ele) => {
-                    myfunction(ele.target.value);
-                    setInputValue(ele.target.value);
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onFocus={() => {
+                    if (searchResults.length > 0) {
+                      setShowSearchResults(true);
+                    }
                   }}
                 />
 
-                {showa ? (
+                {showSearchResults && (
                   <div
-                    className="box search-result !absolute z-[9] search-fix border border-gray-200 dark:border-white/10 mt-1 w-full"
+                    className="box search-result !absolute z-[9999] search-fix border border-gray-200 dark:border-white/10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg"
                     ref={searchResultRef}
                   >
-                    <div className="box-header">
-                      <div className="box-title mb-0 break-all">
-                        Search result of {InputValue}
-                      </div>
-                    </div>
-                    <div className="box-body overflow-auto p-2 flex flex-col max-h-[250px]">
-                      {show2 ? (
-                        NavData.map((e: any, index) => (
-                          <div
-                            key={index}
-                            className="ti-list-group gap-x-3.5 text-gray-800 dark:bg-bgdark dark:border-white/10 dark:text-white"
+                    <div className="box-body overflow-auto max-h-80">
+                      {isSearching ? (
+                        <div className="p-4 text-center text-gray-500">
+                          Searching...
+                        </div>
+                      ) : searchResults.length > 0 ? (
+                        searchResults.map((user) => (
+                          <Link
+                            key={user.id}
+                            href={`/home/facebook/pages/profile/${user.username}`}
+                            className="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border-b dark:border-gray-600 last:border-b-0"
+                            onClick={closeSearchResults}
                           >
-                            <Link
-                              href={`${e.path}/`}
-                              className="search-result-item"
-                              onClick={() => {
-                                (setShowa(false), setInputValue(""));
-                              }}
-                            >
-                              {e.title}
-                            </Link>
-                          </div>
+                            <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3">
+                              <Image
+                                src={user.avatarUrl}
+                                alt={user.username}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-white">
+                                {user.username}
+                              </div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {user.email}
+                              </div>
+                            </div>
+                          </Link>
                         ))
-                      ) : (
-                        <span className={`${searchcolor} `}>{searchval}</span>
-                      )}
+                      ) : searchQuery.length >= 2 ? (
+                        <div className="p-4 text-center text-gray-500">
+                          No users found
+                        </div>
+                      ) : null}
                     </div>
                   </div>
-                ) : (
-                  ""
                 )}
 
                 <Link
@@ -659,29 +483,28 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                 >
                   <i className="bi bi-search"></i>
                 </Link>
-                {/* <!-- End::header-link --> */}
               </div>
-              {/* <!-- End::header-element --> */}
             </div>
 
             <div className="header-content-right">
+              {/* Mobil Arama Butonu */}
               <div className="header-element md:px-[0.5rem] px-1 header-search md:!hidden !block">
                 <button
                   aria-label="button"
                   type="button"
                   data-hs-overlay="#search-modal"
-                  className="inline-flex flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium focus:ring-offset-0 focus:ring-offset-white transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 text-textmuted dark:text-textmuted/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                  className="inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium focus:ring-offset-0 focus:ring-offset-white transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 text-textmuted dark:text-textmuted/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                 >
                   <i className="bi bi-search header-link-icon"></i>
                 </button>
               </div>
 
-              {/* <!-- start header country --> */}
-              <div className="header-element md:px-[0.5rem] px-1  header-country hs-dropdown ti-dropdown  hidden sm:block [--placement:bottom-right] rtl:[--placement:bottom-left]">
+              {/* Dil Seçimi */}
+              <div className="header-element md:px-[0.5rem] px-1 header-country hs-dropdown ti-dropdown hidden sm:block [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
                   id="dropdown-flag"
                   type="button"
-                  className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0  !border-0 !rounded-full !shadow-none"
+                  className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0 !border-0 !rounded-full !shadow-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -759,116 +582,43 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </svg>
                 </button>
 
-                 <ul className="main-header-dropdown ti-dropdown-menu hs-dropdown-menu hidden">
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="US" style={{ width: "20px", height: "20px" }} />
-          </span>
-          English
-        </Link>
-      </li>
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="ES" style={{ width: "20px", height: "20px" }} />
-          </span>
-          español
-        </Link>
-      </li>
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="FR" style={{ width: "20px", height: "20px" }} />
-          </span>
-          français
-        </Link>
-      </li>
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="AE" style={{ width: "20px", height: "20px" }} />
-          </span>
-          عربي
-        </Link>
-      </li>
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="DE" style={{ width: "20px", height: "20px" }} />
-          </span>
-          Deutsch
-        </Link>
-      </li>
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="CN" style={{ width: "20px", height: "20px" }} />
-          </span>
-          中文
-        </Link>
-      </li>
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="IT" style={{ width: "20px", height: "20px" }} />
-          </span>
-          Italiano
-        </Link>
-      </li>
-      <li>
-        <Link
-          scroll={false}
-          className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4"
-          href="#!"
-        >
-          <span className="avatar avatar-rounded avatar-xs leading-none me-2">
-            <Flag code="RU" style={{ width: "20px", height: "20px" }} />
-          </span>
-          Русский
-        </Link>
-      </li>
-    </ul>
+                <ul className="main-header-dropdown ti-dropdown-menu hs-dropdown-menu hidden">
+                  <li>
+                    <Link
+                      scroll={false}
+                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+                      href="#!"
+                    >
+                      <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+                        <Flag code="US" style={{ width: "20px", height: "20px" }} />
+                      </span>
+                      English
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      scroll={false}
+                      className="ti-dropdown-item flex items-center !py-[0.6rem] !px-4 !border-b dark:!border-defaultborder/10"
+                      href="#!"
+                    >
+                      <span className="avatar avatar-rounded avatar-xs leading-none me-2">
+                        <Flag code="TR" style={{ width: "20px", height: "20px" }} />
+                      </span>
+                      Türkçe
+                    </Link>
+                  </li>
+                </ul>
               </div>
-              {/* <!-- end header country --> */}
 
-              {/* <!-- light and dark theme --> */}
+              {/* Tema Değiştirme */}
               <div
                 className="header-element header-theme-mode hidden !items-center sm:block md:!px-[0.5rem] px-1"
-                onClick={() => Toggledark()}
+                onClick={Toggledark}
               >
                 <Link
                   scroll={false}
                   aria-label="anchor"
-                  className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 text-textmuted dark:text-textmuted/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                  className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 text-textmuted dark:text-textmuted/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                   href="#!"
                 >
                   <svg
@@ -889,7 +639,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                 <Link
                   scroll={false}
                   aria-label="anchor"
-                  className="hs-dark-mode-active:flex hidden hs-dark-mode group flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium text-defaulttextcolor  transition-all text-xs dark:bg-bodybg dark:bg-bgdark dark:hover:bg-black/20  dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                  className="hs-dark-mode-active:flex hidden hs-dark-mode group flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium text-defaulttextcolor transition-all text-xs dark:bg-bodybg dark:bg-bgdark dark:hover:bg-black/20 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                   href="#!"
                 >
                   <svg
@@ -908,14 +658,13 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </svg>
                 </Link>
               </div>
-              {/* <!-- End light and dark theme --> */}
 
-              {/* <!-- Header Cart item --> */}
-              <div className="header-element cart-dropdown hs-dropdown ti-dropdown md:!block !hidden md:px-[0.5rem] px-1  [--placement:bottom-right] rtl:[--placement:bottom-left]">
+              {/* Sepet */}
+              <div className="header-element cart-dropdown hs-dropdown ti-dropdown md:!block !hidden md:px-[0.5rem] px-1 [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
                   id="dropdown-cart"
                   type="button"
-                  className="hs-dropdown-toggle relative ti-dropdown-toggle !p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none align-middle text-xs"
+                  className="hs-dropdown-toggle relative ti-dropdown-toggle !p-0 !border-0 flex-shrink-0 !rounded-full !shadow-none align-middle text-xs"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -931,12 +680,12 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     ></path>
                     <path d="M96,216a16,16,0,1,1-16-16A16,16,0,0,1,96,216Zm88-16a16,16,0,1,0,16,16A16,16,0,0,0,184,200ZM231.65,74.35l-28.53,92.71A23.89,23.89,0,0,1,180.18,184H84.07A24.11,24.11,0,0,1,61,166.59L24.82,40H8A8,8,0,0,1,8,24H24.82A16.08,16.08,0,0,1,40.21,35.6L48.32,64H224a8,8,0,0,1,7.65,10.35ZM213.17,80H52.89l23.49,82.2a8,8,0,0,0,7.69,5.8h96.11a8,8,0,0,0,7.65-5.65Z"></path>
                   </svg>
-                  <span className="flex absolute h-5 w-5 top-[0rem] end-[2px]  -me-[0.6rem]">
+                  <span className="flex absolute h-5 w-5 top-[0rem] end-[2px] -me-[0.6rem]">
                     <span
                       className="relative inline-flex rounded-full h-[14.7px] w-[14px] text-[0.625rem] bg-primary text-white justify-center items-center"
                       id="cart-icon-badge"
                     >
-                      {cartItemCount}
+                      {cartItems.length}
                     </span>
                   </span>
                 </button>
@@ -952,7 +701,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                           className="badge bg-success/[0.15] text-success ms-1 text-[0.75rem] !rounded-full"
                           id="cart-data"
                         >
-                          {cartItemCount}
+                          {cartItems.length}
                         </span>
                       </p>
                       <Link
@@ -960,8 +709,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                         href="/ecommerce/customer/shop"
                         className="ti-btn ti-btn-soft-secondary ti-btn-sm btn-wave"
                       >
-                        Continue Shopping{" "}
-                        <i className="ti ti-arrow-narrow-right ms-1"></i>
+                        Continue Shopping <i className="ti ti-arrow-narrow-right ms-1"></i>
                       </Link>
                     </div>
                   </div>
@@ -969,10 +717,10 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     <hr className="dropdown-divider dark:border-white/10" />
                   </div>
                   <ul className="list-none mb-0" id="header-cart-items-scroll">
-                    {cartItems.map((idx) => (
+                    {cartItems.map((item) => (
                       <li
                         className="ti-dropdown-item !border-b !block dark:!border-defaultborder/10"
-                        key={idx.id}
+                        key={item.id}
                       >
                         <div className="flex items-center cart-dropdown-item gap-4">
                           <div className="leading-none">
@@ -980,10 +728,8 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                               <Image
                                 fill
                                 src={`${
-                                  process.env.NODE_ENV === "production"
-                                    ? basePath
-                                    : ""
-                                }${idx.src}`}
+                                  process.env.NODE_ENV === "production" ? basePath : ""
+                                }${item.src}`}
                                 alt="img"
                               />
                             </span>
@@ -995,17 +741,17 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                                   scroll={false}
                                   href="/ecommerce/customer/cart/"
                                 >
-                                  {idx.name}
+                                  {item.name}
                                 </Link>
                                 <div className="text-[0.6875rem] text-textmuted dark:text-textmuted/50">
-                                  <span> Qty : {idx.qty},</span>
+                                  <span> Qty : {item.qty},</span>
                                   <span>
                                     {" "}
                                     Color :{" "}
                                     <span
-                                      className={`${idx.colorclass} font-semibold`}
+                                      className={`${item.colorclass} font-semibold`}
                                     >
-                                      {idx.color}
+                                      {item.color}
                                     </span>
                                   </span>
                                 </div>
@@ -1015,16 +761,17 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                                   scroll={false}
                                   href="#!"
                                   className="header-cart-remove dropdown-item-close"
-                                  onClick={(event) =>
-                                    handleRemove(idx.id, event)
-                                  }
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    handleRemoveCartItem(item.id);
+                                  }}
                                 >
                                   <i className="ri-delete-bin-line opacity-40"></i>
                                 </Link>
                                 <h6 className="font-medium mb-0 mt-1">
-                                  ${idx.newpr}
+                                  ${item.newpr}
                                   <span className="line-through text-textmuted dark:text-textmuted/50 font-normal ms-1 text-[0.8125rem] inline-block">
-                                    ${idx.oldpr}
+                                    ${item.oldpr}
                                   </span>
                                 </h6>
                               </div>
@@ -1036,8 +783,8 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </ul>
 
                   <div
-                    className={`p-4 empty-header-item   ${
-                      cartItemCount === 0 ? "hidden" : "block"
+                    className={`p-4 empty-header-item ${
+                      cartItems.length === 0 ? "hidden" : "block"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-4">
@@ -1056,7 +803,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
 
                   <div
                     className={`p-[3rem] empty-item ${
-                      cartItemCount === 0 ? "block" : "hidden"
+                      cartItems.length === 0 ? "block" : "hidden"
                     }`}
                   >
                     <div className="text-center">
@@ -1073,14 +820,13 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </div>
                 </div>
               </div>
-              {/* <!--End Header cart item  --> */}
 
-              {/* <!--Header Notifictaion --> */}
-              <div className="header-element  md:px-[0.5rem] px-1 notifications-dropdown header-notification hs-dropdown ti-dropdown !hidden xl:!block [--placement:bottom-right] rtl:[--placement:bottom-left]">
+              {/* Bildirimler */}
+              <div className="header-element md:px-[0.5rem] px-1 notifications-dropdown header-notification hs-dropdown ti-dropdown !hidden xl:!block [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
                   id="dropdown-notification"
                   type="button"
-                  className="hs-dropdown-toggle relative ti-dropdown-toggle !p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none align-middle text-xs"
+                  className="hs-dropdown-toggle relative ti-dropdown-toggle !p-0 !border-0 flex-shrink-0 !rounded-full !shadow-none align-middle text-xs"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1096,9 +842,9 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     ></path>
                     <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
                   </svg>
-                  <span className="flex absolute h-[15px] w-[15px] top-[5px] end-[10px]  -me-[0.6rem]">
+                  <span className="flex absolute h-[15px] w-[15px] top-[5px] end-[10px] -me-[0.6rem]">
                     <span className="animate-slow-ping absolute inline-flex -top-[6px] -start-[5px] h-full w-full rounded-full bg-secondary/40 opacity-75"></span>
-                    <span className="relative inline-flex justify-center items-center rounded-full  !h-[5px] !w-[5px] bg-secondary"></span>
+                    <span className="relative inline-flex justify-center items-center rounded-full !h-[5px] !w-[5px] bg-secondary"></span>
                   </span>
                 </button>
                 <div
@@ -1111,7 +857,9 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       <span
                         className="badge bg-secondary/10 text-secondary !rounded-sm"
                         id="notifiation-data"
-                      >{`${notifications.length} Unread`}</span>
+                      >
+                        {notifications.length} Unread
+                      </span>
                     </div>
                   </div>
                   <div className="dropdown-divider"></div>
@@ -1119,18 +867,18 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     className="ti-list-unstyled mb-0"
                     id="header-notification-scroll"
                   >
-                    {notifications.map((idx, index) => (
+                    {notifications.map((notification) => (
                       <li
                         className="ti-dropdown-item !block !border-b dark:!border-defaultborder/10"
-                        key={index}
+                        key={notification.id}
                       >
                         <div className="flex items-center">
                           <div className="pe-2 leading-none">
                             <span
-                              className={`avatar avatar-md avatar-rounded bg-${idx.color} text-white`}
+                              className={`avatar avatar-md avatar-rounded bg-${notification.color} text-white`}
                             >
                               <i
-                                className={`ti ti-${idx.icon} text-[1.25rem]`}
+                                className={`ti ti-${notification.icon} text-[1.25rem]`}
                               ></i>
                             </span>
                           </div>
@@ -1138,13 +886,15 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                             <div>
                               <p className="mb-0 font-medium">
                                 <Link scroll={false} href="#!">
-                                  {idx.title}
+                                  {notification.title}
                                 </Link>
                               </p>
                               <div className="text-textmuted dark:text-textmuted/50 font-normal text-[0.75rem] header-notification-text truncate">
-                                {idx.text1}
-                                <span className={idx.class}>{idx.text2}</span>
-                                {idx.text3}
+                                {notification.text1}
+                                <span className={notification.class}>
+                                  {notification.text2}
+                                </span>
+                                {notification.text3}
                               </div>
                             </div>
                             <div>
@@ -1152,7 +902,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                                 scroll={false}
                                 href="#!"
                                 className="min-w-fit-content text-textmuted dark:text-textmuted/50 dropdown-item-close1"
-                                onClick={() => handleRemove1(idx.id)}
+                                onClick={() => handleRemoveNotification(notification.id)}
                               >
                                 <i className="ri-close-circle-line opacity-40 text-[1.25rem]"></i>
                               </Link>
@@ -1163,7 +913,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     ))}
                   </ul>
                   <div
-                    className={`p-4 empty-header-item1  ${
+                    className={`p-4 empty-header-item1 ${
                       notifications.length === 0 ? "hidden" : "block"
                     }`}
                   >
@@ -1191,11 +941,9 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </div>
                 </div>
               </div>
-              {/* <!--End Header Notifictaion --> */}
 
-              {/* <!-- Fullscreen --> */}
-              <li className="header-element header-fullscreen">
-                {/* <!-- Start::header-link --> */}
+              {/* Fullscreen */}
+              <div className="header-element header-fullscreen">
                 <Link
                   scroll={false}
                   onClick={toggleFullscreen}
@@ -1235,33 +983,27 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     </svg>
                   )}
                 </Link>
-                {/* <!-- End::header-link --> */}
-              </li>
-              {/* <!-- End Full screen --> */}
+              </div>
 
+              {/* All Menu */}
               <div className="circle_icon hover1" ref={allmenu}>
-                <div
-                  onClick={() => {
-                    setShowAllMenu((prev) => !prev);
-                  }}
-                >
+                <div onClick={() => setShowAllMenu((prev) => !prev)}>
                   <Menu />
                 </div>
-
                 {showAllMenu && <AllMenu />}
-              </div> 
+              </div>
 
-              {/* <!-- Header Profile --> */}
+              {/* Profil */}
               <div className="header-element md:!px-[0.5rem] px-2 ti-dropdown hs-dropdown !items-center [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
                   id="dropdown-profile"
                   type="button"
-                  className="hs-dropdown-toggle ti-dropdown-toggle !gap-2 !p-0 flex-shrink-0 sm:me-2 me-0 !rounded-full !shadow-none text-xs align-middle !border-0 !shadow-transparent "
+                  className="hs-dropdown-toggle ti-dropdown-toggle !gap-2 !p-0 flex-shrink-0 sm:me-2 me-0 !rounded-full !shadow-none text-xs align-middle !border-0 !shadow-transparent"
                 >
                   <Image
                     fill
                     src={user.avatarUrl}
-                    alt="Image Description"
+                    alt="Profile"
                     className="avatar avatar-sm avatar-rounded inline-block"
                   />
                 </button>
@@ -1276,7 +1018,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   <li>
                     <Link
                       scroll={false}
-                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center  dark:!border-defaultborder/10"
+                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center dark:!border-defaultborder/10"
                       href="/pages/profile"
                     >
                       <i className="ti ti-user me-2 text-[1.125rem] text-primary"></i>
@@ -1286,7 +1028,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   <li>
                     <Link
                       scroll={false}
-                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center  dark:!border-defaultborder/10"
+                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center dark:!border-defaultborder/10"
                       href="/pages/email/mail-app"
                     >
                       <i className="ti ti-mail me-2 text-[1.125rem] text-secondary"></i>
@@ -1296,7 +1038,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   <li>
                     <Link
                       scroll={false}
-                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center  dark:!border-defaultborder/10"
+                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center dark:!border-defaultborder/10"
                       href="/pages/todolist"
                     >
                       <i className="ti ti-checklist me-2 text-[1.125rem] text-success"></i>
@@ -1306,7 +1048,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   <li>
                     <Link
                       scroll={false}
-                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center  dark:!border-defaultborder/10"
+                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center dark:!border-defaultborder/10"
                       href="/pages/email/mail-settings"
                     >
                       <i className="ti ti-settings me-2 text-[1.125rem] text-orangemain"></i>
@@ -1316,7 +1058,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   <li>
                     <Link
                       scroll={false}
-                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center  dark:!border-defaultborder/10"
+                      className="ti-dropdown-item !py-[0.6rem] !px-4 !border-b flex items-center dark:!border-defaultborder/10"
                       href="/pages/chat"
                     >
                       <i className="ti ti-headset me-2 text-[1.125rem] text-info"></i>
@@ -1340,14 +1082,13 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   </li>
                 </ul>
               </div>
-              {/* <!-- End Header Profile --> */}
 
-              {/* <!-- Switcher Icon --> */}
+              {/* Switcher Icon */}
               <div className="header-element md:px-[0.48rem]">
                 <button
                   aria-label="button"
                   type="button"
-                  className="hs-dropdown-toggle switcher-icon inline-flex flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium  align-middle transition-all text-xs text-textmuted dark:text-textmuted/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                  className="hs-dropdown-toggle switcher-icon inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium align-middle transition-all text-xs text-textmuted dark:text-textmuted/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                   data-hs-overlay="#hs-overlay-switcher"
                 >
                   <svg
@@ -1362,18 +1103,16 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       d="M230.1,108.76,198.25,90.62c-.64-1.16-1.31-2.29-2-3.41l-.12-36A104.61,104.61,0,0,0,162,32L130,49.89c-1.34,0-2.69,0-4,0L94,32A104.58,104.58,0,0,0,59.89,51.25l-.16,36c-.7,1.12-1.37,2.26-2,3.41l-31.84,18.1a99.15,99.15,0,0,0,0,38.46l31.85,18.14c.64,1.16,1.31,2.29,2,3.41l.12,36A104.61,104.61,0,0,0,94,224l32-17.87c1.34,0,2.69,0,4,0L162,224a104.58,104.58,0,0,0,34.08-19.25l.16-36c.7-1.12,1.37-2.26,2-3.41l31.84-18.1A99.15,99.15,0,0,0,230.1,108.76ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z"
                       opacity="0.1"
                     ></path>
-                    <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A111.92,111.92,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.63a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.1,8.1,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8,8,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z"></path>
+                    <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67a8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A111.92,111.92,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.63a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67a8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73a8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.1,8.1,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8,8,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z"></path>
                   </svg>
                 </button>
               </div>
-              {/* <!-- Switcher Icon --> */}
-
-              {/* <!-- End::header-element --> */}
             </div>
           </div>
         </nav>
       </header>
 
+      {/* Mobil Arama Modalı */}
       <div
         id="search-modal"
         className="hs-overlay ti-modal hidden mt-[1.75rem]"
@@ -1386,18 +1125,40 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                 <input
                   type="text"
                   className="form-control !border-s border-e-0"
-                  placeholder="Search Anything ..."
-                  aria-label="Search Anything ..."
-                  aria-describedby="button-addon2"
+                  placeholder="Search for people..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                 />
                 <button
                   className="ti-btn ti-btn-primary !m-0"
                   type="button"
-                  id="button-addon2"
                 >
                   <i className="bi bi-search"></i>
                 </button>
               </div>
+              
+              {showSearchResults && (
+                <div className="mt-3 max-h-60 overflow-auto">
+                  {searchResults.map((user) => (
+                    <Link
+                      key={user.id}
+                      href={`/profile/${user.id}`}
+                      className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                      onClick={closeSearchResults}
+                    >
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden mr-2">
+                        <Image
+                          src={user.avatarUrl}
+                          alt={user.username}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <span className="text-sm">{user.username}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1409,7 +1170,5 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
 const mapStateToProps = (state: any) => ({
   local_varaiable: state.reducer,
 });
+
 export default connect(mapStateToProps, { ThemeChanger })(Header);
-function setIsClient(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
