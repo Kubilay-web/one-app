@@ -1,9 +1,9 @@
 export const menu = [
   {
-    name: "Campus",
+    name: "Social",
     icon: "campus",
     description: "",
-    link: "/link"
+    link: "/home/facebook/pages/home"
   },
   {
     name: "Events",
@@ -12,19 +12,19 @@ export const menu = [
     link: "/events"  // Yeni link ekledim
   },
   {
-    name: "Find Friends",
+    name: "Friends",
     icon: "friends",
     description: "",
-    link: "/find-friends"  // Yeni link ekledim
+    link: "/home/facebook/pages/friends"  // Yeni link ekledim
   },
   {
-    name: "Groups",
+    name: "Forum",
     icon: "groups",
     description: "",
     link: "/home/forum"  // Yeni link ekledim
   },
   {
-    name: "News Feed",
+    name: "News",
     icon: "feed",
     description: "",
     link: "/home/news"  // Yeni link ekledim
@@ -99,7 +99,7 @@ export const menu = [
     name: "Jobs",
     icon: "jobs",
     description: "",
-    link: "/jobs"  // Yeni link ekledim
+    link: "/home/jobs/main"  // Yeni link ekledim
   },
   {
     name: "Climate science center",

@@ -2,6 +2,7 @@ import Link from "next/link";  // next/link'ten Link bileşenini import ediyoruz
 import { menu, create } from "../../data/allMenu";
 import AllMenuItem from "./AllMenuItem";
 import "../../styles/icons/icons.css";
+import "./style.css"
 
 export default function AllMenu() {
   return (
@@ -101,7 +102,7 @@ export default function AllMenu() {
         <div className="all_right">
           <div className="all_right_header">Create</div>
           {create.map((item) => (
-            <Link href={item.link} key={item.name} className="all_right_item hover1">
+            <Link href={item.link} key={item.name} className="all_right_item">
               <div className="all_right_circle">
                 <i className={item.icon}></i>
               </div>

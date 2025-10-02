@@ -12,9 +12,6 @@ header.header-social {
 
 
 
-
-
-
 /*---Header left-----*/
 .header_left {
   display: flex;
@@ -290,6 +287,11 @@ header.header-social {
   border-radius: 10px;
 }
 
+
+.all_menu_item:hover{
+  background-color: rgb(202, 198, 198) !important;
+}
+
 .all_menu_item img {
   width: 36px;
   height: 36px;
@@ -333,6 +335,10 @@ header.header-social {
   padding: 5px 10px;
   border-radius: 10px;
   margin-bottom: 2px;
+}
+
+.all_right_item:hover{
+   background-color: rgb(202, 198, 198) !important;
 }
 
 .all_right_circle {
@@ -730,3 +736,5 @@ header.header-social {
   color: var(--blue-color);
 }
 /*----Active header----*/
+
+

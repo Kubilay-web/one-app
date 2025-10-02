@@ -98,7 +98,7 @@ export default function Home() {
       };
     const router = useRouter();
     const RouteChange = () => {
-        let path = "/social";
+        let path = "/home/facebook/pages/home";
         router.push(path);
     };
     
