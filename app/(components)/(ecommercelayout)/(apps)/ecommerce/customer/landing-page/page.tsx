@@ -568,7 +568,7 @@ const LandingPage = () => {
                 <div className="custom-form-group">
                   <input
                     type="text"
-                    className="form-control !rounded-full shadow-sm !py-3"
+                    className="form-control !rounded-full shadow-sm !py-3 mb-5"
                     placeholder="Enter Your Email.."
                     aria-label="Recipient's username"
                   />

@@ -14979,7 +14979,10 @@ input[type=tel]::-webkit-calendar-picker-indicator {
 
 .custom-form-group .form-control.form-control-lg {
   @apply py-[1rem] !important;
+  margin-bottom:5px !important;
 }
+
+
 
 [type=checkbox], [type=radio] {
   @apply focus:ring-offset-0 focus:shadow-none !important;
