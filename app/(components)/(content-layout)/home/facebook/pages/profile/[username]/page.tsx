@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";// Pages router
+import { useRouter, useParams } from "next/navigation"; // Pages router
 import axios from "axios";
 import { useSession } from "@/app/SessionProvider";
 import Header from "../../../components/header/page";
@@ -69,7 +69,10 @@ export default function ProfilePage({ setVisible }) {
 
   return (
     <div className="profile">
-      <Header page="profile" />
+      <div className="header-container">
+        <Header page="profile" />
+      </div>
+
       <div className="profile_top">
         <div className="profile_container">
           <Cover cover={profile.cover} visitor={visitor} />
@@ -84,7 +87,11 @@ export default function ProfilePage({ setVisible }) {
             <PplYouMayKnow />
             <div className="profile_grid">
               <div className="profile_left">
-                <Intro detailss={profile.details} visitor={visitor} username={username} />
+                <Intro
+                  detailss={profile.details}
+                  visitor={visitor}
+                  username={username}
+                />
                 <Photos user={user} token={user.token} username={username} />
                 <Friends friends={profile.friends} />
                 <div className="relative_fb_copyright">
