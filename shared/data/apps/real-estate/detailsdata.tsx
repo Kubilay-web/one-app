@@ -72,7 +72,7 @@ export const RealProperties = [
         id: 6,
         status: "20% Off",
         statusColor: "danger",
-        image: "../../assets/images/realestate/properties/popular/6-House with nature.png",
+        image: "../../assets/images/realestate/properties/popular/6-House with Nature.png",
         title: "House with nature",
         author: "Joan Hunter",
         location: "USA",
