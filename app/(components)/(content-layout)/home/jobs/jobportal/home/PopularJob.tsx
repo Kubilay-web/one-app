@@ -9,18 +9,30 @@ import {
   FaCogs,
   FaLeaf,
   FaUserShield,
+  FaBuilding,
+  FaChalkboardTeacher,
+  FaMedkit,
+  FaUserTie,
+  FaDesktop,
+  FaBriefcase,
 } from "react-icons/fa";
 
 export default function PopularJobsSection() {
   const jobCategories = [
-    { name: "Roofer", icon: FaHardHat },
-    { name: "Bricklayer", icon: FaHammer },
-    { name: "Electrician", icon: FaBolt },
-    { name: "Plumber", icon: FaTools },
-    { name: "Heating Repairman", icon: FaFireExtinguisher },
-    { name: "Elevator Repairman", icon: FaCogs },
-    { name: "Gardener", icon: FaLeaf },
-    { name: "Watchmen", icon: FaUserShield },
+    { name: "Roofer", icon: FaHardHat, jobsAvailable: 12 },
+    { name: "Bricklayer", icon: FaHammer, jobsAvailable: 8 },
+    { name: "Electrician", icon: FaBolt, jobsAvailable: 15 },
+    { name: "Plumber", icon: FaTools, jobsAvailable: 10 },
+    { name: "Heating Repairman", icon: FaFireExtinguisher, jobsAvailable: 7 },
+    { name: "Elevator Repairman", icon: FaCogs, jobsAvailable: 5 },
+    { name: "Gardener", icon: FaLeaf, jobsAvailable: 20 },
+    { name: "Watchmen", icon: FaUserShield, jobsAvailable: 6 },
+    { name: "Construction", icon: FaBuilding, jobsAvailable: 18 },
+    { name: "Education", icon: FaChalkboardTeacher, jobsAvailable: 25 },
+    { name: "Healthcare", icon: FaMedkit, jobsAvailable: 30 },
+    { name: "Business", icon: FaUserTie, jobsAvailable: 22 },
+    { name: "Finance", icon: FaBriefcase, jobsAvailable: 12 },
+    { name: "Technology", icon: FaDesktop, jobsAvailable: 40 },
   ];
 
   return (
@@ -41,7 +53,7 @@ export default function PopularJobsSection() {
                 <IconComponent />
               </div>
               <h6 className="text-gray-800 font-semibold text-sm mb-1 text-center">
-                12 jobs available
+                {category.jobsAvailable} jobs available
               </h6>
               <span className="text-gray-600 text-center font-medium">
                 {category.name}

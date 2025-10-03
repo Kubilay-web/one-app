@@ -114,28 +114,28 @@ export const left = [
 ];
 export const stories = [
   {
-    profile_picture: "/facebook/stories/profile1.jpg",
-    profile_name: "Elon Musk",
-    image: "/facebook/stories/1.jpg",
+    profile_picture: "/facebook/stories/img-01.jpeg",
+    profile_name: "",
+    image: "/facebook/stories/img-01.jpeg",
   },
   {
-    profile_picture: "/facebook/stories/profile2.jpg",
-    profile_name: "South park",
-    image: "/facebook/stories/2.png",
+    profile_picture: "/facebook/stories/img-02.jpeg",
+    profile_name: "",
+    image: "/facebook/stories/img-02.jpeg",
   },
   {
-    profile_picture: "/facebook/stories/profile3.png",
-    profile_name: "The Sopranos",
-    image: "/facebook/stories/3.jpg",
+    profile_picture: "/facebook/stories/img-03.jpeg",
+    profile_name: "",
+    image: "/facebook/stories/img-03.jpeg",
   },
   {
-    profile_picture: "/facebook/stories/profile4.jfif",
-    profile_name: "Football World",
-    image: "/facebook/stories/4.jpg",
+    profile_picture: "/facebook/stories/img-04.jpeg",
+    profile_name: "",
+    image: "/facebook/stories/img-04.jpeg",
   },
   {
-    profile_picture: "/facebook/stories/profile5.png",
-    profile_name: "The Witcher Wild Hunt",
-    image: "/facebook/stories/5.jfif",
+    profile_picture: "/facebook/stories/img-05.jpeg",
+    profile_name: "",
+    image: "/facebook/stories/img-05.jpeg",
   },
 ];

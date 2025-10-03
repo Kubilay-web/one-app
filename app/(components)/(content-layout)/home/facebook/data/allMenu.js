@@ -35,6 +35,13 @@ export const menu = [
     description: "",
     link: "/pages"  // Yeni link ekledim
   },
+
+    {
+    name: "Messenger",
+    icon: "messenger",
+    description: "",
+    link: "/home/chat"  // Yeni link ekledim
+  },
   {
     name: "Gaming Video",
     icon: "gaming",
@@ -125,12 +132,7 @@ export const menu = [
     description: "",
     link: "/fundraisers"  // Yeni link ekledim
   },
-  {
-    name: "Messenger",
-    icon: "messenger",
-    description: "",
-    link: "/home/chat"  // Yeni link ekledim
-  },
+
   {
     name: "Messenger Kids",
     icon: "messkids",

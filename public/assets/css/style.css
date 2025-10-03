@@ -10758,8 +10758,8 @@ a.fg-emoji-picker-close-button {
 }
 
 .app-sidebar .slide-menu.child1 .side-menu__item, .app-sidebar .slide-menu.child2 .side-menu__item, .app-sidebar .slide-menu.child3 .side-menu__item {
-    font-size: 0.82rem !important;
-    font-weight: 500 !important;
+    font-size: 0.89rem !important;
+    font-weight:700 !important;
     color: black !important;
     margin-top: 0px;
     margin-bottom: 0px;
