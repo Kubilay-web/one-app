@@ -1,21 +1,26 @@
 "use client";
 
-import { FaBriefcase, FaDesktop, FaBuilding, FaChalkboardTeacher, FaMedkit, FaUserTie } from "react-icons/fa";
+import {
+  FaHardHat,
+  FaHammer,
+  FaBolt,
+  FaTools,
+  FaFireExtinguisher,
+  FaCogs,
+  FaLeaf,
+  FaUserShield,
+} from "react-icons/fa";
 
 export default function PopularJobsSection() {
   const jobCategories = [
-    { name: "Finance", icon: FaBriefcase },
-    { name: "Technology", icon: FaDesktop },
-    { name: "Construction", icon: FaBuilding },
-    { name: "Education", icon: FaChalkboardTeacher },
-    { name: "Healthcare", icon: FaMedkit },
-    { name: "Business", icon: FaUserTie },
-    { name: "Finance", icon: FaBriefcase },
-    { name: "Technology", icon: FaDesktop },
-    { name: "Construction", icon: FaBuilding },
-    { name: "Education", icon: FaChalkboardTeacher },
-    { name: "Healthcare", icon: FaMedkit },
-    { name: "Business", icon: FaUserTie },
+    { name: "Roofer", icon: FaHardHat },
+    { name: "Bricklayer", icon: FaHammer },
+    { name: "Electrician", icon: FaBolt },
+    { name: "Plumber", icon: FaTools },
+    { name: "Heating Repairman", icon: FaFireExtinguisher },
+    { name: "Elevator Repairman", icon: FaCogs },
+    { name: "Gardener", icon: FaLeaf },
+    { name: "Watchmen", icon: FaUserShield },
   ];
 
   return (
@@ -38,7 +43,9 @@ export default function PopularJobsSection() {
               <h6 className="text-gray-800 font-semibold text-sm mb-1 text-center">
                 12 jobs available
               </h6>
-              <span className="text-gray-600 text-center font-medium">{category.name}</span>
+              <span className="text-gray-600 text-center font-medium">
+                {category.name}
+              </span>
             </div>
           );
         })}
