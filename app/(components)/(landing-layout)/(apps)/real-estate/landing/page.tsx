@@ -546,7 +546,7 @@ const Landing = () => {
                     <div className="container">
                         <div className="grid grid-cols-12 gap-x-6 items-center">
                             <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-5 col-span-12 lg:block hidden text-center mt-4">
-                                <Image fill src="../../assets/images/ecommerce/png/17.png"  alt="" />
+                                <Image fill src="../../assets/images/ecommerce/png/Buy Sell.png"  alt="" />
                             </div>
                             <div className="xxl:col-span-8 xl:col-span-8 lg:col-span-7 col-span-12">
                                 <div className="my-4">
