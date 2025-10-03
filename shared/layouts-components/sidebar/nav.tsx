@@ -3464,32 +3464,32 @@ export const getMenuItems = (user) => [
     ],
   },
 
-  {
-    menutitle: "Utilities",
-  },
+  // {
+  //   menutitle: "Utilities",
+  // },
 
-  {
-    path: "/apps/ecommerce/admin/faqs",
-    type: "link",
-    active: false,
-    selected: false,
-    title: "Faq's",
-  },
+  // {
+  //   path: "/apps/ecommerce/admin/faqs",
+  //   type: "link",
+  //   active: false,
+  //   selected: false,
+  //   title: "Faq's",
+  // },
 
-  {
-    path: "/pages/reviews",
-    type: "link",
-    active: false,
-    selected: false,
-    title: "Reviews",
-  },
-  {
-    path: "/pages/terms-conditions",
-    type: "link",
-    active: false,
-    selected: false,
-    title: "Terms & Conditions",
-  },
+  // {
+  //   path: "/pages/reviews",
+  //   type: "link",
+  //   active: false,
+  //   selected: false,
+  //   title: "Reviews",
+  // },
+  // {
+  //   path: "/pages/terms-conditions",
+  //   type: "link",
+  //   active: false,
+  //   selected: false,
+  //   title: "Terms & Conditions",
+  // },
   // {
   //   menutitle: "GENERAL"
   // },

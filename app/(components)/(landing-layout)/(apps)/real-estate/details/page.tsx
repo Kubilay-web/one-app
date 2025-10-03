@@ -155,7 +155,7 @@ const Details = () => {
                                 <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12">
                                     <div className="product-spec bg-white dark:!bg-bodybg">
                                         <p className="mb-0 relative">
-                                            <Image fill src="../../assets/images/realestate/icons/4.png" alt="" />
+                                            <Image fill src="../../assets/images/realestate/icons/Bedrooms.png" alt="" />
                                         </p>
                                         <p className="text-[0.875rem] font-semibold mb-0">4+ Bedrooms</p>
                                     </div>
@@ -163,7 +163,7 @@ const Details = () => {
                                 <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12 sm:mt-0 mt-4">
                                     <div className="product-spec bg-white dark:!bg-bodybg">
                                         <p className="mb-0 relative">
-                                            <Image fill src="../../assets/images/realestate/icons/5.png" alt="" />
+                                            <Image fill src="../../assets/images/realestate/icons/Bathrooms.png" alt="" />
                                         </p>
                                         <p className="text-[0.875rem] font-semibold mb-0">
                                             4 Bathrooms
@@ -173,7 +173,7 @@ const Details = () => {
                                 <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12 sm:mt-0 mt-4">
                                     <div className="product-spec bg-white dark:!bg-bodybg">
                                         <p className="mb-0 relative">
-                                            <Image fill src="../../assets/images/realestate/icons/6.png" alt="" />
+                                            <Image fill src="../../assets/images/realestate/icons/Buildup.png" alt="" />
                                         </p>
                                         <p className="text-[0.875rem] font-semibold mb-0">
                                             3500 Sq.ft Built Up
@@ -256,7 +256,7 @@ const Details = () => {
                                         <div className="xxl:col-span-6 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12">
                                             <div className="product-spec mb-2">
                                                 <p className="mb-0 relative">
-                                                    <Image fill src="../../assets/images/realestate/icons/7.png" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/icons/Amenities-24Hr.png" alt="" />
                                                 </p>
                                                 <p className="text-[0.875rem] font-semibold mb-0">24Hr Backup</p>
                                             </div>
@@ -264,7 +264,7 @@ const Details = () => {
                                         <div className="xxl:col-span-6 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12 sm:mt-0 mt-4">
                                             <div className="product-spec mb-2">
                                                 <p className="mb-0 relative">
-                                                    <Image fill src="../../assets/images/realestate/icons/8.png" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/icons/Amenities-RainWater.png" alt="" />
                                                 </p>
                                                 <p className="text-[0.875rem] font-semibold mb-0">
                                                     Rain Water Harvesting
@@ -274,7 +274,7 @@ const Details = () => {
                                         <div className="xxl:col-span-6 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12 sm:mt-0 mt-4">
                                             <div className="product-spec mb-2">
                                                 <p className="mb-0 relative">
-                                                    <Image fill src="../../assets/images/realestate/icons/1.png" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/icons/Amenities-Communities.png" alt="" />
                                                 </p>
                                                 <p className="text-[0.875rem] font-semibold mb-0">
                                                     Community Hall
@@ -284,7 +284,7 @@ const Details = () => {
                                         <div className="xxl:col-span-6 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12 sm:mt-0 mt-4">
                                             <div className="product-spec mb-2">
                                                 <p className="mb-0 relative">
-                                                    <Image fill src="../../assets/images/realestate/icons/9.png" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/icons/Amenities Play.png" alt="" />
                                                 </p>
                                                 <p className="text-[0.875rem] font-semibold mb-0">
                                                     Play Area
@@ -294,7 +294,7 @@ const Details = () => {
                                         <div className="xxl:col-span-6 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12 sm:mt-0 mt-4">
                                             <div className="product-spec mb-2">
                                                 <p className="mb-0 relative">
-                                                    <Image fill src="../../assets/images/realestate/icons/10.png" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/icons/Amenities-Swimming.png" alt="" />
                                                 </p>
                                                 <p className="text-[0.875rem] font-semibold mb-0">
                                                     Swimming Pool
@@ -304,7 +304,7 @@ const Details = () => {
                                         <div className="xxl:col-span-6 xl:col-span-4 lg:col-span-4 md:col-span-4 sm:col-span-4 col-span-12 sm:mt-0 mt-4">
                                             <div className="product-spec mb-2">
                                                 <p className="mb-0 relative">
-                                                    <Image fill src="../../assets/images/realestate/icons/11.png" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/icons/Amenities Gymnasium.png" alt="" />
                                                 </p>
                                                 <p className="text-[0.875rem] font-semibold mb-0">
                                                     Gymnasium
@@ -354,7 +354,7 @@ const Details = () => {
                                                     <h5 className="font-semibold mb-0">$5,643 Cr</h5>
                                                 </div>
                                                 <div className="flex justify-center items-center gap-[3rem] flex-wrap">
-                                                    <Image fill src="../../assets/images/realestate/1.png" className="img-fluid invert-1" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/FloorPlan.png" className="img-fluid invert-1" alt="" />
                                                     <div>
                                                         <h6>Floor Plan Unavailable</h6>
                                                         <Link scroll={false} href="#!" className="ti-btn ti-btn-danger">Request a demo</Link>
@@ -370,7 +370,7 @@ const Details = () => {
                                                     <h5 className="font-semibold mb-0">$7,643 Cr</h5>
                                                 </div>
                                                 <div className="flex justify-center items-center gap-[3rem] flex-wrap">
-                                                    <Image fill src="../../assets/images/realestate/1.png" className="img-fluid" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/FloorPlan.png" className="img-fluid" alt="" />
                                                     <div>
                                                         <h6>Floor Plan Unavailable</h6>
                                                         <Link scroll={false} href="#!" className="ti-btn ti-btn-danger">Request a demo</Link>
@@ -386,7 +386,7 @@ const Details = () => {
                                                     <h5 className="font-semibold mb-0">$8,643 Cr</h5>
                                                 </div>
                                                 <div className="flex justify-center items-center gap-[3rem] flex-wrap">
-                                                    <Image fill src="../../assets/images/realestate/1.png" className="img-fluid" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/FloorPlan.png" className="img-fluid" alt="" />
                                                     <div>
                                                         <h6>Floor Plan Unavailable</h6>
                                                         <Link scroll={false} href="#!" className="ti-btn ti-btn-danger">Request a demo</Link>
@@ -402,7 +402,7 @@ const Details = () => {
                                                     <h5 className="font-semibold mb-0">$9,643 Cr</h5>
                                                 </div>
                                                 <div className="flex justify-center items-center gap-[3rem] flex-wrap">
-                                                    <Image fill src="../../assets/images/realestate/1.png" className="img-fluid" alt="" />
+                                                    <Image fill src="../../assets/images/realestate/FloorPlan.png" className="img-fluid" alt="" />
                                                     <div>
                                                         <h6>Floor Plan Unavailable</h6>
                                                         <Link scroll={false} href="#!" className="ti-btn ti-btn-danger">Request a demo</Link>

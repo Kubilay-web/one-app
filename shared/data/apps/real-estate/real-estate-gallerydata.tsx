@@ -14,10 +14,10 @@ export const RealGallerylist = () => {
     const [open, setOpen] = useState(false);
 
     const Slides = [
-        { src: "../../assets/images/realestate/4.png" },
-        { src: "../../assets/images/realestate/5.png" },
-        { src: "../../assets/images/realestate/6.png" },
-        { src: "../../assets/images/realestate/5.png" },
+        { src: "../../assets/images/realestate/Main-2.png" },
+        { src: "../../assets/images/realestate/Main-3.png" },
+        { src: "../../assets/images/realestate/Main-4.png" },
+        { src: "../../assets/images/realestate/Main-2.png" },
     ]
 
     return (
@@ -26,7 +26,7 @@ export const RealGallerylist = () => {
                 <div className="classify-gallery !p-0 !border-0 relative">
                     <span className="badge bg-warning tag-badge text-white">Featured</span>
                     <span className="ti-btn !bg-white/[0.15] !border !border-white/10 backdrop-blur classifyimage-btn !text-white !rounded-full" onClick={() => setOpen(true)}><i className="ri-image-line me-2 bg-primary !text-white feature-icons !border-0"></i>5 Images</span>
-                    <Image fill priority src="../../assets/images/realestate/2.png" alt="image" onClick={() => setOpen(true)} />
+                    <Image fill priority src="../../assets/images/realestate/Main.png" alt="image" onClick={() => setOpen(true)} />
                 </div>
             </Link>
             <Lightboxcomponent

@@ -220,7 +220,7 @@ const UserProfile = () => {
                                                 <div className="xxl:col-span-6 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-6 col-span-12">
                                                     <div className="product-spec mb-2">
                                                         <p className="mb-0">
-                                                            <Image fill src="../../assets/images/realestate/icons/7.png" alt="" />
+                                                            <Image fill src="../../assets/images/realestate/icons/Amenities-24Hr.png" alt="" />
                                                         </p>
                                                         <p className="text-[0.875rem] font-semibold mb-0">24Hr Backup</p>
                                                     </div>
@@ -228,7 +228,7 @@ const UserProfile = () => {
                                                 <div className="xxl:col-span-6 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-6 col-span-12 sm:mt-0 mt-4">
                                                     <div className="product-spec mb-2">
                                                         <p className="mb-0">
-                                                            <Image fill src="../../assets/images/realestate/icons/8.png" alt="" />
+                                                            <Image fill src="../../assets/images/realestate/icons/Amenities-RainWater.png" alt="" />
                                                         </p>
                                                         <p className="text-[0.875rem] font-semibold mb-0">
                                                             Rain Water Harvesting
@@ -238,7 +238,7 @@ const UserProfile = () => {
                                                 <div className="xxl:col-span-6 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-6 col-span-12 sm:mt-0 mt-4">
                                                     <div className="product-spec mb-2">
                                                         <p className="mb-0">
-                                                            <Image fill src="../../assets/images/realestate/icons/1.png" alt="" />
+                                                            <Image fill src="../../assets/images/realestate/icons/Amenities-Communities.png" alt="" />
                                                         </p>
                                                         <p className="text-[0.875rem] font-semibold mb-0">
                                                             Community Hall
@@ -248,7 +248,7 @@ const UserProfile = () => {
                                                 <div className="xxl:col-span-6 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-6 col-span-12 sm:mt-0 mt-4">
                                                     <div className="product-spec mb-2">
                                                         <p className="mb-0">
-                                                            <Image fill src="../../assets/images/realestate/icons/9.png" alt="" />
+                                                            <Image fill src="../../assets/images/realestate/icons/Amenities Play.png" alt="" />
                                                         </p>
                                                         <p className="text-[0.875rem] font-semibold mb-0">
                                                             Play Area
@@ -258,7 +258,7 @@ const UserProfile = () => {
                                                 <div className="xxl:col-span-6 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-6 col-span-12 sm:mt-0 mt-4">
                                                     <div className="product-spec mb-2">
                                                         <p className="mb-0">
-                                                            <Image fill src="../../assets/images/realestate/icons/10.png" alt="" />
+                                                            <Image fill src="../../assets/images/realestate/icons/Amenities-Swimming.png" alt="" />
                                                         </p>
                                                         <p className="text-[0.875rem] font-semibold mb-0">
                                                             Swimming Pool
@@ -268,7 +268,7 @@ const UserProfile = () => {
                                                 <div className="xxl:col-span-6 xl:col-span-6 lg:col-span-6 md:col-span-6 sm:col-span-6 col-span-12 sm:mt-0 mt-4">
                                                     <div className="product-spec mb-2">
                                                         <p className="mb-0">
-                                                            <Image fill src="../../assets/images/realestate/icons/11.png" alt="" />
+                                                            <Image fill src="../../assets/images/realestate/icons/Amenities Gymnasium.png" alt="" />
                                                         </p>
                                                         <p className="text-[0.875rem] font-semibold mb-0">
                                                             Gymnasium
