@@ -98,6 +98,8 @@ model User {
   UserSearch UserSearch[]
   UserSearchs UserSearch[] @relation("SearchedUserRelation")
 
+  
+
   //Facebook Social2
 
   @@map("users")

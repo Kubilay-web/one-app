@@ -1,77 +1,75 @@
-// app/api/social/getfriendinfos/route.ts
-
-import { NextResponse } from 'next/server'; // Importing NextResponse
+import { NextResponse } from 'next/server';
 import db from "@/app/lib/db";
+import { validateRequest } from '@/app/auth';
 
-// Named export for the GET method
 export async function GET(req: Request) {
   try {
-    const userId = req.user?.id; // Example: You can extract it from session or JWT
+    // 1️⃣ Kullanıcı doğrulama
+    const { user } = await validateRequest();
+    const userId = user?.id;
 
     if (!userId) {
-      // Use NextResponse to return a response with a status code
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    // Retrieve the current user details based on the userId in the request
-    const user = await db.user.findUnique({
+    // 2️⃣ Kullanıcının gelen ve gönderilen pending friend requestlerini al
+    const currentUser = await db.user.findUnique({
       where: { id: userId },
       select: {
         id: true,
         username: true,
         avatarUrl: true,
-        friends: {
+
+        // Gelen pending friend requestler
+        FriendRequestSocial: {
+          where: { status: 'pending' },
           select: {
-            id: true,
-            username: true,
-            avatarUrl: true,
+            user: { select: { id: true, username: true, avatarUrl: true } }
           }
         },
-        requests: {
+
+        // Gönderilen pending friend requestler
+        FriendRequestSocials: {
+          where: { status: 'pending' },
           select: {
-            id: true,
-            username: true,
-            avatarUrl: true,
+            friend: { select: { id: true, username: true, avatarUrl: true } }
           }
         }
       }
     });
 
-    if (!user) {
+    if (!currentUser) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    // Fetch sent friend requests (users who have sent requests to the current user)
-    const sentRequests = await db.friendRequest.findMany({
+    // 3️⃣ Kabul edilmiş arkadaşları al
+    const acceptedFriends = await db.friendRequest.findMany({
       where: {
-        friendId: userId,  // The current user is the friend being requested
-        status: 'pending', // Filter for only pending requests
+        OR: [
+          { userId: userId, status: 'accepted' },
+          { friendId: userId, status: 'accepted' }
+        ]
       },
       select: {
-        id: true,
         userId: true,
         friendId: true,
-        createdAt: true,
-        user: {
-          select: {
-            id: true,
-            username: true,
-            avatarUrl: true,
-          }
-        }
+        user: { select: { id: true, username: true, avatarUrl: true } },
+        friend: { select: { id: true, username: true, avatarUrl: true } }
       }
     });
 
-    // Return the data in the response
+    // Arkadaş listesini map et
+    const friendsList = acceptedFriends.map(f => (f.userId === userId ? f.friend : f.user));
+
+    // 4️⃣ JSON response
     return NextResponse.json({
-      friends: user.friends,
-      requests: user.requests,
-      sentRequests: sentRequests.map(request => request.user), // Only returning the user object in sent requests
+      friends: friendsList,
+      requests: currentUser.FriendRequestSocial.map(r => r.user),
+      sentRequests: currentUser.FriendRequestSocials.map(s => s.friend)
     });
 
   } catch (error) {
-    console.error('Error fetching friend page data:', error);
-    // Use NextResponse to return a server error response
+    console.error('Error fetching friend data:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
