@@ -709,10 +709,10 @@ header.header-social {
   .mmenu {
     width: 290px;
   }
-  .all_menu {
+  /* .all_menu {
     width: 310px;
     left: -10rem;
-  }
+  } */
   .search_area {
     width: 310px;
   }
