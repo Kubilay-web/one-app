@@ -10,16 +10,16 @@ export async function POST(req: Request) {
     if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
 
     const body = await req.json();
-    const { friendId } = body;
-    if (!friendId) return new Response(JSON.stringify({ error: "friendId is required" }), { status: 400 });
+    const { username } = body;
+    if (!username) return new Response(JSON.stringify({ error: "username is required" }), { status: 400 });
 
     await db.friendRequest.deleteMany({
-      where: { userId: user.id, friendId, status: "pending" },
+      where: { userId: user.id, username, status: "pending" },
     });
 
     // Takibi sil
     await db.followSocial.deleteMany({
-      where: { followerId: user.id, followingId: friendId },
+      where: { followerId: user.id, followingId: username },
     });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });

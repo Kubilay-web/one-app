@@ -9,11 +9,11 @@ export async function POST(req: Request) {
     if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
 
     const body = await req.json();
-    const { followingId } = body;
-    if (!followingId) return new Response(JSON.stringify({ error: "followingId is required" }), { status: 400 });
+    const { username } = body;
+    if (!username) return new Response(JSON.stringify({ error: "username is required" }), { status: 400 });
 
     await db.followSocial.create({
-      data: { followerId: user.id, followingId },
+      data: { followerId: user.id, username },
     });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });

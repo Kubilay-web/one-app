@@ -3,7 +3,7 @@ import useClickOutside from "../../helpers/clickOutside";
 import axios from "axios";
 import { useSession } from "@/app/SessionProvider";
 
-export default function Friendship({ profileId }) {
+export default function Friendship({ username }) {
   const [friendship, setFriendship] = useState({
     friends: false,
     following: false,
@@ -24,7 +24,7 @@ export default function Friendship({ profileId }) {
   // Friendship durumunu backend'den al
   const fetchFriendship = async () => {
     try {
-      const { data } = await axios.get(`/api/social/friendship/${profileId}`, {
+      const { data } = await axios.get(`/api/social/friendship/${username}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setFriendship(data);
@@ -36,14 +36,14 @@ export default function Friendship({ profileId }) {
 
   useEffect(() => {
     fetchFriendship();
-  }, [profileId]);
+  }, [username]);
 
   // Handlers
   const addFriendHandler = async () => {
     setFriendship({ ...friendship, requestSent: true, following: true });
     await axios.post(
       `/api/social/friendship/add`,
-      { friendId: profileId },
+      { friendId: username },
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
   };
@@ -52,7 +52,7 @@ export default function Friendship({ profileId }) {
     setFriendship({ ...friendship, requestSent: false, following: false });
     await axios.post(
       `/api/social/friendship/cancel`,
-      { friendId: profileId },
+      { friendId: username },
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
   };
@@ -66,7 +66,7 @@ export default function Friendship({ profileId }) {
     });
     await axios.post(
       `/api/social/friendship/accept`,
-      { friendId: profileId },
+      { friendId: username },
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
   };
@@ -80,7 +80,7 @@ export default function Friendship({ profileId }) {
     });
     await axios.post(
       `/api/social/friendship/delete`,
-      { friendId: profileId },
+      { friendId: username },
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
   };
@@ -94,7 +94,7 @@ export default function Friendship({ profileId }) {
     });
     await axios.post(
       `/api/social/friendship/unfriend`,
-      { friendId: profileId },
+      { friendId: username },
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
   };
@@ -103,7 +103,7 @@ export default function Friendship({ profileId }) {
     setFriendship({ ...friendship, following: true });
     await axios.post(
       `/api/social/friendship/follow`,
-      { followingId: profileId },
+      { followingId: username },
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
   };
@@ -112,7 +112,7 @@ export default function Friendship({ profileId }) {
     setFriendship({ ...friendship, following: false });
     await axios.post(
       `/api/social/friendship/unfollow`,
-      { followingId: profileId },
+      { followingId: username },
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
   };

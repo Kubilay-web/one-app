@@ -19,11 +19,15 @@ export default function Home() {
   // Popup görünürlüğü
   const [visible, setVisible] = useState(false);
 
+  const [showMyPostsOnly, setShowMyPostsOnly] = useState(false); // Feeling/Activity durumu
+
+
+
   // Postları tutacak state
   const [posts, setPosts] = useState([]);
 
   const handleAddNewPost = (createPost) => {
-    setPosts((prev) => [createPost, ...prev]); // Yeni postu en başa ekle
+    setPosts((prev) => [createPost, ...prev]);
   };
 
   // Sayfa yüklendiğinde postları çek
@@ -42,6 +46,12 @@ export default function Home() {
     fetchPosts();
   }, []);
 
+
+
+    const displayedPosts = showMyPostsOnly
+    ? posts.filter((p) => p.userId === user?.id)
+    : posts;
+
   return (
     <div className="home">
       <Toaster position="top-right" reverseOrder={false} />
@@ -52,19 +62,27 @@ export default function Home() {
           onPostCreated={handleAddNewPost}
         />
       )}
-       {/* <Header />  */}
+      {/* <Header />  */}
       <div className="middle-container">
         <div className="home_middle">
-          <div>
-            {/* <LeftHome user={user} /> */}
-          </div>
+          <div>{/* <LeftHome user={user} /> */}</div>
           <div>
             <Stories />
-            <CreatePost user={user} setVisible={setVisible} />
+            <CreatePost
+              user={user}
+              setVisible={setVisible}
+              posts={posts}
+              showMyPostsOnly={showMyPostsOnly}
+              setShowMyPostsOnly={setShowMyPostsOnly}
+            />
             <div className="posts">
-              {posts.map((post, index) => (
-                <Post key={post.id || index} post={post} user={user} />
-              ))}
+              {displayedPosts.length > 0 ? (
+                displayedPosts.map((post, index) => (
+                  <Post key={post.id || index} post={post} user={user} />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No posts.</p>
+              )}
             </div>
           </div>
           <div>

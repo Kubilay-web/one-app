@@ -9,18 +9,18 @@ export async function POST(req: Request) {
     if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
 
     const body = await req.json();
-    const { friendId } = body;
-    if (!friendId) return new Response(JSON.stringify({ error: "friendId is required" }), { status: 400 });
+    const { username } = body;
+    if (!username) return new Response(JSON.stringify({ error: "username is required" }), { status: 400 });
 
     // Pending friend request'i kabul et
     await db.friendRequest.updateMany({
-      where: { userId: friendId, friendId: user.id, status: "pending" },
+      where: { userId: username, username: user.id, status: "pending" },
       data: { status: "accepted" },
     });
 
     // Arkadaşı otomatik takip et
     await db.followSocial.create({
-      data: { followerId: user.id, followingId: friendId },
+      data: { followerId: user.id, followingId: username },
     });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });

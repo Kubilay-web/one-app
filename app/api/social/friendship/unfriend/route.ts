@@ -8,15 +8,15 @@ export async function POST(req: Request) {
     if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
 
     const body = await req.json();
-    const { friendId } = body;
-    if (!friendId) return new Response(JSON.stringify({ error: "friendId is required" }), { status: 400 });
+    const { username } = body;
+    if (!username) return new Response(JSON.stringify({ error: "username is required" }), { status: 400 });
 
     // Accepted friend request sil
     await db.friendRequest.deleteMany({
       where: {
         OR: [
-          { userId: user.id, friendId, status: "accepted" },
-          { userId: friendId, friendId: user.id, status: "accepted" },
+          { userId: user.id, username, status: "accepted" },
+          { userId: username, username: user.id, status: "accepted" },
         ],
       },
     });
@@ -25,8 +25,8 @@ export async function POST(req: Request) {
     await db.followSocial.deleteMany({
       where: {
         OR: [
-          { followerId: user.id, followingId: friendId },
-          { followerId: friendId, followingId: user.id },
+          { followerId: user.id, followingId: username },
+          { followerId: username, followingId: user.id },
         ],
       },
     });
