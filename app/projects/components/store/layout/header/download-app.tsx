@@ -1,4 +1,3 @@
-// Next.js
 import Link from "next/link";
 import Image from "next/image";
 
@@ -23,13 +22,13 @@ export default function DownloadApp() {
       </div>
       {/* Content */}
       <div className="absolute top-0 hidden cursor-pointer group-hover:block">
-        <div className="text-main-primary relative z-50 -ml-20 mt-12 w-[300px] rounded-3xl bg-white px-1 pb-6 pt-2 shadow-lg">
-          {/* Traingle */}
+        <div className="text-black relative z-50 -ml-20 mt-12 w-[300px] rounded-3xl bg-white px-1 pb-6 pt-2 shadow-lg">
+          {/* Triangle */}
           <div className="absolute -top-1.5 left-36 h-0 w-0 border-b-[10px] border-l-[10px] border-r-[10px] border-white border-l-transparent border-r-transparent" />
           <div className="break-words px-1 py-3">
             <div className="flex">
               <div className="mx-3">
-                <h3 className="text-main-primary m-0 mx-auto max-w-40 text-[20px] font-bold">
+                <h3 className="text-black m-0 mx-auto max-w-40 text-[20px] font-bold">
                   Download the GoShop app
                 </h3>
                 <div className="mt-4 flex items-center gap-x-2">

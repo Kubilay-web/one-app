@@ -4,8 +4,8 @@ import HomeMainSwiper from "@/app/projects/components/store/home/main/home-swipe
 import HomeUserCard from "@/app/projects/components/store/home/main/user/user";
 import Sideline from "@/app/projects/components/store/home/sideline/sideline";
 import CategoriesHeader from "@/app/projects/components/store/layout/categories-header/categories-header";
-import Footer from "@/app/projects/components/store/layout/footer/footer";
-import Header from "@/app/projects/components/store/layout/header/header";
+// import Footer from "@/app/projects/components/store/layout/footer/footer";
+// import Header from "@/app/projects/components/store/layout/header/header";
 import SuperDealsImg from "@/public/assets/images/ads/super-deals.avif";
 import MainSwiper from "@/app/projects/components/store/shared/swiper";
 import { SimpleProduct } from "@/app/lib/types";
@@ -33,7 +33,7 @@ export default async function HomePage() {
         <div className="relative h-full w-[calc(100%-40px)] bg-[#e3e3e3]">
           <div className="mx-auto min-h-screen max-w-[1600px] p-4">
             {/* Main */}
-            <div className="grid w-full gap-2 min-[1170px]:grid-cols-[1fr_350px] min-[1465px]:grid-cols-[200px_1fr_350px]">
+            <div className="grid w-full gap-2 min-[1170px]:grid-cols-[1fr_350px] min-[1465px]:grid-cols-[1fr_1fr_1fr]">
               {/* Left */}
               <div
                 className="hidden cursor-pointer rounded-md bg-cover bg-no-repeat min-[1465px]:block"

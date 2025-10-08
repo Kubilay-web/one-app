@@ -9,7 +9,7 @@ export default function CategoryCard({
 }) {
   return (
     <div className="h-full w-full rounded-[10px] bg-white">
-      <Link href={`/browse?category=${category.url}`}>
+      <Link href={`/home/shop/browse?category=${category.url}`}>
         <div className="flex items-center justify-between px-5 pt-4">
           <span className="line-clamp-1 flex-1 overflow-hidden text-[20px] font-extrabold text-[#222]">
             {category.name}
@@ -23,7 +23,7 @@ export default function CategoryCard({
         {category.subCategories.map((sub) => (
           <Link
             key={sub.id}
-            href={`/browse?subCategory=${sub.url}`}
+            href={`/home/shop/browse?subCategory=${sub.url}`}
             className="cursor-pointer overflow-hidden rounded-[10px]"
           >
             <Image

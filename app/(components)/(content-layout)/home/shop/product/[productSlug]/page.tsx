@@ -22,5 +22,5 @@ export default async function ProductPage({
     return redirect("/");
   }
 
-  return redirect(`/apps/shop/product/${product.slug}/${product.variants[0].slug}`);
+  return redirect(`/home/shop/product/${product.slug}/${product.variants[0].slug}`);
 }

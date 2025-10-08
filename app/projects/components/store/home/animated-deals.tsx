@@ -38,7 +38,7 @@ export default function AnimatedDeals() {
         className="h-[330px] w-full"
       />
       <Link
-        href="/browse"
+        href="/home/shop/browse"
         className="absolute left-[7%] top-[25%] z-10 flex h-[181px] w-[140px] justify-center rounded-[24px] bg-[#ffaf00] min-[1070px]:left-[10%]"
       >
         <Image
@@ -53,7 +53,7 @@ export default function AnimatedDeals() {
         </span>
       </Link>
       <Link
-        href="/browse"
+        href="/home/shop/browse"
         className="absolute right-[7%] top-[25%] z-10 flex h-[181px] w-[140px] justify-center rounded-[24px] bg-[#ffaf00] min-[1070px]:right-[10%]"
       >
         <Image

@@ -27,7 +27,7 @@ export default async function CheckoutPage() {
     },
   });
 
-  if (!cart) redirect("/apps/shop/cart");
+  if (!cart) redirect("/home/shop/cart");
 
   const addresses = await getUserShippingAddresses();
 

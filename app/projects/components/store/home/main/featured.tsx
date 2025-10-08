@@ -42,7 +42,7 @@ export default function Featured() {
         style={{ backgroundImage: "url(/assets/images/ads/featured.webp)" }}
       >
         {/* Coupon */}
-        <Link href="/">
+        <Link href="/home/shop">
           <div className="relative float-left h-[190px] w-52 px-3">
             <div className="flex h-[103px] flex-col items-center justify-center">
               <h3 className="my-1 w-full font-bold leading-5 text-white">

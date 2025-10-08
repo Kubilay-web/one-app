@@ -31,7 +31,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
     <div>
       <div
         className={cn(
-          "group relative ml-5 w-[190px] rounded-t-3xl border border-transparent bg-white p-4 transition-all duration-75 ease-in-out hover:border-border hover:shadow-xl min-[480px]:w-[225px]",
+          "group relative ml-5 w-[190px] rounded-t-3xl border border-transparent bg-white p-4 transition-all duration-75 ease-in-out hover:border-gray-300 hover:shadow-xl min-[480px]:w-[225px] gap-3",
           {
             "": true,
           },
@@ -39,13 +39,13 @@ export default function ProductCard({ product }: { product: ProductType }) {
       >
         <div className="relative h-full w-full">
           <Link
-            href={`/apps/shop/product/${slug}?variant=${variantSlug}`}
+            href={`/home/shop/product/${slug}?variant=${variantSlug}`}
             className="relative inline-block w-full overflow-hidden"
           >
             {/* Images Swiper */}
             <ProductCardImageSwiper images={images} />
             {/* Title */}
-            <div className="line-clamp-1 h-[18px] overflow-hidden overflow-ellipsis text-sm text-main-primary">
+            <div className="line-clamp-1 h-[18px] overflow-hidden overflow-ellipsis text-sm text-gray-900">
               {name} · {variantName}
             </div>
             {/* Rating - Sales */}
@@ -58,7 +58,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
                   starDimension="18px"
                   starSpacing="2px"
                 />
-                <div className="text-xs text-main-secondary">{sales} sold</div>
+                <div className="text-xs text-gray-500">{sales} sold</div>
               </div>
             )}
             {/* Price */}
@@ -75,7 +75,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
           />
           <div className="flex-items flex gap-x-1">
             <Button>
-              <Link href={`/apps/shop/product/${slug}/${variantSlug}`}>Add to cart</Link>
+              <Link className="text-black" href={`/home/shop/product/${slug}/${variantSlug}`}>Add to cart</Link>
             </Button>
             <Button
               variant="black"

@@ -36,7 +36,7 @@ const PlaceOrderCard: FC<Props> = ({
       if (order) {
         emptyCart();
         await emptyUserCart();
-        push(`/apps/shop/order/${order.orderId}`);
+        push(`/home/shop/order/${order.orderId}`);
       }
     }
     setLoading(false);

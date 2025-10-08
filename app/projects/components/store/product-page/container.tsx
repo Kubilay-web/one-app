@@ -239,7 +239,7 @@ const ProductPageContainer: FC<Props> = ({ productData, sizeId, children }) => {
                   </button>
 
                   <SocialShare
-                    url={`/apps/shop/product/${productData.productSlug}/${productData.variantSlug}`}
+                    url={`/home/shop/product/${productData.productSlug}/${productData.variantSlug}`}
                     quote={`${productData.name} . ${productData.variantName}`}
                   />
                 </div>

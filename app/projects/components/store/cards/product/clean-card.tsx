@@ -24,13 +24,13 @@ export default function ProductCardClean({
   });
   const numReviews = new Intl.NumberFormat().format(product.numReviews);
   return (
-    <Link href={`/apps/shop/product/${product.slug}?variant=${variant.variantSlug}`}>
+    <Link href={`/home/shop/product/${product.slug}?variant=${variant.variantSlug}`}>
       <div className="card">
         <div className="image-container">
           <Image src={variant.images[0].url} alt="" width={300} height={300} />
           <div className="price">${size.price}</div>
         </div>
-        <div className="content">
+        <div className="flex align-center flex-col">
           <div className="brand line-clamp-1">{variant.variantName}</div>
           <div className="product-name line-clamp-1">{product.name}</div>
           <div className="color-size-container">

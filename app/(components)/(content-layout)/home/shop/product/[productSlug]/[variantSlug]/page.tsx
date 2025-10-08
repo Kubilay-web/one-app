@@ -39,11 +39,11 @@ export default async function ProductVariantPage({
   if (sizeId) {
     const isValidSize = sizes.some((size) => size.id === sizeId);
     if (!isValidSize) {
-      return redirect(`/apps/shop/product/${productSlug}/${variantSlug}`);
+      return redirect(`/home/shop/product/${productSlug}/${variantSlug}`);
     }
   } else if (sizes.length === 1) {
     return redirect(
-      `/apps/shop/product/${productSlug}/${variantSlug}?size=${sizes[0].id}`,
+      `/home/shop/product/${productSlug}/${variantSlug}?size=${sizes[0].id}`,
     );
   }
 

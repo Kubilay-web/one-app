@@ -13,7 +13,7 @@ export default function Sideline() {
       <div className="absolute right-0 top-0 z-30 h-full w-10 bg-gradient-to-t from-slate-500 to-slate-800 text-[13px] duration-100">
         <div className="fixed top-[35%] -translate-y-1/2 text-center">
           <Link
-            href="/profile"
+            href="/home/shop/profile"
             className="group relative block h-[35px] w-[35px] bg-[url('/assets/images/sideline/gift.avif')] bg-cover transition-all duration-100 ease-linear hover:bg-[url('/assets/images/sideline/gift-opened.avif')]"
           >
             <span className="absolute -left-[160px] top-0.5 hidden rounded-sm bg-[#373737] px-4 py-[0.8rem] text-white transition-all duration-500 ease-linear group-hover:block">
@@ -21,13 +21,13 @@ export default function Sideline() {
             </span>
             <div className="absolute left-[-15px] top-[38%] hidden h-0 w-0 border-[12px] border-r-0 border-transparent border-l-[#373737] transition-all duration-500 ease-in-out group-hover:block" />
           </Link>
-          <SidelineItem link="/profile" image={CouponImg}>
+          <SidelineItem link="/home/shop/profile" image={CouponImg}>
             Coupons
           </SidelineItem>
-          <SidelineItem link="/profile/wishlist" image={WishlistImg}>
+          <SidelineItem link="/home/shop/profile/wishlist" image={WishlistImg}>
             Wishlist
           </SidelineItem>
-          <SidelineItem link="/profile/history" image={HistoryImg}>
+          <SidelineItem link="/home/shop/profile/history" image={HistoryImg}>
             History
           </SidelineItem>
         </div>
@@ -41,7 +41,7 @@ export default function Sideline() {
           >
             <SocialShare url="http://localhost:3000" quote="" isCol />
           </SidelineItem>
-          <SidelineItem link="/feedback" image={FeedbackImg}>
+          <SidelineItem link="/home/shop/feedback" image={FeedbackImg}>
             Feedback
           </SidelineItem>
         </div>

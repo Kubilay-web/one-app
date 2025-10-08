@@ -572,7 +572,7 @@ export const getProducts = async (
     }));
 
     const variantImages = product.variants.map((variant) => ({
-      url: `/apps/shop/product/${product.slug}/${variant.slug}`,
+      url: `/home/shop/product/${product.slug}/${variant.slug}`,
       image: variant.variantImage || variant.images[0]?.url,
     }));
 
@@ -708,7 +708,7 @@ export const retrieveProductDetails = async (
       variantName: variant.variantName,
       variantSlug: variant.slug,
       variantImage: variant.variantImage,
-      variantUrl: `/apps/shop/product/${productSlug}/${variant.slug}`,
+      variantUrl: `/home/shop/product/${productSlug}/${variant.slug}`,
       images: variant.images,
       sizes: variant.sizes,
       colors: variant.colors.map((color) => color.name).join(","),

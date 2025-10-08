@@ -217,7 +217,7 @@ const CartProduct: FC<Props> = ({
                 />
               </label>
             )}
-            <Link href={`/apps/shop/product/${productSlug}?variant=${variantSlug}`}>
+            <Link href={`/home/shop/product/${productSlug}?variant=${variantSlug}`}>
               <div className="relative m-0 ml-2 mr-4 h-28 w-28 rounded-lg bg-gray-200">
                 <Image
                   src={image}
@@ -234,7 +234,7 @@ const CartProduct: FC<Props> = ({
             {/* Title - Actions */}
             <div className="flex w-[calc(100%-48px)] items-start overflow-hidden whitespace-nowrap">
               <Link
-                href={`/apps/shop/product/${productSlug}?variant=${variantSlug}`}
+                href={`/home/shop/product/${productSlug}?variant=${variantSlug}`}
                 className="inline-block overflow-hidden overflow-ellipsis whitespace-nowrap text-sm"
               >
                 {name} · {variantName}

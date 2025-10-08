@@ -49,24 +49,24 @@ export default async function BrowsePage({
   return (
     <div className="relative h-screen overflow-hidden">
       {/* Header */}
-      <div className="fixed left-0 top-0 z-10 w-full">
+      <div className="z-10 w-full">
         <Header />
       </div>
 
       {/* Filters Sidebar */}
-      <div className="scrollbar fixed left-2 top-[124px] h-[calc(100vh-64px)] overflow-auto pt-4 md:left-4 lg:top-16">
+      <div className="overflow-auto pt-4 md:left-4 lg:top-16">
         <ProductFilters queries={params} />
       </div>
 
       {/* Main Content */}
       <div className="ml-[190px] pt-[140px] md:ml-[220px] lg:pt-20">
         {/* Sort Section */}
-        <div className="sticky top-[64px] z-10 flex items-center px-4 py-2">
+        <div className="top-[64px] z-10 flex items-center px-4 py-2">
           <ProductSort />
         </div>
 
         {/* Product List */}
-        <div className="scrollbar mt-4 flex max-h-[calc(100vh-155px)] w-full flex-wrap overflow-y-auto px-4 pb-28">
+        <div className="mt-4 flex  w-full flex-wrap px-4 pb-28">
           {products.map((product) => (
             <ProductCard key={product.id + product.slug} product={product} />
           ))}

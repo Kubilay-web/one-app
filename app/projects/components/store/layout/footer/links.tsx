@@ -9,7 +9,7 @@ export default function Links({ subs }: { subs: SubCategory[] }) {
         <h1 className="text-lg font-bold">Find it Fast</h1>
         <ul className="flex flex-col gap-y-1">
           {subs.map((sub) => (
-            <Link key={sub.id} href={`/browse?subCategory=${sub.url}`}>
+            <Link key={sub.id} href={`/home/shop/browse?subCategory=${sub.url}`}>
               <li>
                 <span>{sub.name}</span>
               </li>

@@ -67,7 +67,7 @@ export default function HomeUserCard() {
         </div>
         {/* User links */}
         <div className="mt-4 flex h-[100px] w-full items-center justify-center gap-x-4">
-          <Link href="/profile">
+          <Link href="/home/shop/profile">
             <span
               className="relative mx-auto block h-12 w-12 bg-cover bg-no-repeat"
               style={{
@@ -78,7 +78,7 @@ export default function HomeUserCard() {
               Account
             </span>
           </Link>
-          <Link href="/profile/orders">
+          <Link href="/home/shop/profile/orders">
             <span
               className="relative mx-auto block h-12 w-12 bg-cover bg-no-repeat"
               style={{
@@ -89,7 +89,7 @@ export default function HomeUserCard() {
               Orders
             </span>
           </Link>
-          <Link href="/profile/wishlist">
+          <Link href="/home/shop/profile/wishlist">
             <span
               className="relative mx-auto block h-12 w-12 bg-cover bg-no-repeat"
               style={{
@@ -107,29 +107,29 @@ export default function HomeUserCard() {
             <div className="w-full">
               {role === "ADMIN" ? (
                 <Button variant="orange-gradient" className="rounded-md">
-                  <Link href={"/dashboard/admin"}>
-                    Switch to Admin Dashboard
+                  <Link className="text-sm" href={"/dashboards/shop/admin"}>
+                    To Admin Dashboard
                   </Link>
                 </Button>
               ) : role === "SELLER" ? (
                 <Button variant="orange-gradient" className="rounded-md">
-                  <Link href={"/dashboard/seller"}>
-                    Switch to Seller Dashboard
+                  <Link className="text-sm" href={"/dashboards/shop/seller"}>
+                    To Seller Dashboard
                   </Link>
                 </Button>
               ) : (
                 <Button variant="orange-gradient" className="rounded-md">
-                  <Link href={"/seller/apply"}>Apply to become a seller</Link>
+                  <Link href={"/home/shop/seller/apply"}>Apply to become a seller</Link>
                 </Button>
               )}
             </div>
           ) : (
             <div className="flex w-full justify-between gap-x-4">
               <Button variant="orange-gradient">
-                <Link href="/sign-up">Join</Link>
+                <Link href="/">Join</Link>
               </Button>
               <Button variant="gray">
-                <Link href="/sign-in">Sign in</Link>
+                <Link href="/sign-up">Sign in</Link>
               </Button>
             </div>
           )}
@@ -142,7 +142,7 @@ export default function HomeUserCard() {
               backgroundImage: "url(/assets/images/ads/user-card-ad.avif)",
             }}
           >
-            <Link href="">
+            <Link href="#">
               <div className="h-24">
                 <div className="mt-2.5 overflow-hidden text-[13px] leading-[18px] text-white">
                   Your favorite store

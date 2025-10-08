@@ -82,7 +82,7 @@ export default function CountryLanguageCurrencySelector({
         <div className="relative z-50 -ml-32 mt-12 w-[300px] rounded-[24px] bg-white px-6 pb-6 pt-2 text-main-primary shadow-lg">
           {/* Triangle */}
           <div className="absolute -top-1.5 right-24 h-0 w-0 border-b-[10px] border-l-[10px] border-r-[10px] border-white border-l-transparent border-r-transparent" />
-          <div className="mt-4 text-[20px] font-bold leading-6">Ship to</div>
+          <div className="mt-4 text-[20px] font-bold leading-6 text-black">Ship to</div>
           <div className="mt-2">
             <div className="relative rounded-lg bg-white text-main-primary">
               <CountrySelector
@@ -97,24 +97,24 @@ export default function CountryLanguageCurrencySelector({
                 }
               />
               <div>
-                <div className="mt-4 text-[20px] font-bold leading-6">
+                <div className="mt-4 text-[20px] font-bold leading-6 text-black">
                   Language
                 </div>
                 <div className="relative mt-2.5 flex h-10 cursor-pointer items-center overflow-hidden text-ellipsis whitespace-nowrap rounded-lg border-[1px] border-black/20 px-3 py-0">
-                  <div className="align-middle">English</div>
+                  <div className="align-middle text-black">English</div>
                   <span className="absolute right-2">
                     <ChevronDown className="scale-75 text-main-primary" />
                   </span>
                 </div>
               </div>
               <div>
-                <div className="mt-4 text-[20px] font-bold leading-6">
+                <div className="mt-4 text-[20px] font-bold leading-6 text-black">
                   Currency
                 </div>
                 <div className="relative mt-2 flex h-10 cursor-pointer items-center overflow-hidden text-ellipsis whitespace-nowrap rounded-lg border-[1px] border-black/20 px-3 py-0">
-                  <div className="align-middle">USD (US Dollar)</div>
+                  <div className="align-middle text-black">USD (US Dollar)</div>
                   <span className="absolute right-2">
-                    <ChevronDown className="scale-75 text-main-primary" />
+                    <ChevronDown className="scale-75 text-main-primary text-white" />
                   </span>
                 </div>
               </div>
