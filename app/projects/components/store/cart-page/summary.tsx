@@ -28,7 +28,7 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
       setLoading(true);
       const res = await saveUserCart(cartItems);
       console.log("res-->", res);
-      if (res) router.push("/checkout");
+      if (res) router.push("/home/shop/checkout");
       setLoading(false);
     } catch (error: any) {
       toast.error(error.toString());
@@ -38,7 +38,7 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
     <div className="relative bg-white px-6 py-4">
       <h1 className="mb-4 text-2xl font-bold text-gray-900">Summary</h1>
       <div className="mt-4 flex items-center border-b pb-1 text-sm font-medium text-[#222]">
-        <h2 className="overflow-hidden text-ellipsis whitespace-nowrap break-normal">
+        <h2 className="overflow-hidden text-[22px] text-ellipsis whitespace-nowrap break-normal">
           Subtotal
         </h2>
         <h3 className="w-0 min-w-0 flex-1 text-right">
@@ -50,7 +50,7 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
         </h3>
       </div>
       <div className="mt-2 flex items-center border-b pb-1 text-sm font-medium text-[#222]">
-        <h2 className="overflow-hidden text-ellipsis whitespace-nowrap break-normal">
+        <h2 className="overflow-hidden text-[22px] text-ellipsis whitespace-nowrap break-normal">
           Shipping Fees
         </h2>
         <h3 className="w-0 min-w-0 flex-1 text-right">
@@ -62,7 +62,7 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
         </h3>
       </div>
       <div className="mt-2 flex items-center border-b pb-1 text-sm font-medium text-[#222]">
-        <h2 className="overflow-hidden text-ellipsis whitespace-nowrap break-normal">
+        <h2 className="overflow-hidden text-[22px] text-ellipsis whitespace-nowrap break-normal">
           Taxes
         </h2>
         <h3 className="w-0 min-w-0 flex-1 text-right">
@@ -74,7 +74,7 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
         </h3>
       </div>
       <div className="mt-2 flex items-center text-sm font-bold text-[#222]">
-        <h2 className="overflow-hidden text-ellipsis whitespace-nowrap break-normal">
+        <h2 className="overflow-hidden text-[22px] text-ellipsis whitespace-nowrap break-normal">
           Total
         </h2>
         <h3 className="w-0 min-w-0 flex-1 text-right">
@@ -88,9 +88,9 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
       <div className="5 my-2">
         <Button onClick={() => handleSaveCart()}>
           {loading ? (
-            <PulseLoader size={5} color="#fff" />
+           <PulseLoader size={5} color="#6b7280" />
           ) : (
-            <span>Checkout ({cartItems.length})</span>
+            <span className="text-red-600">Checkout ({cartItems.length})</span>
           )}
         </Button>
       </div>

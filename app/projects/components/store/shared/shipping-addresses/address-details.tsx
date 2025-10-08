@@ -293,7 +293,7 @@ const AddressDetails: FC<AddressDetailsProps> = ({
             />
           </div>
 
-          <Button type="submit" disabled={isLoading} className="rounded-md">
+          <Button type="submit" disabled={isLoading} className="rounded-md text-red-600">
             {isLoading
               ? "loading..."
               : data?.id

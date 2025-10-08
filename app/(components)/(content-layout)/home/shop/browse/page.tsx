@@ -54,6 +54,8 @@ export default async function BrowsePage({
       </div>
 
       {/* Filters Sidebar */}
+
+      <div className="flex align-center">
       <div className="overflow-auto pt-4 md:left-4 lg:top-16">
         <ProductFilters queries={params} />
       </div>
@@ -72,6 +74,8 @@ export default async function BrowsePage({
           ))}
         </div>
       </div>
+      </div>
+
     </div>
   );
 }

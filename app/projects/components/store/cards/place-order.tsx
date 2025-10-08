@@ -117,9 +117,9 @@ const PlaceOrderCard: FC<Props> = ({
       <div className="mt-2 bg-white p-4">
         <Button onClick={() => handlePlaceOrder()}>
           {loading ? (
-            <PulseLoader size={5} color="" />
+            <PulseLoader size={5} color="#6b7280" />
           ) : (
-            <span>Place order</span>
+            <span className="text-red-600">Place order</span>
           )}
         </Button>
       </div>
@@ -156,7 +156,7 @@ const Info = ({
         }
       )}
     >
-      <h2 className="overflow-hidden text-ellipsis whitespace-nowrap break-normal">
+      <h2 className="overflow-hidden text-[22px] text-ellipsis whitespace-nowrap break-normal">
         {title}
       </h2>
       <h3 className="w-0 min-w-0 flex-1 text-right">

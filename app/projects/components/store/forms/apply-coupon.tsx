@@ -37,7 +37,7 @@ export default function ApplyCouponForm({
 
   // Submit handler for form submission
   const handleSubmit = async (
-    values: z.infer<typeof ApplyCouponFormSchema>,
+    values: z.infer<typeof ApplyCouponFormSchema>
   ) => {
     try {
       const res = await applyCoupon(values.coupon, cartId);
@@ -73,7 +73,7 @@ export default function ApplyCouponForm({
             />
             <Button
               variant="outline"
-              className="absolute right-2 top-1/2 w-20 -translate-y-1/2 rounded-2xl px-6"
+              className="absolute right-2 top-1/2 w-20 -translate-y-1/2 rounded-2xl px-6 hover:bg-gray-600"
             >
               Apply
             </Button>

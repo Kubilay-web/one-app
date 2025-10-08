@@ -8,7 +8,7 @@ export default function Cart() {
   const totalItems = useCartStore((state) => state.totalItems);
   return (
     <div className="relative flex h-11 cursor-pointer items-center px-2">
-      <Link href="/cart" className="flex items-center text-white">
+      <Link href="/home/shop/cart" className="flex items-center text-white">
         <span className="inline-block text-[32px]">
           <CartIcon />
         </span>

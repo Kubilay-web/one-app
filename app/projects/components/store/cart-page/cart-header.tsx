@@ -54,7 +54,7 @@ const CartHeader: FC<Props> = ({
     <div className="bg-white py-4">
       <div>
         <div className="g-white px-6">
-          <div className="flex items-center text-2xl font-bold text-[#222]">
+          <div className="flex items-center text-xl font-bold text-[#222]">
             <h1>Cart ({cartLength})</h1>
           </div>
         </div>

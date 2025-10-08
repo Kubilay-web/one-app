@@ -333,26 +333,26 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Cart",
           },
-          {
-            path: "/home/shop/checkout",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Checkout",
-          },
+          // {
+          //   path: "/home/shop/checkout",
+          //   type: "link",
+          //   active: false,
+          //   selected: false,
+          //   title: "Checkout",
+          // },
 
           {
             title: "Profile",
             type: "sub",
             active: false,
             children: [
-              {
-                path: "/home/shop/profile/overview",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Overview",
-              },
+              // {
+              //   path: "/home/shop/profile/overview",
+              //   type: "link",
+              //   active: false,
+              //   selected: false,
+              //   title: "Overview",
+              // },
               {
                 path: "/home/shop/profile/orders",
                 type: "link",
