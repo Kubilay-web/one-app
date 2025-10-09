@@ -53,7 +53,7 @@ const StoreOrderSummary: FC<Props> = ({ group }) => {
     <div className="relative py-2">
       <div className="w-full px-1">
         <div className="space-y-3">
-          <h2 className="line-clamp-1 overflow-ellipsis text-3xl font-bold leading-10">
+          <h2 className="line-clamp-1 overflow-ellipsis text-xl font-bold leading-10">
             Order Details
           </h2>
           <h6 className="text-2xl font-semibold leading-9">#{group.id}</h6>

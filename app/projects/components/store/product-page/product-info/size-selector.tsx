@@ -51,8 +51,8 @@ const SizeSelector: FC<Props> = ({
       {sizes.map((size) => (
         <span
           key={size.id}
-          className={`cursor-pointer rounded-full border px-5 py-1 transition-all hover:bg-orange-background hover:text-white ${
-            size.id === sizeId ? "bg-orange-background text-white" : ""
+          className={`cursor-pointer rounded-full border px-5 py-1 transition-all hover:bg-orange-background ${
+            size.id === sizeId ? "bg-orange-background text-black" : "text-black"
           }`}
           onClick={() => handleSelectSize(size)}
         >

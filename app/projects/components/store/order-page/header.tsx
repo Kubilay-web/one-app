@@ -35,9 +35,9 @@ export default function OrderHeader({ order }: { order: OrderFulltType }) {
               <ChevronLeft className="stroke-main-secondary" />
             </button>
           </div>
-          <h1 className="text-main-secondary">Order Details</h1>
-          <ChevronRight className="w-4 stroke-main-secondary" />
-          <h2>Order #{order.id}</h2>
+          <h1 className="text-2xl">Order Details</h1>
+          <ChevronRight className="w-4" />
+          <h2 className="text-2xl">Order #{order.id}</h2>
         </div>
         <div className="flex w-full flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* Status */}

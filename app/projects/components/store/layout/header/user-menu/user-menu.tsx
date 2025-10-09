@@ -141,17 +141,17 @@ const links = [
   {
     icon: <OrderIcon />,
     title: "My Orders",
-    link: "/profile/orders",
+    link: "/home/shop/profile/orders",
   },
   {
     icon: <MessageIcon />,
     title: "Messages",
-    link: "/profile/messages",
+    link: "/home/shop/profile/messages",
   },
   {
     icon: <WishlistIcon />,
     title: "WishList",
-    link: "/profile/wishlist",
+    link: "/home/shop/profile/wishlist",
   },
 ];
 const extraLinks = [
