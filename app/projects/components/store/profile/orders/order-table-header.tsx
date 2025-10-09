@@ -87,7 +87,7 @@ const OrderTableHeader: FC<Props> = ({
         <div className="w-[500px] text-main-primary text-sm leading-6 relative flex">
           {/* Select */}
           <div className="relative mb-4 w-fit">
-            <select className="h-8 px-4 w-24 appearance-none outline-none cursor-pointer hover:border-[1px] hover:border-black border rounded-l-md">
+            <select className="h-3 px-4 w-24 appearance-none outline-none cursor-pointer hover:border-[1px] hover:border-black border rounded-l-md">
               <option value="">
                 <div className="flex h-8 text-left text-sm overflow-hidden">
                   <span className="flex-1 whitespace-nowrap">Order</span>

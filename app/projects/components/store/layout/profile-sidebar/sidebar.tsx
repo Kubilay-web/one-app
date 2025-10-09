@@ -11,11 +11,11 @@ export default function ProfileSidebar() {
     <div>
       <div className="w-full p-4 text-xs text-[#999]">
         <span>
-          <Link href="/">Home</Link>
+          <Link href="/home/shop">Home</Link>
           <span className="mx-2">&gt;</span>
         </span>
         <span>
-          <Link href="/profile">Account</Link>
+          <Link href="/home/shop/profile">Account</Link>
           {pathname !== "/profile" && <span className="mx-2">&gt;</span>}
         </span>
         {path && (

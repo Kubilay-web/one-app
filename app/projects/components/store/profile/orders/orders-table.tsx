@@ -147,7 +147,7 @@ export default function OrdersTable({
                         </td>
                         <td className="p-4">${order.total.toFixed(2)}</td>
                         <td className="p-4">
-                          <Link href={`/order/${order.id}`}>
+                          <Link href={`/home/shop/order/${order.id}`}>
                             <span className="cursor-pointer text-xs text-blue-primary hover:underline">
                               View
                             </span>

@@ -12,7 +12,7 @@ export default function OrdersOverview() {
         <div className="inline-block flex-1 py-3 text-xl font-bold">
           My Orders
         </div>
-        <Link href="/profile/orders">
+        <Link href="/home/shop/profile/orders">
           <div className="flex cursor-pointer items-center text-sm text-main-primary">
             View All
             <span className="ml-2 inline-block text-lg">
@@ -62,21 +62,21 @@ const menu = [
   {
     title: "Unpaid",
     img: UnpaidImg,
-    link: "/profile/orders/unpaid",
+    link: "/home/shop/profile/orders/unpaid",
   },
   {
     title: "To be shipped",
     img: ToBeShippedImg,
-    link: "/profile/orders/toShip",
+    link: "/home/shop/profile/orders/toShip",
   },
   {
     title: "Shipped",
     img: ShippedImg,
-    link: "/profile/orders/shipped",
+    link: "/home/shop/profile/orders/shipped",
   },
   {
     title: "Delivered",
     img: ToBeReviewedImg,
-    link: "/profile/orders/delivered",
+    link: "/home/shop/profile/orders/delivered",
   },
 ];
