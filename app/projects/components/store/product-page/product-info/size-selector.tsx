@@ -52,7 +52,9 @@ const SizeSelector: FC<Props> = ({
         <span
           key={size.id}
           className={`cursor-pointer rounded-full border px-5 py-1 transition-all hover:bg-orange-background ${
-            size.id === sizeId ? "bg-orange-background text-black" : "text-black"
+            size.id === sizeId
+              ? "bg-gray-300 text-black" // Seçildiğinde arka plan gri olsun
+              : "text-black"
           }`}
           onClick={() => handleSelectSize(size)}
         >

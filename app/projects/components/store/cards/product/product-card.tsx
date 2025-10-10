@@ -78,7 +78,6 @@ export default function ProductCard({ product }: { product: ProductType }) {
               <Link className="text-black" href={`/home/shop/product/${slug}/${variantSlug}`}>Add to cart</Link>
             </Button>
             <Button
-              variant="black"
               size="icon"
               onClick={() => handleaddToWishlist()}
             >
