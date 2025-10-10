@@ -20,16 +20,13 @@ export default function CartContainer({
 }: {
   userCountry: Country;
 }) {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const cartItems = useFromStore(useCartStore, (state) => state.cart);
   const setCart = useCartStore((state) => state.setCart);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [isCartLoaded, setIsCartLoaded] = useState<boolean>(false);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectedItems, setSelectedItems] = useState<CartProductType[]>([]);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [totalShipping, setTotalShipping] = useState<number>(0);
 
   useEffect(() => {
@@ -61,7 +58,10 @@ export default function CartContainer({
       {cartItems && cartItems.length > 0 ? (
         <>
           {loading ? (
-            <div>loading...</div>
+            // Loading Spinner
+            <div className="flex items-center justify-center min-h-[calc(100vh-125px)] bg-gray-100">
+              <div className="animate-spin rounded-full border-t-4 border-b-4 border-blue-500 w-16 h-16"></div>
+            </div>
           ) : (
             <div className="min-h-[calc(100vh-125px)] bg-[#f5f5f5]">
               <div className="mx-auto flex max-w-[1200px] py-6">

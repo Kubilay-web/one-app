@@ -67,7 +67,7 @@ const Countdown: FC<Props> = ({ targetDate, home_style }) => {
         <div className="inline-block">
           <span
             className={cn(
-              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-white",
+              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-black",
               {
                 "mr-1 bg-white p-2 text-black": home_style,
               },
@@ -78,7 +78,7 @@ const Countdown: FC<Props> = ({ targetDate, home_style }) => {
           <span className="mx-1">:</span>
           <span
             className={cn(
-              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-white",
+              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-black",
               {
                 "mr-1 bg-white p-2 text-black": home_style,
               },
@@ -89,7 +89,7 @@ const Countdown: FC<Props> = ({ targetDate, home_style }) => {
           <span className="mx-1">:</span>
           <span
             className={cn(
-              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-white",
+              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-black",
               {
                 "mr-1 bg-white p-2 text-black": home_style,
               },
@@ -100,7 +100,7 @@ const Countdown: FC<Props> = ({ targetDate, home_style }) => {
           <span className="mx-1">:</span>
           <span
             className={cn(
-              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-white",
+              "inline-block min-h-4 min-w-5 rounded-[2px] bg-orange-background p-0 text-center text-black",
               {
                 "mr-1 bg-white p-2 text-black": home_style,
               },
