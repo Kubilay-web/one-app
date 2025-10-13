@@ -1,21 +1,16 @@
 "use client";
 
-// React
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-
-// Prisma model
 import { Country } from "@prisma/client";
-
-// Form handling utilities
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Types, Schema
+// Schema ve tipler
 import { ShippingAddressSchema } from "@/app/lib/validation";
 import { SelectMenuOption, UserShippingAddressType } from "@/app/lib/types";
 
-// UI Components
+// UI Bileşenleri
 import CountrySelector from "@/app/projects/components/shared/country-selector";
 import {
   Form,
@@ -26,14 +21,13 @@ import {
   FormMessage,
 } from "@/app/projects/components/ui/form";
 import { Input } from "@/app/projects/components/ui/input";
-
-// Queries
-import { upsertShippingAddress } from "@/app/queries/user";
-// Utils
-import { v4 } from "uuid";
+import { Button } from "@/app/projects/components/ui/button";
 import { useToast } from "@/app/projects/components/ui/use-toast";
+
+// Araçlar
+import { v4 } from "uuid";
 import { useRouter } from "next/navigation";
-import { Button } from "../../ui/button";
+import { upsertShippingAddress } from "@/app/queries/user";
 
 interface AddressDetailsProps {
   data?: UserShippingAddressType;
@@ -46,246 +40,270 @@ const AddressDetails: FC<AddressDetailsProps> = ({
   countries,
   setShow,
 }) => {
-  // Initializing necessary hooks
-  const { toast } = useToast(); // Hook for displaying toast messages
-  const router = useRouter(); // Hook for routing
+  const { toast } = useToast();
+  const router = useRouter();
 
-  // State for country selector
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [country, setCountry] = useState<string>(
+    data?.country?.name || countries[0]?.name || "Afghanistan",
+  );
 
-  // State for selected country
-  const [country, setCountry] = useState<string>("Afghanistan");
-
-  // Form hook for managing form state and validation
+  // ✅ FORM OLUŞTURMA
   const form = useForm<z.infer<typeof ShippingAddressSchema>>({
-    mode: "onChange", // Form validation mode
-    resolver: zodResolver(ShippingAddressSchema), // Resolver for form validation
+    mode: "onChange",
+    resolver: zodResolver(ShippingAddressSchema),
     defaultValues: {
-      // Setting default form values from data (if available)
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-      address1: data?.address1,
-      address2: data?.address2 || "",
-      city: data?.city,
-      countryId: data?.countryId,
-      phone: data?.phone,
-      state: data?.state,
-      zip_code: data?.zip_code,
-      default: data?.default,
+      firstName: data?.firstName ?? "",
+      lastName: data?.lastName ?? "",
+      phone: data?.phone ?? "",
+      address1: data?.address1 ?? "",
+      address2: data?.address2 ?? "",
+      city: data?.city ?? "",
+      state: data?.state ?? "",
+      zip_code: data?.zip_code ?? "",
+      countryId: data?.countryId ?? countries[0]?.id ?? "",
+      default: data?.default ?? false,
     },
   });
 
-  // Loading status based on form submission
   const isLoading = form.formState.isSubmitting;
 
-  // Reset form values when data changes
+  // ✅ ÜLKE DEĞİŞTİĞİNDE FORM GÜNCELLE
+  const handleCountryChange = (name: string) => {
+    const selected = countries.find((c) => c.name === name);
+    if (selected) {
+      form.setValue("countryId", selected.id, { shouldValidate: true });
+      setCountry(selected.name);
+    }
+  };
+
+  // ✅ DATA VARSA FORMU RESETLE
   useEffect(() => {
     if (data) {
       form.reset({
-        ...data,
-        address2: data.address2 || "",
+        firstName: data.firstName ?? "",
+        lastName: data.lastName ?? "",
+        phone: data.phone ?? "",
+        address1: data.address1 ?? "",
+        address2: data.address2 ?? "",
+        city: data.city ?? "",
+        state: data.state ?? "",
+        zip_code: data.zip_code ?? "",
+        countryId: data.countryId ?? countries[0]?.id ?? "",
+        default: data.default ?? false,
       });
-      handleCountryChange(data?.country.name);
+      if (data.country?.name) handleCountryChange(data.country.name);
     }
-  }, [data, form]);
+  }, [data]);
 
-  // Submit handler for form submission
-  const handleSubmit = async (
-    values: z.infer<typeof ShippingAddressSchema>,
-  ) => {
+  // ✅ FORM SUBMIT
+  const handleSubmit = async (values: z.infer<typeof ShippingAddressSchema>) => {
+    console.log("Form values:", values); // ✅ Artık undefined olmayacak
+
     try {
-      // Upserting category data
       const response = await upsertShippingAddress({
-        id: data?.id ? data.id : v4(),
-        firstName: values.firstName,
-        lastName: values.lastName,
-        phone: values.phone,
-        address1: values.address1,
-        address2: values.address2 || "",
-        city: values.city,
+        id: data?.id ?? v4(),
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
+        phone: values.phone.trim(),
+        address1: values.address1.trim(),
+        address2: values.address2?.trim() || "",
+        city: values.city.trim(),
         countryId: values.countryId,
-        state: values.state,
-        default: values.default,
-        zip_code: values.zip_code,
-        userId: "",
+        state: values.state.trim(),
+        default: values.default ?? false,
+        zip_code: values.zip_code.trim(),
+        userId: "", // backend dolduracak
         createdAt: new Date(),
         updatedAt: new Date(),
       });
 
-      // Displaying success message
       toast({
         title: data?.id
-          ? "Shipping address has been updated."
-          : `Congratulations! Shipping address is now created.`,
+          ? "Shipping address updated successfully."
+          : "New shipping address created.",
         duration: 3000,
       });
 
-      // Refresh data
       router.refresh();
+      setShow(false);
     } catch (error: any) {
-      // Handling form submission errors
       toast({
         variant: "destructive",
-        title: "Oops!",
-        description: error.toString(),
+        title: "Error",
+        description: error.message || "Something went wrong.",
       });
     }
-  };
-
-  const handleCountryChange = (name: string) => {
-    const country = countries.find((c) => c.name === name);
-    if (country) {
-      form.setValue("countryId", country.id);
-    }
-    setCountry(name);
   };
 
   return (
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          {/* CONTACT */}
           <div className="space-y-2">
             <FormLabel>Contact information</FormLabel>
             <div className="flex flex-col gap-3 md:flex-row">
               <FormField
-                disabled={isLoading}
                 control={form.control}
                 name="firstName"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder="First name*" {...field} />
+                      <Input
+                        placeholder="First name*"
+                        {...field}
+                        value={field.value || ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
-                disabled={isLoading}
                 control={form.control}
                 name="lastName"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder="Last name*" {...field} />
+                      <Input
+                        placeholder="Last name*"
+                        {...field}
+                        value={field.value || ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+
             <FormField
-              disabled={isLoading}
               control={form.control}
               name="phone"
               render={({ field }) => (
                 <FormItem className="!mt-3 flex-1 md:w-[calc(50%-8px)]">
                   <FormControl>
-                    <Input placeholder="Phone number*" {...field} />
+                    <Input
+                      placeholder="Phone number*"
+                      {...field}
+                      value={field.value || ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+
+          {/* ADDRESS */}
           <div className="space-y-2">
             <FormLabel>Address</FormLabel>
-            <div>
-              <FormField
-                disabled={isLoading}
-                control={form.control}
-                name="countryId"
-                render={({ field }) => (
-                  <FormItem className="!mt-3 flex-1 md:w-[calc(50%-8px)]">
-                    <FormControl>
-                      <CountrySelector
-                        id={"countries"}
-                        open={isOpen}
-                        onToggle={() => setIsOpen((prev) => !prev)}
-                        onChange={(val) => handleCountryChange(val)}
-                        selectedValue={
-                          (countries.find(
-                            (c) => c.name === country,
-                          ) as SelectMenuOption) || countries[0]
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="!mt-3 flex flex-col gap-3">
-              <FormField
-                disabled={isLoading}
-                control={form.control}
-                name="address1"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormControl>
-                      <Input
-                        placeholder="Street, house/apartment/unit*"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isLoading}
-                control={form.control}
-                name="address2"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormControl>
-                      <Input
-                        placeholder="Apt, suite, unit, etc (optional）"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="countryId"
+              render={() => (
+                <FormItem className="!mt-3 flex-1 md:w-[calc(50%-8px)]">
+                  <FormControl>
+                    <CountrySelector
+                      id="countries"
+                      open={isOpen}
+                      onToggle={() => setIsOpen((prev) => !prev)}
+                      onChange={(val) => handleCountryChange(val)}
+                      selectedValue={
+                        (countries.find(
+                          (c) => c.name === country,
+                        ) as SelectMenuOption) || countries[0]
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <div className="!mt-3 flex items-center justify-between gap-3">
+            <FormField
+              control={form.control}
+              name="address1"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Street, house/apartment/unit*"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address2"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Apt, suite, unit (optional)"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex gap-3">
               <FormField
-                disabled={isLoading}
                 control={form.control}
                 name="state"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder="State*" {...field} />
+                      <Input
+                        placeholder="State*"
+                        {...field}
+                        value={field.value || ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
-                disabled={isLoading}
                 control={form.control}
                 name="city"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder="City*" {...field} />
+                      <Input
+                        placeholder="City*"
+                        {...field}
+                        value={field.value || ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+
             <FormField
-              disabled={isLoading}
               control={form.control}
               name="zip_code"
               render={({ field }) => (
                 <FormItem className="!mt-3 w-[calc(50%-8px)] flex-1">
                   <FormControl>
-                    <Input placeholder="Zip code*" {...field} />
+                    <Input
+                      placeholder="Zip code*"
+                      {...field}
+                      value={field.value || ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -293,12 +311,17 @@ const AddressDetails: FC<AddressDetailsProps> = ({
             />
           </div>
 
-          <Button type="submit" disabled={isLoading} className="rounded-md text-red-600">
+          {/* BUTTON */}
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="rounded-md text-red-600"
+          >
             {isLoading
-              ? "loading..."
+              ? "Saving..."
               : data?.id
-                ? "Save address information"
-                : "Create address"}
+              ? "Save address information"
+              : "Create address"}
           </Button>
         </form>
       </Form>
