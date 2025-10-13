@@ -315,7 +315,7 @@ const AddressDetails: FC<AddressDetailsProps> = ({
           <Button
             type="submit"
             disabled={isLoading}
-            className="rounded-md text-red-600"
+            className="rounded-md text-white"
           >
             {isLoading
               ? "Saving..."
