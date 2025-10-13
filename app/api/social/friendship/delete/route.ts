@@ -3,19 +3,37 @@ import { validateRequest } from "@/app/auth";
 
 export async function POST(req: Request) {
   try {
-
-    const {user} = await validateRequest();
+    // Validate the user
+    const { user } = await validateRequest();
     if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
 
-    const body = await req.json();
-    const { username } = body;
-    if (!username) return new Response(JSON.stringify({ error: "username is required" }), { status: 400 });
+    // Get the request body and extract the username
+   const body = await req.json();
+    const username = body.username;
 
-    await db.friendRequest.deleteMany({
-      where: { userId: username, username: user.id, status: "pending" },
+    if (!username) return new Response(JSON.stringify({ error: "Username is required" }), { status: 400 });
+
+    // Find the user by username to get the userId
+    const userToCancelRequest = await db.user.findUnique({
+      where: { username: username },
     });
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    if (!userToCancelRequest) {
+      return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
+    }
+
+    // Delete the pending friend request where the user is the request sender and the target is the user to cancel
+     await db.friendRequest.deleteMany({
+      where: {
+        userId: userToCancelRequest.id,
+        friendId: user.id,
+        status: "pending",
+      },
+    });
+
+
+    // Return success response
+    return new Response(JSON.stringify({ success: true, message: "Pending friend request deleted successfully!" }), { status: 200 });
   } catch (err) {
     console.error(err);
     return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });

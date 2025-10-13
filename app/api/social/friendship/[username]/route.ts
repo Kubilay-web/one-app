@@ -23,14 +23,16 @@ export async function GET(
       where: { userId: username, friendId: user.id, status: "pending" },
     });
 
-    const friends = await db.friendRequest.findFirst({
-      where: {
-        OR: [
-          { userId: user.id, friendId: username, status: "accepted" },
-          { userId: username, friendId: user.id, status: "accepted" },
-        ],
-      },
-    });
+  const friends = await db.friendRequest.findMany({
+  where: {
+    status: "accepted",
+    OR: [
+      { userId: user.id, friendId: username },
+      { userId: username, friendId: user.id },
+    ],
+  },
+});
+
 
     const following = await db.followSocial.findUnique({
       where: {

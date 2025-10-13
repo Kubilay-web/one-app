@@ -25,7 +25,7 @@ export default async function MinimalHeader() {
             {user ? (
               <UserButton />
             ) : (
-              <Link href="/sign-in">
+              <Link href="/">
                 <Button variant="outline">Sign in</Button>
               </Link>
             )}

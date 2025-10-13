@@ -1,28 +1,39 @@
 import db from "@/app/lib/db";
 import { validateRequest } from "@/app/auth";
 
-
 export async function POST(req: Request) {
   try {
-  
-
-    const {user} = await validateRequest();
+    // Kullanıcı doğrulaması
+    const { user } = await validateRequest();
     if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
 
+    // İstekten gelen veriyi al
     const body = await req.json();
-    const { username } = body;
-    if (!username) return new Response(JSON.stringify({ error: "username is required" }), { status: 400 });
+    const username = body.username;
 
-    await db.friendRequest.deleteMany({
-      where: { userId: user.id, username, status: "pending" },
+    if (!username) return new Response(JSON.stringify({ error: "Username is required" }), { status: 400 });
+
+    // username'e karşılık gelen userId'yi alalım
+    const userToDelete = await db.user.findUnique({
+      where: { username: username },
     });
 
-    // Takibi sil
+    if (!userToDelete) {
+      return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
+    }
+
+    // 1. Arkadaşlık isteğini sil
+    await db.friendRequest.deleteMany({
+      where: { userId: user.id, friendId: userToDelete.id, status: "pending" },
+    });
+
+    // 2. Takip ilişkisinin silinmesi
     await db.followSocial.deleteMany({
-      where: { followerId: user.id, followingId: username },
+      where: { followerId: user.id, followingId: userToDelete.id },
     });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
+
   } catch (err) {
     console.error(err);
     return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });

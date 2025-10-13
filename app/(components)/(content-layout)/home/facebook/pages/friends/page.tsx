@@ -147,7 +147,7 @@ export default function Friends() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {data.sentRequests?.map((user) => (
-              <Card user={user} key={user._id} type="sent" />
+              <Card user={user} key={user.id} type="sent" />
             ))}
           </div>
         </section>
