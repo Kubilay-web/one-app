@@ -102,7 +102,17 @@ model User {
 
   //Facebook Social2
 
+
+  //Shop2
+
+
+  cartData Json? 
+  OrderShop OrderShop[]
+
+  //
+
   @@map("users")
+
 
 }
 
@@ -1973,3 +1983,40 @@ model UserSearch {
   @@unique([userId, searchedUserId])  // Aynı kullanıcı için aynı aranan kullanıcı duplicasyonu engeller
 }
 
+
+
+//////////////////////////////////////////////
+
+
+// Shop2 Models
+
+
+model OrderShop {
+  id            String   @id @default(cuid()) @map("_id")
+  userId        String   // Kullanıcı ID'si
+  items         Json     // Ürünlerin bilgileri JSON formatında
+  amount        Float    // Siparişin toplam tutarı
+  address       Json     // Adres bilgileri JSON formatında
+  status        String   @default("Order Placed") // Sipariş durumu
+  paymentMethod String   // Ödeme yöntemi (örneğin "Kredi Kartı")
+  payment       Boolean  @default(false) // Ödeme tamamlanmış mı?
+  date          DateTime // Siparişin verildiği tarih
+  user          User     @relation(fields: [userId], references: [id]) // User ile ilişki
+
+  @@map("orders")
+}
+
+model ProductShop {
+  id           String   @id @default(cuid()) @map("_id")
+  name         String   // Ürün adı
+  description  String   // Ürün açıklaması
+  price        Float    // Ürün fiyatı
+  images       Json     // Ürün görselleri (JSON dizisi)
+  category     String   // Ürün kategorisi
+  subCategory  String   // Ürün alt kategorisi
+  sizes        Json     // Ürün beden bilgileri (JSON dizisi)
+  bestseller   Boolean? // Bestseller olup olmadığı
+  date         DateTime // Ürün eklenme tarihi
+
+  @@map("products")
+}

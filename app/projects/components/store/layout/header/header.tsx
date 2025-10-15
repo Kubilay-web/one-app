@@ -7,8 +7,8 @@ import { cookies } from "next/headers";
 import { Country } from "@prisma/client";
 import CountryLanguageCurrencySelector from "./country-lang-curr-selector";
 
-export default function Header() {
-  const cookieStore = cookies();
+export default async function Header() {
+  const cookieStore = await cookies();
   const userCountryCookie = cookieStore.get("userCountry");
 
   let userCountry: Country = {
@@ -19,7 +19,11 @@ export default function Header() {
   };
 
   if (userCountryCookie) {
-    userCountry = JSON.parse(userCountryCookie.value) as Country;
+    try {
+      userCountry = JSON.parse(userCountryCookie.value) as Country;
+    } catch {
+      console.warn("Invalid userCountry cookie format");
+    }
   }
 
   return (

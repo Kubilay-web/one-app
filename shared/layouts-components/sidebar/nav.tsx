@@ -395,6 +395,77 @@ export const getMenuItems = (user) => [
       },
       //
 
+      {
+        title: "Shop2",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/home/store/about",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "About",
+          },
+
+          {
+            path: "/home/store/cart",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Cart",
+          },
+
+          {
+            path: "/home/store/collection",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Collection",
+          },
+
+          {
+            path: "/home/store/contact",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Contact",
+          },
+
+          {
+            path: "/home/store",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+
+          {
+            path: "/home/store/orders",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Orders",
+          },
+
+          {
+            path: "/home/store/place-order",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Place Order",
+          },
+
+          {
+            path: "/home/store/verify",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Verify",
+          },
+        ],
+      },
+
       //Jobs
 
       {
@@ -1764,6 +1835,36 @@ export const getMenuItems = (user) => [
                 title: "SubCategories New",
               },
             ],
+          },
+        ],
+      },
+
+      {
+        title: "Shop2",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/dashboards/store/add",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Add Items",
+          },
+          {
+            path: "/dashboards/store/list",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "List Items",
+          },
+          {
+            path: "/dashboards/store/orders",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Orders",
           },
         ],
       },
