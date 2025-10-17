@@ -25,7 +25,7 @@ const uploadToCloudinary = async (file) => {
   return data.secure_url;
 };
 
-export default function CreatePostPopup({ user, setVisible }) {
+export default function CreatePostPopup({ user, setVisible, onPostCreated }) {
   const [text, setText] = useState("");
   const [showPrev, setShowPrev] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function CreatePostPopup({ user, setVisible }) {
   const postSubmit = async () => {
     setLoading(true);
     try {
-      await createPost(
+      const newPost= await createPost(
         null,
         background,
         text,
@@ -61,6 +61,9 @@ export default function CreatePostPopup({ user, setVisible }) {
         user.id,
         user.token
       );
+
+      // Yeni postu anında ekliyoruz
+      onPostCreated(newPost);
 
       setBackground("");
       setText("");

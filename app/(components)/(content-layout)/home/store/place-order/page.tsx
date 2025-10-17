@@ -32,7 +32,7 @@ const PlaceOrder = () => {
 
     const initPay = (order) => {
         const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+            key:process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY,
             amount: order.amount,
             currency: order.currency,
             name:'Order Payment',
@@ -43,9 +43,9 @@ const PlaceOrder = () => {
                 console.log(response)
                 try {
                     
-                    const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay',response,{headers:{token}})
+                    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/store/order`,response,{headers:{token}})
                     if (data.success) {
-                        navigate('/orders')
+                        navigate('/home/store/orders')
                         setCartItems({})
                     }
                 } catch (error) {
@@ -80,7 +80,8 @@ const PlaceOrder = () => {
             let orderData = {
                 address: formData,
                 items: orderItems,
-                amount: getCartAmount() + delivery_fee
+                amount: getCartAmount() + delivery_fee,
+                paymentMethod: method
             }
             
 
@@ -88,7 +89,7 @@ const PlaceOrder = () => {
 
                 // API Calls for COD
                 case 'cod':
-                    const response = await axios.post(backendUrl + '/api/order/place',orderData,{headers:{token}})
+                    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/store/order`,orderData,{headers:{token}})
                     if (response.data.success) {
                         setCartItems({})
                         navigate('/orders')
@@ -98,7 +99,7 @@ const PlaceOrder = () => {
                     break;
 
                 case 'stripe':
-                    const responseStripe = await axios.post(backendUrl + '/api/order/stripe',orderData,{headers:{token}})
+                    const responseStripe = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/store/order`,orderData,{headers:{token}})
                     if (responseStripe.data.success) {
                         const {session_url} = responseStripe.data
                         window.location.replace(session_url)
@@ -109,7 +110,7 @@ const PlaceOrder = () => {
 
                 case 'razorpay':
 
-                    const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, {headers:{token}})
+                    const responseRazorpay = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/store/order`, orderData, {headers:{token}})
                     if (responseRazorpay.data.success) {
                         initPay(responseRazorpay.data.order)
                     }

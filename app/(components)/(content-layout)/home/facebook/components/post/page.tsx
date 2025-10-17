@@ -81,12 +81,12 @@ export default function Post({ post, user }) {
     <div className="post">
       <div className="post_header">
         <Link
-          href={`/home/facebook/pages/profile/${post.user.username}`}
+          href={`/home/facebook/pages/profile/${post.user?.username}`}
           className="post_header_left"
         >
-          <img src={post.user.avatarUrl} alt="" />
+          <img src={post.user?.avatarUrl} alt="" />
           <div className="header_col">
-            <div className="post_profile_name">{post.user.username}</div>
+            <div className="post_profile_name">{post.user?.username}</div>
             <div className="post_profile_privacy_date">
               <Moment fromNow interval={30}>
                 {post.createdAt}

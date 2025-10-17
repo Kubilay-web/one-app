@@ -26,8 +26,13 @@ export default function Home() {
   // Postları tutacak state
   const [posts, setPosts] = useState([]);
 
-  const handleAddNewPost = (createPost) => {
-    setPosts((prev) => [createPost, ...prev]);
+
+    const handleAddNewPost = async (newPost) => {
+    // Yeni postu önce local state'e ekliyoruz
+    setPosts((prev) => [newPost, ...prev]);
+
+    // Sonrasında sunucudan tekrar postları çekiyoruz
+    await fetchPosts(); // Yeni post ekledikten sonra veriyi güncelle
   };
 
   // Sayfa yüklendiğinde postları çek
@@ -60,6 +65,7 @@ export default function Home() {
           user={user}
           setVisible={setVisible}
           onPostCreated={handleAddNewPost}
+          
         />
       )}
       {/* <Header />  */}
