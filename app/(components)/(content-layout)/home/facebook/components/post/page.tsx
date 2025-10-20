@@ -16,6 +16,7 @@ import { GoGlobe } from "react-icons/go";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { RiShareForwardLine } from "react-icons/ri";
+import axios from "axios";
 
 export default function Post({ post, user }) {
   const [visible, setVisible] = useState(false);
@@ -68,13 +69,15 @@ export default function Post({ post, user }) {
     }
   };
 
-  // Yeni yorum geldiğinde güncellemek için callback
-  const handleNewComment = (newComment) => {
-    setComments((prev) => [newComment, ...prev]);
-  };
 
   const showMore = () => {
     setCount((prev) => prev + 3);
+  };
+
+
+   // Yeni yorum ekledikten sonra postları güncelle
+  const handleNewComment = (newComment) => {
+    setComments((prev) => [newComment, ...prev]); // Yeni yorumu ekleyip güncelle
   };
 
   return (
@@ -119,12 +122,12 @@ export default function Post({ post, user }) {
                 post.images.length === 1
                   ? "grid_1"
                   : post.images.length === 2
-                  ? "grid_2"
-                  : post.images.length === 3
-                  ? "grid_3"
-                  : post.images.length === 4
-                  ? "grid_4"
-                  : post.images.length >= 5 && "grid_5"
+                    ? "grid_2"
+                    : post.images.length === 3
+                      ? "grid_3"
+                      : post.images.length === 4
+                        ? "grid_4"
+                        : post.images.length >= 5 && "grid_5"
               }
             >
               {post.images.slice(0, 5).map((image, i) => (
@@ -202,12 +205,12 @@ export default function Post({ post, user }) {
                 check === "like"
                   ? "#4267b2"
                   : check === "love"
-                  ? "#f63459"
-                  : ["haha", "sad", "wow"].includes(check)
-                  ? "#f7b125"
-                  : check === "angry"
-                  ? "#e4605a"
-                  : ""
+                    ? "#f63459"
+                    : ["haha", "sad", "wow"].includes(check)
+                      ? "#f7b125"
+                      : check === "angry"
+                        ? "#e4605a"
+                        : ""
               }`,
             }}
           >

@@ -5,8 +5,9 @@ import Picker from "emoji-picker-react";
 import { FaSmile, FaCamera, FaTimes } from "react-icons/fa";
 import { MdGif } from "react-icons/md";
 import { ClipLoader } from "react-spinners";
+import axios from "axios";
 
-export default function CreateComment({ user, postId, onNewComment }) {
+export default function CreateComment({ user, postId, onNewComment  }) {
   const [picker, setPicker] = useState(false);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
@@ -14,6 +15,9 @@ export default function CreateComment({ user, postId, onNewComment }) {
   const [loading, setLoading] = useState(false);
   const textRef = useRef<HTMLInputElement>(null);
   const imgInput = useRef<HTMLInputElement>(null);
+
+    // Postları tutacak state
+    const [posts, setPosts] = useState([]);
 
   const handleEmoji = (emojiObject) => {
     const ref = textRef.current;
@@ -41,7 +45,9 @@ export default function CreateComment({ user, postId, onNewComment }) {
     setCommentImage(file);
   };
 
-  const handleComment = async (e) => {
+
+
+   const handleComment = async (e) => {
     if (e.key === "Enter" && !e.shiftKey && text.trim()) {
       e.preventDefault();
       setLoading(true);
@@ -65,16 +71,21 @@ export default function CreateComment({ user, postId, onNewComment }) {
         setText("");
         setCommentImage(null);
 
-        if (data.comment && typeof onNewComment === "function") {
-          onNewComment(data.comment); // Post bileşenine anlık gönder
-        }
+        // Yeni yorum ekledikten sonra postları güncelle
         if (data.message) setError(data.message);
+
+        // Yeni yorum ekledikten sonra postları tekrar al
+        if (onNewComment) {
+          onNewComment(data.comment);  // Burada `onNewComment` callback fonksiyonunu çağırıyoruz
+        }
       } catch {
         setLoading(false);
         setError("Failed to post comment. Please try again.");
       }
     }
   };
+
+
 
   return (
     <div className="create_comment_wrap">

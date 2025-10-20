@@ -27,13 +27,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
 
 
-    const handleAddNewPost = async (newPost) => {
-    // Yeni postu önce local state'e ekliyoruz
-    setPosts((prev) => [newPost, ...prev]);
-
-    // Sonrasında sunucudan tekrar postları çekiyoruz
-    await fetchPosts(); // Yeni post ekledikten sonra veriyi güncelle
-  };
+ 
 
   // Sayfa yüklendiğinde postları çek
   useEffect(() => {
@@ -51,6 +45,26 @@ export default function Home() {
     fetchPosts();
   }, []);
 
+
+     const handleAddNewPost = async (newPost) => {
+    // Yeni postu önce local state'e ekliyoruz
+    setPosts((prev) => [newPost, ...prev]);
+
+
+        const fetchPosts = async () => {
+      try {
+        const res = await axios.get("/api/social/posts");
+        setPosts(res.data);
+        console.log("res", res);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load posts");
+      }
+    };
+
+    // Sonrasında sunucudan tekrar postları çekiyoruz
+    await fetchPosts(); // Yeni post ekledikten sonra veriyi güncelle
+  };
 
 
     const displayedPosts = showMyPostsOnly
