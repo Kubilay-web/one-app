@@ -49,31 +49,98 @@ export async function POST(req) {
 
 
 
- export async function GET(req) {
-   try {
-     const posts = await db.postSocial.findMany({
-       orderBy: { createdAt: "desc" },
-       include: {
-         user: true, // postu paylaşan kullanıcı bilgisi
-         comments: {
-           include: {
-             commentBy: true, // commentById üzerinden tüm user bilgilerini getir
-           },
-         },
-       },
-     })
-     return new Response(JSON.stringify(posts), {
-       status: 200,
-       headers: { "Content-Type": "application/json" },
-     });
-   } catch (error) {
-     console.error(error);
-     return new Response(JSON.stringify({ message: error.message }), {
-       status: 500,
-       headers: { "Content-Type": "application/json" },
-     });
-   }
- }
+
+export async function GET(req: NextRequest) {
+  try {
+    // 1. Giriş yapan kullanıcıyı al
+    const { user } = await validateRequest();
+    const userId = user?.id;
+
+    if (!userId) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // 2. Accepted arkadaşlık ilişkilerini al
+    const friends = await db.friendRequest.findMany({
+      where: {
+        OR: [
+          { userId: userId, status: "accepted" },
+          { friendId: userId, status: "accepted" },
+        ],
+      },
+    });
+
+    const friendIds = friends.map((f) =>
+      f.userId === userId ? f.friendId : f.userId
+    );
+
+    const allowedUserIds = [userId, ...friendIds];
+
+    // 3. Kullanıcı ve arkadaşlarının postlarını al
+    const posts = await db.postSocial.findMany({
+      where: {
+        userId: {
+          in: allowedUserIds,
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: true,
+        comments: {
+          include: {
+            commentBy: true,
+          },
+        },
+        React: true,
+        SavedPost: true,
+      },
+    });
+
+    return new Response(JSON.stringify(posts), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+
+  } catch (error: any) {
+    console.error("GET /api/social/posts error:", error);
+    return new Response(JSON.stringify({ message: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+
+
+
+
+//  export async function GET(req) {
+//    try {
+//      const posts = await db.postSocial.findMany({
+//        orderBy: { createdAt: "desc" },
+//        include: {
+//          user: true, // postu paylaşan kullanıcı bilgisi
+//          comments: {
+//            include: {
+//              commentBy: true, // commentById üzerinden tüm user bilgilerini getir
+//            },
+//          },
+//        },
+//      })
+//      return new Response(JSON.stringify(posts), {
+//        status: 200,
+//        headers: { "Content-Type": "application/json" },
+//      });
+//    } catch (error) {
+//      console.error(error);
+//      return new Response(JSON.stringify({ message: error.message }), {
+//        status: 500,
+//        headers: { "Content-Type": "application/json" },
+//      });
+//    }
+//  }
 
 
 

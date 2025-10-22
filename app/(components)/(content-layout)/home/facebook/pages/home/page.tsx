@@ -27,7 +27,6 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
 
 
- 
 
   // Sayfa yüklendiğinde postları çek
   useEffect(() => {
