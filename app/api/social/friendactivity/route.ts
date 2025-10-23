@@ -1,3 +1,4 @@
+// app/api/social/friendactivity/route.ts
 import db from "@/app/lib/db";
 import { validateRequest } from "@/app/auth";
 
@@ -7,33 +8,42 @@ export async function GET() {
 
   const userId = user.id;
 
-  // Takip edilenleri al
-  const following = await db.followSocial.findMany({
-    where: { followerId: userId },
-    select: { followingId: true },
+  // 1️⃣ Arkadaşlarını al (status = 'accepted')
+  const friends = await db.friendRequest.findMany({
+    where: {
+      OR: [
+        { userId: userId, status: "accepted" },
+        { friendId: userId, status: "accepted" },
+      ],
+    },
+    select: { userId: true, friendId: true },
   });
-  const followingIds = following.map(f => f.followingId);
-  if (followingIds.length === 0) return Response.json([]);
 
-  // Takip edilenlerin beğenileri
+  const friendIds = friends.map(f =>
+    f.userId === userId ? f.friendId : f.userId
+  );
+
+  if (friendIds.length === 0) return Response.json([]);
+
+  // 2️⃣ Arkadaşların beğenileri
   const likes = await db.react.findMany({
-    where: { reactById: { in: followingIds } },
+    where: { reactById: { in: friendIds } },
     include: {
-      reactBy: { select: { username: true, avatarUrl: true } }, // doğru alanlar
+      reactBy: { select: { username: true, avatarUrl: true } },
       postRef: { include: { user: { select: { username: true, avatarUrl: true } } } },
     },
   });
 
-  // Takip edilenlerin yorumları
+  // 3️⃣ Arkadaşların yorumları
   const comments = await db.commentSocial.findMany({
-    where: { commentById: { in: followingIds } },
+    where: { commentById: { in: friendIds } },
     include: {
-      commentBy: { select: { username: true, avatarUrl: true } }, // doğru alanlar
+      commentBy: { select: { username: true, avatarUrl: true } },
       post: { include: { user: { select: { username: true, avatarUrl: true } } } },
     },
   });
 
-  // Tek bir listeye topla
+  // 4️⃣ Tek bir listeye topla
   const activities = [
     ...likes.map(like => ({
       id: like.id,
@@ -55,8 +65,10 @@ export async function GET() {
     })),
   ];
 
-  // Zaman sırasına göre sırala
-  activities.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  // 5️⃣ Zaman sırasına göre sırala
+  activities.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 
   return Response.json(activities);
 }

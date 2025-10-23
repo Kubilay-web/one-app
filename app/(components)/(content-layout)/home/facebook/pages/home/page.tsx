@@ -21,12 +21,8 @@ export default function Home() {
 
   const [showMyPostsOnly, setShowMyPostsOnly] = useState(false); // Feeling/Activity durumu
 
-
-
   // Postları tutacak state
   const [posts, setPosts] = useState([]);
-
-
 
   // Sayfa yüklendiğinde postları çek
   useEffect(() => {
@@ -44,13 +40,11 @@ export default function Home() {
     fetchPosts();
   }, []);
 
-
-     const handleAddNewPost = async (newPost) => {
+  const handleAddNewPost = async (newPost) => {
     // Yeni postu önce local state'e ekliyoruz
     setPosts((prev) => [newPost, ...prev]);
 
-
-        const fetchPosts = async () => {
+    const fetchPosts = async () => {
       try {
         const res = await axios.get("/api/social/posts");
         setPosts(res.data);
@@ -65,8 +59,7 @@ export default function Home() {
     await fetchPosts(); // Yeni post ekledikten sonra veriyi güncelle
   };
 
-
-    const displayedPosts = showMyPostsOnly
+  const displayedPosts = showMyPostsOnly
     ? posts.filter((p) => p.userId === user?.id)
     : posts;
 
@@ -78,7 +71,6 @@ export default function Home() {
           user={user}
           setVisible={setVisible}
           onPostCreated={handleAddNewPost}
-          
         />
       )}
       {/* <Header />  */}
@@ -96,9 +88,69 @@ export default function Home() {
             />
             <div className="posts">
               {displayedPosts.length > 0 ? (
-                displayedPosts.map((post, index) => (
-                  <Post key={post.id || index} post={post} user={user} />
-                ))
+                displayedPosts.map((post, index) =>
+                  post.message ? (
+                    // 🔔 Arkadaş Aktivitesi Kartı
+                    <div
+                      key={post.id || index}
+                      onClick={() => {
+                        if (typeof window !== "undefined") {
+                          const el = document.getElementById(
+                            `post-${post.postId}`
+                          );
+                          if (el) {
+                            el.scrollIntoView({
+                              behavior: "smooth",
+                              block: "center",
+                            });
+                            // 🎨 Geçici highlight efekti
+                            el.classList.add(
+                              "ring",
+                              "ring-blue-400",
+                              "ring-offset-2"
+                            );
+                            setTimeout(() => {
+                              el.classList.remove(
+                                "ring",
+                                "ring-blue-400",
+                                "ring-offset-2"
+                              );
+                            }, 1500);
+                          }
+                        }
+                      }}
+                      className="flex items-start gap-3 bg-blue-50 dark:bg-gray-800 p-4 rounded-2xl border border-blue-100 dark:border-gray-700 transition hover:shadow-md mb-3 cursor-pointer hover:bg-blue-100/60"
+                    >
+                      <img
+                        src={post.actor?.avatarUrl || "/default-avatar.png"}
+                        alt={post.actor?.username}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      <div className="flex-1">
+                        <p className="text-gray-800 dark:text-gray-200 font-medium">
+                          <span className="font-semibold">
+                            {post.actor?.username}
+                          </span>{" "}
+                          {post.type === "like"
+                            ? "gönderiyi beğendi"
+                            : "gönderiye yorum yaptı"}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(post.createdAt).toLocaleString("tr-TR")}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    // 📝 Normal Post Kartı
+                    <div
+                      id={`post-${post.id}`}
+                      key={post.id || index}
+                      className="transition-all duration-500"
+                    >
+                      <Post post={post} user={user} />
+                    </div>
+                  )
+                )
               ) : (
                 <p className="text-center text-gray-500">No posts.</p>
               )}

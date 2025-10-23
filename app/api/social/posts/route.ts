@@ -49,21 +49,16 @@ export async function POST(req) {
 
 
 
-
 export async function GET(req: NextRequest) {
   try {
-    // 1. Giriş yapan kullanıcıyı al
+    // 1️⃣ Giriş yapan kullanıcıyı al
     const { user } = await validateRequest();
-    const userId = user?.id;
-
-    if (!userId) {
-      return new Response(JSON.stringify({ message: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (!user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    const userId = user.id;
 
-    // 2. Accepted arkadaşlık ilişkilerini al
+    // 2️⃣ Accepted arkadaşlık ilişkilerini al
     const friends = await db.friendRequest.findMany({
       where: {
         OR: [
@@ -73,45 +68,81 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const friendIds = friends.map((f) =>
-      f.userId === userId ? f.friendId : f.userId
-    );
+    const friendIds = friends.map((f) => (f.userId === userId ? f.friendId : f.userId));
 
     const allowedUserIds = [userId, ...friendIds];
 
-    // 3. Kullanıcı ve arkadaşlarının postlarını al
+    // 3️⃣ Kullanıcı ve arkadaşlarının postlarını al
     const posts = await db.postSocial.findMany({
-      where: {
-        userId: {
-          in: allowedUserIds,
-        },
-      },
+      where: { userId: { in: allowedUserIds } },
       orderBy: { createdAt: "desc" },
       include: {
-        user: true,
+        user: { select: { id: true, username: true, avatarUrl: true } },
         comments: {
           include: {
-            commentBy: true,
+            commentBy: { select: { id: true, username: true, avatarUrl: true } },
           },
         },
-        React: true,
-        SavedPost: true,
+        React: {
+          include: { reactBy: { select: { id: true, username: true, avatarUrl: true } } },
+        },
       },
     });
 
-    return new Response(JSON.stringify(posts), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+    // 4️⃣ Arkadaşların aktivitelerini (like ve yorum) ekle
+    const likes = await db.react.findMany({
+      where: { reactById: { in: friendIds } },
+      include: {
+        reactBy: { select: { id: true, username: true, avatarUrl: true } },
+        postRef: { select: { id: true, userId: true } },
+      },
     });
 
-  } catch (error: any) {
-    console.error("GET /api/social/posts error:", error);
-    return new Response(JSON.stringify({ message: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
+    const comments = await db.commentSocial.findMany({
+      where: { commentById: { in: friendIds } },
+      include: {
+        commentBy: { select: { id: true, username: true, avatarUrl: true } },
+        post: { select: { id: true, userId: true } },
+      },
     });
+
+    // 5️⃣ Friend activity objelerini oluştur
+    const friendActivities = [
+      ...likes.map((like) => ({
+        id: like.id,
+        type: "like",
+        actor: like.reactBy,
+        postId: like.postRef.id,
+        message: `${like.reactBy.username} gönderiyi beğendi`,
+        createdAt: like.createdAt,
+        isFriendActivity: true,
+      })),
+      ...comments.map((comment) => ({
+        id: comment.id,
+        type: "comment",
+        actor: comment.commentBy,
+        postId: comment.post.id,
+        message: `${comment.commentBy.username} gönderiye yorum yaptı`,
+        createdAt: comment.commentAt,
+        isFriendActivity: true,
+      })),
+    ];
+
+    // 6️⃣ Post ve Friend activity’leri tek listede birleştir ve tarih sırasına göre sırala
+    const feed = [
+      ...posts.map((p) => ({ ...p, isFriendActivity: false })),
+      ...friendActivities,
+    ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    return NextResponse.json(feed);
+  } catch (error: any) {
+    console.error("GET /api/social/feed error:", error);
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+
+
+
 
 
 
