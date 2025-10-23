@@ -52,6 +52,10 @@ export default function Post({ post, user }) {
         setReacts([...reacts]);
         setTotal((prev) => prev - 1);
       }
+
+      
+
+      
     } else {
       setCheck(type);
       let index = reacts.findIndex((x) => x.react === type);
@@ -234,6 +238,7 @@ export default function Post({ post, user }) {
           postId={post.id}
           user={user}
           onNewComment={handleNewComment}
+          postOwnerId={post.user.id} 
         />
 
         {comments &&

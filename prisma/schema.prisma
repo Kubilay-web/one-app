@@ -98,6 +98,10 @@ model User {
   UserSearch UserSearch[]
   UserSearchs UserSearch[] @relation("SearchedUserRelation")
 
+
+
+  NotificationSocial NotificationSocial[] @relation("NotificationFromUser")
+  NotificationSocials NotificationSocial[] @relation("NotificationToUser")
   
 
   //Facebook Social2
@@ -112,6 +116,7 @@ model User {
   //
 
   @@map("users")
+
 
 
 }
@@ -1873,6 +1878,7 @@ model PostSocial {
   React React[]
 
   SavedPost SavedPost[]
+
 }
 
 model CommentSocial {
@@ -1981,6 +1987,23 @@ model UserSearch {
   createdAt DateTime @default(now())
 
   @@unique([userId, searchedUserId])  // Aynı kullanıcı için aynı aranan kullanıcı duplicasyonu engeller
+}
+
+
+
+model NotificationSocial {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  type        String   // "like", "comment", "follow", "friendRequest", etc.
+  message     String?  // "Ahmet fotoğrafını beğendi" gibi
+  fromUser    User     @relation("NotificationFromUser", fields: [fromUserId], references: [id])
+  fromUserId  String
+  toUser      User     @relation("NotificationToUser", fields: [toUserId], references: [id])
+  toUserId    String
+  postId      String?  @db.ObjectId // eğer bir post ile ilgiliyse
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([toUserId])
 }
 
 

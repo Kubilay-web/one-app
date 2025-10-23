@@ -263,6 +263,13 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Profile",
           },
+                {
+            path: `/home/facebook/pages/notifications`,
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Notifications",
+          },
         ],
       },
 

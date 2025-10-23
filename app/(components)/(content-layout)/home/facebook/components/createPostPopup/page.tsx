@@ -10,6 +10,7 @@ import { BsChevronDown } from "react-icons/bs";
 import { createPost } from "../../functions/post";
 import PulseLoader from "react-spinners/PulseLoader";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios"
 
 // Cloudinary upload helper
 const uploadToCloudinary = async (file) => {
@@ -61,6 +62,15 @@ export default function CreatePostPopup({ user, setVisible, onPostCreated }) {
         user.id,
         user.token
       );
+
+    await axios.post("/api/notificationsocial", {
+      fromUserId: user.id,
+      toUserId: user.id, // istersen farklı kullanıcıya
+      type: "newPost",
+      message: `${user.username} yeni bir gönderi paylaştı.`,
+      postId: newPost.id,
+    });
+
 
       // Yeni postu anında ekliyoruz
       onPostCreated(newPost);

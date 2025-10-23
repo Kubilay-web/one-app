@@ -7,7 +7,7 @@ import { MdGif } from "react-icons/md";
 import { ClipLoader } from "react-spinners";
 import axios from "axios";
 
-export default function CreateComment({ user, postId, onNewComment  }) {
+export default function CreateComment({ user, postId, onNewComment,postOwnerId  }) {
   const [picker, setPicker] = useState(false);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
@@ -52,6 +52,7 @@ export default function CreateComment({ user, postId, onNewComment  }) {
       e.preventDefault();
       setLoading(true);
 
+
       try {
         const formData = new FormData();
         formData.append("comment", text);
@@ -73,6 +74,15 @@ export default function CreateComment({ user, postId, onNewComment  }) {
 
         // Yeni yorum ekledikten sonra postları güncelle
         if (data.message) setError(data.message);
+
+
+          await axios.post("/api/notificationsocial", {
+          fromUserId: user.id,
+          toUserId: postOwnerId,
+          type: "comment",
+          message: `${user.username} gönderine yorum yaptı: "${text}"`,
+          postId,
+        });
 
         // Yeni yorum ekledikten sonra postları tekrar al
         if (onNewComment) {
