@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation"; // Pages router
+import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
 import { useSession } from "@/app/SessionProvider";
 import Header from "../../../components/header/page";
 import Cover from "../Cover/page";
 import ProfielPictureInfos from "../ProfielPictureInfos";
-
 import ProfileMenu from "../ProfileMenu";
 import PplYouMayKnow from "../PplYouMayKnow";
 import CreatePost from "../../../components/createPost/page";
@@ -22,30 +21,28 @@ import Link from "next/link";
 export default function ProfilePage({ setVisible }) {
   const { user } = useSession();
   const router = useRouter();
-  const params = useParams(); // <-- Burada parametreleri alıyoruz
-  const username = params?.username; // Dinamik parametre
+  const params = useParams();
+  const username = params?.username;
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // 🟢 Yeni state'ler
+  const [showSaved, setShowSaved] = useState(false);
+  const [savedPosts, setSavedPosts] = useState([]);
+
   useEffect(() => {
     if (!username) return;
-
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        setError("");
-
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/profiles/${username}`,
           {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
+            headers: { Authorization: `Bearer ${user.token}` },
           }
         );
-
         if (res.data.ok === false) {
           router.push("/apps/facebook/facebook/pages/home");
         } else {
@@ -57,9 +54,28 @@ export default function ProfilePage({ setVisible }) {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, [username, user?.token, router]);
+
+  // 🔹 Saved Posts'ları çek
+  const fetchSavedPosts = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/social/savepost`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+      setSavedPosts(res.data.savedPosts || []);
+    } catch (err) {
+      console.error("Error fetching saved posts:", err);
+    }
+  };
+
+  const handleShowSaved = (value) => {
+    setShowSaved(value);
+    if (value) fetchSavedPosts();
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -109,15 +125,27 @@ export default function ProfilePage({ setVisible }) {
                   Meta © 2022
                 </div>
               </div>
+
               <div className="profile_right">
                 {!visitor && (
                   <CreatePost user={user} profile setVisible={setVisible} />
                 )}
-                <GridPosts />
+
+                {/* 🔹 GridPosts’a handler gönderiyoruz */}
+                <GridPosts onShowSaved={handleShowSaved} />
+
                 <div className="posts">
-                  {profile.postsocial && profile.postsocial.length ? (
+                  {showSaved ? (
+                    savedPosts.length ? (
+                      savedPosts.map((sp) => (
+                        <Post key={sp.id} post={sp.post} user={user} />
+                      ))
+                    ) : (
+                      <div className="no_posts">No saved posts available</div>
+                    )
+                  ) : profile.postsocial && profile.postsocial.length ? (
                     profile.postsocial.map((post) => (
-                      <Post post={post} user={user} key={post.id} />
+                      <Post key={post.id} post={post} user={user} />
                     ))
                   ) : (
                     <div className="no_posts">No posts available</div>

@@ -18,6 +18,9 @@ import useOnClickOutside from "../../helpers/clickOutside";
 import { savePost } from "../../functions/post";
 import { deletePost } from "../../functions/post";
 import { saveAs } from "file-saver";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 export default function PostMenu({
@@ -66,10 +69,16 @@ export default function PostMenu({
     });
   };
 
-  const deleteHandler = async () => {
-    deletePost(postId,token)
+const deleteHandler = async () => {
+  try {
+    await deletePost(postId, token); // deletePost fonksiyonunun promise döndüğünü varsayıyoruz
+    toast.success("Post deleted successfully!");
+    setShowMenu(false); // Menü kapatmak istersen
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to delete post.");
   }
-
+};
   return (
     <ul className="post_menu" ref={menu}>
       {/* Pin Post: Eğer kullanıcı postu paylaşan kişiyle aynıysa */}
@@ -142,6 +151,7 @@ export default function PostMenu({
           subtitle="I'm concerned about this post"
         />
       )}
+          <ToastContainer position="top-right" autoClose={3000} />
     </ul>
   );
 }

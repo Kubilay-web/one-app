@@ -1,5 +1,5 @@
 import { validateRequest } from "@/app/auth";
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 import { NotificationCountInfo } from "@/app/lib/types";
 
 export async function GET() {
@@ -10,7 +10,7 @@ export async function GET() {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const unreadCount = await prisma.notification.count({
+    const unreadCount = await db.notification.count({
       where: {
         recipientId: user.id,
         read: false,
