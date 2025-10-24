@@ -10,7 +10,6 @@ import RightHome from "../../components/home/right";
 import Stories from "../../components/home/stories/page";
 import Post from "../../components/post/page";
 import "./style.css";
-import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 export default function Home() {
@@ -65,7 +64,6 @@ export default function Home() {
 
   return (
     <div className="home">
-      <Toaster position="top-right" reverseOrder={false} />
       {visible && (
         <CreatePostPopup
           user={user}

@@ -53,20 +53,7 @@ export default function Post({ post, user }) {
         setTotal((prev) => prev - 1);
       }
 
-
-       if (post.user.id !== user.id) {
-    try {
-      await axios.post("/api/notificationsocial", {
-        fromUserId: user.id,
-        toUserId: post.user.id,
-        type: "react",
-        message: `${user.username} gönderine "${type}" tepkisi verdi.`,
-        postId: post.id,
-      });
-    } catch (err) {
-      console.error("Notification failed", err);
-    }
-  }
+      
 
       
     } else {
@@ -251,6 +238,7 @@ export default function Post({ post, user }) {
           postId={post.id}
           user={user}
           onNewComment={handleNewComment}
+          postOwnerId={post.user.id} 
         />
 
         {comments &&

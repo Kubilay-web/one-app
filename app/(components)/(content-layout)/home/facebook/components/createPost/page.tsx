@@ -68,7 +68,7 @@ export default function CreatePost({
           onClick={handleExploreClick}
         >
           <Feeling color="#f7b928" />
-          Feeling/Activity
+          Discover One
         </div>
       </div>
 

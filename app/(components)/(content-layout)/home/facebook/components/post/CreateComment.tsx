@@ -7,7 +7,7 @@ import { MdGif } from "react-icons/md";
 import { ClipLoader } from "react-spinners";
 import axios from "axios";
 
-export default function CreateComment({ user, postId, onNewComment, postOwnerId  }) {
+export default function CreateComment({ user, postId, onNewComment,postOwnerId  }) {
   const [picker, setPicker] = useState(false);
   const [text, setText] = useState("");
   const [error, setError] = useState("");

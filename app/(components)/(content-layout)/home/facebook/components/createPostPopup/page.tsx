@@ -9,8 +9,8 @@ import { IoMdClose } from "react-icons/io";
 import { BsChevronDown } from "react-icons/bs";
 import { createPost } from "../../functions/post";
 import PulseLoader from "react-spinners/PulseLoader";
-import toast, { Toaster } from "react-hot-toast";
-import axios from "axios"
+import axios from "axios";
+import toast from "react-hot-toast";
 
 // Cloudinary upload helper
 const uploadToCloudinary = async (file) => {
@@ -52,9 +52,15 @@ export default function CreatePostPopup({ user, setVisible, onPostCreated }) {
   };
 
   const postSubmit = async () => {
+    if (!text && images.length === 0 && !background) {
+      toast.error("Post cannot be empty!");
+      return;
+    }
+
     setLoading(true);
     try {
-      const newPost= await createPost(
+      // Post oluştur
+      const newPost = await createPost(
         null,
         background,
         text,
@@ -63,26 +69,28 @@ export default function CreatePostPopup({ user, setVisible, onPostCreated }) {
         user.token
       );
 
-    await axios.post("/api/notificationsocial", {
-      fromUserId: user.id,
-      toUserId: user.id, // istersen farklı kullanıcıya
-      type: "newPost",
-      message: `${user.username} yeni bir gönderi paylaştı.`,
-      postId: newPost.id,
-    });
+      // Bildirim ekle
+      await axios.post("/api/notificationsocial", {
+        fromUserId: user.id,
+        toUserId: user.id, // istersen farklı kullanıcıya
+        type: "newPost",
+        message: `${user.username} yeni bir gönderi paylaştı.`,
+        postId: newPost.id,
+      });
 
-
-      // Yeni postu anında ekliyoruz
+      // Yeni postu parent component'e bildir
       onPostCreated(newPost);
 
+      // Formu temizle
       setBackground("");
       setText("");
       setImages([]);
       setVisible(false);
-      toast.success("Posted successfully!");
+
+      toast.success("Post created successfully!"); // Başarılı toast
     } catch (err) {
       console.error(err);
-      toast.error(err.message || "Something went wrong");
+      toast.error(err?.response?.data?.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
@@ -90,7 +98,6 @@ export default function CreatePostPopup({ user, setVisible, onPostCreated }) {
 
   return (
     <div className="blur-social bg-black bg-opacity-40">
-      <Toaster position="top-right" reverseOrder={false} />
 
       <div className="postBox bg-white dark:bg-neutral-800 text-black dark:text-white rounded-md shadow-md">
         {/* Header */}

@@ -5,7 +5,7 @@ import EmojiPickerBackgrounds from "./EmojiPickerBackgrounds";
 import { IoMdClose } from "react-icons/io"; // exit_icon
 import { AiOutlinePlus, AiOutlineEdit } from "react-icons/ai"; // addPhoto_icon, edit_icon
 import { FaMobileAlt } from "react-icons/fa"; // phone_icon
-import toast from "react-hot-toast";
+
 
 // Cloudinary upload helper
 const uploadToCloudinary = async (file) => {
