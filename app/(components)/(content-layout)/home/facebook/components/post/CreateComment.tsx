@@ -16,9 +16,6 @@ export default function CreateComment({ user, postId, onNewComment,postOwnerId  
   const textRef = useRef<HTMLInputElement>(null);
   const imgInput = useRef<HTMLInputElement>(null);
 
-    // Postları tutacak state
-    const [posts, setPosts] = useState([]);
-
   const handleEmoji = (emojiObject) => {
     const ref = textRef.current;
     if (!ref) return;
@@ -68,6 +65,7 @@ export default function CreateComment({ user, postId, onNewComment,postOwnerId  
           }
         );
         const data = await res.json();
+              console.log("API Response:", data);
         setLoading(false);
         setText("");
         setCommentImage(null);
@@ -84,10 +82,18 @@ export default function CreateComment({ user, postId, onNewComment,postOwnerId  
           postId,
         });
 
+
         // Yeni yorum ekledikten sonra postları tekrar al
-        if (onNewComment) {
-          onNewComment(data.comment);  // Burada `onNewComment` callback fonksiyonunu çağırıyoruz
-        }
+             if (onNewComment) {
+        onNewComment({
+          ...data.comment, // yeni yorum objesini gönderiyoruz
+          postId,           // postId'yi de ekleyebiliriz
+          user: user        // Yorum yapan kullanıcı bilgisi
+        });
+      }
+
+
+
       } catch {
         setLoading(false);
         setError("Failed to post comment. Please try again.");

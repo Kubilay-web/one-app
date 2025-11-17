@@ -263,7 +263,7 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Profile",
           },
-                {
+          {
             path: `/home/facebook/pages/notifications`,
             type: "link",
             active: false,
@@ -934,6 +934,64 @@ export const getMenuItems = (user) => [
                 active: false,
                 selected: false,
                 title: "Live Auction",
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        title: "Youtube",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/home/youtube/main",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+          {
+            path: "/home/youtube/subscriptions",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Subscriptions",
+          },
+          {
+            path: "/home/youtube/trending",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Trending",
+          },
+
+          {
+            title: "You",
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/home/youtube/history",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "History",
+              },
+              {
+                path: "/home/youtube/likedvideos",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Liked videos",
+              },
+              {
+                path: "/home/youtube/allplaylists",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "All playlists",
               },
             ],
           },

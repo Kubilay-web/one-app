@@ -80,9 +80,10 @@ export default function Post({ post, user }) {
 
 
    // Yeni yorum ekledikten sonra postları güncelle
-  const handleNewComment = (newComment) => {
-    setComments((prev) => [newComment, ...prev]); // Yeni yorumu ekleyip güncelle
+   const handleNewComment = (newComment) => {
+    setComments((prevComments) => [newComment, ...prevComments]);
   };
+
 
   return (
     <div className="post">
@@ -238,7 +239,7 @@ export default function Post({ post, user }) {
           postId={post.id}
           user={user}
           onNewComment={handleNewComment}
-          postOwnerId={post.user.id} 
+          postOwnerId={post.userId} 
         />
 
         {comments &&
