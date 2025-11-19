@@ -38,8 +38,6 @@ model User {
   bannerUrl String?
   bannerKey String?
 
-
-
   reputation Int? @default(0)
 
   role                  Role           @default(USER)
@@ -1737,9 +1735,6 @@ model OnlineUser {
   user        User     @relation(fields: [userId], references: [id])
 }
 
-
-
-
 //Social2 Facebook
 
 model PostSocial {
@@ -1918,9 +1913,8 @@ enum VideoVisibility {
   public
 }
 
-
 model Video {
-  id             String          @id @map("_id") @db.ObjectId
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
   title          String
   description    String?
   muxStatus      String?
@@ -1948,7 +1942,6 @@ model Video {
   playlistVideos PlaylistVideo[]
 }
 
-
 model VideoView {
   id        String   @id @map("_id") @db.ObjectId
   userId    String
@@ -1959,7 +1952,6 @@ model VideoView {
   user  User  @relation(fields: [userId], references: [id])
   video Video @relation(fields: [videoId], references: [id])
 }
-
 
 model VideoReaction {
   id        String       @id @map("_id") @db.ObjectId
@@ -1973,7 +1965,6 @@ model VideoReaction {
   video Video @relation(fields: [videoId], references: [id])
 }
 
-
 model Subscription {
   id        String   @id @map("_id") @db.ObjectId
   viewerId  String
@@ -1984,7 +1975,6 @@ model Subscription {
   viewer  User @relation("ViewerSubscriptions", fields: [viewerId], references: [id])
   creator User @relation("CreatorSubscribers", fields: [creatorId], references: [id])
 }
-
 
 model CommentVideo {
   id        String   @id @map("_id") @db.ObjectId
@@ -2002,7 +1992,6 @@ model CommentVideo {
   reactions CommentReaction[]
 }
 
-
 model CommentReaction {
   id        String       @id @map("_id") @db.ObjectId
   userId    String
@@ -2015,19 +2004,17 @@ model CommentReaction {
   comment CommentVideo @relation(fields: [commentId], references: [id])
 }
 
-
 model Playlist {
   id          String   @id @map("_id") @db.ObjectId
   name        String
   description String?
-  userId      String  
+  userId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   user           User            @relation(fields: [userId], references: [id])
   playlistVideos PlaylistVideo[]
 }
-
 
 model PlaylistVideo {
   id         String   @id @map("_id") @db.ObjectId
@@ -2040,7 +2027,6 @@ model PlaylistVideo {
   video    Video    @relation(fields: [videoId], references: [id])
 }
 
-
 model VideoCategory {
   id          String   @id @map("_id") @db.ObjectId
   name        String   @unique
@@ -2052,6 +2038,5 @@ model VideoCategory {
 }
 
 //VideoClone
-
 
 //4.36.32

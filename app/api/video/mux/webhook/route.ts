@@ -1,71 +1,85 @@
-import { NextResponse } from "next/server";
-import db from "@/app/lib/db";
-import Mux from "@mux/mux-node";
+import { NextRequest, NextResponse } from "next/server";
+import  db  from "@/app/lib/db";
+import { mux } from "@/app/lib/mux";
 
-const mux = new Mux({
-  tokenId: process.env.MUX_TOKEN_ID!,
-  tokenSecret: process.env.MUX_TOKEN_SECRET!,
-});
-
-// MUX Webhook Signing Secret
-const SIGNING_SECRET = process.env.MUX_WEBHOOK_SECRET!;
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await req.text();
-    const signature = req.headers.get("mux-signature");
+    console.log("🔔 Mux webhook received");
 
-    // 1) Webhook doğrulaması
-    const isValid = Mux.Webhooks.verifyHeader(
-      body,
-      signature!,
-      SIGNING_SECRET
+    const body = await req.json();
+    console.log("Webhook body:", JSON.stringify(body, null, 2));
+
+    const { type, data } = body;
+
+    // Upload completed event
+    if (type === "video.upload.asset_created") {
+      const uploadId = data.id;
+      const assetId = data.asset_id;
+
+      console.log(`📹 Upload ${uploadId} completed, asset: ${assetId}`);
+
+      // Video'yu bul ve güncelle
+      const video = await db.video.update({
+        where: {
+          muxUploadId: uploadId,
+        },
+        data: {
+          muxAssetId: assetId,
+          muxStatus: "asset_created",
+        },
+      });
+
+      console.log(`✅ Video ${video.id} updated with asset ${assetId}`);
+    }
+
+    // Asset ready event
+    if (type === "video.asset.ready") {
+      const assetId = data.id;
+      const playbackId = data.playback_ids?.[0]?.id;
+      const duration = data.duration ? Math.round(data.duration * 1000) : 0;
+
+      console.log(`🎬 Asset ${assetId} ready, playback: ${playbackId}, duration: ${duration}`);
+
+      // Video'yu bul ve güncelle
+      const video = await db.video.update({
+        where: {
+          muxAssetId: assetId,
+        },
+        data: {
+          muxPlaybackId: playbackId,
+          muxStatus: "ready",
+          duration: duration,
+        },
+      });
+
+      console.log(`✅ Video ${video.id} is ready for playback`);
+    }
+
+    // Asset errored event
+    if (type === "video.asset.errored") {
+      const assetId = data.id;
+      const errors = data.errors;
+
+      console.log(`❌ Asset ${assetId} errored:`, errors);
+
+      const video = await db.video.update({
+        where: {
+          muxAssetId: assetId,
+        },
+        data: {
+          muxStatus: "errored",
+        },
+      });
+
+      console.log(`❌ Video ${video.id} marked as errored`);
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error("❌ Webhook error:", error);
+    return NextResponse.json(
+      { error: "Webhook Error", details: error.message },
+      { status: 500 }
     );
-
-    if (!isValid) {
-      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
-    }
-
-    const event = JSON.parse(body);
-
-    // 2) Yalnızca asset.ready event'ini işliyoruz
-    if (event.type !== "video.asset.ready") {
-      return NextResponse.json({ message: "Ignored" });
-    }
-
-    const asset = event.data;
-    const assetId = asset.id;
-
-    // 3) Bu asset ID hangi videoya ait?
-    const video = await db.video.findFirst({
-      where: {
-        muxUploadId: asset.upload_id,
-      },
-    });
-
-    if (!video) {
-      return NextResponse.json(
-        { error: "Related video not found" },
-        { status: 404 }
-      );
-    }
-
-    // 4) Playback ID al
-    const playbackId = asset.playback_ids?.[0]?.id;
-
-    // 5) Veritabanını güncelle
-    await db.video.update({
-      where: { id: video.id },
-      data: {
-        muxAssetId: assetId,
-        muxPlaybackId: playbackId,
-        status: "ready",
-      },
-    });
-
-    return NextResponse.json({ message: "Webhook processed" });
-  } catch (err) {
-    console.error("WEBHOOK ERROR:", err);
-    return NextResponse.json({ error: "Webhook Error" }, { status: 500 });
   }
 }

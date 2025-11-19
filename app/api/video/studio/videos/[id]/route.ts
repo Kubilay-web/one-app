@@ -1,40 +1,148 @@
-import { NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
+import { NextRequest, NextResponse } from "next/server";
 import { validateRequest } from "@/app/auth";
-import db from "@/app/lib/db";
+import  db  from "@/app/lib/db";
+import { UTApi } from "uploadthing/server";
+import { mux } from "@/app/lib/mux";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+interface Params {
+  params: {
+    id: string;
+  };
+}
+
+export async function GET(req: NextRequest, { params }: Params) {
   try {
     const {user} = await validateRequest();
-    if (!user) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    const userId = user?.id;
 
-    // ID ObjectId mi?
-    if (!ObjectId.isValid(params.id)) {
-      return new NextResponse("Invalid video ID", { status: 400 });
-    }
-
-    // ObjectId string'e çevrilmiş haliyle prisma kullanabilir
-    const id = new ObjectId(params.id).toString();
-
-    const video = await db.video.findFirst({
+    const video = await db.video.findUnique({
       where: {
-        id,
-        userId: user.id,
+        id: params.id,
+      },
+      include: {
+        user: {
+          include: {
+            _count: {
+              select: {
+                subscribers: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            views: true,
+            reactions: {
+              where: { type: "like" },
+            },
+          },
+        },
       },
     });
 
     if (!video) {
-      return new NextResponse("Not found", { status: 404 });
+      return NextResponse.json({ error: "Video not found" }, { status: 404 });
     }
 
+    let viewerReaction = null;
+    let viewerSubscribed = false;
+
+    if (userId) {
+      // Get viewer's reaction
+      const reaction = await db.videoReaction.findFirst({
+        where: {
+          videoId: params.id,
+          userId: userId,
+        },
+      });
+
+      if (reaction) {
+        viewerReaction = reaction.type;
+      }
+
+      // Check if viewer is subscribed
+      const subscription = await db.subscription.findFirst({
+        where: {
+          viewerId: userId,
+          creatorId: video.userId,
+        },
+      });
+
+      viewerSubscribed = !!subscription;
+    }
+
+    const response = {
+      ...video,
+      user: {
+        ...video.user,
+        subscriberCount: video.user._count.subscribers,
+        viewerSubscribed,
+      },
+      viewCount: video._count.views,
+      likeCount: video._count.reactions,
+      viewerReaction,
+    };
+
+    return NextResponse.json(response);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest, { params }: Params) {
+  try {
+    const {user} = await validateRequest();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+
+    const video = await db.video.update({
+      where: {
+        id: params.id,
+        userId: user.id,
+      },
+      data: {
+        title: body.title,
+        description: body.description,
+        categoryId: body.categoryId,
+        visibility: body.visibility,
+        updatedAt: new Date(),
+      },
+    });
+
     return NextResponse.json(video);
-  } catch (err) {
-    console.error(err);
-    return new NextResponse("Server error", { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Video not found or unauthorized" },
+      { status: 404 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: Params) {
+  try {
+    const {user} = await validateRequest();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const video = await db.video.delete({
+      where: {
+        id: params.id,
+        userId: user.id,
+      },
+    });
+
+    return NextResponse.json(video);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Video not found or unauthorized" },
+      { status: 404 }
+    );
   }
 }

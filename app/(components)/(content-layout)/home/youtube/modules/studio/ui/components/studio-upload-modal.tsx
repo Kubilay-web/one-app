@@ -20,7 +20,7 @@ export const StudioUploadModal = () => {
     try {
       setIsPending(true);
 
-      const res = await fetch("/api/video/studio/videos/create", {
+      const res = await fetch("/api/video/studio/videos", {
         method: "POST",
       });
 
