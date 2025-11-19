@@ -1921,7 +1921,7 @@ model Video {
   muxAssetId     String?         @unique
   muxUploadId    String?         @unique
   muxPlaybackId  String?         @unique
-  muxTrackId     String?         @unique
+  muxTrackId     String?        
   muxTrackStatus String?
   thumbnailUrl   String?
   thumbnailKey   String?

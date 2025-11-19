@@ -84,50 +84,75 @@ export async function POST(req: NextRequest) {
   }
 }
 
+
+
+
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const categoryId = searchParams.get("categoryId");
-    const userId = searchParams.get("userId");
-    const cursor = searchParams.get("cursor");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const {user} = await validateRequest();
+    
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
+    const { searchParams } = new URL(req.url);
+    const cursor = searchParams.get("cursor");
+    const limit = parseInt(searchParams.get("limit") || "10");
+
+    console.log("📹 Fetching studio videos for user:", user.id);
+
+    // Base where condition - sadece kullanıcının kendi videoları
     let where: any = {
-      visibility: "public",
+      userId: user.id, // Sadece kullanıcının kendi videoları
     };
 
-    if (categoryId) {
-      where.categoryId = categoryId;
-    }
-
-    if (userId) {
-      where.userId = userId;
-    }
-
+    // Cursor-based pagination
     let cursorCondition = {};
     if (cursor) {
-      const [id, updatedAt] = cursor.split("_");
-      cursorCondition = {
-        id: { lt: id },
-        updatedAt: { lte: new Date(updatedAt) },
-      };
+      try {
+        const [id, updatedAt] = cursor.split("_");
+        cursorCondition = {
+          OR: [
+            { updatedAt: { lt: new Date(updatedAt) } },
+            {
+              updatedAt: new Date(updatedAt),
+              id: { lt: id }
+            }
+          ]
+        };
+      } catch (error) {
+        console.error("Cursor parsing error:", error);
+      }
     }
 
+    // Final where condition
+    const finalWhere = {
+      ...where,
+      ...(Object.keys(cursorCondition).length > 0 ? cursorCondition : {})
+    };
+
+    console.log("Final where condition:", finalWhere);
+
+    // Videoları çek
     const videos = await db.video.findMany({
-      where: {
-        ...where,
-        ...cursorCondition,
-      },
+      where: finalWhere,
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          }
+        },
         _count: {
           select: {
             views: true,
             reactions: {
-              where: { type: "like" },
+              where: { type: "like" }
             },
-          },
-        },
+            comments: true,
+          }
+        }
       },
       orderBy: [
         { updatedAt: "desc" },
@@ -136,20 +161,39 @@ export async function GET(req: NextRequest) {
       take: limit + 1,
     });
 
+    console.log(`✅ Found ${videos.length} videos for user ${user.id}`);
+
+    // Pagination logic
     const hasMore = videos.length > limit;
     const items = hasMore ? videos.slice(0, -1) : videos;
-    const lastItem = items[items.length - 1];
-    const nextCursor = hasMore 
-      ? `${lastItem.id}_${lastItem.updatedAt.toISOString()}`
-      : null;
+    
+    let nextCursor = null;
+    if (hasMore && items.length > 0) {
+      const lastItem = items[items.length - 1];
+      nextCursor = `${lastItem.id}_${lastItem.updatedAt.toISOString()}`;
+    }
+
+    // Response'u zenginleştir
+    const enrichedItems = items.map(video => ({
+      ...video,
+      viewCount: video._count.views,
+      likeCount: video._count.reactions,
+      commentCount: video._count.comments,
+    }));
 
     return NextResponse.json({
-      items,
+      items: enrichedItems,
       nextCursor,
+      hasMore,
+      total: items.length,
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("❌ Error fetching studio videos:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        error: "Internal server error",
+        details: process.env.NODE_ENV === "development" ? error.message : undefined
+      },
       { status: 500 }
     );
   }
