@@ -448,3 +448,18 @@ export function formatMoney(amount:number){
 export function relativeDate(from:Date){
 return formatDistanceToNowStrict(from,{addSuffix:true})
 }
+
+
+
+
+//Video
+
+export const formatDuration = (duration: number) => {
+  const seconds = Math.floor((duration % 60000) / 1000);
+  const minutes = Math.floor(duration / 60000);
+  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+};
+
+export const snakeCaseToTitle = (str: string) => {
+  return str.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+};

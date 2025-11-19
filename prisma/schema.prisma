@@ -35,6 +35,9 @@ model User {
   location  String?
   portfolio String?
 
+  bannerUrl String?
+  bannerKey String?
+
   events       Event[]
   integrations Integration[]
   availability Availability?
@@ -84,41 +87,47 @@ model User {
 
   //Facebook Social2
 
-  cover String? 
+  cover          String?
   postsocial     PostSocial[]
   commentssocial CommentSocial[]
 
   FriendRequestSocial  FriendRequest[] @relation("UserFriendsFriend")
   FriendRequestSocials FriendRequest[] @relation("UserFriendsUser")
-  FollowSocial FollowSocial[] @relation("FollowerRelation")
-  FollowSocials FollowSocial[] @relation("FollowingRelation")
-  UserDetails UserDetails[]
-  React React[]
-  SavedPost SavedPost[]
-  UserSearch UserSearch[]
-  UserSearchs UserSearch[] @relation("SearchedUserRelation")
+  FollowSocial         FollowSocial[]  @relation("FollowerRelation")
+  FollowSocials        FollowSocial[]  @relation("FollowingRelation")
+  UserDetails          UserDetails[]
+  React                React[]
+  SavedPost            SavedPost[]
+  UserSearch           UserSearch[]
+  UserSearchs          UserSearch[]    @relation("SearchedUserRelation")
 
-
-
-  NotificationSocial NotificationSocial[] @relation("NotificationFromUser")
+  NotificationSocial  NotificationSocial[] @relation("NotificationFromUser")
   NotificationSocials NotificationSocial[] @relation("NotificationToUser")
-  
 
   //Facebook Social2
 
-
   //Shop2
 
-
-  cartData Json? 
+  cartData  Json?
   OrderShop OrderShop[]
 
   //
 
+  //Video
+
+  videos         Video[]
+  videoViews     VideoView[]
+  videoReactions VideoReaction[]
+  subscriptions  Subscription[]  @relation("ViewerSubscriptions")
+  subscribers    Subscription[]  @relation("CreatorSubscribers")
+  commentsVideo  CommentVideo[]
+  playlists      Playlist[]
+
+  //Video
+
+  commentReactions CommentReaction[]
+
   @@map("users")
-
-
-
 }
 
 model CouponToUser {
@@ -1878,7 +1887,6 @@ model PostSocial {
   React React[]
 
   SavedPost SavedPost[]
-
 }
 
 model CommentSocial {
@@ -1902,10 +1910,8 @@ model FriendRequest {
   friend    User     @relation("UserFriendsFriend", fields: [friendId], references: [id])
 }
 
-
-
 model UserDetails {
-  id           String  @id @map("_id") @default(auto()) @db.ObjectId
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
   userId       String  @unique
   biosocial    String?
   otherName    String?
@@ -1915,7 +1921,7 @@ model UserDetails {
   college      String?
   currentCity  String?
   hometown     String?
-  relationship String? 
+  relationship String?
   instagram    String?
 
   user User @relation(fields: [userId], references: [id])
@@ -1923,19 +1929,16 @@ model UserDetails {
   @@map("userDetails")
 }
 
-
-
 model FollowSocial {
-  id        String @id @map("_id") @default(auto()) @db.ObjectId
-  followerId String 
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String
   followingId String
 
-  follower User @relation("FollowerRelation", fields: [followerId], references: [id])
+  follower  User @relation("FollowerRelation", fields: [followerId], references: [id])
   following User @relation("FollowingRelation", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
 }
-
 
 enum ReactType {
   like
@@ -1946,82 +1949,70 @@ enum ReactType {
   wow
 }
 
-
 model React {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  react    ReactType
-  postRef  PostSocial     @relation(fields: [postRefId], references: [id])
-  postRefId String  @db.ObjectId
-  reactBy  User     @relation(fields: [reactById], references: [id])
-  reactById String  
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  react     ReactType
+  postRef   PostSocial @relation(fields: [postRefId], references: [id])
+  postRefId String     @db.ObjectId
+  reactBy   User       @relation(fields: [reactById], references: [id])
+  reactById String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-
-
-
 model SavedPost {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  post      PostSocial @relation(fields: [postId], references: [id])
-  postId    String   @db.ObjectId
-  savedAt   DateTime @default(now())
+  id      String     @id @default(auto()) @map("_id") @db.ObjectId
+  post    PostSocial @relation(fields: [postId], references: [id])
+  postId  String     @db.ObjectId
+  savedAt DateTime   @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String  
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  @@unique([userId, postId]) 
+  @@unique([userId, postId])
 }
 
-
-
 model UserSearch {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  searchedUser   User     @relation("SearchedUserRelation", fields: [searchedUserId], references: [id])
-  searchedUserId String 
+  searchedUser   User   @relation("SearchedUserRelation", fields: [searchedUserId], references: [id])
+  searchedUserId String
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, searchedUserId])  // Aynı kullanıcı için aynı aranan kullanıcı duplicasyonu engeller
+  @@unique([userId, searchedUserId]) // Aynı kullanıcı için aynı aranan kullanıcı duplicasyonu engeller
 }
 
-
-
 model NotificationSocial {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  type        String   // "like", "comment", "follow", "friendRequest", etc.
-  message     String?  // "Ahmet fotoğrafını beğendi" gibi
-  fromUser    User     @relation("NotificationFromUser", fields: [fromUserId], references: [id])
-  fromUserId  String
-  toUser      User     @relation("NotificationToUser", fields: [toUserId], references: [id])
-  toUserId    String
-  postId      String?  @db.ObjectId // eğer bir post ile ilgiliyse
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  type       String // "like", "comment", "follow", "friendRequest", etc.
+  message    String? // "Ahmet fotoğrafını beğendi" gibi
+  fromUser   User     @relation("NotificationFromUser", fields: [fromUserId], references: [id])
+  fromUserId String
+  toUser     User     @relation("NotificationToUser", fields: [toUserId], references: [id])
+  toUserId   String
+  postId     String?  @db.ObjectId // eğer bir post ile ilgiliyse
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
   @@index([toUserId])
 }
 
-
-
 //////////////////////////////////////////////
-
 
 // Shop2 Models
 
-
 model OrderShop {
   id            String   @id @default(cuid()) @map("_id")
-  userId        String   // Kullanıcı ID'si
-  items         Json     // Ürünlerin bilgileri JSON formatında
-  amount        Float    // Siparişin toplam tutarı
-  address       Json     // Adres bilgileri JSON formatında
+  userId        String // Kullanıcı ID'si
+  items         Json // Ürünlerin bilgileri JSON formatında
+  amount        Float // Siparişin toplam tutarı
+  address       Json // Adres bilgileri JSON formatında
   status        String   @default("Order Placed") // Sipariş durumu
-  paymentMethod String   // Ödeme yöntemi (örneğin "Kredi Kartı")
+  paymentMethod String // Ödeme yöntemi (örneğin "Kredi Kartı")
   payment       Boolean  @default(false) // Ödeme tamamlanmış mı?
   date          DateTime // Siparişin verildiği tarih
   user          User     @relation(fields: [userId], references: [id]) // User ile ilişki
@@ -2030,30 +2021,166 @@ model OrderShop {
 }
 
 model ProductShop {
-  id           String   @id @default(cuid()) @map("_id")
-  name         String   // Ürün adı
-  description  String   // Ürün açıklaması
-  price        Float    // Ürün fiyatı
-  images       Json     // Ürün görselleri (JSON dizisi)
-  category     String   // Ürün kategorisi
-  subCategory  String   // Ürün alt kategorisi
-  sizes        Json     // Ürün beden bilgileri (JSON dizisi)
-  bestseller   Boolean? // Bestseller olup olmadığı
-  date         DateTime // Ürün eklenme tarihi
+  id          String   @id @default(cuid()) @map("_id")
+  name        String // Ürün adı
+  description String // Ürün açıklaması
+  price       Float // Ürün fiyatı
+  images      Json // Ürün görselleri (JSON dizisi)
+  category    String // Ürün kategorisi
+  subCategory String // Ürün alt kategorisi
+  sizes       Json // Ürün beden bilgileri (JSON dizisi)
+  bestseller  Boolean? // Bestseller olup olmadığı
+  date        DateTime // Ürün eklenme tarihi
 
   @@map("products")
 }
 
-
-
 /////VideoClone
 
+enum ReactionType {
+  like
+  dislike
+}
+
+enum VideoVisibility {
+  private
+  public
+}
+
+
+model Video {
+  id             String          @id @map("_id") @db.ObjectId
+  title          String
+  description    String?
+  muxStatus      String?
+  muxAssetId     String?         @unique
+  muxUploadId    String?         @unique
+  muxPlaybackId  String?         @unique
+  muxTrackId     String?         @unique
+  muxTrackStatus String?
+  thumbnailUrl   String?
+  thumbnailKey   String?
+  previewUrl     String?
+  previewKey     String?
+  duration       Int             @default(0)
+  visibility     VideoVisibility @default(private)
+  userId         String
+  categoryId     String?         @db.ObjectId
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id])
+  category       VideoCategory?  @relation(fields: [categoryId], references: [id])
+  views          VideoView[]
+  reactions      VideoReaction[]
+  comments       CommentVideo[]
+  playlistVideos PlaylistVideo[]
+}
+
+
+model VideoView {
+  id        String   @id @map("_id") @db.ObjectId
+  userId    String
+  videoId   String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id])
+  video Video @relation(fields: [videoId], references: [id])
+}
+
+
+model VideoReaction {
+  id        String       @id @map("_id") @db.ObjectId
+  userId    String
+  videoId   String       @db.ObjectId
+  type      ReactionType
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id])
+  video Video @relation(fields: [videoId], references: [id])
+}
+
+
+model Subscription {
+  id        String   @id @map("_id") @db.ObjectId
+  viewerId  String
+  creatorId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  viewer  User @relation("ViewerSubscriptions", fields: [viewerId], references: [id])
+  creator User @relation("CreatorSubscribers", fields: [creatorId], references: [id])
+}
+
+
+model CommentVideo {
+  id        String   @id @map("_id") @db.ObjectId
+  parentId  String?  @db.ObjectId
+  userId    String
+  videoId   String   @db.ObjectId
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User              @relation(fields: [userId], references: [id])
+  video     Video             @relation(fields: [videoId], references: [id])
+  parent    CommentVideo?     @relation("CommentVideoParent", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   CommentVideo[]    @relation("CommentVideoParent")
+  reactions CommentReaction[]
+}
+
+
+model CommentReaction {
+  id        String       @id @map("_id") @db.ObjectId
+  userId    String
+  commentId String       @db.ObjectId
+  type      ReactionType
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  user    User         @relation(fields: [userId], references: [id])
+  comment CommentVideo @relation(fields: [commentId], references: [id])
+}
+
+
+model Playlist {
+  id          String   @id @map("_id") @db.ObjectId
+  name        String
+  description String?
+  userId      String  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id])
+  playlistVideos PlaylistVideo[]
+}
+
+
+model PlaylistVideo {
+  id         String   @id @map("_id") @db.ObjectId
+  playlistId String   @db.ObjectId
+  videoId    String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  playlist Playlist @relation(fields: [playlistId], references: [id])
+  video    Video    @relation(fields: [videoId], references: [id])
+}
+
+
 model VideoCategory {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId  // MongoDB'de otomatik ObjectId kullanımı
+  id          String   @id @map("_id") @db.ObjectId
   name        String   @unique
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  videos Video[]
 }
 
 //VideoClone
+
+
+//4.36.32
