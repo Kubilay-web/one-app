@@ -38,10 +38,7 @@ model User {
   bannerUrl String?
   bannerKey String?
 
-  events       Event[]
-  integrations Integration[]
-  availability Availability?
-  meetings     Meeting[]
+
 
   reputation Int? @default(0)
 
@@ -1740,134 +1737,8 @@ model OnlineUser {
   user        User     @relation(fields: [userId], references: [id])
 }
 
-//Calendar
 
-enum IntegrationProviderEnum {
-  GOOGLE
-  ZOOM
-  MICROSOFT
-}
 
-enum IntegrationAppTypeEnum {
-  GOOGLE_MEET_AND_CALENDAR
-  ZOOM_MEETING
-  OUTLOOK_CALENDAR
-}
-
-enum IntegrationCategoryEnum {
-  CALENDAR_AND_VIDEO_CONFERENCING
-  VIDEO_CONFERENCING
-  CALENDAR
-}
-
-model Integration {
-  id            String                  @id @default(auto()) @map("_id") @db.ObjectId
-  provider      IntegrationProviderEnum
-  category      IntegrationCategoryEnum
-  app_type      IntegrationAppTypeEnum
-  access_token  String
-  refresh_token String?
-  expiry_date   BigInt?
-  metadata      Json
-  isConnected   Boolean                 @default(true)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, app_type])
-}
-
-enum EventLocationEnumType {
-  GOOGLE_MEET_AND_CALENDAR
-  ZOOM_MEETING
-}
-
-model Event {
-  id           String                @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  description  String?
-  duration     Int                   @default(30)
-  slug         String
-  isPrivate    Boolean               @default(false)
-  locationType EventLocationEnumType
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  meetings Meeting[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Availability {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  timeGap Int    @default(30)
-
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
-
-  days DayAvailability[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum DayOfWeekEnum {
-  SUNDAY
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-}
-
-model DayAvailability {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  day         DayOfWeekEnum
-  startTime   DateTime
-  endTime     DateTime
-  isAvailable Boolean       @default(true)
-
-  availabilityId String       @db.ObjectId
-  availability   Availability @relation(fields: [availabilityId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum MeetingStatus {
-  SCHEDULED
-  CANCELLED
-}
-
-model Meeting {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  guestName       String
-  guestEmail      String
-  additionalInfo  String?
-  startTime       DateTime
-  endTime         DateTime
-  meetLink        String
-  calendarEventId String
-  calendarAppType String
-
-  status MeetingStatus @default(SCHEDULED)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  eventId String @db.ObjectId
-  event   Event  @relation(fields: [eventId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
 
 //Social2 Facebook
 
