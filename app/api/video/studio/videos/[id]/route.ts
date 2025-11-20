@@ -1,77 +1,59 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateRequest } from "@/app/auth";
-import  db  from "@/app/lib/db";
-import { UTApi } from "uploadthing/server";
-import { mux } from "@/app/lib/mux";
+import db from "@/app/lib/db";
+import { ObjectId } from "mongodb";
 
-interface Params {
-  params: {
-    id: string;
-  };
+interface Context {
+  params: { id: string };
 }
 
-export async function GET(req: NextRequest, { params }: Params) {
+
+export async function GET(req: NextRequest, context: Context) {
   try {
-    const {user} = await validateRequest();
+    // id'den sadece ObjectId kısmını al
+    const rawId = context.params.id;
+    const id = rawId.split(":")[0]; // "691ed4119103d8923f88e9c6:200" -> "691ed4119103d8923f88e9c6"
+
+    const { user } = await validateRequest();
     const userId = user?.id;
 
+    // ObjectId doğrulama
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid video ID" }, { status: 400 });
+    }
+
     const video = await db.video.findUnique({
-      where: {
-        id: params.id,
-      },
+      where: { id },
       include: {
         user: {
           include: {
-            _count: {
-              select: {
-                subscribers: true,
-              },
-            },
+            _count: { select: { subscribers: true } },
           },
         },
         _count: {
-          select: {
-            views: true,
-            reactions: {
-              where: { type: "like" },
-            },
-          },
+          select: { views: true, reactions: { where: { type: "like" } } },
         },
       },
     });
 
-    if (!video) {
-      return NextResponse.json({ error: "Video not found" }, { status: 404 });
-    }
+    if (!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
 
     let viewerReaction = null;
     let viewerSubscribed = false;
 
     if (userId) {
-      // Get viewer's reaction
       const reaction = await db.videoReaction.findFirst({
-        where: {
-          videoId: params.id,
-          userId: userId,
-        },
+        where: { videoId: id, userId },
       });
+      if (reaction) viewerReaction = reaction.type;
 
-      if (reaction) {
-        viewerReaction = reaction.type;
-      }
-
-      // Check if viewer is subscribed
       const subscription = await db.subscription.findFirst({
-        where: {
-          viewerId: userId,
-          creatorId: video.userId,
-        },
+        where: { viewerId: userId, creatorId: video.userId },
       });
-
       viewerSubscribed = !!subscription;
     }
 
-    const response = {
+    return NextResponse.json({
       ...video,
       user: {
         ...video.user,
@@ -81,35 +63,31 @@ export async function GET(req: NextRequest, { params }: Params) {
       viewCount: video._count.views,
       likeCount: video._count.reactions,
       viewerReaction,
-    };
-
-    return NextResponse.json(response);
+    });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error(error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-export async function PUT(req: NextRequest, { params }: Params) {
+
+
+
+export async function PUT(req: NextRequest, context: Context) {
   try {
-    const {user} = await validateRequest();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const { id } = context.params;
+    const { user } = await validateRequest();
+
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
 
     const video = await db.video.update({
-      where: {
-        id: params.id,
-        userId: user.id,
-      },
+      where: { id, userId: user.id },
       data: {
         title: body.title,
         description: body.description,
-        categoryId: body.categoryId,
+        categoryId: body.categoryId || null,
         visibility: body.visibility,
         updatedAt: new Date(),
       },
@@ -117,32 +95,25 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
     return NextResponse.json(video);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Video not found or unauthorized" },
-      { status: 404 }
-    );
+    console.error(error);
+    return NextResponse.json({ error: "Video not found or unauthorized" }, { status: 404 });
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, context: Context) {
   try {
-    const {user} = await validateRequest();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const { id } = context.params;
+    const { user } = await validateRequest();
+
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const video = await db.video.delete({
-      where: {
-        id: params.id,
-        userId: user.id,
-      },
+      where: { id, userId: user.id },
     });
 
     return NextResponse.json(video);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Video not found or unauthorized" },
-      { status: 404 }
-    );
+    console.error(error);
+    return NextResponse.json({ error: "Video not found or unauthorized" }, { status: 404 });
   }
 }

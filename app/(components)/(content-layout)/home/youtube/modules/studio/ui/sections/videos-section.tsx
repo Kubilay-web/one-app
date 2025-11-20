@@ -128,7 +128,7 @@ const VideosSectionClient = () => {
             {pages.map((video) => (
               <Link
                 prefetch
-                href={`/studio/videos/${video.id}`}
+                href={`/home/youtube/studio/videos/${video.id}`}
                 key={video.id}
                 legacyBehavior
               >

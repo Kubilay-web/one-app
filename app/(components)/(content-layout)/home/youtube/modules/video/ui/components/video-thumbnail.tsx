@@ -47,13 +47,10 @@ export const VideoThumbnail = ({
 
         {/* PREVIEW IMAGE (hover) - only if exists */}
         {previewUrl && (
-          <Image
+          <img
             src={previewUrl}
             alt={`${title} preview`}
-            fill
-            unoptimized
-            sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
-            className="h-full w-full object-cover opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+            className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           />
         )}
       </div>
