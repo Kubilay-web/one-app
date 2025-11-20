@@ -1,13 +1,84 @@
+// import type { NextConfig } from "next";
+// import path from "path";
+
+// const isProd = process.env.NODE_ENV === "production";
+
+// const nextConfig: NextConfig = {
+//   trailingSlash: false,
+
+//   typescript: {
+//     ignoreBuildErrors: true,
+//   },
+
+//   eslint: {
+//     ignoreDuringBuilds: true,
+//   },
+
+//   sassOptions: {
+//     includePaths: [path.join(__dirname, "public/assets/scss")],
+//     silenceDeprecations: ["legacy-js-api"],
+//     quietDeps: true,
+//   },
+
+//   reactStrictMode: false,
+
+//   productionBrowserSourceMaps: false, // source map üretimini kapat
+
+//   webpack(config, { isServer }) {
+//     if (!isServer) {
+//       config.optimization.minimize = false; // RAM kullanımı azalt
+//       config.cache = false; // cache kapalı
+//     }
+//     return config;
+//   },
+
+//   rewrites: async () => {
+//     return [
+//       {
+//         source: "/social/hashtag/:tag",
+//         destination: "/social/search?q=%23:tag",
+//       },
+//     ];
+//   },
+
+//   images: {
+//     remotePatterns: [
+//       {
+//         protocol: "https",
+//         hostname: "sb52wuzhjx.ufs.sh",
+//         pathname: `/f/*`,
+//       },
+//       {
+//         protocol: "https",
+//         hostname: "res.cloudinary.com",
+//       },
+//     ],
+//     unoptimized: true,
+//   },
+
+//   // Opsiyonel olarak eklenebilir:
+//   // experimental: {
+//   //   memoryManagement: true,
+//   // },
+
+//   // Eğer SSR yoksa:
+//   // output: "export",
+// };
+
+// export default nextConfig;
+
+
+
+
+
 import type { NextConfig } from "next";
 import path from "path";
 
-const isProd = process.env.NODE_ENV === "production";
-
 const nextConfig: NextConfig = {
-  trailingSlash: false,
+  reactStrictMode: true,
 
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 
   eslint: {
@@ -18,27 +89,6 @@ const nextConfig: NextConfig = {
     includePaths: [path.join(__dirname, "public/assets/scss")],
     silenceDeprecations: ["legacy-js-api"],
     quietDeps: true,
-  },
-
-  reactStrictMode: false,
-
-  productionBrowserSourceMaps: false, // source map üretimini kapat
-
-  webpack(config, { isServer }) {
-    if (!isServer) {
-      config.optimization.minimize = false; // RAM kullanımı azalt
-      config.cache = false; // cache kapalı
-    }
-    return config;
-  },
-
-  rewrites: async () => {
-    return [
-      {
-        source: "/social/hashtag/:tag",
-        destination: "/social/search?q=%23:tag",
-      },
-    ];
   },
 
   images: {
@@ -53,16 +103,22 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
       },
     ],
-    unoptimized: true,
+    unoptimized: false, // Vercel image optimization aktif
   },
 
-  // Opsiyonel olarak eklenebilir:
-  // experimental: {
-  //   memoryManagement: true,
-  // },
+  experimental: {
+    serverActions: { allowedOrigins: ["*"] },
+    optimizePackageImports: ["lucide-react"],
+  },
 
-  // Eğer SSR yoksa:
-  // output: "export",
+  async rewrites() {
+    return [
+      {
+        source: "/social/hashtag/:tag",
+        destination: "/social/search?q=%23:tag",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
