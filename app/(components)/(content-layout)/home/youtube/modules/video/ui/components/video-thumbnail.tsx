@@ -30,7 +30,7 @@ export const VideoThumbnail = ({
   previewUrl,
 }: VideoThumbnailProps) => {
   // Next.js Image “src required” hatasını önlemek için fallback
-  const safeImage = imageUrl || "/placeholder-thumbnail.jpg";
+  const safeImage = imageUrl || "/youtube/placeholder.svg";
 
   return (
     <div className="relative group">
