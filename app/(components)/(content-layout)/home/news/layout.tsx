@@ -5,7 +5,6 @@ import Header from "@/app/projects/components/newsportal/Header";
 import Footer from "@/app/projects/components/newsportal/Footer";
 
 
-export const revalidate = 300;
 
 export default async function Layout({
   children,

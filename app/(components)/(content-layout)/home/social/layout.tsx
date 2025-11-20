@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 import SessionProvider from "@/app/SessionProvider";
 
 
-export const revalidate = 300;
+
 
 export default async function Layout({
   children,

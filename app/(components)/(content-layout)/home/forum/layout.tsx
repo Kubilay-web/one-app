@@ -10,7 +10,7 @@ import { ThemeProvider } from "next-themes";
 import LeftSidebar from "@/app/projects/components/stackoverflow/LeftSidebar";
 import RightSidebar from "@/app/projects/components/stackoverflow/RightSidebar";
 
-export const revalidate = 300;
+
 
 export const metadata: Metadata = {
   title: {

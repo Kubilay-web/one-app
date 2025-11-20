@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import SessionProvider from "@/app/SessionProvider";
 import { Toaster } from "react-hot-toast";
 
-export const revalidate = 300;
+
 
 export default async function Layout({
   children,
