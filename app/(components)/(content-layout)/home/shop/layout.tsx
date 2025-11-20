@@ -7,6 +7,8 @@ import CategoriesHeader from "@/app/projects/components/store/layout/categories-
 import Footer from "@/app/projects/components/store/layout/footer/footer";
 import { Toaster } from "react-hot-toast";
 
+export const revalidate = 300;
+
 export default async function Layout({
   children,
 }: {

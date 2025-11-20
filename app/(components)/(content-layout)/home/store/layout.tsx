@@ -6,6 +6,9 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
 import ShopContextProvider from './context/ShopContext'
 
+
+export const revalidate = 300;
+
 export default async function Layout({
   children,
 }: {

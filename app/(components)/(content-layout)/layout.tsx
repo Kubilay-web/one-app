@@ -11,6 +11,8 @@ import Backtotop from '@/shared/layouts-components/backtotop/backtotop';
 import Loader from '@/shared/layouts-components/loader/loader';
 import PrelineScript from "@/app/PrelineScript"
 
+export const revalidate = 300;
+
 const Layout = ({ children, }: any) => {
     const [lateLoad, setlateLoad] = useState(false);
     useEffect(() => {
