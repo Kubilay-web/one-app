@@ -6,6 +6,9 @@ import { usePathname } from 'next/navigation';
 import React, { Fragment, useEffect, useRef } from 'react'
 import { connect } from 'react-redux';
 
+
+
+
 const Layout = ({ children,}: any) => {
     const pathName = usePathname()
 
