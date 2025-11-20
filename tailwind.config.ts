@@ -35,7 +35,8 @@ module.exports = {
       bootstrap: ["bootstrap-icons"],
       Montserrat: ["Montserrat","sans-serif"],
       remix : ["remixicon"],
-      tabler : ["tabler-icons"]
+      tabler : ["tabler-icons"],
+      sans: ["var(--font-inter)"],
     },
     fontSize: {
       defaultsize: '0.85rem',
