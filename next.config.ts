@@ -56,18 +56,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-   experimental: {
-    webpackBuildWorker: true,  // Webpack için worker kullanımı
-    workerThreads: true,       // Node.js worker threads etkinleştir
-  },
-
-  // Opsiyonel olarak eklenebilir:
-  // experimental: {
-  //   memoryManagement: true,
-  // },
-
-  // Eğer SSR yoksa:
-  // output: "export",
 };
 
 export default nextConfig;
