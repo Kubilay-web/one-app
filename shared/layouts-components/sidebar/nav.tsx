@@ -2002,6 +2002,21 @@ export const getMenuItems = (user) => [
         ],
       },
 
+      {
+        title: "Video",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/home/youtube/studio",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Video Studio",
+          },
+        ],
+      },
+
       //  {
       //    title: "Jobs",
       //    type: "sub",

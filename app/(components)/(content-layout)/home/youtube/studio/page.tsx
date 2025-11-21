@@ -1,29 +1,31 @@
-
 import { StudioView } from "../modules/studio/ui/views/studio-view";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const Page = async () => {
-  // Using a direct fetch for the fastest approach to retrieve data
   const fetchStudios = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/video/studio/videos`, { method: 'GET' });
+      const response = await fetch("/api/video/studio/videos", {
+        method: "GET",
+        cache: "no-store",
+      });
+
       if (!response.ok) {
-        throw new Error('Failed to fetch studios');
+        throw new Error(`API returned ${response.status}`);
       }
+
       return await response.json();
     } catch (error) {
-      console.error('Error fetching studios:', error);
+      console.error("Error fetching studios:", error);
       return [];
     }
   };
 
-  // Fetch the data before rendering
   const studios = await fetchStudios();
 
-  return (
-      <StudioView studios={studios} />
-  );
+  console.log("studios--->", studios);
+
+  return <StudioView studios={studios} />;
 };
 
 export default Page;
