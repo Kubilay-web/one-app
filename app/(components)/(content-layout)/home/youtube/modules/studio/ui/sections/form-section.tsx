@@ -7,16 +7,46 @@ import { useForm } from "react-hook-form";
 import { Suspense, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "react-error-boundary";
+import { useParams } from "next/navigation";
 
-import { CopyCheckIcon, CopyIcon, Globe2Icon, ImagePlusIcon, Loader2Icon, LockIcon, MoreVerticalIcon, RotateCcwIcon, SparklesIcon, TrashIcon } from "lucide-react";
+import {
+  CopyCheckIcon,
+  CopyIcon,
+  Globe2Icon,
+  ImagePlusIcon,
+  Loader2Icon,
+  LockIcon,
+  MoreVerticalIcon,
+  RotateCcwIcon,
+  SparklesIcon,
+  TrashIcon,
+} from "lucide-react";
 
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { Skeleton } from "../../../../components/ui/skeleton";
 import { Textarea } from "../../../../components/ui/textarea";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../components/ui/dropdown-menu";
-import { Form, FormControl, FormField, FormLabel, FormMessage, FormItem } from "../../../../components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../../components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../../../components/ui/dropdown-menu";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormLabel,
+  FormMessage,
+  FormItem,
+} from "../../../../components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../../components/ui/select";
 
 import { VideoPlayer } from "../../../video/ui/components/video-player";
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal";
@@ -26,7 +56,7 @@ interface FormSectionProps {
   videoId: string;
 }
 
-const THUMBNAIL_FALLBACK = "/fallback-thumbnail.png"; // fallback
+const THUMBNAIL_FALLBACK = "/youtube/fallback-thumbnail.png"; // fallback
 
 export const FormSection = ({ videoId }: FormSectionProps) => {
   return (
@@ -51,43 +81,56 @@ export const FormSectionSkeleton = () => {
   );
 };
 
-const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
+const FormSectionSuspense = () => {
+  const params = useParams() as { videoId: string };
+  const videoId = params.videoId;
+
+  console.log("VIDEO ID =>", videoId);
+
   const router = useRouter();
 
   const [video, setVideo] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [thumbnailModalOpen, setThumbnailModalOpen] = useState(false);
-  const [thumbnailGenerateModalOpen, setThumbnailGenerateModalOpen] = useState(false);
+  const [thumbnailGenerateModalOpen, setThumbnailGenerateModalOpen] =
+    useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
   // Fetch video + categories
+
+  const form = useForm({
+    defaultValues: {}, // başlangıçta boş
+  });
+
   useEffect(() => {
+    if (!videoId) return;
+
     const fetchData = async () => {
       try {
         const [videoRes, categoriesRes] = await Promise.all([
-          fetch(`/api/video/studio/videos/${videoId}`).then(r => r.json()),
-          fetch(`/api/video/videocategories`).then(r => r.json()),
+          fetch(`/api/video/studio/videos/${videoId}`).then((r) => r.json()),
+          fetch(`/api/video/videocategories`).then((r) => r.json()),
         ]);
+
         setVideo(videoRes);
         setCategories(categoriesRes);
+
+        form.reset(videoRes); // <-- BURADA RESET
       } catch (err) {
         toast.error("Failed to fetch data");
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [videoId]);
-
-  const form = useForm({
-    defaultValues: video || {},
-  });
 
   const onSubmit = async (data: any) => {
     try {
       const res = await fetch(`/api/video/studio/videos/${videoId}`, {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
@@ -115,7 +158,9 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const revalidateVideo = async () => {
     try {
-      await fetch(`/api/video/studio/videos/${videoId}/revalidate`, { method: "POST" });
+      await fetch(`/api/video/studio/videos/${videoId}/revalidate`, {
+        method: "POST",
+      });
       toast.success("Video revalidated");
     } catch {
       toast.error("Something went wrong");
@@ -124,7 +169,9 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const generateTitle = async () => {
     try {
-      await fetch(`/api/videos/${videoId}/generate`, { method: "POST" });
+      await fetch(`/api/video/studio/videos/${videoId}/generate`, {
+        method: "POST",
+      });
       toast.success("Title generation started");
     } catch {
       toast.error("Something went wrong");
@@ -133,7 +180,9 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const generateDescription = async () => {
     try {
-      await fetch(`/api/videos/${videoId}/generate-description`, { method: "POST" });
+      await fetch(`/api/video/studio/videos/${videoId}/generate`, {
+        method: "POST",
+      });
       toast.success("Description generation started");
     } catch {
       toast.error("Something went wrong");
@@ -142,14 +191,16 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const restoreThumbnail = async () => {
     try {
-      await fetch(`/api/videos/${videoId}/thumbnail`, { method: "POST" });
+      await fetch(`/api/video/studio/videos/${videoId}/thumbnail`, {
+        method: "POST",
+      });
       toast.success("Thumbnail restored");
     } catch {
       toast.error("Something went wrong");
     }
   };
 
-  const fullUrl = `/api/video/studio/videos/${videoId}`;
+  const fullUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/home/youtube/main/videos/${videoId}`;
 
   const onCopy = async () => {
     await navigator.clipboard.writeText(fullUrl);
@@ -176,14 +227,24 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Video details</h1>
             <div className="flex gap-x-2">
-              <Button type="submit" disabled={!form.formState.isDirty}>Save</Button>
+              <Button type="submit" disabled={!form.formState.isDirty}>
+                Save
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon"><MoreVerticalIcon /></Button>
+                  <Button variant="ghost" size="icon">
+                    <MoreVerticalIcon />
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={revalidateVideo}><RotateCcwIcon className="mr-2" />Revalidate</DropdownMenuItem>
-                  <DropdownMenuItem onClick={removeVideo}><TrashIcon className="mr-2" />Delete</DropdownMenuItem>
+                  <DropdownMenuItem onClick={revalidateVideo}>
+                    <RotateCcwIcon className="mr-2" />
+                    Revalidate
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={removeVideo}>
+                    <TrashIcon className="mr-2" />
+                    Delete
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -198,7 +259,14 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 <FormLabel>
                   <div className="flex items-center gap-x-2">
                     Title
-                    <Button size="icon" variant="outline" type="button" onClick={generateTitle}><SparklesIcon /></Button>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      type="button"
+                      onClick={generateTitle}
+                    >
+                      <SparklesIcon />
+                    </Button>
                   </div>
                 </FormLabel>
                 <FormControl>
@@ -218,11 +286,22 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 <FormLabel>
                   <div className="flex items-center gap-x-2">
                     Description
-                    <Button size="icon" variant="outline" type="button" onClick={generateDescription}><SparklesIcon /></Button>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      type="button"
+                      onClick={generateDescription}
+                    >
+                      <SparklesIcon />
+                    </Button>
                   </div>
                 </FormLabel>
                 <FormControl>
-                  <Textarea {...field} rows={10} placeholder="Add a description to your video" />
+                  <Textarea
+                    {...field}
+                    rows={10}
+                    placeholder="Add a description to your video"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -238,15 +317,39 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 <FormLabel>Thumbnail</FormLabel>
                 <FormControl>
                   <div className="p-0.5 border border-dashed relative h-[84px] w-[153px] group">
-                    <Image src={video.thumbnailUrl || THUMBNAIL_FALLBACK} fill className="object-cover" alt="Thumbnail" />
+                    <Image
+                      src={video.thumbnailUrl || THUMBNAIL_FALLBACK}
+                      fill
+                      className="object-cover"
+                      alt="Thumbnail"
+                    />
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button type="button" size="icon" className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"><MoreVerticalIcon /></Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
+                        >
+                          <MoreVerticalIcon />
+                        </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => setThumbnailModalOpen(true)}><ImagePlusIcon className="mr-1" />Change</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setThumbnailGenerateModalOpen(true)}><SparklesIcon className="mr-1" />AI-generated</DropdownMenuItem>
-                        <DropdownMenuItem onClick={restoreThumbnail}><RotateCcwIcon className="mr-1" />Restore</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => setThumbnailModalOpen(true)}
+                        >
+                          <ImagePlusIcon className="mr-1" />
+                          Change
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => setThumbnailGenerateModalOpen(true)}
+                        >
+                          <SparklesIcon className="mr-1" />
+                          AI-generated
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={restoreThumbnail}>
+                          <RotateCcwIcon className="mr-1" />
+                          Restore
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -255,15 +358,52 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             )}
           />
 
+            <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Category
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value ?? undefined}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
           {/* Video Player */}
           <div className="aspect-video mt-6">
-            <VideoPlayer playbackId={video.muxPlaybackId} thumbnailUrl={video.thumbnailUrl} />
+            <VideoPlayer
+              playbackId={video.muxPlaybackId}
+              thumbnailUrl={video.thumbnailUrl}
+            />
           </div>
 
           {/* Video Link */}
           <div className="mt-4 flex items-center gap-x-2">
-            <Link href={fullUrl}><p className="text-blue-500 line-clamp-1">{fullUrl}</p></Link>
-            <Button type="button" variant="ghost" size="icon" onClick={onCopy}>{isCopied ? <CopyCheckIcon /> : <CopyIcon />}</Button>
+            <Link href={fullUrl}>
+              <p className="text-blue-500 line-clamp-1">{fullUrl}</p>
+            </Link>
+            <Button type="button" variant="ghost" size="icon" onClick={onCopy}>
+              {isCopied ? <CopyCheckIcon /> : <CopyIcon />}
+            </Button>
           </div>
 
           {/* Visibility */}
@@ -273,20 +413,30 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Visibility</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <SelectTrigger><SelectValue placeholder="Select visibility" /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select visibility" />
+                    </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="public"><Globe2Icon className="mr-2" />Public</SelectItem>
-                    <SelectItem value="private"><LockIcon className="mr-2" />Private</SelectItem>
+                  <SelectContent className="bg-white">
+                    <SelectItem value="public">
+                      <Globe2Icon className="mr-2" />
+                      Public
+                    </SelectItem>
+                    <SelectItem value="private">
+                      <LockIcon className="mr-2" />
+                      Private
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-
         </form>
       </Form>
     </>

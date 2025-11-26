@@ -43,7 +43,7 @@ export const ThumbnailUploadModal = ({
       onOpenChange={onOpenChange}
     >
       <UploadDropzone
-        endpoint="thumbnailUploader"
+        endpoint="/api/uploadthing"
         input={{ videoId }}
         onClientUploadComplete={onUploadComplete}
         disabled={uploading}

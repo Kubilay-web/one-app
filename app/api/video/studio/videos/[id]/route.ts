@@ -4,24 +4,27 @@ import db from "@/app/lib/db";
 import { ObjectId } from "mongodb";
 
 interface Context {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
+
+// ---------------------- GET ----------------------
+
+
 
 
 export async function GET(req: NextRequest, context: Context) {
   try {
-    // id'den sadece ObjectId kısmını al
-    const rawId = context.params.id;
-    const id = rawId.split(":")[0]; // "691ed4119103d8923f88e9c6:200" -> "691ed4119103d8923f88e9c6"
+    const { id: rawId } = await context.params;
+    const id = rawId.split(":")[0]; // "ABC:200" -> "ABC"
 
     const { user } = await validateRequest();
     const userId = user?.id;
 
-    // ObjectId doğrulama
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid video ID" }, { status: 400 });
     }
 
+    // Video'yu al ve tüm reaksiyonları dahil et
     const video = await db.video.findUnique({
       where: { id },
       include: {
@@ -31,13 +34,16 @@ export async function GET(req: NextRequest, context: Context) {
           },
         },
         _count: {
-          select: { views: true, reactions: { where: { type: "like" } } },
+          select: { views: true },
         },
+        reactions: true, // tüm reaksiyonları al
       },
     });
 
-    if (!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
+    if (!video)
+      return NextResponse.json({ error: "Video not found" }, { status: 404 });
 
+    // Viewer bilgileri
     let viewerReaction = null;
     let viewerSubscribed = false;
 
@@ -50,8 +56,13 @@ export async function GET(req: NextRequest, context: Context) {
       const subscription = await db.subscription.findFirst({
         where: { viewerId: userId, creatorId: video.userId },
       });
+
       viewerSubscribed = !!subscription;
     }
+
+    // Like ve dislike sayısını hesapla
+    const likeCount = video.reactions.filter(r => r.type === "like").length;
+    const dislikeCount = video.reactions.filter(r => r.type === "dislike").length;
 
     return NextResponse.json({
       ...video,
@@ -59,26 +70,32 @@ export async function GET(req: NextRequest, context: Context) {
         ...video.user,
         subscriberCount: video.user._count.subscribers,
         viewerSubscribed,
+        isOwner: userId === video.userId, // isOwner'ı ekliyoruz
       },
       viewCount: video._count.views,
-      likeCount: video._count.reactions,
+      likeCount,
+      dislikeCount,
       viewerReaction,
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
 
 
 
-
+// ---------------------- PUT ----------------------
 export async function PUT(req: NextRequest, context: Context) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const { user } = await validateRequest();
 
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
 
@@ -96,16 +113,21 @@ export async function PUT(req: NextRequest, context: Context) {
     return NextResponse.json(video);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Video not found or unauthorized" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Video not found or unauthorized" },
+      { status: 404 }
+    );
   }
 }
 
+// ---------------------- DELETE ----------------------
 export async function DELETE(req: NextRequest, context: Context) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const { user } = await validateRequest();
 
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const video = await db.video.delete({
       where: { id, userId: user.id },
@@ -114,6 +136,9 @@ export async function DELETE(req: NextRequest, context: Context) {
     return NextResponse.json(video);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Video not found or unauthorized" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Video not found or unauthorized" },
+      { status: 404 }
+    );
   }
 }

@@ -1943,7 +1943,7 @@ model Video {
 }
 
 model VideoView {
-  id        String   @id @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
   userId    String
   videoId   String   @db.ObjectId
   createdAt DateTime @default(now())
@@ -1954,7 +1954,7 @@ model VideoView {
 }
 
 model VideoReaction {
-  id        String       @id @map("_id") @db.ObjectId
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   userId    String
   videoId   String       @db.ObjectId
   type      ReactionType
@@ -1966,7 +1966,7 @@ model VideoReaction {
 }
 
 model Subscription {
-  id        String   @id @map("_id") @db.ObjectId
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   viewerId  String
   creatorId String
   createdAt DateTime @default(now())
@@ -1977,7 +1977,7 @@ model Subscription {
 }
 
 model CommentVideo {
-  id        String   @id @map("_id") @db.ObjectId
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   parentId  String?  @db.ObjectId
   userId    String
   videoId   String   @db.ObjectId
@@ -1993,7 +1993,7 @@ model CommentVideo {
 }
 
 model CommentReaction {
-  id        String       @id @map("_id") @db.ObjectId
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   userId    String
   commentId String       @db.ObjectId
   type      ReactionType

@@ -39,7 +39,7 @@ export const ThumbnailGenerateModal = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await fetch(`/api/videos/${videoId}/generate-thumbnail`, {
+      const res = await fetch(`/api/videos/${videoId}/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: values.prompt }),

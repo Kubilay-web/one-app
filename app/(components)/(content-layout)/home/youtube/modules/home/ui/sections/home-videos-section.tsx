@@ -39,7 +39,7 @@ let _initialPromise: Promise<any> | null = null;
 
 function fetchInitialVideos(categoryId?: string) {
   if (!_initialPromise) {
-    const url = new URL("/api/videos", window.location.origin);
+    const url = new URL("/api/video/studio/videos", window.location.origin);
     if (categoryId) url.searchParams.set("categoryId", categoryId);
 
     _initialPromise = fetch(url.toString(), { cache: "no-store" }).then(r => r.json());
@@ -63,7 +63,7 @@ const HomeVideosSectionSuspense = ({ categoryId }: HomeVideosSectionProps) => {
 
     setIsFetching(true);
 
-    const url = new URL("/api/videos", window.location.origin);
+    const url = new URL("/api/video/studio/videos", window.location.origin);
     if (categoryId) url.searchParams.set("categoryId", categoryId);
     url.searchParams.set("cursor", nextCursor);
 

@@ -1,91 +1,56 @@
-import { NextRequest, NextResponse } from "next/server";
-import  db from "@/app/lib/db";
+import { NextResponse } from "next/server";
+import db from "@/app/lib/db"
 import { validateRequest } from "@/app/auth";
 
-export async function GET(req: NextRequest) {
-  try {
-    const {user} = await validateRequest();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+export async function POST(req: Request) {
+  // Kullanıcı doğrulama
+  const { user } = await validateRequest();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { searchParams } = new URL(req.url);
-    const cursor = searchParams.get("cursor");
-    const limit = parseInt(searchParams.get("limit") || "20");
+  const { userId } = await req.json();
+  if (!userId) return NextResponse.json({ error: "userId gerekli" }, { status: 400 });
 
-    // Get user's subscriptions
-    const subscriptions = await db.subscription.findMany({
-      where: {
-        viewerId: user.id,
-      },
-      select: {
-        creatorId: true,
-      },
-    });
-
-    const creatorIds = subscriptions.map(sub => sub.creatorId);
-
-    if (creatorIds.length === 0) {
-      return NextResponse.json({
-        items: [],
-        nextCursor: null,
-      });
-    }
-
-    let where: any = {
-      userId: { in: creatorIds },
-      visibility: "public",
-    };
-
-    if (cursor) {
-      const [id, updatedAt] = cursor.split("_");
-      where = {
-        ...where,
-        $or: [
-          { updatedAt: { lt: new Date(updatedAt) } },
-          {
-            updatedAt: new Date(updatedAt),
-            id: { lt: id },
-          },
-        ],
-      };
-    }
-
-    const videos = await db.video.findMany({
-      where,
-      include: {
-        user: true,
-        _count: {
-          select: {
-            views: true,
-            reactions: {
-              where: { type: "like" },
-            },
-          },
-        },
-      },
-      orderBy: [
-        { updatedAt: "desc" },
-        { id: "desc" },
-      ],
-      take: limit + 1,
-    });
-
-    const hasMore = videos.length > limit;
-    const items = hasMore ? videos.slice(0, -1) : videos;
-    const lastItem = items[items.length - 1];
-    const nextCursor = hasMore 
-      ? `${lastItem.id}_${lastItem.updatedAt.toISOString()}`
-      : null;
-
-    return NextResponse.json({
-      items,
-      nextCursor,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+  // Eğer kendi videoma abone olmak istemiyorsan aç
+  if (userId === user.id) {
+    return NextResponse.json({ error: "Kendi kendine abone olunamaz" }, { status: 400 });
   }
+
+  // Mevcut aboneliği kontrol et
+  const existing = await db.subscription.findFirst({
+    where: { viewerId: user.id, creatorId: userId },
+  });
+
+  if (existing) {
+    // Abonelik varsa sil
+    await db.subscription.delete({ where: { id: existing.id } });
+  } else {
+    // Abonelik yoksa oluştur
+    await db.subscription.create({
+      data: {
+        viewerId: user.id,
+        creatorId: userId,
+      },
+    });
+  }
+
+  return NextResponse.json({ isSubscribed: !existing });
+}
+
+// DELETE: Abonelik silme
+export async function DELETE(req: Request) {
+  const { user } = await validateRequest();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const url = new URL(req.url);
+  const userId = url.searchParams.get("userId");
+  if (!userId) return NextResponse.json({ error: "userId gerekli" }, { status: 400 });
+
+  // Kendi aboneliğini silmek mantıklı değil
+  if (userId === user.id) return NextResponse.json({ error: "Kendi aboneliğini silemezsin" }, { status: 400 });
+
+  const deleted = await db.subscription.deleteMany({
+    where: { viewerId: user.id, creatorId: userId },
+  });
+
+  return NextResponse.json({ deleted });
 }

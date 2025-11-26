@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { VideoView } from "../../../modules/video/ui/views/video-view";
+import { VideoView } from "../../../modules/studio/ui/views/video-view";
+
+
 
 interface PageProps {
   params: { videoId: string };
@@ -19,8 +21,8 @@ const Page = ({ params }: PageProps) => {
     const fetchData = async () => {
       try {
         const [videoRes, categoriesRes] = await Promise.all([
-          fetch(`/api/video/studio/videos/${videoId}`, { cache: "no-store" }),
-          fetch(`/api/video/videocategories`, { cache: "no-store" }),
+          fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/video/studio/videos/${videoId}`, { cache: "no-store" }),
+          fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/video/videocategories`, { cache: "no-store" }),
         ]);
 
         if (!videoRes.ok) throw new Error("Failed to fetch video");
