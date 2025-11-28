@@ -7,105 +7,86 @@ export async function GET(req: NextRequest) {
     const cursor = searchParams.get("cursor");
     const limit = parseInt(searchParams.get("limit") || "20");
 
-    // MongoDB aggregation pipeline for trending videos
-    const pipeline: any[] = [
-      {
-        $match: {
-          visibility: "public",
-        },
-      },
-      {
-        $lookup: {
-          from: "User",
-          localField: "userId",
-          foreignField: "id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: "$user",
-      },
-      {
-        $lookup: {
-          from: "VideoView",
-          localField: "id",
-          foreignField: "videoId",
-          as: "views",
-        },
-      },
-      {
-        $lookup: {
-          from: "VideoReaction",
-          localField: "id",
-          foreignField: "videoId",
-          as: "reactions",
-        },
-      },
-      {
-        $addFields: {
-          viewCount: { $size: "$views" },
-          likeCount: {
-            $size: {
-              $filter: {
-                input: "$reactions",
-                as: "reaction",
-                cond: { $eq: ["$$reaction.type", "like"] },
-              },
-            },
-          },
-          dislikeCount: {
-            $size: {
-              $filter: {
-                input: "$reactions",
-                as: "reaction",
-                cond: { $eq: ["$$reaction.type", "dislike"] },
-              },
-            },
-          },
-        },
-      },
-      {
-        $sort: {
-          viewCount: -1,
-          id: -1,
-        },
-      },
-    ];
+    // -------------------------------------------------
+    // 1) Tüm videoları visibility=public olarak çek
+    // NOT: Prisma + MongoDB JOIN desteklemediği için include yok!
+    // -------------------------------------------------
 
-    if (cursor) {
-      const [id, viewCount] = cursor.split("_");
-      pipeline.push({
-        $match: {
-          $or: [
-            { viewCount: { $lt: parseInt(viewCount) } },
-            {
-              viewCount: parseInt(viewCount),
-              id: { $lt: id },
-            },
-          ],
-        },
-      });
-    }
-
-    pipeline.push({ $limit: limit + 1 });
-
-    const videos = await db.video.aggregateRaw({
-      pipeline,
+    let videos = await db.video.findMany({
+      where: { visibility: "public" },
+      orderBy: { createdAt: "desc" },
     });
 
-    const videosArray = JSON.parse(JSON.stringify(videos));
-    const hasMore = videosArray.length > limit;
-    const items = hasMore ? videosArray.slice(0, -1) : videosArray;
-    const lastItem = items[items.length - 1];
-    const nextCursor = hasMore 
-      ? `${lastItem.id}_${lastItem.viewCount}`
-      : null;
+    if (!videos.length) {
+      return NextResponse.json({ items: [], nextCursor: null });
+    }
+
+    // -------------------------------------------------
+    // 2) HER VIDEO İÇİN viewCount, like, dislike al
+    // -------------------------------------------------
+
+    const videosWithStats = await Promise.all(
+      videos.map(async (v) => {
+        const [views, likes, dislikes, user] = await Promise.all([
+          db.videoView.count({ where: { videoId: v.id } }),
+          db.videoReaction.count({
+            where: { videoId: v.id, type: "like" },
+          }),
+          db.videoReaction.count({
+            where: { videoId: v.id, type: "dislike" },
+          }),
+          db.user.findUnique({ where: { id: v.userId } }),
+        ]);
+
+        const score = views + likes * 2 - dislikes * 1;
+
+        return {
+          ...v,
+          user,
+          viewCount: views,
+          likeCount: likes,
+          dislikeCount: dislikes,
+          score,
+        };
+      })
+    );
+
+    // -------------------------------------------------
+    // 3) Trending sıralaması (skor → createdAt → id)
+    // -------------------------------------------------
+
+    videosWithStats.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    });
+
+    // -------------------------------------------------
+    // 4) CURSOR BASED PAGINATION
+    // -------------------------------------------------
+
+    let startIndex = 0;
+
+    if (cursor) {
+      startIndex = videosWithStats.findIndex((v) => v.id === cursor) + 1;
+    }
+
+    const paginated = videosWithStats.slice(startIndex, startIndex + limit + 1);
+
+    const hasMore = paginated.length > limit;
+    const items = hasMore ? paginated.slice(0, -1) : paginated;
+
+    const nextCursor = hasMore ? items[items.length - 1].id : null;
+
+    // -------------------------------------------------
+    // RESPONSE
+    // -------------------------------------------------
 
     return NextResponse.json({
       items,
       nextCursor,
     });
   } catch (error) {
+    console.error("TRENDING API ERROR:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -92,18 +92,18 @@ export const VideoRowCard = ({
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact"
-    }).format(data.viewCount);
-  }, [data.viewCount]);
+    }).format(data.viewsCount);
+  }, [data.viewsCount]);
 
   const compactLikes = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact"
-    }).format(data.likeCount);
-  }, [data.likeCount]);
+    }).format(data.likesCount);
+  }, [data.likesCount]);
 
   return (
     <div className={videoRowCardVariants({ size })}>
-      <Link prefetch href={`/videos/${data.id}`} className={thumbnailVariants({ size })}>
+      <Link prefetch href={`/home/youtube/main/videos/${data.id}`} className={thumbnailVariants({ size })}>
         <VideoThumbnail
           imageUrl={data.thumbnailUrl}
           previewUrl={data.previewUrl}
@@ -115,7 +115,7 @@ export const VideoRowCard = ({
       {/* Info*/}
       <div className="flex-1 min-w-0">
         <div className="flex justify-between gap-x-2">
-          <Link prefetch href={`/videos/${data.id}`} className="flex-1 min-w-0">
+          <Link prefetch href={`/home/youtube/main/videos/${data.id}`} className="flex-1 min-w-0">
             <h3
               className={cn(
                 "font-medium line-clamp-2",
@@ -134,10 +134,10 @@ export const VideoRowCard = ({
                 <div className="flex items-center gap-2 my-3">
                   <UserAvatar
                     size="sm"
-                    imageUrl={data.user.imageUrl}
-                    name={data.user.name}
+                    imageUrl={data.user.avatarUrl}
+                    name={data.user.username}
                   />
-                  <UserInfo size="sm" name={data.user.name} />
+                  <UserInfo size="sm" name={data.user.username} />
                 </div>
                 <Tooltip>
                   <TooltipTrigger asChild>

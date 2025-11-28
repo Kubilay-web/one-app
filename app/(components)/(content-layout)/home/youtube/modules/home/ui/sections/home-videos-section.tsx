@@ -3,7 +3,10 @@
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { InfiniteScroll } from "../../../../components/infinite-scroll";
-import { VideoGridCard, VideoGridCardSkeleton } from "../../../video/ui/components/video-grid-card";
+import {
+  VideoGridCard,
+  VideoGridCardSkeleton,
+} from "../../../video/ui/components/video-grid-card";
 
 interface HomeVideosSectionProps {
   categoryId?: string;
@@ -31,64 +34,55 @@ export const HomeVideosSectionSkeleton = () => {
   );
 };
 
-/* ---------------------------------------------------------
-   Suspense-friendly fetch (ilk sayfa)
----------------------------------------------------------- */
+async function fetchInitialVideos(categoryId?: string) {
+  const url = new URL("/api/video/studio/videos", window.location.origin);
+  if (categoryId) url.searchParams.set("categoryId", categoryId);
 
-let _initialPromise: Promise<any> | null = null;
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  const data = await response.json();
 
-function fetchInitialVideos(categoryId?: string) {
-  if (!_initialPromise) {
-    const url = new URL("/api/video/studio/videos", window.location.origin);
-    if (categoryId) url.searchParams.set("categoryId", categoryId);
-
-    _initialPromise = fetch(url.toString(), { cache: "no-store" }).then(r => r.json());
-  }
-
-  throw _initialPromise; // Suspense burada devreye girer
+  return data; // Burada Promise dönüyor
 }
 
-/* ---------------------------------------------------------
-   Infinite scroll component
----------------------------------------------------------- */
 const HomeVideosSectionSuspense = ({ categoryId }: HomeVideosSectionProps) => {
-  const firstPage = fetchInitialVideos(categoryId);
+  // `Suspense`'in async işlemi beklemesi için doğrudan Promise'i kullanıyoruz
+  const firstPage = fetchInitialVideos(categoryId); // Bu, Promise döndürüyor
 
-  const [pages, setPages] = useState([firstPage]);
-  const [nextCursor, setNextCursor] = useState(firstPage.nextCursor);
-  const [isFetching, setIsFetching] = useState(false);
+  // Suspense bekleyecek ve ilk render sonrasında veriyi verecek
+  return (
+    <div>
+      <VideoList pageDataPromise={firstPage} />
+    </div>
+  );
+};
 
-  const fetchNextPage = async () => {
-    if (!nextCursor || isFetching) return;
+// Video listesi componenti
+const VideoList = ({ pageDataPromise }: { pageDataPromise: Promise<any> }) => {
+  const [data, setData] = useState<any>(null);
 
-    setIsFetching(true);
+  // Veriyi ilk yüklediğinde set et
+  useState(() => {
+    pageDataPromise.then((res) => {
+      setData(res);
+    });
+  }, [pageDataPromise]);
 
-    const url = new URL("/api/video/studio/videos", window.location.origin);
-    if (categoryId) url.searchParams.set("categoryId", categoryId);
-    url.searchParams.set("cursor", nextCursor);
+  if (!data) {
+    return <div>Loading...</div>;
+  }
 
-    const data = await fetch(url.toString(), { cache: "no-store" }).then(r => r.json());
-
-    setPages(prev => [...prev, data]);
-    setNextCursor(data.nextCursor);
-    setIsFetching(false);
-  };
-
-  const items = pages.flatMap(p => p.items);
+    // Eğer video yoksa mesaj göster
+  if (!data.items || data.items.length === 0) {
+    return <p className="text-center text-gray-500">No videos available</p>;
+  }
 
   return (
     <div>
       <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
-        {items.map((video: any) => (
+        {data.items.map((video: any) => (
           <VideoGridCard key={video.id} data={video} />
         ))}
       </div>
-
-      <InfiniteScroll
-        hasNextPage={!!nextCursor}
-        isFetchingNextPage={isFetching}
-        fetchNextPage={fetchNextPage}
-      />
     </div>
   );
 };

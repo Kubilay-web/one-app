@@ -47,7 +47,7 @@ export default function Home({ searchParams }: PageProps) {
   }, []); // Empty dependency array to fetch only once when the component mounts
 
   return (
-    <div>
+    <div>  
       {loading ? (
         <p>Loading...</p>
       ) : error ? (

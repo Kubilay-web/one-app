@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url);
 
-    const videoId = params.id; // <-- Dinamik route
+    const videoId = params.id; // Dinamik route
     const limit = searchParams.get("limit");
     const cursor = searchParams.get("cursor");
 
@@ -34,10 +34,13 @@ export async function GET(
       }
     }
 
-    // Video + kategori bilgisi al
+    // Video bilgisi ve ilişkili veriler al
     const video = await db.video.findUnique({
       where: { id: videoId },
-      include: { category: true },
+      include: {
+        category: true,  // Kategori bilgisi dahil ediliyor
+        user: true,      // Kullanıcı bilgisi
+      },
     });
 
     if (!video) {
@@ -47,32 +50,68 @@ export async function GET(
       );
     }
 
-    // Öneriler
-    const suggestions = await db.video.findMany({
+    // Video izlenme sayısını hesapla
+    const viewsCount = await db.videoView.count({
       where: {
-        categoryId: video.categoryId,
-        NOT: { id: videoId },
-        ...(cursorValue && { createdAt: { lt: cursorValue } }),
-      },
-      take: limitValue,
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-        thumbnailUrl: true,
-        duration: true,
-        createdAt: true,
+        videoId: videoId,
       },
     });
 
+    // Video beğeni sayısını hesapla
+    const likesCount = await db.videoReaction.count({
+      where: {
+        videoId: videoId,
+        type: 'like',  // Beğeni türü
+      },
+    });
+
+    // Öneriler
+    const suggestions = await db.video.findMany({
+      where: {
+        categoryId: video.categoryId,  // Aynı kategoriye ait videolar
+        NOT: { id: videoId },  // Mevcut video hariç
+        ...(cursorValue && { createdAt: { lt: cursorValue } }),  // Cursor doğrulama
+      },
+      take: limitValue,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: true,         // Kullanıcı bilgileri dahil
+        category: true,     // Kategori bilgisi dahil
+      },
+    });
+
+    // Önerilen videolar için izlenme ve beğeni sayısını hesaplayın
+    const suggestionsWithCounts = await Promise.all(
+      suggestions.map(async (suggestion) => {
+        const suggestionViewsCount = await db.videoView.count({
+          where: {
+            videoId: suggestion.id,
+          },
+        });
+
+        const suggestionLikesCount = await db.videoReaction.count({
+          where: {
+            videoId: suggestion.id,
+            type: 'like',  // Beğeni türü
+          },
+        });
+
+        return {
+          ...suggestion,
+          viewsCount: suggestionViewsCount,
+          likesCount: suggestionLikesCount,
+        };
+      })
+    );
+
     // nextCursor hesaplama
     const nextCursor =
-      suggestions.length === limitValue
-        ? suggestions[suggestions.length - 1].createdAt
+      suggestionsWithCounts.length === limitValue
+        ? suggestionsWithCounts[suggestionsWithCounts.length - 1].createdAt
         : null;
 
     return NextResponse.json({
-      items: suggestions,
+      items: suggestionsWithCounts,
       nextCursor,
     });
   } catch (error) {

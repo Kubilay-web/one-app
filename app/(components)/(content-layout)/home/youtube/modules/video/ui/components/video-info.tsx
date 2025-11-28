@@ -54,7 +54,7 @@ export const VideoInfo = ({ data, onRemove }: VideoInfoProps) => {
   return (
     <div className="flex gap-3">
       <Link prefetch href={`/users/${data.user.id}`}>
-        <UserAvatar imageUrl={data.user.imageUrl} name={data.user.name} />
+        <UserAvatar imageUrl={data.user.avatarUrl} name={data.user.username} />
       </Link>
 
       <div className="min-w-0 flex-1">
@@ -65,7 +65,7 @@ export const VideoInfo = ({ data, onRemove }: VideoInfoProps) => {
         </Link>
 
         <Link prefetch href={`/users/${data.user.id}`}>
-          <UserInfo name={data.user.name} />
+          <UserInfo name={data.user.username} />
         </Link>
 
         <Link prefetch href={`/videos/${data.id}`}>

@@ -45,7 +45,7 @@ export const PlaylistAddModal = ({
     setCursor(null);
     setIsLoading(true);
 
-    const url = new URL("/api/playlists", window.location.origin);
+    const url = new URL("/api/video/playlists", window.location.origin);
     url.searchParams.set("videoId", videoId);
 
     fetch(url.toString())
@@ -65,7 +65,7 @@ export const PlaylistAddModal = ({
 
     setIsFetchingNextPage(true);
 
-    const url = new URL("/api/playlists", window.location.origin);
+    const url = new URL("/api/video/playlists", window.location.origin);
     url.searchParams.set("videoId", videoId);
     url.searchParams.set("cursor", cursor);
 
@@ -79,12 +79,12 @@ export const PlaylistAddModal = ({
   const allPlaylists = pages.flatMap((p) => p.items);
 
   /* -----------------------------------------
-      ADD VIDEO TO PLAYLIST
+      ADD VIDEO TO PLAYLIST  (PUT)
   ----------------------------------------- */
   const addVideo = async (playlistId: string) => {
     try {
-      await fetch("/api/playlists/add", {
-        method: "POST",
+      await fetch("/api/video/playlists", {
+        method: "PUT",
         body: JSON.stringify({ playlistId, videoId }),
       });
 
@@ -105,11 +105,11 @@ export const PlaylistAddModal = ({
   };
 
   /* -----------------------------------------
-      REMOVE VIDEO
+      REMOVE VIDEO  (DELETE)
   ----------------------------------------- */
   const removeVideo = async (playlistId: string) => {
     try {
-      await fetch("/api/playlists/remove", {
+      await fetch("/api/video/playlists", {
         method: "DELETE",
         body: JSON.stringify({ playlistId, videoId }),
       });

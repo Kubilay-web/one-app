@@ -89,8 +89,8 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    const {user} = await validateRequest();
-    
+    const { user } = await validateRequest();
+
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -98,13 +98,19 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const cursor = searchParams.get("cursor");
     const limit = parseInt(searchParams.get("limit") || "10");
+    const categoryId = searchParams.get("categoryId"); // <-- categoryId al
 
-    console.log("📹 Fetching studio videos for user:", user.id);
+    console.log("📹 Fetching studio videos for user:", user.id, "category:", categoryId);
 
-    // Base where condition - sadece kullanıcının kendi videoları
+    // Base where condition - kullanıcının kendi videoları
     let where: any = {
-      userId: user.id, // Sadece kullanıcının kendi videoları
+      userId: user.id,
     };
+
+    // Category filtre ekle
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
 
     // Cursor-based pagination
     let cursorCondition = {};
@@ -166,7 +172,7 @@ export async function GET(req: NextRequest) {
     // Pagination logic
     const hasMore = videos.length > limit;
     const items = hasMore ? videos.slice(0, -1) : videos;
-    
+
     let nextCursor = null;
     if (hasMore && items.length > 0) {
       const lastItem = items[items.length - 1];

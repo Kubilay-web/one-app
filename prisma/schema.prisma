@@ -1918,9 +1918,9 @@ model Video {
   title          String
   description    String?
   muxStatus      String?
-  muxAssetId     String?         @unique
-  muxUploadId    String?         @unique
-  muxPlaybackId  String?         @unique
+  muxAssetId     String?        
+  muxUploadId    String?        
+  muxPlaybackId  String?      
   muxTrackId     String?        
   muxTrackStatus String?
   thumbnailUrl   String?
@@ -2005,7 +2005,7 @@ model CommentReaction {
 }
 
 model Playlist {
-  id          String   @id @map("_id") @db.ObjectId
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
   userId      String
@@ -2017,7 +2017,7 @@ model Playlist {
 }
 
 model PlaylistVideo {
-  id         String   @id @map("_id") @db.ObjectId
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   playlistId String   @db.ObjectId
   videoId    String   @db.ObjectId
   createdAt  DateTime @default(now())

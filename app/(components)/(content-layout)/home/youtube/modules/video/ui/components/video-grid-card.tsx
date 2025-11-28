@@ -5,7 +5,7 @@ import { VideoThumbnail, VideoThumbnailSkeleton } from "./video-thumbnail";
 import { VideoGetManyOutput } from "../../types";
 
 interface VideoGridCardProps {
-  data: VideoGetManyOutput["items"][number];
+  data: VideoGetManyOutput;
   onRemove?: () => void;
 }
 
@@ -22,9 +22,11 @@ export const VideoGridCard = ({
   data,
   onRemove,
 }: VideoGridCardProps) => {
+    
+
   return (
     <div className="flex flex-col gap-2 w-full group">
-      <Link prefetch href={`/videos/${data.id}`}>
+      <Link prefetch href={`/home/youtube/main/videos/${data.id}`}>
         <VideoThumbnail
           imageUrl={data.thumbnailUrl}
           previewUrl={data.previewUrl}

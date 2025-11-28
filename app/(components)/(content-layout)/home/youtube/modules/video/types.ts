@@ -29,8 +29,10 @@ export interface VideoGetManyOutput {
   title: string;
   muxPlaybackId: string;
   thumbnailUrl: string;
+  previewUrl: string;    // Yeni eklenen alan
+  duration: number;      // Yeni eklenen alan
+  visibility?: string;   // Gerekli değilse, isteğe bağlı hale getirilebilir
 }
-
 
 
 export const fetchVideo = async (videoId: string): Promise<VideoGetOneOutput> => {
