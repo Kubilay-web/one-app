@@ -40,11 +40,11 @@ export const VideoMenu = ({
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant={variant} size="icon" className="rounded-full">
+          <Button variant={variant} size="icon" className="rounded-full bg-slate-500 text-white">
             <MoreVerticalIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+        <DropdownMenuContent className="bg-slate-500 text-white" align="end" onClick={(e) => e.stopPropagation()}>
           <DropdownMenuItem onClick={onShare}>
             <ShareIcon className="mr-2 size-4" />
             Share

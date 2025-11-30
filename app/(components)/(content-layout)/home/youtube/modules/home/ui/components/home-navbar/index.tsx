@@ -12,7 +12,7 @@ export const HomeNavbar = () => {
       <div className="flex items-center gap-4 w-full">
         {/* Menu and logo */}
         <div className="flex items-center flex-shrink-0">
-          <SidebarTrigger />
+          {/* <SidebarTrigger /> */}
           <Link href="/">
             <div className="px-4 flex items-center gap-1">
               <Image src="/youtube/youtube-logo.svg" height={32} width={32} alt="logo" />

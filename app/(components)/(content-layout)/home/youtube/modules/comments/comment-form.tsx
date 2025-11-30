@@ -120,7 +120,7 @@ export const CommentForm = ({
                 Cancel
               </Button>
             )}
-            <Button disabled={isSubmitting} type="submit" size="sm">
+            <Button disabled={isSubmitting} type="submit" size="sm" className="bg-slate-500 text-white">
               {variant === "reply" ? "Reply" : "Comment"}
             </Button>
           </div>

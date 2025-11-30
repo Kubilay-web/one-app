@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-
 import { cn } from "@/app/lib/utils";
 import { Button } from "../../../../components/ui/button";
 import { Skeleton } from "../../../../components/ui/skeleton";
@@ -10,8 +9,6 @@ import { UserAvatar } from "../../../../components/user-avatar";
 import { useSubscription } from "../../../subscriptions/hooks/use-subscription";
 import { SubscriptionButton } from "../../../subscriptions/ui/components/subscription-button";
 import { useSession } from "@/app/SessionProvider";
-
-
 
 export const UserPageInfoSkeleton = () => {
   return (
@@ -50,7 +47,7 @@ export const UserPageInfo = ({ users }) => {
     isSubscribed: user.viewerSubscribed,
   });
 
-  const isCurrentUser = currentUserId === user.id;
+  const isCurrentUser = currentUserId === users.id;
 
   return (
     <div className="py-6">
@@ -60,7 +57,7 @@ export const UserPageInfo = ({ users }) => {
           <UserAvatar
             size="lg"
             imageUrl={users.avatarUrl}
-            name={user.username}
+            name={users.username}
             className="h-[60px] w-[60px]"
           />
           <div className="flex-1 min-w-0">
@@ -79,7 +76,9 @@ export const UserPageInfo = ({ users }) => {
             asChild
             className="w-full mt-3 rounded-full"
           >
-            <Link prefetch href="/studio">Go to studio</Link>
+            <Link prefetch href="/home/youtube/main/studio">
+              Go to studio
+            </Link>
           </Button>
         ) : (
           <SubscriptionButton
@@ -96,39 +95,38 @@ export const UserPageInfo = ({ users }) => {
         <UserAvatar
           size="xl"
           imageUrl={users.avatarUrl}
-          name={user.username}
-          className={cn(isCurrentUser && "cursor-pointer hover:opacity-80 transition-opacity duration-300")}
+          name={users.username}
+          className={cn(
+            isCurrentUser &&
+              "cursor-pointer hover:opacity-80 transition-opacity duration-300"
+          )}
         />
         <div className="flex-1 min-w-0">
-          <h1 className="text-4xl font-bold">{user.username}</h1>
+          <h1 className="text-4xl font-bold">{users.username}</h1>
           <div className="flex items-center gap-1 text-sm text-muted-foreground mt-3">
             <span>{users.subscriberCount} subscribers</span>
             <span>&bull;</span>
             <span>{users.videoCount} videos</span>
           </div>
 
-          {isCurrentUser ? (
-            <Button
-              variant="secondary"
-              asChild
-              className="mt-3 rounded-full"
-            >
-              <Link prefetch href="/home/youtube/main/studio">Go to studio</Link>
-            </Button>
-          ) : (
-            <SubscriptionButton
-              disabled={isPending}
-              isSubscribed={users.viewerSubscribed}
-              onClick={onClick}
-              className="mt-3"
-            />
-          )}
+          <div className="mt-5">
+            {isCurrentUser ? (
+              <Button variant="secondary" asChild className="mt-3 rounded-full">
+                <Link prefetch href="/home/youtube/main/studio">
+                  Go to studio
+                </Link>
+              </Button>
+            ) : (
+              <SubscriptionButton
+                disabled={isPending}
+                isSubscribed={users.viewerSubscribed}
+                onClick={onClick}
+                className="mt-3"
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
-
-
-
-// #10.52.04

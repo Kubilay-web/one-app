@@ -13,7 +13,7 @@ export const StudioNavbar = () => {
       <div className="flex items-center gap-4 w-full">
         {/* Menu and Logo */}
         <div className="flex items-center flex-shrink-0">
-          <SidebarTrigger />
+          {/* <SidebarTrigger /> */}
           <Link prefetch href="/studio" className="hidden md:block">
             <div className="p-4 flex items-center gap-1">
               <Image src="/youtube/youtube-logo.svg" alt="Logo" width={32} height={32} />

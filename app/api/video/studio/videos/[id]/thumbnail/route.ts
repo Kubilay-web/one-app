@@ -1,17 +1,23 @@
-// app/api/video/studio/videos/[id]/thumbnail/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { validateRequest } from "@/app/auth";
 import db from "@/app/lib/db";
-import { UTApi } from "uploadthing/server";
+import cloudinary from "cloudinary";
+
+// Cloudinary konfigürasyonu
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,  // Cloudinary Cloud Name
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,        // Cloudinary API Key
+  api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET   // Cloudinary API Secret
+});
 
 export async function POST(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
   try {
-    // Next.js 13+ App Router'da params async olarak çözümlenebilir
-    const params = await context.params;
-    const videoId = params.id;
+    // Video ID'yi alıyoruz
+        const { id: videoId } = context.params;
+
 
     // Kullanıcı doğrulama
     const { user } = await validateRequest();
@@ -31,31 +37,14 @@ export async function POST(
       return NextResponse.json({ error: "Video not found" }, { status: 404 });
     }
 
-    const utapi = new UTApi();
+    // Cloudinary'ye yükleme işlemi
+    const { thumbnailUrl } = await req.json();  // Frontend'den gelen URL
 
-    // Önceki thumbnail varsa sil
-    if (video.thumbnailKey) {
-      await utapi.deleteFiles(video.thumbnailKey);
+    if (!thumbnailUrl) {
+      return NextResponse.json({ error: "Thumbnail URL is required" }, { status: 400 });
     }
 
-    if (!video.muxPlaybackId) {
-      return NextResponse.json({ error: "No playback ID" }, { status: 400 });
-    }
-
-    // Mux'tan geçici thumbnail al ve UploadThing'e yükle
-    const tempThumbnailUrl = `https://image.mux.com/${video.muxPlaybackId}/thumbnail.jpg`;
-    const uploadedThumbnail = await utapi.uploadFilesFromUrl(tempThumbnailUrl);
-
-    if (!uploadedThumbnail.data) {
-      return NextResponse.json(
-        { error: "Failed to upload thumbnail" },
-        { status: 500 }
-      );
-    }
-
-    const { key: thumbnailKey, url: thumbnailUrl } = uploadedThumbnail.data;
-
-    // Veritabanında güncelle
+    // Veritabanındaki video kaydını güncelliyoruz
     const updatedVideo = await db.video.update({
       where: {
         id: videoId,
@@ -63,7 +52,7 @@ export async function POST(
       },
       data: {
         thumbnailUrl,
-        thumbnailKey,
+        thumbnailKey: thumbnailUrl.split("/").pop(), // URL'nin son kısmını key olarak alıyoruz
       },
     });
 

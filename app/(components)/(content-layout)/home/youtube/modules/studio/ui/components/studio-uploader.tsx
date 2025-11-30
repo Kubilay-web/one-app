@@ -39,7 +39,7 @@ export const StudioUploader = ({
             </p>
           </div>
           <MuxUploaderFileSelect muxUploader={UPLOADER_ID}>
-            <Button type="button" className="rounded-full">
+            <Button type="button" className="rounded-full text-white">
               Select files
             </Button>
           </MuxUploaderFileSelect>

@@ -227,7 +227,7 @@ const FormSectionSuspense = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Video details</h1>
             <div className="flex gap-x-2">
-              <Button type="submit" disabled={!form.formState.isDirty}>
+              <Button type="submit" className="bg-slate-500 text-white" disabled={!form.formState.isDirty}>
                 Save
               </Button>
               <DropdownMenu>
@@ -236,7 +236,7 @@ const FormSectionSuspense = () => {
                     <MoreVerticalIcon />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent className="bg-slate-500 text-white" align="end">
                   <DropdownMenuItem onClick={revalidateVideo}>
                     <RotateCcwIcon className="mr-2" />
                     Revalidate
@@ -313,7 +313,7 @@ const FormSectionSuspense = () => {
             control={form.control}
             name="thumbnailUrl"
             render={() => (
-              <FormItem>
+              <FormItem className="mt-3">
                 <FormLabel>Thumbnail</FormLabel>
                 <FormControl>
                   <div className="p-0.5 border border-dashed relative h-[84px] w-[153px] group">
@@ -328,12 +328,12 @@ const FormSectionSuspense = () => {
                         <Button
                           type="button"
                           size="icon"
-                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
+                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 bg-slate-300"
                         >
                           <MoreVerticalIcon />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent>
+                      <DropdownMenuContent className="bg-slate-500 text-white">
                         <DropdownMenuItem
                           onClick={() => setThumbnailModalOpen(true)}
                         >
@@ -362,7 +362,7 @@ const FormSectionSuspense = () => {
                 control={form.control}
                 name="categoryId"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mt-3">
                     <FormLabel>
                       Category
                     </FormLabel>
@@ -375,7 +375,7 @@ const FormSectionSuspense = () => {
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="bg-white text-black">
                         {categories.map((category) => (
                           <SelectItem key={category.id} value={category.id}>
                             {category.name}
@@ -389,8 +389,8 @@ const FormSectionSuspense = () => {
               />
 
           {/* Video Player */}
-          <div className="aspect-video mt-6">
-            <VideoPlayer
+          <div className="aspect-video w mt-6 w-[700px]">
+            <VideoPlayer 
               playbackId={video.muxPlaybackId}
               thumbnailUrl={video.thumbnailUrl}
             />
@@ -411,18 +411,18 @@ const FormSectionSuspense = () => {
             control={form.control}
             name="visibility"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="mt-3 mb-3">
                 <FormLabel>Visibility</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl>
+                  <FormControl className="h-auto mb-3">
                     <SelectTrigger>
                       <SelectValue placeholder="Select visibility" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-white h-auto mb-3">
                     <SelectItem value="public">
                       <Globe2Icon className="mr-2" />
                       Public

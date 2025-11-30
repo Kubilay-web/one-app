@@ -46,7 +46,7 @@ export const StudioUploadModal = () => {
     setUploadUrl(null);
     setVideoId(null);
 
-    router.push(`/studio/videos/${videoId}`);
+    router.push(`/home/youtube/main/videos/${videoId}`);
   };
 
   return (
@@ -66,7 +66,7 @@ export const StudioUploadModal = () => {
         )}
       </ResponsiveModal>
 
-      <Button variant="secondary" onClick={createVideo} disabled={isPending}>
+      <Button className="bg-slate-500 text-white" variant="secondary" onClick={createVideo} disabled={isPending}>
         {isPending ? (
           <Loader2Icon className="animate-spin" />
         ) : (

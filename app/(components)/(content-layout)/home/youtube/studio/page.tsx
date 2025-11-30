@@ -24,7 +24,6 @@ const Page = async () => {
 
   const studios = await fetchStudios();
 
-  console.log("studios--->", studios);
 
   return <StudioView studios={studios} />;
 };

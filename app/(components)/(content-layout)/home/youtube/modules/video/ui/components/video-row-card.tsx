@@ -148,7 +148,7 @@ export const VideoRowCard = ({
                   <TooltipContent
                     side="bottom"
                     align="center"
-                    className="bg-black/70"
+                    className="bg-black/70 text-white"
                   >
                     <p>From the video description</p>
                   </TooltipContent>

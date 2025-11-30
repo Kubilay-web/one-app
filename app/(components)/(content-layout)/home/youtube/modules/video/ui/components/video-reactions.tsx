@@ -88,7 +88,7 @@ export const VideoReactions = ({
         onClick={() => handleReaction("like")}
         disabled={loading}
         variant="secondary"
-        className="rounded-l-full rounded-r-none gap-2 pr-4"
+        className="rounded-l-full rounded-r-none gap-2 pr-4 bg-slate-500 text-white"
       >
         <ThumbsUpIcon className={cn("size-5", reaction === "like" && "fill-black")} />
         {likesCount}
@@ -98,7 +98,7 @@ export const VideoReactions = ({
         onClick={() => handleReaction("dislike")}
         disabled={loading}
         variant="secondary"
-        className="rounded-l-none rounded-r-full pl-3"
+        className="rounded-l-none rounded-r-full pl-3 bg-slate-500 text-white"
       >
         <ThumbsDownIcon className={cn("size-5", reaction === "dislike" && "fill-black")} />
         {dislikesCount}

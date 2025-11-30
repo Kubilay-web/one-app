@@ -83,7 +83,7 @@ export const PlaylistCreateModal = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Playlist Name</FormLabel>
-                <FormControl>
+                <FormControl >
                   <Input {...field} placeholder="My favorite videos" />
                 </FormControl>
                 <FormMessage />
@@ -91,7 +91,7 @@ export const PlaylistCreateModal = ({
             )}
           />
           <div className="flex justify-end">
-            <Button
+            <Button className="text-white"
               disabled={form.formState.isSubmitting} // Disable submit button while submitting
               type="submit"
             >

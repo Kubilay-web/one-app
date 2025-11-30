@@ -39,6 +39,9 @@ export const VideoInfoSkeleton = () => {
 };
 
 export const VideoInfo = ({ data, onRemove }: VideoInfoProps) => {
+
+
+
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", { notation: "compact" }).format(
       data.viewCount
@@ -53,19 +56,19 @@ export const VideoInfo = ({ data, onRemove }: VideoInfoProps) => {
 
   return (
     <div className="flex gap-3">
-      <Link prefetch href={`/users/${data.user.id}`}>
+      <Link prefetch href={`/home/youtube/main/users/${data.user.id}`}>
         <UserAvatar imageUrl={data.user.avatarUrl} name={data.user.username} />
       </Link>
 
       <div className="min-w-0 flex-1">
-        <Link prefetch href={`/videos/${data.id}`}>
+        <Link prefetch href={`/home/youtube/main/videos/${data.id}`}>
           <h3 className="font-medium line-clamp-1 lg:line-clamp-2 text-base break-words">
             {data.title}
           </h3>
         </Link>
 
         <Link prefetch href={`/users/${data.user.id}`}>
-          <UserInfo name={data.user.username} />
+          <UserInfo name={data.user.name} />
         </Link>
 
         <Link prefetch href={`/videos/${data.id}`}>

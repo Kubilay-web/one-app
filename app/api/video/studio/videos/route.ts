@@ -91,21 +91,15 @@ export async function GET(req: NextRequest) {
   try {
     const { user } = await validateRequest();
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const { searchParams } = new URL(req.url);
     const cursor = searchParams.get("cursor");
     const limit = parseInt(searchParams.get("limit") || "10");
     const categoryId = searchParams.get("categoryId"); // <-- categoryId al
 
-    console.log("📹 Fetching studio videos for user:", user.id, "category:", categoryId);
+    console.log("📹 Fetching videos for category:", categoryId);
 
-    // Base where condition - kullanıcının kendi videoları
-    let where: any = {
-      userId: user.id,
-    };
+    // Base where condition - Eğer categoryId varsa filtrele, yoksa tüm videoları getir
+    let where: any = {};
 
     // Category filtre ekle
     if (categoryId) {
@@ -134,7 +128,7 @@ export async function GET(req: NextRequest) {
     // Final where condition
     const finalWhere = {
       ...where,
-      ...(Object.keys(cursorCondition).length > 0 ? cursorCondition : {})
+      ...(Object.keys(cursorCondition).length > 0 ? cursorCondition : {}),
     };
 
     console.log("Final where condition:", finalWhere);
@@ -148,6 +142,7 @@ export async function GET(req: NextRequest) {
             id: true,
             username: true,
             email: true,
+            avatarUrl:true,
           }
         },
         _count: {
@@ -164,10 +159,10 @@ export async function GET(req: NextRequest) {
         { updatedAt: "desc" },
         { id: "desc" },
       ],
-      take: limit + 1,
+      take: limit + 1, // Sonraki sayfa için fazladan bir eleman alıyoruz
     });
 
-    console.log(`✅ Found ${videos.length} videos for user ${user.id}`);
+    console.log(`✅ Found ${videos.length} videos`);
 
     // Pagination logic
     const hasMore = videos.length > limit;
@@ -194,7 +189,7 @@ export async function GET(req: NextRequest) {
       total: items.length,
     });
   } catch (error: any) {
-    console.error("❌ Error fetching studio videos:", error);
+    console.error("❌ Error fetching videos:", error);
     return NextResponse.json(
       { 
         error: "Internal server error",

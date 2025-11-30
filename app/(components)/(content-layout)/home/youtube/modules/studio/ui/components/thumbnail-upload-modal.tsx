@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { UploadDropzone } from "@/app/lib/uploadthingvideo";
-import { ResponsiveModal } from "../../../../components/responsive-modal";
 import { toast } from "sonner";
+import { ResponsiveModal } from "../../../../components/responsive-modal";
 
 interface ThumbnailUploadModalProps {
   videoId: string;
@@ -18,21 +17,56 @@ export const ThumbnailUploadModal = ({
 }: ThumbnailUploadModalProps) => {
   const [uploading, setUploading] = useState(false);
 
-  const onUploadComplete = async (fileUrl: string) => {
+  const uploadThumbnailToCloudinary = async (file: File) => {
     try {
       setUploading(true);
-      const res = await fetch(`/api/videos/${videoId}/thumbnail`, {
+
+      // Cloudinary API'ye dosya yüklemek için gerekli URL'yi alıyoruz
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+      const uploadPreset = "cloudinary";  // Cloudinary ayarlarınıza göre upload preset
+
+      // FormData oluşturuyoruz ve Cloudinary'ye göndereceğimiz verileri ekliyoruz
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+      formData.append("folder", "thumbnails"); // İsteğe bağlı, dosyaları organize etmek için klasör ekleyebilirsiniz
+
+      // Cloudinary API'sine dosyayı gönderiyoruz
+      const res = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Cloudinary upload failed");
+
+      // Yükleme başarılıysa URL'yi alıyoruz
+      const data = await res.json();
+      const thumbnailUrl = data.secure_url; // Cloudinary'den gelen dosya URL'si
+
+      // Yükleme işlemi tamamlandıktan sonra videonun thumbnail'ını güncelliyoruz
+      const updateRes = await fetch(`/api/video/studio/videos/${videoId}/thumbnail`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ thumbnailUrl: fileUrl }),
+        body: JSON.stringify({ thumbnailUrl }), // Cloudinary URL'sini gönderiyoruz
       });
-      if (!res.ok) throw new Error("Failed to upload thumbnail");
+
+      if (!updateRes.ok) throw new Error("Failed to update thumbnail");
+
       toast.success("Thumbnail updated");
       onOpenChange(false);
     } catch (err) {
+      console.error(err);
       toast.error("Something went wrong while uploading thumbnail");
     } finally {
       setUploading(false);
+    }
+  };
+
+  // Dosya seçildiğinde bu fonksiyon çalışacak
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadThumbnailToCloudinary(file);
     }
   };
 
@@ -42,12 +76,15 @@ export const ThumbnailUploadModal = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <UploadDropzone
-        endpoint="/api/uploadthing"
-        input={{ videoId }}
-        onClientUploadComplete={onUploadComplete}
-        disabled={uploading}
-      />
+      <div>
+        <input
+          type="file"
+          accept="image/*" // sadece resim dosyalarını kabul et
+          onChange={onFileChange}
+          disabled={uploading}
+        />
+        {uploading && <p>Uploading...</p>}
+      </div>
     </ResponsiveModal>
   );
 };
