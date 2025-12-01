@@ -1,80 +1,78 @@
 import { PrismaClient } from '@prisma/client';
-import { serve } from '@upstash/workflow/nextjs';
 import fetch from 'node-fetch';
 
 const prisma = new PrismaClient();
 
-// Başlık oluşturma için OpenAI sistem promptu
-const TITLE_SYSTEM_PROMPT = `Your task is to generate an SEO-focused title for a YouTube video based on its transcript. Please follow these guidelines:
-- Be concise but descriptive, using relevant keywords to improve discoverability.
-- Highlight the most compelling or unique aspect of the video content.
-- Avoid jargon or overly complex language unless it directly supports searchability.
-- Use action-oriented phrasing or clear value propositions where applicable.
-- Ensure the title is 3-8 words long and no more than 100 characters.
-- ONLY return the title as plain text. Do not add quotes or any additional formatting.`;
+const TITLE_SYSTEM_PROMPT = `
+Your task is to generate an SEO-focused title for a YouTube video based on its transcript.
+Guidelines:
+- Be concise but descriptive using relevant keywords.
+- Highlight compelling or unique aspects.
+- Avoid jargon unless required.
+- Use action-oriented/value-driven phrasing.
+- Title must be 3–8 words, max 100 chars.
+- ONLY return the raw title text.
+`;
 
-interface InputType {
-  userId: string;
-  videoId: string;
-}
-
-export const { POST } = serve(
-  async (context) => {
-    const input = context.requestPayload as InputType;
-    const { videoId, userId } = input;
+export async function POST(req: Request) {
+  try {
+    const { videoId, userId } = await req.json();
 
     // 1. Video bilgisini çek
     const video = await prisma.video.findFirst({
-      where: {
-        id: videoId,
-        userId: userId,
-      },
+      where: { id: videoId, userId },
     });
 
     if (!video) {
-      throw new Error("Video not found");
+      return Response.json({ error: "Video not found" }, { status: 404 });
     }
 
-    // 2. Transkripti almak için Mux API'sini kullan
+    // 2. Mux transkriptini al
     const transcriptUrl = `https://stream.mux.com/${video.muxPlaybackId}/text/${video.muxTrackId}.txt`;
-    const response = await fetch(transcriptUrl);
-    const transcript = await response.text();
+    const transcriptResponse = await fetch(transcriptUrl);
+    const transcript = await transcriptResponse.text();
 
     if (!transcript) {
-      throw new Error("Transcript not found");
+      return Response.json({ error: "Transcript not found" }, { status: 500 });
     }
 
-    // 3. OpenAI API'si ile başlık oluştur
-    const openAIResponse = await fetch('https://api.openai.com/v1/completions', {
-      method: 'POST',
+    // 3. OpenAI API ile başlık oluştur
+    const openAIResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'gpt-4',
-        prompt: `${TITLE_SYSTEM_PROMPT}\n${transcript}`,
-        max_tokens: 60,  // Başlık için uygun token uzunluğu
+        model: "gpt-4o-mini", // gpt-4 yerine daha hızlı, yeni nesil model
+        messages: [
+          { role: "system", content: TITLE_SYSTEM_PROMPT },
+          { role: "user", content: transcript },
+        ],
+        max_tokens: 50,
       }),
     });
 
-    const openAIData = await openAIResponse.json();
-    const title = openAIData.choices[0]?.text?.trim();
+    const data = await openAIResponse.json();
+    const title = data?.choices?.[0]?.message?.content?.trim();
 
     if (!title) {
-      throw new Error("Title generation failed");
+      return Response.json({ error: "Title generation failed" }, { status: 500 });
     }
 
-    // 4. Video başlığını güncelle
+    // 4. Videoyu güncelle
     await prisma.video.update({
-      where: {
-        id: video.id,
-      },
-      data: {
-        title: title || video.title,  // Yeni başlık veya mevcut başlık
-      },
+      where: { id: video.id },
+      data: { title },
     });
 
-    return { status: 'success', title };
+    return Response.json({ status: "success", title });
+
+  } catch (err) {
+    console.error(err);
+    return Response.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
-);
+}

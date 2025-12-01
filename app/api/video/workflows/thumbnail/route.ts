@@ -1,35 +1,27 @@
 import { PrismaClient } from '@prisma/client';
-import { serve } from '@upstash/workflow/nextjs';
 import cloudinary from 'cloudinary';
-import { fetch } from 'node-fetch';
+import fetch from 'node-fetch';
 
 const prisma = new PrismaClient();
 
-// Cloudinary'yi yapılandırma
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
 });
 
-const DESCRIPTION_SYSTEM_PROMPT = `Your task is to generate a visually engaging thumbnail for the video. Follow these guidelines:
-- Ensure the thumbnail is visually appealing and fits the context of the video.
-- Include keywords or visuals related to the video content.
-- Make it look like a standard video thumbnail with some creativity.
-- Focus on delivering a unique and professional design.`;
+const DESCRIPTION_SYSTEM_PROMPT = `
+Your task is to generate a visually engaging thumbnail for the video.
+Ensure the thumbnail is visually appealing and fits the context.
+Include keywords or visuals related to the video content.
+`;
 
-interface InputType {
-  userId: string;
-  videoId: string;
-  prompt: string;
-}
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { videoId, userId, prompt } = body;
 
-export const { POST } = serve(
-  async (context) => {
-    const input = context.requestPayload as InputType;
-    const { videoId, userId, prompt } = input;
-
-    // 1. Video'yu veritabanından çek
+    // 1. Videoyu veritabanından çek
     const video = await prisma.video.findFirst({
       where: {
         id: videoId,
@@ -38,11 +30,11 @@ export const { POST } = serve(
     });
 
     if (!video) {
-      throw new Error('Video not found');
+      return Response.json({ error: 'Video not found' }, { status: 404 });
     }
 
-    // 2. OpenAI API'si ile Thumbnail oluşturmak için DALL-E'yi kullan
-    const response = await fetch('https://api.openai.com/v1/images/generations', {
+    // 2. OpenAI ile thumbnail üret
+    const aiResponse = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
@@ -56,54 +48,54 @@ export const { POST } = serve(
       }),
     });
 
-    const body = await response.json();
-    const tempThumbnailUrl = body.data[0]?.url;
+    const aiBody = await aiResponse.json();
+    const tempThumbnailUrl = aiBody?.data?.[0]?.url;
 
     if (!tempThumbnailUrl) {
-      throw new Error('Error generating image');
+      return Response.json({ error: 'Error generating image' }, { status: 500 });
     }
 
-    // 3. Önceki thumbnail'ı Cloudinary üzerinden sil
+    // 3. Önceki thumbnail varsa sil
     if (video.thumbnailKey) {
       try {
         await cloudinary.v2.uploader.destroy(video.thumbnailKey);
-      } catch (error) {
-        console.error('Error deleting old thumbnail:', error);
+      } catch (err) {
+        console.log('Cloudinary delete error:', err);
       }
 
       await prisma.video.update({
-        where: {
-          id: video.id,
-        },
-        data: {
-          thumbnailKey: null,
-          thumbnailUrl: null,
-        },
+        where: { id: video.id },
+        data: { thumbnailKey: null, thumbnailUrl: null },
       });
     }
 
-    // 4. Yeni thumbnail'ı Cloudinary'ye yükle
+    // 4. Cloudinary'ye yükle
     const uploadResult = await cloudinary.v2.uploader.upload(tempThumbnailUrl, {
-      public_id: `video-thumbnail-${video.id}`, // Uniqueness için video ID'sini kullanıyoruz
+      public_id: `video-thumbnail-${video.id}`,
       folder: 'video-thumbnails',
       overwrite: true,
     });
 
-    if (!uploadResult?.secure_url || !uploadResult?.public_id) {
-      throw new Error('Error uploading thumbnail to Cloudinary');
+    if (!uploadResult.secure_url) {
+      return Response.json({ error: 'Error uploading thumbnail' }, { status: 500 });
     }
 
-    // 5. Veritabanında video kaydını güncelle
+    // 5. Veritabanını güncelle
     await prisma.video.update({
-      where: {
-        id: video.id,
-      },
+      where: { id: video.id },
       data: {
         thumbnailUrl: uploadResult.secure_url,
         thumbnailKey: uploadResult.public_id,
       },
     });
 
-    return { status: 'success', thumbnailUrl: uploadResult.secure_url };
+    return Response.json({
+      status: 'success',
+      thumbnailUrl: uploadResult.secure_url,
+    });
+
+  } catch (err) {
+    console.error(err);
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-);
+}

@@ -953,14 +953,14 @@ export const getMenuItems = (user) => [
             title: "Home",
           },
           {
-            path: "/home/youtube/subscriptions",
+            path: "/home/youtube/main/subscriptions",
             type: "link",
             active: false,
             selected: false,
             title: "Subscriptions",
           },
           {
-            path: "/home/youtube/trending",
+            path: "/home/youtube/main/feed/trending",
             type: "link",
             active: false,
             selected: false,
@@ -973,14 +973,14 @@ export const getMenuItems = (user) => [
             active: false,
             children: [
               {
-                path: "/home/youtube/history",
+                path: "/home/youtube/main/playlists/history",
                 type: "link",
                 active: false,
                 selected: false,
                 title: "History",
               },
               {
-                path: "/home/youtube/likedvideos",
+                path: "/home/youtube/main/playlists/liked",
                 type: "link",
                 active: false,
                 selected: false,

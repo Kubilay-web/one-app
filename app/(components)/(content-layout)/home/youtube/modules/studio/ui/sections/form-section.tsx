@@ -169,7 +169,7 @@ const FormSectionSuspense = () => {
 
   const generateTitle = async () => {
     try {
-      await fetch(`/api/video/studio/videos/${videoId}/generate`, {
+      await fetch(`/api/video/workflows/title`, {
         method: "POST",
       });
       toast.success("Title generation started");
@@ -180,8 +180,15 @@ const FormSectionSuspense = () => {
 
   const generateDescription = async () => {
     try {
-      await fetch(`/api/video/studio/videos/${videoId}/generate`, {
+      await fetch(`/api/video/workflows/description`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          videoId,
+          userId: video.userId, // video’dan gelir
+        }),
       });
       toast.success("Description generation started");
     } catch {
@@ -191,7 +198,7 @@ const FormSectionSuspense = () => {
 
   const restoreThumbnail = async () => {
     try {
-      await fetch(`/api/video/studio/videos/${videoId}/thumbnail`, {
+      await fetch(`/api/video/workflows/thumbnail`, {
         method: "POST",
       });
       toast.success("Thumbnail restored");
@@ -227,7 +234,11 @@ const FormSectionSuspense = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Video details</h1>
             <div className="flex gap-x-2">
-              <Button type="submit" className="bg-slate-500 text-white" disabled={!form.formState.isDirty}>
+              <Button
+                type="submit"
+                className="bg-slate-500 text-white"
+                disabled={!form.formState.isDirty}
+              >
                 Save
               </Button>
               <DropdownMenu>
@@ -236,7 +247,10 @@ const FormSectionSuspense = () => {
                     <MoreVerticalIcon />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-slate-500 text-white" align="end">
+                <DropdownMenuContent
+                  className="bg-slate-500 text-white"
+                  align="end"
+                >
                   <DropdownMenuItem onClick={revalidateVideo}>
                     <RotateCcwIcon className="mr-2" />
                     Revalidate
@@ -358,39 +372,37 @@ const FormSectionSuspense = () => {
             )}
           />
 
-            <FormField
-                control={form.control}
-                name="categoryId"
-                render={({ field }) => (
-                  <FormItem className="mt-3">
-                    <FormLabel>
-                      Category
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value ?? undefined}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-white text-black">
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem className="mt-3">
+                <FormLabel>Category</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value ?? undefined}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-white text-black">
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Video Player */}
           <div className="aspect-video w mt-6 w-[700px]">
-            <VideoPlayer 
+            <VideoPlayer
               playbackId={video.muxPlaybackId}
               thumbnailUrl={video.thumbnailUrl}
             />
