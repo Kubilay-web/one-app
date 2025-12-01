@@ -171,6 +171,11 @@ const FormSectionSuspense = () => {
     try {
       await fetch(`/api/video/workflows/title`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          videoId,
+          userId: video.userId, // video state’den alınıyor
+        }),
       });
       toast.success("Title generation started");
     } catch {
@@ -198,9 +203,16 @@ const FormSectionSuspense = () => {
 
   const restoreThumbnail = async () => {
     try {
-      await fetch(`/api/video/workflows/thumbnail`, {
+      if (!video) return toast.error("Video not loaded yet");
+
+      await fetch(`/api/video/studio/videos/${videoId}/thumbnail`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          thumbnailUrl: video.thumbnailUrl || "/youtube/fallback-thumbnail.png",
+        }),
       });
+
       toast.success("Thumbnail restored");
     } catch {
       toast.error("Something went wrong");

@@ -37,26 +37,30 @@ export const ThumbnailGenerateModal = ({
     defaultValues: { prompt: "" },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const res = await fetch(`/api/videos/${videoId}/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: values.prompt }),
-      });
+ const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  try {
+    const res = await fetch(`/api/video/workflows/thumbnail`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        videoId,       // videoya ait ID
+        prompt: values.prompt,
+      }),
+    });
 
-      if (!res.ok) throw new Error("Failed to generate thumbnail");
+    if (!res.ok) throw new Error("Failed to generate thumbnail");
 
-      toast.success("Background job started", {
-        description: "This may take some time",
-      });
+    toast.success("Background job started", {
+      description: "This may take some time",
+    });
 
-      form.reset();
-      onOpenChange(false);
-    } catch (err) {
-      toast.error("Something went wrong");
-    }
-  };
+    form.reset();
+    onOpenChange(false);
+  } catch (err) {
+    toast.error("Something went wrong");
+  }
+};
+
 
   return (
     <ResponsiveModal
