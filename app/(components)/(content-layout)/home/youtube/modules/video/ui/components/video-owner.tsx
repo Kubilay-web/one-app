@@ -15,6 +15,8 @@ export const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
   const [isSubscribed, setIsSubscribed] = useState(user.viewerSubscribed);
   const [isPending, setIsPending] = useState(false);
 
+  console.log("user---------------dsdf0",user)
+
   const handleSubscription = async () => {
     setIsPending(true);
     try {
@@ -36,11 +38,11 @@ export const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
 
   return (
     <div className="flex items-center sm:items-start justify-between sm:justify-start gap-3 min-w-0">
-      <Link prefetch href={`/users/${user.id}`}>
+      <Link prefetch href={`/home/youtube/main/users/${user.id}`}>
         <div className="flex items-center gap-3 min-w-0">
-          {/* <UserAvatar size="lg" imageUrl={user.imageUrl} name={user.name} /> */}
+          <UserAvatar size="lg" imageUrl={user.avatarUrl} name={user.username} /> 
           <div className="flex flex-col gap-1 min-w-0">
-            <UserInfo size="lg" name={user.name} />
+            <UserInfo size="lg" name={user.username} />
             <span className="text-sm text-muted-foreground line-clamp-1">
               {user.subscriberCount} subscribers
             </span>
@@ -50,7 +52,7 @@ export const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
 
       {user.isOwner ? (
         <Button variant="secondary" className="rounded-full" asChild>
-          <Link prefetch href={`/studio/videos/${videoId}`}>Edit video</Link>
+          <Link prefetch href={`/home/youtube/studio/videos/${videoId}`}>Edit video</Link>
         </Button>
       ) : (
         <SubscriptionButton

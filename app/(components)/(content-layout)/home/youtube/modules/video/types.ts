@@ -11,8 +11,8 @@ export interface VideoGetOneOutput {
   subscriberCount: number;   // Abone sayısı
   user: {
     id: string;
-    name: string;
-    imageUrl: string;
+    username: string;
+    avatarUrl: string;
     subscriberCount: number;
     viewerSubscribed: boolean; // Kullanıcının abone olup olmadığı
     isOwner: boolean;         // Video sahibi mi

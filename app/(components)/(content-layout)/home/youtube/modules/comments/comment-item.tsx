@@ -31,6 +31,9 @@ export const CommentItem = ({ comment, variant = "comment", onDelete }) => {
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [isRepliesOpen, setIsRepliesOpen] = useState(false);
 
+
+  console.log("comment-------------",comment)
+
   // ✅ State ekliyoruz
   const [likeCount, setLikeCount] = useState(comment.likeCount || 0);
   const [dislikeCount, setDislikeCount] = useState(comment.dislikeCount || 0);
@@ -117,7 +120,7 @@ export const CommentItem = ({ comment, variant = "comment", onDelete }) => {
   return (
     <div>
       <div className="flex gap-4">
-        <Link href={`/users/${comment.userId}`}>
+        <Link href={`/home/youtube/main/users/${comment.user.id}`}>
           <UserAvatar
             size={variant === "comment" ? "lg" : "sm"}
             imageUrl={comment.user.avatarUrl}
@@ -126,7 +129,7 @@ export const CommentItem = ({ comment, variant = "comment", onDelete }) => {
         </Link>
 
         <div className="flex-1 min-w-0">
-          <Link href={`/users/${comment.userId}`}>
+          <Link href={`/home/youtube/main/users/${comment.user.id}`}>
             <div className="flex items-center gap-2 mb-0.5">
               <span className="font-medium text-sm pb-0.5">
                 {comment.user.username}

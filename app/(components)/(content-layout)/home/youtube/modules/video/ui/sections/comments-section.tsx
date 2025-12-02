@@ -46,7 +46,6 @@ export const CommentsSection = ({ videoId }: CommentsSectionProps) => {
     fetchComments();
   }, [videoId]);
 
-  console.log("comments", comments);
 
   if (isLoading) {
     return (

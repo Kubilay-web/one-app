@@ -13,7 +13,7 @@ export const HomeNavbar = () => {
         {/* Menu and logo */}
         <div className="flex items-center flex-shrink-0">
           {/* <SidebarTrigger /> */}
-          <Link href="/">
+          <Link href="/home/youtube/main">
             <div className="px-4 flex items-center gap-1">
               <Image src="/youtube/youtube-logo.svg" height={32} width={32} alt="logo" />
               <p className="text-xl font-semibold tracking-tight">NewTube</p>
