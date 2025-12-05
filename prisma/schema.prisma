@@ -117,10 +117,12 @@ model User {
   subscribers    Subscription[]  @relation("CreatorSubscribers")
   commentsVideo  CommentVideo[]
   playlists      Playlist[]
+  commentReactions CommentReaction[]
 
   //Video
 
-  commentReactions CommentReaction[]
+
+
 
   @@map("users")
 }
@@ -1918,10 +1920,10 @@ model Video {
   title          String
   description    String?
   muxStatus      String?
-  muxAssetId     String?        
-  muxUploadId    String?        
-  muxPlaybackId  String?      
-  muxTrackId     String?        
+  muxAssetId     String?
+  muxUploadId    String?
+  muxPlaybackId  String?
+  muxTrackId     String?
   muxTrackStatus String?
   thumbnailUrl   String?
   thumbnailKey   String?
@@ -1943,7 +1945,7 @@ model Video {
 }
 
 model VideoView {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String
   videoId   String   @db.ObjectId
   createdAt DateTime @default(now())
@@ -1966,7 +1968,7 @@ model VideoReaction {
 }
 
 model Subscription {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   viewerId  String
   creatorId String
   createdAt DateTime @default(now())
@@ -1977,7 +1979,7 @@ model Subscription {
 }
 
 model CommentVideo {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   parentId  String?  @db.ObjectId
   userId    String
   videoId   String   @db.ObjectId
@@ -2005,7 +2007,7 @@ model CommentReaction {
 }
 
 model Playlist {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
   userId      String
@@ -2017,7 +2019,7 @@ model Playlist {
 }
 
 model PlaylistVideo {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   playlistId String   @db.ObjectId
   videoId    String   @db.ObjectId
   createdAt  DateTime @default(now())
@@ -2039,4 +2041,62 @@ model VideoCategory {
 
 //VideoClone
 
-//4.36.32
+
+
+
+//////////////////////////////////
+
+
+model ProfileInstagram {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
+  avatar   String?
+  username String?
+  name     String?
+  subtitle String?
+  bio      String?
+}
+
+model PostInstagram {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  author      String
+  image       String
+  description String
+  likesCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CommentInstagram {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  author    String
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LikeInstagram {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  author    String
+  createdAt DateTime @default(now())
+}
+
+model BookmarkInstagram {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  author    String
+  createdAt DateTime @default(now())
+}
+
+model FollowerInstagram {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  followingProfileEmail String
+  followingProfileId    String   @db.ObjectId
+  followedProfileId     String   @db.ObjectId
+  createdAt             DateTime @default(now())
+}
+
+
+//////////////////////////////////

@@ -998,6 +998,59 @@ export const getMenuItems = (user) => [
         ],
       },
 
+      {
+        title: "Instagram",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/home/instagram",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+          {
+            path: "/home/instagram/search",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Search",
+          },
+          {
+            path: "/home/instagram/browse",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Browse",
+          },
+
+          {
+            path: "/home/instagram/profile",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Profile",
+          },
+
+               {
+            path: "/home/instagram/createprofile",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Create Profile",
+          },
+
+          {
+            path: "/home/instagram/create",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Create",
+          },
+        ],
+      },
+
       // {
       //   path: "/dashboards/sales",
       //   type: "link",
