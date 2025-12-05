@@ -4,6 +4,7 @@ import ProfileNav from "../../components/ProfileNav";
 import ProfilePageInfo from "../../components/ProfilePageInfo";
 import db from "@/app/lib/db";
 import {redirect} from "next/navigation";
+import { ensureInstagramProfile, getSessionEmailOrThrow } from "../../actions";
 
 export default async function BookmarkedPage() {
   const {user} = await validateRequest();
@@ -18,6 +19,10 @@ export default async function BookmarkedPage() {
   const posts = await db.postInstagram.findMany({
     where: {id: {in: bookmarks.map(b => b.postId)}},
   })
+
+    const email = await getSessionEmailOrThrow();
+  
+    await ensureInstagramProfile(email);
   return (
     <div>
       <ProfilePageInfo

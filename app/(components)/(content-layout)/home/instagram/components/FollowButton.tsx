@@ -28,7 +28,7 @@ export default function FollowButton({
       router.refresh();
     }}>
       <button
-        className={'flex items-center gap-2 px-4 py-2 text-white rounded-md text-lg '+(isFollowed ? 'bg-gradient-to-tr from-ig-orange to-ig-red from-50%' : "bg-gradient-to-tr from-ig-orange to-ig-red to-80%")}>
+        className={'flex items-center gap-2 px-4 py-2 text-gray-500 rounded-md text-lg '+(isFollowed ? 'bg-gradient-to-tr from-ig-orange to-ig-red from-50%' : "bg-gradient-to-tr from-ig-orange to-ig-red to-80%")}>
         {isFollowed ? <UserMinusIcon /> : <UserPlusIcon />}
         {isFollowed ? 'Unfollow':'Follow'}
       </button>

@@ -2,6 +2,7 @@ import { validateRequest } from "@/app/auth";
 import SettingsForm from "../components/SettingsForm";
 import db from "@/app/lib/db"
 import {Button} from "@radix-ui/themes";
+import { ensureInstagramProfile, getSessionEmailOrThrow } from "../actions";
 
 export default async function SettingsPage() {
   const {user} = await validateRequest();
@@ -11,6 +12,10 @@ export default async function SettingsPage() {
   const profile = await db.profileInstagram.findFirst({
     where: {email: user.email},
   });
+
+     const email = await getSessionEmailOrThrow();
+  
+     await ensureInstagramProfile(email);
   return (
     <div className="max-w-sm mx-auto">
       <h1 className="text-2xl font-bold mb-4 text-center">

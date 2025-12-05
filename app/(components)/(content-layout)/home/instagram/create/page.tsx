@@ -1,51 +1,70 @@
-'use client';
 import { ensureInstagramProfile, getSessionEmailOrThrow, postEntry } from "../actions";
 import { Button, TextArea } from "@radix-ui/themes";
 import { CloudUploadIcon, SendIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-export default function CreatePage() {
+export default async function CreatePage() {
   const [imageUrl, setImageUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    if (file) {
-      setIsUploading(true);
-      const data = new FormData();
-      data.set("file", file);
+  
+    const email = await getSessionEmailOrThrow();
+  
+    await ensureInstagramProfile(email);
 
-      fetch("/api/instagram/upload", {
+  // Function to upload the image asynchronously
+  const uploadImage = async (file: File) => {
+    setIsUploading(true);
+    const data = new FormData();
+    data.set("file", file);
+
+    try {
+      const res = await fetch("/api/instagram/upload", {
         method: "POST",
         body: data,
-      })
-        .then(res => res.json())
-        .then(result => {
-          setImageUrl(result.secure_url);
-          setIsUploading(false);
-        });
+      });
+      const result = await res.json();
+      setImageUrl(result.secure_url);
+    } catch (error) {
+      console.error("Image upload failed", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (file) {
+      uploadImage(file);
     }
   }, [file]);
 
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement);
+    formData.append("image", imageUrl);
+
+    try {
+      const { id } = await postEntry(formData);
+      router.push(`/home/instagram/posts/${id}`);
+      router.refresh();
+    } catch (error) {
+      console.error("Error submitting post", error);
+    }
+  };
 
   return (
-    <form
-      className="max-w-md mx-auto"
-      action={async formData => {
-        const { id } = await postEntry(formData);  // <-- FIX
-        router.push(`/home/instagram/posts/${id}`);
-        router.refresh();
-      }}
-    >
+    <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
       <input type="hidden" name="image" value={imageUrl} />
 
       <div className="flex flex-col gap-4">
         <div>
           <div className="min-h-64 p-2 bg-gray-400 rounded-md relative">
-            {imageUrl && <img src={imageUrl} className="rounded-md" alt="" />}
+            {imageUrl && <img src={imageUrl} className="rounded-md" alt="Uploaded" />}
 
             <div className="absolute inset-0 flex items-center justify-center">
               <input
@@ -77,7 +96,7 @@ export default function CreatePage() {
       </div>
 
       <div className="flex mt-4 justify-center">
-        <Button>
+        <Button type="submit" disabled={isUploading}>
           <SendIcon size={16} />
           Publish
         </Button>

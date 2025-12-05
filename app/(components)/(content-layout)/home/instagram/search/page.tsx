@@ -1,3 +1,4 @@
+import { ensureInstagramProfile, getSessionEmailOrThrow } from "../actions";
 import Preloader from "../components/Preloader";
 import SearchForm from "../components/SearchForm";
 import SearchResults from "../components/SearchResults";
@@ -8,6 +9,10 @@ export default async function SearchPage({
 }:{
   searchParams: {query:string},
 }) {
+
+   const email = await getSessionEmailOrThrow();
+
+   await ensureInstagramProfile(email);
   return (
     <div className="w-full">
       <div className="max-w-md mx-auto">

@@ -1,4 +1,4 @@
-import { getSessionEmail } from "../../actions";
+import { ensureInstagramProfile, getSessionEmail, getSessionEmailOrThrow } from "../../actions";
 import ProfilePageContent from "../../components/ProfilePageContent";
 import db from "@/app/lib/db"
 
@@ -17,6 +17,10 @@ export default async function UserProfilePage({
       followedProfileId: profile.id,
     },
   });
+
+    const email = await getSessionEmailOrThrow();
+    
+       await ensureInstagramProfile(email);
   return (
     <ProfilePageContent
       isOurProfile={profile.email === sessionEmail}
