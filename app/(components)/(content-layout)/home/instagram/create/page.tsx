@@ -1,20 +1,29 @@
+'use client';  // Add the 'use client' directive at the top of the file
+
 import { ensureInstagramProfile, getSessionEmailOrThrow, postEntry } from "../actions";
 import { Button, TextArea } from "@radix-ui/themes";
 import { CloudUploadIcon, SendIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-export default async function CreatePage() {
+export default function CreatePage() {
   const [imageUrl, setImageUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  
-    const email = await getSessionEmailOrThrow();
-  
-    await ensureInstagramProfile(email);
+  // Move async logic (fetching session email, ensuring Instagram profile) into useEffect
+  useEffect(() => {
+    const fetchData = async () => {
+      const email = await getSessionEmailOrThrow();
+      await ensureInstagramProfile(email);
+    };
+
+    fetchData().catch((error) => {
+      console.error("Error fetching user data:", error);
+    });
+  }, []);
 
   // Function to upload the image asynchronously
   const uploadImage = async (file: File) => {
