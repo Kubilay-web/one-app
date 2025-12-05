@@ -33,7 +33,13 @@ export default async function HomeTopRow({
         {profiles.map((profile) => (
           <div className="w-24 flex flex-col justify-center items-center">
             <div>
-              <div className="inline-block p-1 rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">
+              <div
+                className="inline-block p-1 rounded-full"
+                style={{
+                  background:
+                    "linear-gradient(to top right, #FFA500 50%, #FF5733 80%)",
+                }}
+              >
                 <div className="inline-block p-0.5 bg-white dark:bg-black rounded-full">
                   <Avatar
                     size="6"

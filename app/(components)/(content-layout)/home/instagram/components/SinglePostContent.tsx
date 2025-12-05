@@ -35,7 +35,7 @@ export default function SinglePostContent({
 
   // Eğer post yoksa bir mesaj göster
   if (!post) {
-    return <div className="text-center text-gray-500">Post bulunamadı.</div>;
+    return <div className="text-center text-gray-500">No post.</div>;
   }
 
   return (

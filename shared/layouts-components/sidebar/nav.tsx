@@ -1033,14 +1033,7 @@ export const getMenuItems = (user) => [
             title: "Profile",
           },
 
-               {
-            path: "/home/instagram/createprofile",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Create Profile",
-          },
-
+        
           {
             path: "/home/instagram/create",
             type: "link",
