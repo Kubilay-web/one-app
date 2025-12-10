@@ -1,0 +1,5 @@
+{
+  "buildCommand": "echo 'Local build already done'",
+  "outputDirectory": ".next",
+  "framework": "nextjs"
+}
