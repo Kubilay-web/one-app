@@ -237,6 +237,52 @@ export const getMenuItems = (user) => [
     active: false,
     children: [
       {
+        title: "OneSocial",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/home/onesocial/feed/home",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+          {
+            path: "/home/onesocial/profile/connections",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Profile",
+          },
+          {
+            path: "/home/onesocial/profile/events",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Events",
+          },
+
+          {
+            path: "/home/onesocial/notifications",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Notifications",
+          },
+
+          {
+            path: "/home/onesocial/settings/account",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Account",
+          },
+        ],
+      },
+
+      {
         title: "Social",
         icon: Dashboardicon,
         type: "sub",
@@ -1033,7 +1079,6 @@ export const getMenuItems = (user) => [
             title: "Profile",
           },
 
-        
           {
             path: "/home/instagram/create",
             type: "link",

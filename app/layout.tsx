@@ -3,6 +3,8 @@ import "./globals.scss";
 import ClientProviders from "./ClientProviders";
 import { validateRequest } from "./auth";
 import SessionProvider from "./SessionProvider";
+import { LayoutProvider } from "./(components)/(content-layout)/home/onesocial/context/useLayoutContext";
+
 
 export const metadata = {
   title: "My App",
@@ -20,9 +22,11 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body>
-        <SessionProvider value={session}>
-          <ClientProviders>{children}</ClientProviders>
-        </SessionProvider>
+        <LayoutProvider>
+          <SessionProvider value={session}>
+            <ClientProviders>{children}</ClientProviders>
+          </SessionProvider>
+        </LayoutProvider>
       </body>
     </html>
   );
