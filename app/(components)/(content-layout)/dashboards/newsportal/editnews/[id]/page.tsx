@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import JoditEditor from "jodit-react";
+import dynamic from "next/dynamic";
 import { FaImages } from "react-icons/fa6";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Gallery from "@/app/projects/components/newsportal/Gallery";
+
+// FIX: JoditEditor SSR disable
+const JoditEditor = dynamic(() => import("jodit-react"), {
+  ssr: false,
+});
 
 const EditNews = () => {
   const { id: news_id } = useParams(); // App Router params
