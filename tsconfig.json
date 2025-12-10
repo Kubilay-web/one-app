@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
-     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -13,16 +17,33 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./*"],
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","server.ts", "app/(components)/(content-layout)/apps/facebook/components/profielPicture/page.tsx", "app/(components)/(content-layout)/apps/facebook/components/header/userMenu/DisplayAccessibility.js", "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/AddToYourPost.js", "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/EmojiPickerBackgrounds.js", "app/(components)/(content-layout)/apps/facebook/pages/profile/Friendship.js", "shared/layouts-components/header/AllMenu.js", "app/(components)/(content-layout)/home/facebook/components/header/AllMenu.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "server.ts",
+    "app/(components)/(content-layout)/apps/facebook/components/profielPicture/page.tsx",
+    "app/(components)/(content-layout)/apps/facebook/components/header/userMenu/DisplayAccessibility.js",
+    "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/AddToYourPost.js",
+    "app/(components)/(content-layout)/apps/facebook/components/createPostPopup/EmojiPickerBackgrounds.js",
+    "app/(components)/(content-layout)/apps/facebook/pages/profile/Friendship.js",
+    "shared/layouts-components/header/AllMenu.js",
+    "app/(components)/(content-layout)/home/facebook/components/header/AllMenu.tsx",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
