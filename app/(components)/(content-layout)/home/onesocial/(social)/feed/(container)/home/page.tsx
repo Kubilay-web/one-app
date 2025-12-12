@@ -5,10 +5,30 @@ import CreatePostCard from '../../../../components/cards/CreatePostCard'
 import Link from 'next/link'
 import LoadContentButton from '../../../../components/LoadContentButton'
 
+// Blog'ları çeken asenkron fonksiyon
+async function getLatestBlogs() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/onesocial/news?limit=4`, {
+      // SSG veya ISR için cache opsiyonu
+      next: { revalidate: 60 } // 60 saniyede bir yenile
+    })
+    
+    if (!res.ok) {
+      throw new Error('Failed to fetch blogs')
+    }
+    
+    const data = await res.json()
+    return data.data || []
+  } catch (error) {
+    console.error('Error fetching blogs:', error)
+    return []
+  }
+}
 
+const Home = async () => {
+  // Blog'ları sunucu tarafta çek
+  const latestBlogs = await getLatestBlogs()
 
-
-const Home = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Left Content */}
@@ -34,45 +54,44 @@ const Home = () => {
 
           {/* News Items */}
           <div className="space-y-4">
-            <div className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
-              <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
-                <Link href="/blogs/details">
-                  Ten questions you should answer truthfully
-                </Link>
-              </h6>
-              <small className="text-sm text-gray-500 dark:text-gray-400">2hr</small>
-            </div>
-
-            <div className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
-              <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
-                <Link href="/blogs/details">
-                  Five unbelievable facts about money
-                </Link>
-              </h6>
-              <small className="text-sm text-gray-500 dark:text-gray-400">3hr</small>
-            </div>
-
-            <div className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
-              <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
-                <Link href="/blogs/details">
-                  Best Pinterest Boards for learning about business
-                </Link>
-              </h6>
-              <small className="text-sm text-gray-500 dark:text-gray-400">4hr</small>
-            </div>
-
-            <div className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
-              <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
-                <Link href="/blogs/details">
-                  Skills that you can learn from business
-                </Link>
-              </h6>
-              <small className="text-sm text-gray-500 dark:text-gray-400">6hr</small>
-            </div>
+            {latestBlogs.length > 0 ? (
+              latestBlogs.map((blog) => (
+                <div key={blog.id} className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
+                  <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
+                    <Link href={`/blogs/${blog.slug}`}>
+                      {blog.title}
+                    </Link>
+                  </h6>
+                  <small className="text-sm text-gray-500 dark:text-gray-400">{blog.timeAgo}</small>
+                </div>
+              ))
+            ) : (
+              // Fallback veriler (API çalışmazsa)
+              <>
+                <div className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
+                  <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
+                    <Link href="/blogs/details">
+                      Ten questions you should answer truthfully
+                    </Link>
+                  </h6>
+                  <small className="text-sm text-gray-500 dark:text-gray-400">2hr</small>
+                </div>
+                <div className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
+                  <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
+                    <Link href="/blogs/details">
+                      Five unbelievable facts about money
+                    </Link>
+                  </h6>
+                  <small className="text-sm text-gray-500 dark:text-gray-400">3hr</small>
+                </div>
+              </>
+            )}
 
             {/* Load More Button */}
             <div className="pt-2">
-              <LoadContentButton name="View all latest news" />
+              <Link href="/blogs">
+                <LoadContentButton name="View all latest news" />
+              </Link>
             </div>
           </div>
         </div>

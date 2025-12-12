@@ -1,224 +1,197 @@
-'use client'
-import { FaPlus } from 'react-icons/fa6'
-import dynamic from 'next/dynamic'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+"use client";
+import { FaPlus } from "react-icons/fa6";
+import dynamic from "next/dynamic";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
-const StoryComponent = dynamic(() => import('./StoryComponent'), { ssr: false })
+const StoryComponent = dynamic(() => import("./StoryComponent"), {
+  ssr: false,
+});
 
 // Default avatar
-import defaultAvatar from '@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/03.jpg'
+import defaultAvatar from "@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/03.jpg";
 
 type StoryItem = {
-  id: string
-  type: string
-  text?: string
-  images: string[]
-  background?: string
-  expiresAt?: string
-  viewers?: string
-  createdAt: string
-  isViewed: boolean
-}
+  id: string;
+  type: string;
+  text?: string;
+  images: string[];
+  background?: string;
+  expiresAt?: string;
+  viewers?: string;
+  createdAt: string;
+  isViewed: boolean;
+};
 
 type StoryUser = {
-  id: string
-  username: string
-  displayName: string
-  avatarUrl: string | null
-}
+  id: string;
+  username: string;
+  displayName: string;
+  avatarUrl: string | null;
+};
 
 type StoryGroup = {
-  user: StoryUser
-  stories: StoryItem[]
-  hasUnviewed: boolean
-}
+  user: StoryUser;
+  stories: StoryItem[];
+  hasUnviewed: boolean;
+};
 
 const Stories = () => {
-  const [stories, setStories] = useState<StoryGroup[]>([])
-  const [loading, setLoading] = useState(true)
-  const [userAvatar, setUserAvatar] = useState<string | null>(null)
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [newStoryText, setNewStoryText] = useState('')
-  const [newStoryImage, setNewStoryImage] = useState<string | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const router = useRouter()
+  const [stories, setStories] = useState<StoryGroup[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newStoryText, setNewStoryText] = useState("");
+  const [newStoryImage, setNewStoryImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const router = useRouter();
+  const textareaRef = useRef<HTMLTextAreaElement>(null); // cursor kontrolü için ref
 
-  // Story verilerini fetch et
   useEffect(() => {
-    fetchStories()
-  }, [])
+    fetchStories();
+  }, []);
 
   const fetchStories = async () => {
     try {
-      setLoading(true)
-      
-      // Story verilerini al
-      const storiesResponse = await fetch('/api/onesocial/stories', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        cache: 'no-store'
-      })
+      setLoading(true);
+
+      const storiesResponse = await fetch("/api/onesocial/stories", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        cache: "no-store",
+      });
 
       if (storiesResponse.ok) {
-        const data = await storiesResponse.json()
-        if (data.success) {
-          setStories(data.stories)
-        }
+        const data = await storiesResponse.json();
+        if (data.success) setStories(data.stories);
       }
 
-      // Kullanıcı avatarını al
-      const userResponse = await fetch('/api/onesocial/user', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include'
-      })
+      const userResponse = await fetch("/api/onesocial/user", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
 
       if (userResponse.ok) {
-        const userData = await userResponse.json()
-        if (userData.success && userData.user?.avatarUrl) {
-          setUserAvatar(userData.user.avatarUrl)
-        }
+        const userData = await userResponse.json();
+        if (userData.success && userData.user?.avatarUrl)
+          setUserAvatar(userData.user.avatarUrl);
       }
     } catch (error) {
-      console.error('Error fetching stories:', error)
+      console.error("Error fetching stories:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  // Story görüntüleme işlemi
   const markStoryAsViewed = async (storyId: string) => {
     try {
       await fetch(`/api/onesocial/stories/${storyId}/view`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include'
-      })
-      
-      // Local state'i güncelle
-      setStories(prev => prev.map(group => ({
-        ...group,
-        stories: group.stories.map(story => 
-          story.id === storyId ? { ...story, isViewed: true } : story
-        ),
-        hasUnviewed: group.stories.some(s => !s.isViewed && s.id !== storyId)
-      })))
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      setStories((prev) =>
+        prev.map((group) => ({
+          ...group,
+          stories: group.stories.map((story) =>
+            story.id === storyId ? { ...story, isViewed: true } : story
+          ),
+          hasUnviewed: group.stories.some(
+            (s) => !s.isViewed && s.id !== storyId
+          ),
+        }))
+      );
     } catch (error) {
-      console.error('Error marking story as viewed:', error)
+      console.error("Error marking story as viewed:", error);
     }
-  }
+  };
 
-  // Story oluşturma modal'ını aç
-  const handleCreateStoryClick = () => {
-    setShowCreateModal(true)
-  }
+  const handleCreateStoryClick = () => setShowCreateModal(true);
 
-  // Resim yükleme handler
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      // Dosya boyutu kontrolü (5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('Image size should be less than 5MB')
-        return
+        alert("Image size should be less than 5MB");
+        return;
       }
-
-      // Dosya tipi kontrolü
-      if (!file.type.startsWith('image/')) {
-        alert('Please upload an image file')
-        return
+      if (!file.type.startsWith("image/")) {
+        alert("Please upload an image file");
+        return;
       }
-
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setNewStoryImage(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+      const reader = new FileReader();
+      reader.onloadend = () => setNewStoryImage(reader.result as string);
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
-  // Story oluşturma işlemi
   const handleCreateStory = async () => {
     if (!newStoryText.trim() && !newStoryImage) {
-      alert('Please add text or image to your story')
-      return
+      alert("Please add text or image to your story");
+      return;
     }
-
     try {
-      setUploading(true)
-      
-      const response = await fetch('/api/onesocial/stories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
+      setUploading(true);
+      const response = await fetch("/api/onesocial/stories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           text: newStoryText.trim(),
           images: newStoryImage ? [newStoryImage] : [],
-          type: 'story'
-        })
-      })
-
+          type: "story",
+        }),
+      });
       if (response.ok) {
-        const data = await response.json()
+        const data = await response.json();
         if (data.success) {
-          // Modal'ı kapat ve formu temizle
-          setShowCreateModal(false)
-          setNewStoryText('')
-          setNewStoryImage(null)
-          
-          // Story listesini yenile
-          fetchStories()
-          
-          alert('Story posted successfully!')
+          setShowCreateModal(false);
+          setNewStoryText("");
+          setNewStoryImage(null);
+          fetchStories();
+          alert("Story posted successfully!");
         }
       } else {
-        alert('Failed to create story')
+        alert("Failed to create story");
       }
     } catch (error) {
-      console.error('Error creating story:', error)
-      alert('Error creating story')
+      console.error("Error creating story:", error);
+      alert("Error creating story");
     } finally {
-      setUploading(false)
+      setUploading(false);
     }
-  }
+  };
 
-  // Format stories for StoryComponent
-  const formatStoriesForComponent = () => {
-    return stories.map((storyGroup, index) => ({
+  const formatStoriesForComponent = () =>
+    stories.map((storyGroup, index) => ({
       id: (index + 1).toString(),
       name: storyGroup.user.displayName || storyGroup.user.username,
       photo: storyGroup.user.avatarUrl || defaultAvatar.src,
-      time: new Date(storyGroup.stories[0]?.createdAt || Date.now()).getTime() / 1000,
-      items: storyGroup.stories.map((story, storyIndex) => ({
+      time:
+        new Date(storyGroup.stories[0]?.createdAt || Date.now()).getTime() /
+        1000,
+      items: storyGroup.stories.map((story) => ({
         id: story.id,
-        src: story.images[0] || '',
-        type: story.type === 'video' ? 'video' : 'photo',
-        preview: story.images[0] || '',
+        src: story.images[0] || "",
+        type: story.type === "video" ? "video" : "photo",
+        preview: story.images[0] || "",
         length: 5,
         text: story.text,
-        link: '',
+        link: "",
         linkText: false,
         time: new Date(story.createdAt).getTime() / 1000,
         isViewed: story.isViewed,
-        onView: () => markStoryAsViewed(story.id)
-      }))
-    }))
-  }
+        onView: () => markStoryAsViewed(story.id),
+      })),
+    }));
 
-  // Create Story Modal
   const CreateStoryModal = () => {
-    if (!showCreateModal) return null
+    if (!showCreateModal) return null;
+    
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
@@ -237,15 +210,26 @@ const Stories = () => {
           <div className="p-4">
             <div className="mb-4">
               <textarea
+                ref={textareaRef}
                 value={newStoryText}
-                onChange={(e) => setNewStoryText(e.target.value)}
+                onChange={(e) => {
+                  const textarea = e.target;
+                  const { selectionStart, selectionEnd } = textarea;
+                  setNewStoryText(textarea.value);
+                  setTimeout(() => {
+                    textarea.setSelectionRange(selectionStart, selectionEnd);
+                  }, 0);
+                }}
                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 rows={4}
                 placeholder="What's on your mind?"
                 maxLength={500}
                 disabled={uploading}
+                autoFocus
               />
-              <p className="text-sm text-gray-500 mt-1">{newStoryText.length}/500</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {newStoryText.length}/500
+              </p>
             </div>
 
             <div className="mb-6">
@@ -278,7 +262,9 @@ const Stories = () => {
             </div>
 
             <div className="text-sm text-gray-500 mb-4">
-              <p className="font-semibold mb-1">Story will disappear after 24 hours</p>
+              <p className="font-semibold mb-1">
+                Story will disappear after 24 hours
+              </p>
               <p>Your friends will see this in their stories feed</p>
             </div>
           </div>
@@ -297,20 +283,20 @@ const Stories = () => {
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50"
               disabled={uploading || (!newStoryText.trim() && !newStoryImage)}
             >
-              {uploading ? 'Posting...' : 'Post Story'}
+              {uploading ? "Posting..." : "Post Story"}
             </button>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <>
       <div className="flex gap-2 -mb-3">
         {/* Create Story Button */}
         <div className="relative">
-          <div 
+          <div
             className="
               border-2 border-dashed 
               h-[150px] 
@@ -327,7 +313,7 @@ const Stories = () => {
               transition-colors
               duration-200
               cursor-pointer
-            " 
+            "
             onClick={handleCreateStoryClick}
           >
             <div className="relative">
@@ -353,17 +339,20 @@ const Stories = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Stories List */}
         {loading ? (
           <div className="flex gap-2">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="w-[120px] h-[150px] bg-gray-200 animate-pulse rounded-lg" />
+              <div
+                key={i}
+                className="w-[120px] h-[150px] bg-gray-200 animate-pulse rounded-lg"
+              />
             ))}
           </div>
         ) : stories.length > 0 ? (
-          <StoryComponent 
-            stories={formatStoriesForComponent()} 
+          <StoryComponent
+            stories={formatStoriesForComponent()}
             onStoryView={markStoryAsViewed}
           />
         ) : (
@@ -373,10 +362,9 @@ const Stories = () => {
         )}
       </div>
 
-      {/* Create Story Modal */}
       <CreateStoryModal />
     </>
-  )
-}
+  );
+};
 
-export default Stories
+export default Stories;

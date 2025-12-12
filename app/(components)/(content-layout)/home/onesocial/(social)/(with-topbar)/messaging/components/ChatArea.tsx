@@ -92,6 +92,9 @@ const UserMessage = ({ message, toUser }: { message: ChatMessageType; toUser: Us
   )
 }
 
+
+
+
 const ChatArea = () => {
   const { theme } = useLayoutContext()
   const { activeChat } = useChatContext()

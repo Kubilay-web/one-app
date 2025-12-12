@@ -5,7 +5,8 @@ import { interestsData } from './data'
 import Image from 'next/image'
 import { BsBriefcase, BsCalendarDate, BsEnvelope, BsGeoAlt, BsHeart, BsPencilSquare, BsPlusCircleDotted, BsThreeDots, BsTrash } from 'react-icons/bs'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 
 const Interests = () => {
@@ -45,6 +46,8 @@ const Interests = () => {
     </div>
   )
 }
+
+
 
 const ActionDropdown = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -89,6 +92,26 @@ const ActionDropdown = () => {
 }
 
 const About = () => {
+  const [profile, setProfile] = useState(null)
+
+  // API'den profil bilgilerini al
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get('/api/onesocial/profile')
+        if (response.data.success) {
+          setProfile(response.data.data.user) // API'den gelen veriyi profile state'ine atıyoruz
+        }
+      } catch (error) {
+        console.error("Profile bilgileri alınırken bir hata oluştu:", error)
+      }
+    }
+
+    fetchProfile()
+  }, [])
+
+  if (!profile) return <div>Loading...</div> // Eğer profil verisi gelmemişse, yükleniyor mesajı göster
+
   return (
     <div className="space-y-6">
       {/* Profile Info Card */}
@@ -104,9 +127,7 @@ const About = () => {
               <ActionDropdown />
             </div>
             <p className="text-sm text-gray-600">
-              He moonlights difficult engrossed it, sportsmen. Interested has all Devonshire difficulty gay assistance joy. 
-              Handsome met debating sir dwelling age material. As style lived he worse dried. Offered related so visitors 
-              we private removed. Moderate do subjects to distance.
+              {profile.bio || 'No bio available'} {/* Bio'nun API'den gelen değerini göster */}
             </p>
           </div>
 
@@ -116,7 +137,7 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsCalendarDate className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Born: <span className="ml-1 font-medium text-gray-900">October 20, 1990</span>
+                Born: <span className="ml-1 font-medium text-gray-900">{profile.birthDate || 'Unknown'}</span>
               </p>
               <ActionDropdown />
             </div>
@@ -125,7 +146,7 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsHeart className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Status: <span className="ml-1 font-medium text-gray-900">Single</span>
+                Status: <span className="ml-1 font-medium text-gray-900">{profile.status || 'Unknown'}</span>
               </p>
               <ActionDropdown />
             </div>
@@ -134,7 +155,7 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsBriefcase className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                <span className="font-medium text-gray-900">Lead Developer</span>
+                <span className="font-medium text-gray-900">{profile.job || 'No job information'}</span>
               </p>
               <ActionDropdown />
             </div>
@@ -143,16 +164,7 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsGeoAlt className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Lives in: <span className="ml-1 font-medium text-gray-900">New Hampshire</span>
-              </p>
-              <ActionDropdown />
-            </div>
-
-            {/* Joined */}
-            <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
-              <p className="text-sm text-gray-600">
-                <BsGeoAlt className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Joined on: <span className="ml-1 font-medium text-gray-900">Nov 26, 2019</span>
+                Lives in: <span className="ml-1 font-medium text-gray-900">{profile.location || 'Unknown'}</span>
               </p>
               <ActionDropdown />
             </div>
@@ -161,7 +173,7 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsEnvelope className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Email: <span className="ml-1 font-medium text-gray-900">stackbros07@gmail.com</span>
+                Email: <span className="ml-1 font-medium text-gray-900">{profile.email || 'No email available'}</span>
               </p>
               <ActionDropdown />
             </div>

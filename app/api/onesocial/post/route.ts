@@ -1,57 +1,82 @@
-import { NextRequest, NextResponse } from 'next/server'
-import db from "@/app/lib/db"
-import { validateRequest } from '@/app/auth'
-// GET /api/postsocial - Tüm postları getir (arkadaşların ve kendi postları)
-export async function GET(request: NextRequest) {
+import { NextRequest, NextResponse } from 'next/server';
+import db from "@/app/lib/db";
+import { validateRequest } from '@/app/auth';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Cloudinary konfigürasyonu
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
+});
+
+// Base64'i Cloudinary'e yükleme fonksiyonu
+const uploadBase64ToCloudinary = async (base64Data: string, type: 'image' | 'video' = 'image'): Promise<string> => {
   try {
-    const {user} = await validateRequest()
-    const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const skip = (page - 1) * limit
+    const uploadResult = await cloudinary.uploader.upload(base64Data, {
+      resource_type: type,
+      folder: 'social-posts',
+      transformation: type === 'image' ? [
+        { width: 1000, height: 1000, crop: 'limit' }
+      ] : [],
+    });
+    
+    return uploadResult.secure_url; // Yüklenen medya URL'sini döndürüyoruz
+  } catch (error) {
+    console.error('Cloudinary upload error:', error);
+    throw error;
+  }
+};
 
-    // Kullanıcı ID'si
-    const userId = user?.id
+// POST /api/postsocial - Cloudinary ile yeni post oluştur
+export async function POST(request: NextRequest) {
+  try {
+    const { user } = await validateRequest();
 
-    // Where koşulu: type 'story' olmayan ve arkadaşların postları
-    let whereCondition: any = {
-      type: { not: 'story' } // Story olmayan postlar
+    if (!user?.id) {
+      return NextResponse.json({
+        success: false,
+        error: 'Unauthorized'
+      }, { status: 401 });
     }
 
-    // Kullanıcı giriş yaptıysa, arkadaşlarının ve kendi postlarını göster
-    if (userId) {
-      // Arkadaşları bul
-      const friends = await db.friendRequest.findMany({
-        where: {
-          OR: [
-            { userId, status: 'accepted' },
-            { friendId: userId, status: 'accepted' }
-          ]
-        },
-        select: {
-          userId: true,
-          friendId: true
+    const body = await request.json();
+    let { text, images = [], background, type = 'post' } = body;
+
+    // Base64 resimleri Cloudinary'e yükle
+    const cloudinaryUrls: string[] = [];
+
+    if (images && images.length > 0) {
+      for (const image of images) {
+        if (typeof image === 'string' && image.startsWith('data:')) {
+          try {
+            // Dosya tipini belirle (image veya video)
+            const fileType = image.includes('data:video') ? 'video' : 'image';
+
+            const cloudinaryUrl = await uploadBase64ToCloudinary(image, fileType);
+            cloudinaryUrls.push(cloudinaryUrl);
+          } catch (uploadError) {
+            console.error('Cloudinary upload failed:', uploadError);
+            // Hata durumunda orijinal base64'ü ekle (ama tavsiye edilmez)
+            cloudinaryUrls.push(image); // Veya hata mesajı döndürülebilir.
+          }
+        } else if (typeof image === 'string') {
+          // Zaten URL ise direkt ekle
+          cloudinaryUrls.push(image);
         }
-      })
-
-      // Arkadaş ID'lerini topla
-      const friendIds = friends.flatMap(friend => 
-        friend.userId === userId ? friend.friendId : friend.userId
-      )
-
-      // Kendi ID'yi de ekle
-      const allUserIds = [userId, ...friendIds]
-      whereCondition.userId = { in: allUserIds }
-    } else {
-      // Giriş yapmamışsa public postları göster
-      whereCondition = {
-        type: { not: 'story' }
       }
     }
 
-    // Post'ları getir (comments, likes, reacts, user bilgileri ile)
-    const posts = await db.postSocial.findMany({
-      where: whereCondition,
+    // Yeni post oluştur (Cloudinary URL'leri ile)
+    const post = await db.postSocial.create({
+      data: {
+        type,
+        text,
+        images: cloudinaryUrls, // Cloudinary URL'leri
+        background,
+        userId: user.id,
+        createdAt: new Date(),
+      },
       include: {
         user: {
           select: {
@@ -59,153 +84,10 @@ export async function GET(request: NextRequest) {
             username: true,
             displayName: true,
             avatarUrl: true,
-            bio: true,
-            role: true
-          }
-        },
-        comments: {
-          include: {
-            commentBy: {
-              select: {
-                id: true,
-                username: true,
-                displayName: true,
-                avatarUrl: true
-              }
-            }
           },
-          orderBy: { commentAt: 'desc' },
-          take: 2 // İlk 2 yorumu getir
         },
-        React: {
-          include: {
-            reactBy: {
-              select: {
-                id: true,
-                username: true,
-                displayName: true,
-                avatarUrl: true
-              }
-            }
-          }
-        },
-        SavedPost: {
-          where: userId ? { userId } : undefined,
-          take: 1
-        }
       },
-      orderBy: { createdAt: 'desc' },
-      skip,
-      take: limit
-    })
-
-    // Toplam post sayısı
-    const totalPosts = await db.postSocial.count({
-      where: whereCondition
-    })
-
-    // Post'ları frontend formatına dönüştür
-    const formattedPosts = posts.map(post => ({
-      id: post.id,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
-      caption: post.text,
-      images: post.images,
-      background: post.background,
-      type: post.type,
-      user: {
-        id: post.user.id,
-        name: post.user.displayName || post.user.username,
-        username: post.user.username,
-        avatar: post.user.avatarUrl,
-        bio: post.user.bio,
-        role: post.user.role
-      },
-      likesCount: post.React.filter(r => r.react === 'like' || r.react === 'love' || r.react === 'wow' || r.react === 'haha').length,
-      commentsCount: post.comments.length,
-      sharesCount: 0, // Paylaşım sayısı için ayrı model gerekebilir
-      isLiked: userId ? post.React.some(r => r.reactById === userId && 
-        (r.react === 'like' || r.react === 'love' || r.react === 'wow' || r.react === 'haha')) : false,
-      isSaved: post.SavedPost.length > 0,
-      comments: post.comments.map(comment => ({
-        id: comment.id,
-        content: comment.comment,
-        image: comment.image,
-        createdAt: comment.commentAt,
-        user: {
-          id: comment.commentBy.id,
-          name: comment.commentBy.displayName || comment.commentBy.username,
-          avatar: comment.commentBy.avatarUrl
-        }
-      })),
-      reacts: post.React.map(react => ({
-        id: react.id,
-        type: react.react,
-        userId: react.reactById,
-        user: {
-          id: react.reactBy.id,
-          name: react.reactBy.displayName || react.reactBy.username,
-          avatar: react.reactBy.avatarUrl
-        }
-      }))
-    }))
-
-    return NextResponse.json({
-      success: true,
-      posts: formattedPosts,
-      pagination: {
-        page,
-        limit,
-        total: totalPosts,
-        totalPages: Math.ceil(totalPosts / limit),
-        hasMore: skip + limit < totalPosts
-      }
-    })
-  } catch (error) {
-    console.error('Get posts error:', error)
-    return NextResponse.json({
-      success: false,
-      error: 'Failed to fetch posts'
-    }, { status: 500 })
-  }
-}
-
-// POST /api/postsocial - Yeni post oluştur
-export async function POST(request: NextRequest) {
-  try {
-    const {user} = await validateRequest()
-    
-    if (!user?.id) {
-      return NextResponse.json({
-        success: false,
-        error: 'Unauthorized'
-      }, { status: 401 })
-    }
-
-    const body = await request.json()
-    const { text, images, background, type = 'post' } = body
-
-    // Yeni post oluştur
-    const post = await db.postSocial.create({
-      data: {
-        type,
-        text,
-        images: images || [],
-        background,
-        userId: user.id,
-        createdAt: new Date()
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            displayName: true,
-            avatarUrl: true
-          }
-        }
-      }
-    })
+    });
 
     return NextResponse.json({
       success: true,
@@ -219,22 +101,22 @@ export async function POST(request: NextRequest) {
         user: {
           id: post.user.id,
           name: post.user.displayName || post.user.username,
-          avatar: post.user.avatarUrl
+          avatar: post.user.avatarUrl,
         },
         likesCount: 0,
         commentsCount: 0,
         isLiked: false,
         isSaved: false,
         comments: [],
-        reacts: []
+        reacts: [],
       },
-      message: 'Post created successfully'
-    })
+      message: 'Post created successfully',
+    });
   } catch (error) {
-    console.error('Create post error:', error)
+    console.error('Create post error:', error);
     return NextResponse.json({
       success: false,
       error: 'Failed to create post'
-    }, { status: 500 })
+    }, { status: 500 });
   }
 }

@@ -192,20 +192,20 @@ const ProfilePanel = ({ links }: ProfilePanelProps) => {
                 )}
               </Link>
             </h5>
-            <p className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600">
               {loading ? (
                 <div className="h-4 w-40 mx-auto bg-gray-200 animate-pulse rounded mt-1" />
               ) : (
                 getUserBio()
               )}
-            </p>
-            <p className="mt-3 text-gray-700">
+            </div>
+            <div className="mt-3 text-gray-700">
               {loading ? (
                 <div className="h-12 w-full bg-gray-200 animate-pulse rounded" />
               ) : (
                 getBioText()
               )}
-            </p>
+            </div>
 
             <div className="flex justify-center items-center gap-3 md:gap-6 my-4">
               <div className="text-center">

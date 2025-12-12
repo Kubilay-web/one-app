@@ -1,16 +1,14 @@
-import GlightBox from '../../../components/GlightBox'
-import { getAllMedia } from '../../../helpers/data'
-import type { MediaType } from '../../../types/data'
-import { toAlphaNumber } from '../../../utils/change-casing'
+"use client";
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { BsChatLeftTextFill, BsHeartFill, BsPlayFill } from 'react-icons/bs'
-import { FaCameraRetro } from 'react-icons/fa'
+import { useEffect, useState } from "react";
+import { BsChatLeftTextFill, BsHeartFill, BsPlayFill } from "react-icons/bs";
+import { FaCameraRetro } from "react-icons/fa";
+import Image from "next/image";
+import Link from "next/link";
+import GlightBox from "../../../components/GlightBox";
+import { toAlphaNumber } from "../../../utils/change-casing";
 
-
-
-const VideoCard = ({ comments, image, likes, time }: MediaType) => {
+const VideoCard = ({ comments, image, likes, time, muxPlaybackId }: any) => {
   return (
     <div className="group relative overflow-hidden rounded-lg bg-white">
       {/* Video Thumbnail Container */}
@@ -30,7 +28,7 @@ const VideoCard = ({ comments, image, likes, time }: MediaType) => {
           <GlightBox 
             className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-600" 
             data-glightbox 
-            href="/videos/video-call.mp4"
+            href={`https://stream.mux.com/${muxPlaybackId}.m3u8`} // Mux video URL
           >
             <BsPlayFill className="h-5 w-5" />
           </GlightBox>
@@ -67,43 +65,72 @@ const VideoCard = ({ comments, image, likes, time }: MediaType) => {
   )
 }
 
-const Videos = async () => {
-  const allVideos = await getAllMedia()
-  
+
+const Videos = () => {
+  const [videos, setVideos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch("/api/onesocial/videos");
+        const data = await response.json();
+
+        if (data.success) {
+          setVideos(data.videos);
+        }
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
       {/* Header */}
       <div className="border-b border-gray-100 px-6 py-4">
         <h2 className="text-lg font-semibold text-gray-900">Videos</h2>
       </div>
-      
+
       {/* Body */}
       <div className="p-6">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
           {/* Add Video Card */}
           <div className="relative flex h-full min-h-[180px] items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 text-center transition-colors hover:border-gray-400 hover:bg-gray-50">
-            <Link 
-              href="#" 
+            <Link
+              href="#"
               className="absolute inset-0 flex flex-col items-center justify-center p-4"
             >
               <FaCameraRetro className="mb-2 h-9 w-9 text-gray-400" />
               <h6 className="text-sm font-medium text-gray-600">Add Video</h6>
             </Link>
           </div>
-          
+
           {/* Video Cards */}
-          {allVideos.slice(0, 4).map((video, idx) => (
+          {videos.slice(0, 4).map((video, idx) => (
             <div key={idx}>
-              <VideoCard {...video} />
+              <VideoCard
+                comments={video.stats.comments}
+                image={video.thumbnailUrl}
+                likes={video.stats.likes}
+                time={video.duration}
+                muxPlaybackId={video.muxPlaybackId}
+              />
             </div>
           ))}
         </div>
       </div>
-      
+
       {/* Footer */}
       <div className="border-t border-gray-100 px-6 py-4"></div>
     </div>
-  )
-}
+  );
+};
 
-export default Videos
+export default Videos;

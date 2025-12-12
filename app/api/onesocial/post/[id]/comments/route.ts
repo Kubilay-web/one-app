@@ -66,28 +66,30 @@ export async function GET(
 }
 
 // POST /api/postsocial/[id]/comments - Yeni yorum ekle
+
+
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const {user} = await validateRequest()
+    const { user } = await validateRequest();
     
     if (!user?.id) {
       return NextResponse.json({
         success: false,
         error: 'Unauthorized'
-      }, { status: 401 })
+      }, { status: 401 });
     }
 
-    const body = await request.json()
-    const { content, image } = body
+    const body = await request.json();
+    const { content, image } = body;
 
     if (!content?.trim()) {
       return NextResponse.json({
         success: false,
         error: 'Comment content is required'
-      }, { status: 400 })
+      }, { status: 400 });
     }
 
     // Yeni yorum oluştur
@@ -112,7 +114,7 @@ export async function POST(
           select: { userId: true }
         }
       }
-    })
+    });
 
     // Bildirim oluştur
     if (comment.post.userId !== user.id) {
@@ -126,7 +128,7 @@ export async function POST(
           isRead: false,
           createdAt: new Date()
         }
-      })
+      });
     }
 
     return NextResponse.json({
@@ -143,12 +145,12 @@ export async function POST(
         }
       },
       message: 'Comment added successfully'
-    })
+    });
   } catch (error) {
-    console.error('Add comment error:', error)
+    console.error('Add comment error:', error);
     return NextResponse.json({
       success: false,
       error: 'Failed to add comment'
-    }, { status: 500 })
+    }, { status: 500 });
   }
 }

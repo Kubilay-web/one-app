@@ -5,19 +5,19 @@ export const PROFILE_MENU_ITEMS: MenuItemType[] = [
   {
     key: 'profile-feed',
     label: 'Feed',
-    url: 'home/onesocial/profile/feed',
+    url: '/home/onesocial/profile/feed',
     parentKey: 'pages-profile',
   },
   {
     key: 'profile-about',
     label: 'About',
-    url: 'home/onesocial/profile/about',
+    url: '/home/onesocial/profile/about',
     parentKey: 'pages-profile',
   },
   {
     key: 'profile-connections',
     label: 'Connections',
-    url: 'home/onesocial/profile/connections',
+    url: '/home/onesocial/profile/connections',
     badge: {
       text: '300',
       variant: 'success',
@@ -27,25 +27,25 @@ export const PROFILE_MENU_ITEMS: MenuItemType[] = [
   {
     key: 'profile-media',
     label: 'Media',
-    url: 'home/onesocial/profile/media',
+    url: '/home/onesocial/profile/media',
     parentKey: 'pages-profile',
   },
   {
     key: 'profile-videos',
     label: 'Videos',
-    url: 'home/onesocial/profile/videos',
+    url: '/home/onesocial/profile/videos',
     parentKey: 'pages-profile',
   },
   {
     key: 'profile-events',
     label: 'Events',
-    url: 'home/onesocial/profile/events',
+    url: '/home/onesocial/profile/events',
     parentKey: 'pages-profile',
   },
   {
     key: 'profile-activity',
     label: 'Activity',
-    url: '/profile/activity',
+    url: '/home/social/profile/activity',
     parentKey: 'pages-profile',
   },
 ]
