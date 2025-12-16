@@ -62,11 +62,7 @@ const AboutContent = () => (
 );
 
 
-const FriendsContent = () => (
-  <div>
-    <Friends />
-  </div>
-);
+
 
 const FeedContent = () => (
   <div>
