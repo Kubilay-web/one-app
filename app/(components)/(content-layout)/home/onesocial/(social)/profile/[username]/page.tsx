@@ -44,12 +44,15 @@ import About from "../about/page";
 import Videos from "../videos/page";
 import Feed from "../feed/page";
 import PostList from "../../feed/(container)/posts/page";
+import FriendsPage from "../../feed/(container)/friends/page";
+import { useSession } from "@/app/SessionProvider";
 
 // Tab tiplerini tanımlayalım
 type TabType =
   | "feed"
   | "about"
   | "connections"
+  | "friends"
   | "media"
   | "videos"
   | "events"
@@ -61,8 +64,11 @@ const AboutContent = () => (
   </div>
 );
 
-
-
+const FriendsContent = () => (
+  <div>
+    <FriendsPage />
+  </div>
+);
 
 const FeedContent = () => (
   <div>
@@ -77,10 +83,65 @@ const VideosContent = () => (
 );
 
 // Experience component
-const Experience = ({ experiences }: { experiences: any[] }) => {
-  const [showAll, setShowAll] = useState(false);
 
-  const displayExperiences = showAll ? experiences : experiences.slice(0, 3);
+
+// Experience component'ını güncelleyelim
+const Experience = ({ experiences = [] }: { experiences?: any[] }) => {
+  const [showAll, setShowAll] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [localExperiences, setLocalExperiences] = useState<any[]>(experiences || []);
+  const {user}=useSession();
+
+  // Deneyim verileri değiştiğinde güncelle
+  useEffect(() => {
+    setLocalExperiences(experiences || []);
+  }, []);
+
+  const displayExperiences = showAll 
+    ? localExperiences 
+    : localExperiences.slice(0, 3);
+
+  const handleAddExperience = async () => {
+    // Yeni deneyim ekleme mantığı buraya gelecek
+    console.log("Add experience clicked");
+  };
+
+  const handleEditExperience = async (experienceId: string) => {
+    // Deneyim düzenleme mantığı
+    console.log("Edit experience:", experienceId);
+  };
+
+  const handleDeleteExperience = async (experienceId: string) => {
+    if (!confirm("Are you sure you want to delete this experience?")) return;
+
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/onesocial/experience/${experienceId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (res.ok) {
+        // Başarılı silme durumunda listeden kaldır
+        setLocalExperiences(prev => prev.filter(exp => exp.id !== experienceId));
+      }
+    } catch (error) {
+      console.error('Error deleting experience:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Format tarih fonksiyonu
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    } catch (error) {
+      return dateString;
+    }
+  };
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -88,59 +149,86 @@ const Experience = ({ experiences }: { experiences: any[] }) => {
         <h5 className="text-lg font-semibold text-gray-900 dark:text-white">
           Experience
         </h5>
-        <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30">
+        <button 
+          onClick={handleAddExperience}
+          className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30"
+          title="Add Experience"
+        >
           <FaPlus className="h-4 w-4" />
         </button>
       </div>
       <div className="p-6 pt-0">
-        {displayExperiences.length > 0 ? (
+        {localExperiences.length > 0 ? (
           <>
-            {displayExperiences.map((experience, idx) => (
+            {displayExperiences.map((experience) => (
               <div
                 className="flex items-start py-4 first:pt-6 last:pb-0"
-                key={idx}
+                key={experience.id}
               >
                 <div className="mr-3 flex-shrink-0">
                   <button className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                      <Image
-                        src={experience.logo || "/default-company.png"}
-                        alt={experience.title}
-                        fill
-                        className="object-cover"
-                      />
+                    <div className="relative h-10 w-10 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
+                      {experience.companyLogo ? (
+                        <Image
+                          src={experience.companyLogo}
+                          alt={experience.companyName}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-blue-100 dark:bg-blue-900">
+                          <span className="text-sm font-semibold text-blue-600 dark:text-blue-300">
+                            {experience.companyName?.charAt(0)?.toUpperCase() || 'C'}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </button>
                 </div>
                 <div className="min-w-0 flex-1">
                   <h6 className="text-sm font-semibold text-gray-900 dark:text-white">
-                    <Link
-                      href="#"
-                      className="hover:text-blue-600 dark:hover:text-blue-400"
-                    >
-                      {experience.title}
-                    </Link>
+                    {experience.title}
                   </h6>
-                  <div className="mt-1 flex items-center">
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {experience.companyName}
+                    {experience.location && ` • ${experience.location}`}
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {formatDate(experience.startDate)} - {experience.currentlyWorking ? 'Present' : formatDate(experience.endDate)}
+                  </p>
+                  {experience.description && (
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                       {experience.description}
                     </p>
-                    <Link
-                      href="#"
-                      className="ml-2 rounded-lg bg-blue-50 px-2 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30"
-                    >
-                      Edit
-                    </Link>
-                  </div>
+                  )}
+                  
+                  {/* Edit/Delete Buttons - Sadece kullanıcı kendi profili ise */}
+                  {user && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <button
+                        onClick={() => handleEditExperience(experience.id)}
+                        className="rounded-lg bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteExperience(experience.id)}
+                        disabled={loading}
+                        className="rounded-lg bg-red-50 px-3 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+                      >
+                        {loading ? 'Deleting...' : 'Delete'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
-            {experiences.length > 3 && (
+            {localExperiences.length > 3 && (
               <button
                 onClick={() => setShowAll(!showAll)}
                 className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
               >
-                {showAll ? "Show Less" : `Show All (${experiences.length})`}
+                {showAll ? 'Show Less' : `Show All (${localExperiences.length})`}
               </button>
             )}
           </>
@@ -149,15 +237,21 @@ const Experience = ({ experiences }: { experiences: any[] }) => {
             <p className="text-gray-500 dark:text-gray-400">
               No experience added yet
             </p>
-            <button className="mt-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
-              Add Experience
-            </button>
+            {user && (
+              <button 
+                onClick={handleAddExperience}
+                className="mt-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                Add Experience
+              </button>
+            )}
           </div>
         )}
       </div>
     </div>
   );
 };
+
 
 // Photos component
 const Photos = ({ photos }: { photos: string[] }) => {
@@ -540,6 +634,7 @@ const ProfileLayout = ({ children }: ChildrenType) => {
 
   const user = profileData?.user || {};
   const isCurrentUser = profileData?.isCurrentUser || false;
+  const experiences = profileData?.experiences
 
   console.log("user--", user);
 
@@ -605,9 +700,15 @@ const ProfileLayout = ({ children }: ChildrenType) => {
       icon: null,
       badge: null,
     },
+    // {
+    //   key: "activity",
+    //   label: "Activity",
+    //   icon: null,
+    //   badge: null,
+    // },
     {
-      key: "activity",
-      label: "Activity",
+      key: "friends",
+      label: "Friends",
       icon: null,
       badge: null,
     },
@@ -618,6 +719,8 @@ const ProfileLayout = ({ children }: ChildrenType) => {
     switch (activeTab) {
       case "feed":
         return <FeedContent />;
+      case "friends":
+        return <FriendsContent />;
       case "videos":
         return <VideosContent />;
       case "about":
@@ -911,7 +1014,7 @@ const ProfileLayout = ({ children }: ChildrenType) => {
                 </div>
 
                 {/* Experience */}
-                <Experience experiences={experienceData} />
+                <Experience experiences={experiences} />
 
                 {/* Photos */}
                 <Photos photos={photos} />
