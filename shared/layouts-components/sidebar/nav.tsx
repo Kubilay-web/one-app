@@ -250,7 +250,7 @@ export const getMenuItems = (user) => [
             title: "Home",
           },
           {
-            path: "/home/onesocial/profile/connections",
+            path: `/home/onesocial/profile/${user.username}`,
             type: "link",
             active: false,
             selected: false,

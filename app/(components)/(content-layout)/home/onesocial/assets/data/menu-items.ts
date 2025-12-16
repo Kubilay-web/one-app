@@ -134,7 +134,7 @@ export const APP_MENU_ITEMS: MenuItemType[] = [
       {
         key: 'pages-messaging',
         label: 'Messaging',
-        url: '/messaging',
+        url: '/home/chat',
         parentKey: 'pages',
       },
       {

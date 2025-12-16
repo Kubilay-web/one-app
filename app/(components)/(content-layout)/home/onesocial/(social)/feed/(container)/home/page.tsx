@@ -58,7 +58,7 @@ const Home = async () => {
               latestBlogs.map((blog) => (
                 <div key={blog.id} className="pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
                   <h6 className="font-medium text-gray-800 dark:text-white mb-1 hover:text-blue-500 dark:hover:text-blue-400">
-                    <Link href={`/blogs/${blog.slug}`}>
+                    <Link href="/home/onesocial/blogs">
                       {blog.title}
                     </Link>
                   </h6>
@@ -89,7 +89,7 @@ const Home = async () => {
 
             {/* Load More Button */}
             <div className="pt-2">
-              <Link href="/blogs">
+              <Link href="/home/onesocial/blogs">
                 <LoadContentButton name="View all latest news" />
               </Link>
             </div>

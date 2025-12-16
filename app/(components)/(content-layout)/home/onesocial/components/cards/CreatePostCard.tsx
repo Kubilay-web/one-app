@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   BsBookmarkCheck,
   BsCalendar2EventFill,
@@ -36,97 +36,143 @@ import avatar4 from "@/app/(components)/(content-layout)/home/onesocial/assets/i
 import avatar5 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/05.jpg";
 import avatar6 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/06.jpg";
 import avatar7 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/07.jpg";
+import usePostStore from "@/app/social-store/post";
+import { useSession } from "@/app/SessionProvider";
+
+interface SimpleFileUploadProps {
+  accept: string;
+  multiple?: boolean;
+  onFilesSelected: (files: File[], previewUrls: string[]) => void;
+}
 
 const SimpleFileUpload = ({
   accept,
   multiple = true,
   onFilesSelected,
-}: {
-  accept: string;
-  multiple?: boolean;
-  onFilesSelected: (files: File[]) => void;
-}) => {
+}: SimpleFileUploadProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    console.log("Seçilen dosyalar:", files);
-    onFilesSelected(files);
+    if (files.length === 0) return;
 
-    // Preview oluştur
-    const urls = files.map((file) => URL.createObjectURL(file));
-    setPreviewUrls(urls);
+    // Yeni dosyaları ve preview URL'lerini ekle
+    const newFiles = [...selectedFiles, ...files];
+    const newUrls = files.map((file) => URL.createObjectURL(file));
+    const allUrls = [...previewUrls, ...newUrls];
+
+    setSelectedFiles(newFiles);
+    setPreviewUrls(allUrls);
+
+    // Parent'a gönder
+    onFilesSelected(newFiles, allUrls);
+
+    // Input'u resetle (aynı dosyayı tekrar seçebilmek için)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const removeFile = (index: number) => {
-    // URL'yi temizle
+    // Object URL'yi temizle
     URL.revokeObjectURL(previewUrls[index]);
 
-    const newUrls = [...previewUrls];
-    newUrls.splice(index, 1);
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    const newUrls = previewUrls.filter((_, i) => i !== index);
+
+    setSelectedFiles(newFiles);
     setPreviewUrls(newUrls);
 
-    // Parent component'e güncellenmiş dosya listesini gönder
-    onFilesSelected([]);
+    // Parent'ı güncelle
+    onFilesSelected(newFiles, newUrls);
+  };
+
+  // Component unmount olduğunda object URL'leri temizle
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
+
+  // Video için ikon seçimi
+  const getIcon = () => {
+    if (accept.includes("video")) {
+      return <BsCameraReelsFill className="text-gray-400 text-2xl mb-2" />;
+    }
+    return <BsImageFill className="text-gray-400 text-2xl mb-2" />;
   };
 
   return (
     <div className="mt-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Upload {accept.includes("image") ? "images" : "videos"}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={accept}
+        multiple={multiple}
+        onChange={handleFileChange}
+        className="hidden"
+        id={`file-input-${accept}`}
+      />
+      <label
+        htmlFor={`file-input-${accept}`}
+        className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg hover:border-blue-400 transition-colors"
+      >
+        {getIcon()}
+        <span className="text-gray-600 font-medium">
+          {accept.includes("image") ? "Upload images" : "Upload videos"}
+        </span>
+        <span className="text-gray-500 text-sm mt-1">
+          Click to browse files
+        </span>
+        <span className="text-xs text-gray-400 mt-2">
+          {accept.includes("image")
+            ? "JPG, PNG, GIF supported"
+            : "MP4, MOV, AVI supported"}
+        </span>
       </label>
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
-        <input
-          type="file"
-          accept={accept}
-          multiple={multiple}
-          onChange={handleFileChange}
-          className="hidden"
-          id={`file-input-${accept}`}
-        />
-        <label
-          htmlFor={`file-input-${accept}`}
-          className="cursor-pointer block"
-        >
-          <BsImages className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-600">
-            Click to upload {accept.includes("image") ? "images" : "videos"} or
-            drag & drop
-          </p>
-        </label>
-      </div>
 
-      {/* Preview'lar */}
       {previewUrls.length > 0 && (
         <div className="mt-4">
-          <div className="mb-2 text-sm font-medium text-gray-700">
-            {previewUrls.length}{" "}
-            {accept.includes("image") ? "image(s)" : "video(s)"} selected
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {previewUrls.map((url, index) => (
-              <div key={index} className="relative">
-                {accept.includes("image") ? (
-                  <img
-                    src={url}
-                    alt={`Preview ${index}`}
-                    className="w-full h-32 object-cover rounded-lg"
-                  />
-                ) : (
-                  <video
-                    src={url}
-                    className="w-full h-32 object-cover rounded-lg"
-                    controls
-                    preload="metadata"
-                  />
-                )}
+          <p className="text-sm font-medium text-gray-700 mb-2">
+            Selected {previewUrls.length}{" "}
+            {previewUrls.length === 1 ? "file" : "files"}
+          </p>
+          <div className="grid grid-cols-3 gap-3">
+            {previewUrls.map((url, i) => (
+              <div key={i} className="relative group">
+                <div className="aspect-square overflow-hidden rounded-lg bg-gray-100 border">
+                  {accept.includes("image") ? (
+                    <img
+                      src={url}
+                      alt={`Preview ${i + 1}`}
+                      className="w-full h-full object-cover"
+                      onLoad={() => console.log(`Image ${i} loaded`)}
+                      onError={() => console.log(`Image ${i} failed to load`)}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-800">
+                      <BsCameraReelsFill className="text-white text-2xl" />
+                      <span className="text-xs text-white absolute bottom-1 left-1 bg-black bg-opacity-50 px-1 rounded">
+                        Video
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeFile(i);
+                  }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors z-10"
                   type="button"
-                  onClick={() => removeFile(index)}
-                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                  title="Remove file"
                 >
                   ×
                 </button>
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg" />
               </div>
             ))}
           </div>
@@ -146,6 +192,7 @@ const CreatePostCard = () => {
     avatar6,
     avatar7,
   ];
+
   const { isTrue: isOpenPhoto, toggle: togglePhotoModel } = useToggle();
   const { isTrue: isOpenVideo, toggle: toggleVideoModel } = useToggle();
   const { isTrue: isOpenEvent, toggle: toggleEvent } = useToggle();
@@ -154,17 +201,38 @@ const CreatePostCard = () => {
   const [postContent, setPostContent] = useState("");
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [photoContent, setPhotoContent] = useState(""); // Photo modal için text
-  const [videoContent, setVideoContent] = useState(""); // Video modal için text
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]); // Fotoğraflar
-  const [uploadedVideos, setUploadedVideos] = useState<string[]>([]); // Videolar
-  const [isPostingPhoto, setIsPostingPhoto] = useState(false);
-  const [isPostingVideo, setIsPostingVideo] = useState(false);
-  const [uploadedImageFiles, setUploadedImageFiles] = useState<File[]>([]);
-  const [uploadedVideoFiles, setUploadedVideoFiles] = useState<File[]>([]);
 
-  // File'ı base64'e çevirme fonksiyonunu ekleyin
+  // Photo modal için state'ler
+  const [photoContent, setPhotoContent] = useState("");
+  const [uploadedImageFiles, setUploadedImageFiles] = useState<File[]>([]);
+  const [photoPreviewUrls, setPhotoPreviewUrls] = useState<string[]>([]);
+  const [isPostingPhoto, setIsPostingPhoto] = useState(false);
+  const [cursorPositionPhoto, setCursorPositionPhoto] = useState<number | null>(
+    null
+  );
+
+  // Video modal için state'ler
+  const [videoContent, setVideoContent] = useState("");
+  const [uploadedVideoFiles, setUploadedVideoFiles] = useState<File[]>([]);
+  const [videoPreviewUrls, setVideoPreviewUrls] = useState<string[]>([]);
+  const [isPostingVideo, setIsPostingVideo] = useState(false);
+  const [cursorPositionVideo, setCursorPositionVideo] = useState<number | null>(
+    null
+  );
+
+  // Ana textarea için cursor state
+  const [cursorPosition, setCursorPosition] = useState<number | null>(null);
+  const { user } = useSession();
+  const [isPosting, setIsPosting] = useState(false);
+
+  const { prependPost } = usePostStore();
+
+  // Ana textarea ref'i
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const photoTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const videoTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // File'ı base64'e çevirme fonksiyonu
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -172,18 +240,6 @@ const CreatePostCard = () => {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
-  };
-
-  // DropzoneFormInput callback'lerini güncelleyin
-  const handleImageFiles = (files: any[]) => {
-    // File'ları filtrele
-    const imageFiles = files.filter((item) => item && item instanceof File);
-    setUploadedImageFiles(imageFiles);
-  };
-
-  const handleVideoFiles = (files: any[]) => {
-    const videoFiles = files.filter((item) => item && item instanceof File);
-    setUploadedVideoFiles(videoFiles);
   };
 
   // Kullanıcı avatarını fetch et
@@ -215,6 +271,96 @@ const CreatePostCard = () => {
     fetchUserAvatar();
   }, []);
 
+  // Ana textarea için cursor kontrolü
+  const handleTextareaChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const textarea = e.target;
+      const { selectionStart, value } = textarea;
+
+      setCursorPosition(selectionStart);
+      setPostContent(value);
+    },
+    []
+  );
+
+  // Photo modal textarea için cursor kontrolü
+  const handlePhotoTextareaChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const textarea = e.target;
+      const { selectionStart, value } = textarea;
+
+      setCursorPositionPhoto(selectionStart);
+      setPhotoContent(value);
+    },
+    []
+  );
+
+  // Video modal textarea için cursor kontrolü
+  const handleVideoTextareaChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const textarea = e.target;
+      const { selectionStart, value } = textarea;
+
+      setCursorPositionVideo(selectionStart);
+      setVideoContent(value);
+    },
+    []
+  );
+
+  // Cursor pozisyonlarını restore et
+  useEffect(() => {
+    if (textareaRef.current && cursorPosition !== null) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(cursorPosition, cursorPosition);
+    }
+  }, [postContent, cursorPosition]);
+
+  useEffect(() => {
+    if (photoTextareaRef.current && cursorPositionPhoto !== null) {
+      photoTextareaRef.current.focus();
+      photoTextareaRef.current.setSelectionRange(
+        cursorPositionPhoto,
+        cursorPositionPhoto
+      );
+    }
+  }, [photoContent, cursorPositionPhoto]);
+
+  useEffect(() => {
+    if (videoTextareaRef.current && cursorPositionVideo !== null) {
+      videoTextareaRef.current.focus();
+      videoTextareaRef.current.setSelectionRange(
+        cursorPositionVideo,
+        cursorPositionVideo
+      );
+    }
+  }, [videoContent, cursorPositionVideo]);
+
+  // Photo modal kapandığında state'leri temizle
+  useEffect(() => {
+    if (!isOpenPhoto) {
+      setTimeout(() => {
+        setPhotoContent("");
+        setUploadedImageFiles([]);
+        photoPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+        setPhotoPreviewUrls([]);
+        setCursorPositionPhoto(null);
+      }, 300);
+    }
+  }, [isOpenPhoto]);
+
+  // Video modal kapandığında state'leri temizle
+  useEffect(() => {
+    if (!isOpenVideo) {
+      setTimeout(() => {
+        setVideoContent("");
+        setUploadedVideoFiles([]);
+        videoPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+        setVideoPreviewUrls([]);
+        setCursorPositionVideo(null);
+      }, 300);
+    }
+  }, [isOpenVideo]);
+
   const eventFormSchema = yup.object({
     title: yup.string().required("Please enter event title"),
     description: yup.string().required("Please enter event description"),
@@ -241,6 +387,7 @@ const CreatePostCard = () => {
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 text-2xl"
+              type="button"
             >
               ×
             </button>
@@ -276,113 +423,134 @@ const CreatePostCard = () => {
     );
   };
 
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setPostContent(e.target.value);
-  };
-
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!postContent.trim() || isPosting) return;
 
-    if (postContent.trim()) {
-      try {
-        // Hangi endpoint'i kullandığınızı kontrol edin
-        const response = await fetch("/api/onesocial/post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            text: postContent, // veya content: postContent
-            type: "post",
-          }),
-        });
+    try {
+      setIsPosting(true);
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Post successful:", data);
-          setPostContent("");
-          window.location.reload();
-        }
-      } catch (error) {
-        console.error("Error posting:", error);
-      }
+      const res = await fetch("/api/onesocial/post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          text: postContent,
+          type: "post",
+        }),
+      });
+
+      if (!res.ok) throw new Error("Post failed");
+
+      const data = await res.json();
+
+      prependPost({
+        id: String(data.id),
+        createdAt: data.createdAt ?? new Date().toISOString(),
+        text: data.text ?? postContent,
+        images: [],
+        videos: [],
+        user: {
+          username: user.username ?? "You",
+          avatarUrl: user.avatarUrl ?? "/default-avatar.png",
+        },
+        likesCount: 0,
+        isLiked: false,
+        comments: [],
+        commentsCount: 0,
+      });
+
+      setPostContent("");
+      setCursorPosition(null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsPosting(false);
     }
   };
 
-  // Photo Modal için post işlemi
+  // Photo dosya seçimi handler'ı
+  const handlePhotoFilesSelected = (files: File[], previewUrls: string[]) => {
+    setUploadedImageFiles(files);
+    setPhotoPreviewUrls(previewUrls);
+  };
 
+  // Photo Modal için post işlemi
   const handlePhotoPostSubmit = async () => {
     if (!photoContent.trim() && uploadedImageFiles.length === 0) return;
 
     try {
       setIsPostingPhoto(true);
 
-      // File'ları base64'e çevir
-      const base64Images: string[] = [];
-      for (const file of uploadedImageFiles) {
-        const base64 = await fileToBase64(file);
-        base64Images.push(base64);
-      }
+      const base64Images = await Promise.all(
+        uploadedImageFiles.map(fileToBase64)
+      );
 
-      // API'ye gönder (Cloudinary'e yüklenecek)
-      const response = await fetch("/api/onesocial/post", {
+      const res = await fetch("/api/onesocial/post", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           text: photoContent,
-          images: base64Images, // Base64 resimler
+          images: base64Images,
           type: "post",
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Photo post successful:", data);
-        setPhotoContent("");
-        setUploadedImageFiles([]);
-        togglePhotoModel();
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("Error posting photo:", error);
+      if (!res.ok) throw new Error("Photo post failed");
+
+      const data = await res.json();
+
+      prependPost({
+        id: String(data.id),
+        createdAt: data.createdAt ?? new Date().toISOString(),
+        text: data.text ?? photoContent,
+        images: data.images ?? [],
+        videos: [],
+        user: {
+          username: user.username,
+          avatarUrl: user.avatarUrl,
+        },
+        likesCount: 0,
+        isLiked: false,
+        comments: [],
+        commentsCount: 0,
+      });
+
+      // Modal'ı kapat ve state'leri temizle
+      togglePhotoModel();
+      setPhotoContent("");
+      setUploadedImageFiles([]);
+      photoPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+      setPhotoPreviewUrls([]);
+      setCursorPositionPhoto(null);
+    } catch (err) {
+      console.error(err);
     } finally {
       setIsPostingPhoto(false);
     }
   };
 
-  // Video Modal için post işlemi
+  // Video dosya seçimi handler'ı
+  const handleVideoFilesSelected = (files: File[], previewUrls: string[]) => {
+    setUploadedVideoFiles(files);
+    setVideoPreviewUrls(previewUrls);
+  };
 
   // Video Modal için post işlemi
   const handleVideoPostSubmit = async () => {
     if (!videoContent.trim() && uploadedVideoFiles.length === 0) {
-      console.log("Hata: Video içeriği veya dosya yok");
+      alert("Please add text or video to your post");
       return;
     }
 
     try {
       setIsPostingVideo(true);
-      console.log("Video gönderimi başlıyor...");
 
-      // File'ları base64'e çevir
-      const base64Videos: string[] = [];
-      for (const file of uploadedVideoFiles) {
-        console.log(`Dosya işleniyor: ${file.name} (${file.size} bytes)`);
-        try {
-          const base64 = await fileToBase64(file);
-          base64Videos.push(base64);
-          console.log(`Dosya başarıyla base64'e çevrildi: ${file.name}`);
-        } catch (error) {
-          console.error(`Dosya işleme hatası (${file.name}):`, error);
-        }
-      }
+      const base64Videos = await Promise.all(
+        uploadedVideoFiles.map(fileToBase64)
+      );
 
-      console.log("API isteği hazırlanıyor...");
-
-      // API'ye gönder - videos alanını kullan
       const response = await fetch("/api/onesocial/post", {
         method: "POST",
         headers: {
@@ -391,28 +559,48 @@ const CreatePostCard = () => {
         credentials: "include",
         body: JSON.stringify({
           text: videoContent,
-          videos: base64Videos, // videos olarak gönder
+          videos: base64Videos,
           type: "post",
         }),
       });
 
-      console.log("API yanıtı alındı:", response.status);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Video post successful:", data);
-        setVideoContent("");
-        setUploadedVideoFiles([]);
-        toggleVideoModel();
-        window.location.reload();
-      } else {
+      if (!response.ok) {
         const errorText = await response.text();
-        console.error("API Error:", response.status, errorText);
-        alert(`Video gönderilemedi: ${errorText}`);
+        throw new Error(`API Error: ${errorText}`);
       }
+
+      const data = await response.json();
+
+      prependPost({
+        id: String(data.id),
+        createdAt: data.createdAt ?? new Date().toISOString(),
+        text: data.text ?? videoContent,
+        images: [],
+        videos: data.videos ?? [],
+        user: {
+          username: user.username,
+          avatarUrl: user.avatarUrl,
+        },
+        likesCount: 0,
+        isLiked: false,
+        comments: [],
+        commentsCount: 0,
+      });
+
+      // Modal'ı kapat ve state'leri temizle
+      toggleVideoModel();
+      setVideoContent("");
+      setUploadedVideoFiles([]);
+      videoPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+      setVideoPreviewUrls([]);
+      setCursorPositionVideo(null);
+
+      alert("Video posted successfully!");
     } catch (error) {
       console.error("Error posting video:", error);
-      alert(`Hata: ${error}`);
+      alert(
+        `Error: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     } finally {
       setIsPostingVideo(false);
     }
@@ -422,14 +610,14 @@ const CreatePostCard = () => {
     <>
       <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
         <div className="flex mb-3">
-          <div className="relative w-8 h-8 mr-2">
+          <div className="relative w-8 h-8 mr-2 flex-shrink-0">
             <span role="button" className="cursor-pointer">
               {loading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
               ) : (
                 <Image
                   className="rounded-full object-cover w-full h-full"
-                  src={userAvatar}
+                  src={userAvatar || avatar3}
                   alt="User avatar"
                   width={32}
                   height={32}
@@ -442,11 +630,21 @@ const CreatePostCard = () => {
           <form className="w-full" onSubmit={handlePostSubmit}>
             <textarea
               ref={textareaRef}
-              className="w-full p-2 border-0 focus:outline-none focus:ring-0 resize-none"
+              className="w-full p-2 border-0 focus:outline-none focus:ring-0 resize-none placeholder-gray-500"
               rows={2}
               placeholder="Share your thoughts..."
               onChange={handleTextareaChange}
               value={postContent}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const textarea = e.target as HTMLTextAreaElement;
+                  setCursorPosition(textarea.selectionStart + 1);
+                }
+              }}
+              onSelect={(e) => {
+                const textarea = e.target as HTMLTextAreaElement;
+                setCursorPosition(textarea.selectionStart);
+              }}
             />
 
             {/* Post butonu - yazı yazılınca görünür */}
@@ -454,9 +652,19 @@ const CreatePostCard = () => {
               <div className="flex justify-end mt-3">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  disabled={isPosting}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2
+                    ${
+                      isPosting
+                        ? "bg-blue-400 cursor-not-allowed"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    }
+                    text-white transition-colors`}
                 >
-                  Post
+                  {isPosting && (
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  )}
+                  {isPosting ? "Posting..." : "Post"}
                 </button>
               </div>
             )}
@@ -467,6 +675,7 @@ const CreatePostCard = () => {
           <button
             className="flex items-center bg-gray-100 hover:bg-gray-200 py-1 px-2 rounded transition-colors"
             onClick={togglePhotoModel}
+            type="button"
           >
             <BsImageFill size={20} className="text-green-500 mr-2" />
             Photo
@@ -474,6 +683,7 @@ const CreatePostCard = () => {
           <button
             className="flex items-center bg-gray-100 hover:bg-gray-200 py-1 px-2 rounded transition-colors"
             onClick={toggleVideoModel}
+            type="button"
           >
             <BsCameraReelsFill size={20} className="text-blue-500 mr-2" />
             Video
@@ -481,6 +691,7 @@ const CreatePostCard = () => {
           <button
             className="flex items-center bg-gray-100 hover:bg-gray-200 py-1 px-2 rounded transition-colors"
             onClick={toggleEvent}
+            type="button"
           >
             <BsCalendar2EventFill size={20} className="text-red-500 mr-2" />
             Event
@@ -488,6 +699,7 @@ const CreatePostCard = () => {
           <button
             className="flex items-center bg-gray-100 hover:bg-gray-200 py-1 px-2 rounded transition-colors"
             onClick={togglePost}
+            type="button"
           >
             <BsEmojiSmileFill size={20} className="text-yellow-500 mr-2" />
             Feeling /Activity
@@ -497,6 +709,7 @@ const CreatePostCard = () => {
             <button
               className="flex items-center bg-gray-100 hover:bg-gray-200 py-1 px-2 rounded transition-colors"
               onClick={() => setDropdownOpen(!dropdownOpen)}
+              type="button"
             >
               <BsThreeDots />
             </button>
@@ -537,7 +750,6 @@ const CreatePostCard = () => {
       </div>
 
       {/* Photo Modal */}
-
       <Modal
         isOpen={isOpenPhoto}
         onClose={togglePhotoModel}
@@ -545,7 +757,7 @@ const CreatePostCard = () => {
       >
         <div className="p-4">
           <div className="flex mb-3">
-            <div className="relative w-8 h-8 mr-2">
+            <div className="relative w-8 h-8 mr-2 flex-shrink-0">
               {loading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
               ) : (
@@ -560,11 +772,23 @@ const CreatePostCard = () => {
             </div>
             <div className="w-full">
               <textarea
-                className="w-full p-2 text-xl leading-tight border-0 focus:outline-none focus:ring-0 resize-none"
-                rows={2}
+                ref={photoTextareaRef}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none placeholder-gray-500"
+                rows={3}
                 placeholder="Share your thoughts..."
                 value={photoContent}
-                onChange={(e) => setPhotoContent(e.target.value)}
+                onChange={handlePhotoTextareaChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const textarea = e.target as HTMLTextAreaElement;
+                    setCursorPositionPhoto(textarea.selectionStart + 1);
+                  }
+                }}
+                onSelect={(e) => {
+                  const textarea = e.target as HTMLTextAreaElement;
+                  setCursorPositionPhoto(textarea.selectionStart);
+                }}
+                disabled={isPostingPhoto}
               />
             </div>
           </div>
@@ -573,13 +797,13 @@ const CreatePostCard = () => {
           <SimpleFileUpload
             accept="image/*"
             multiple={true}
-            onFilesSelected={(files: File[]) => setUploadedImageFiles(files)}
+            onFilesSelected={handlePhotoFilesSelected}
           />
         </div>
         <ModalFooter>
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md"
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors disabled:opacity-50"
             onClick={togglePhotoModel}
             disabled={isPostingPhoto}
           >
@@ -587,20 +811,24 @@ const CreatePostCard = () => {
           </button>
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-md disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handlePhotoPostSubmit}
             disabled={
               isPostingPhoto ||
               (!photoContent.trim() && uploadedImageFiles.length === 0)
             }
           >
-            {isPostingPhoto ? "Posting..." : "Post"}
+            {isPostingPhoto ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                Posting...
+              </>
+            ) : (
+              "Post"
+            )}
           </button>
         </ModalFooter>
       </Modal>
-      {/* Photo Modal */}
-
-      {/* Video Modal */}
 
       {/* Video Modal */}
       <Modal
@@ -610,7 +838,7 @@ const CreatePostCard = () => {
       >
         <div className="p-4">
           <div className="flex mb-3">
-            <div className="relative w-8 h-8 mr-2">
+            <div className="relative w-8 h-8 mr-2 flex-shrink-0">
               {loading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
               ) : (
@@ -625,51 +853,74 @@ const CreatePostCard = () => {
             </div>
             <div className="w-full">
               <textarea
-                className="w-full p-2 text-xl leading-tight border-0 focus:outline-none focus:ring-0 resize-none"
-                rows={2}
+                ref={videoTextareaRef}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none placeholder-gray-500"
+                rows={3}
                 placeholder="Share your thoughts..."
                 value={videoContent}
-                onChange={(e) => setVideoContent(e.target.value)}
+                onChange={handleVideoTextareaChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const textarea = e.target as HTMLTextAreaElement;
+                    setCursorPositionVideo(textarea.selectionStart + 1);
+                  }
+                }}
+                onSelect={(e) => {
+                  const textarea = e.target as HTMLTextAreaElement;
+                  setCursorPositionVideo(textarea.selectionStart);
+                }}
+                disabled={isPostingVideo}
               />
             </div>
           </div>
 
-          {/* DROPZONE DEĞİL, SimpleFileUpload KULLANIN */}
           <SimpleFileUpload
             accept="video/*"
             multiple={true}
-            onFilesSelected={(files: File[]) => setUploadedVideoFiles(files)}
+            onFilesSelected={handleVideoFilesSelected}
           />
 
-          {/* Debug bilgisi */}
-          <div className="mt-4 p-3 bg-gray-50 rounded text-sm">
-            <p className="font-medium mb-1">Information:</p>
-            <p>Choice Video Files: {uploadedVideoFiles.length}</p>
-            {uploadedVideoFiles.length > 0 && (
-              <p className="text-xs mt-1">
-                File: {uploadedVideoFiles[0].name} -{" "}
-                {(uploadedVideoFiles[0].size / 1024 / 1024).toFixed(2)} MB
+          {/* Bilgi kutusu */}
+          {uploadedVideoFiles.length > 0 && (
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+              <p className="text-sm font-medium text-blue-700 mb-1">
+                Selected {uploadedVideoFiles.length} video(s)
               </p>
-            )}
-          </div>
+              <ul className="text-xs text-blue-600">
+                {uploadedVideoFiles.map((file, i) => (
+                  <li key={i} className="truncate">
+                    • {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <ModalFooter>
           <button
             type="button"
-            className="flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md"
+            className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors disabled:opacity-50"
+            disabled={isPostingVideo}
           >
             <BsCameraVideoFill className="mr-1" /> Live video
           </button>
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-md disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleVideoPostSubmit}
             disabled={
               isPostingVideo ||
               (!videoContent.trim() && uploadedVideoFiles.length === 0)
             }
           >
-            {isPostingVideo ? "Posting..." : "Post"}
+            {isPostingVideo ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                Posting...
+              </>
+            ) : (
+              "Post"
+            )}
           </button>
         </ModalFooter>
       </Modal>
@@ -775,14 +1026,14 @@ const CreatePostCard = () => {
           <ModalFooter>
             <button
               type="button"
-              className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
               onClick={toggleEvent}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-md"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
             >
               Create now
             </button>
@@ -794,7 +1045,7 @@ const CreatePostCard = () => {
       <Modal isOpen={isOpenPost} onClose={togglePost} title="Create post">
         <div className="p-4">
           <div className="flex mb-3">
-            <div className="relative w-8 h-8 mr-2">
+            <div className="relative w-8 h-8 mr-2 flex-shrink-0">
               {loading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
               ) : (
@@ -809,7 +1060,7 @@ const CreatePostCard = () => {
             </div>
             <form className="w-full">
               <textarea
-                className="w-full p-2 text-xl leading-tight border-0 focus:outline-none focus:ring-0 resize-none"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none placeholder-gray-500"
                 rows={4}
                 placeholder="Share your thoughts..."
                 defaultValue={""}
@@ -819,7 +1070,7 @@ const CreatePostCard = () => {
           <div className="flex gap-2 flex-wrap">
             <Tooltip text="Photo">
               <Link
-                className="w-10 h-10 flex items-center justify-center bg-green-50 text-green-600 rounded-full hover:bg-green-100"
+                className="w-10 h-10 flex items-center justify-center bg-green-50 text-green-600 rounded-full hover:bg-green-100 transition-colors"
                 href="#"
               >
                 <BsImageFill />
@@ -827,7 +1078,7 @@ const CreatePostCard = () => {
             </Tooltip>
             <Tooltip text="Video">
               <Link
-                className="w-10 h-10 flex items-center justify-center bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100"
+                className="w-10 h-10 flex items-center justify-center bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors"
                 href="#"
               >
                 <BsCameraReelsFill />
@@ -835,7 +1086,7 @@ const CreatePostCard = () => {
             </Tooltip>
             <Tooltip text="Events">
               <Link
-                className="w-10 h-10 flex items-center justify-center bg-red-50 text-red-600 rounded-full hover:bg-red-100"
+                className="w-10 h-10 flex items-center justify-center bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-colors"
                 href="#"
               >
                 <BsCalendar2EventFill />
@@ -843,7 +1094,7 @@ const CreatePostCard = () => {
             </Tooltip>
             <Tooltip text="Feeling/Activity">
               <Link
-                className="w-10 h-10 flex items-center justify-center bg-yellow-50 text-yellow-600 rounded-full hover:bg-yellow-100"
+                className="w-10 h-10 flex items-center justify-center bg-yellow-50 text-yellow-600 rounded-full hover:bg-yellow-100 transition-colors"
                 href="#"
               >
                 <BsEmojiSmileFill />
@@ -851,7 +1102,7 @@ const CreatePostCard = () => {
             </Tooltip>
             <Tooltip text="Check in">
               <Link
-                className="w-10 h-10 flex items-center justify-center bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200"
+                className="w-10 h-10 flex items-center justify-center bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
                 href="#"
               >
                 <BsGeoAltFill />
@@ -859,7 +1110,7 @@ const CreatePostCard = () => {
             </Tooltip>
             <Tooltip text="Tag people on top">
               <Link
-                className="w-10 h-10 flex items-center justify-center bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100"
+                className="w-10 h-10 flex items-center justify-center bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors"
                 href="#"
               >
                 <BsTagFill />
@@ -871,7 +1122,7 @@ const CreatePostCard = () => {
           <div className="w-1/4">
             <ChoicesFormInput
               options={{ searchEnabled: false }}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               data-position="top"
               data-search-enabled="false"
             >
@@ -884,13 +1135,13 @@ const CreatePostCard = () => {
           <div className="w-3/4 text-right">
             <button
               type="button"
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md mr-2"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md mr-2 transition-colors"
             >
               <BsCameraVideoFill className="mr-1" /> Live video
             </button>
             <button
               type="button"
-              className="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-md"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
             >
               Post
             </button>

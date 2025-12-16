@@ -20,6 +20,7 @@ import { useLayoutContext } from "../../../context/useLayoutContext";
 import clsx from "clsx";
 import { developedByLink } from "../../../context/constants";
 import Link from "next/link";
+import { useSession } from "@/app/SessionProvider";
 
 type ThemeModeType = {
   theme: ThemeType;
@@ -45,6 +46,7 @@ const ProfileDropdown = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const {user}=useSession();
 
   const themeModes: ThemeModeType[] = [
     {
@@ -220,7 +222,7 @@ const ProfileDropdown = () => {
             </div>
             <Link
               className="block w-full mt-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium rounded-lg text-center hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-              href="home/onesocial/profile/feed"
+              href={`/home/onesocial/profile/${user.username}`}
             >
               View profile
             </Link>
@@ -229,14 +231,14 @@ const ProfileDropdown = () => {
           <div className="py-2">
             <Link 
               className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              href="/settings/account"
+              href="/home/onesocial/settings/account"
             >
               <BsGear className="mr-2" />
               Settings &amp; Privacy
             </Link>
             <Link 
               className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              href={developedByLink}
+              href="#"
               target="_blank"
               rel="noreferrer"
             >
@@ -257,15 +259,15 @@ const ProfileDropdown = () => {
             
             <Link
               className="flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-              href="/auth-advance/sign-in"
+              href="/"
             >
               <BsPower className="mr-2" />
               Sign Out
             </Link>
             
-            <hr className="my-2 border-gray-200 dark:border-gray-700" />
+            {/* <hr className="my-2 border-gray-200 dark:border-gray-700" /> */}
             
-            <div className="flex items-center justify-center gap-3 p-2 pt-0">
+            {/* <div className="flex items-center justify-center gap-3 p-2 pt-0">
               <span className="text-sm text-gray-600 dark:text-gray-400">Mode:</span>
               {themeModes.map(({ icon: Icon, theme }, idx) => (
                 <div 
@@ -289,7 +291,7 @@ const ProfileDropdown = () => {
                   </button>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       )}

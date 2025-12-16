@@ -1,8 +1,8 @@
 "use client";
+
 import { FaPlus } from "react-icons/fa6";
 import dynamic from "next/dynamic";
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 const StoryComponent = dynamic(() => import("./StoryComponent"), {
@@ -12,14 +12,13 @@ const StoryComponent = dynamic(() => import("./StoryComponent"), {
 // Default avatar
 import defaultAvatar from "@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/03.jpg";
 
+/* ---------------- TYPES ---------------- */
+
 type StoryItem = {
   id: string;
   type: string;
   text?: string;
   images: string[];
-  background?: string;
-  expiresAt?: string;
-  viewers?: string;
   createdAt: string;
   isViewed: boolean;
 };
@@ -37,16 +36,46 @@ type StoryGroup = {
   hasUnviewed: boolean;
 };
 
+/* ---------------- CLOUDINARY ---------------- */
+
+const uploadToCloudinary = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append(
+    "upload_preset",
+    process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME!
+  );
+  formData.append("folder", "stories");
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  const data = await res.json();
+  return data.secure_url;
+};
+
+/* ---------------- COMPONENT ---------------- */
+
 const Stories = () => {
   const [stories, setStories] = useState<StoryGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newStoryText, setNewStoryText] = useState("");
   const [newStoryImage, setNewStoryImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const router = useRouter();
-  const textareaRef = useRef<HTMLTextAreaElement>(null); // cursor kontrolü için ref
+
+  /* ---------------- FETCH ---------------- */
 
   useEffect(() => {
     fetchStories();
@@ -56,313 +85,227 @@ const Stories = () => {
     try {
       setLoading(true);
 
-      const storiesResponse = await fetch("/api/onesocial/stories", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
+      const storiesRes = await fetch("/api/onesocial/stories", {
         credentials: "include",
         cache: "no-store",
       });
 
-      if (storiesResponse.ok) {
-        const data = await storiesResponse.json();
+      if (storiesRes.ok) {
+        const data = await storiesRes.json();
         if (data.success) setStories(data.stories);
       }
 
-      const userResponse = await fetch("/api/onesocial/user", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
+      const userRes = await fetch("/api/onesocial/user", {
         credentials: "include",
       });
 
-      if (userResponse.ok) {
-        const userData = await userResponse.json();
-        if (userData.success && userData.user?.avatarUrl)
-          setUserAvatar(userData.user.avatarUrl);
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        if (userData.success) setUserAvatar(userData.user?.avatarUrl);
       }
-    } catch (error) {
-      console.error("Error fetching stories:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  /* ---------------- STORY VIEW ---------------- */
+
   const markStoryAsViewed = async (storyId: string) => {
-    try {
-      await fetch(`/api/onesocial/stories/${storyId}/view`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
+    await fetch(`/api/onesocial/stories/${storyId}/view`, {
+      method: "POST",
+      credentials: "include",
+    });
 
-      setStories((prev) =>
-        prev.map((group) => ({
-          ...group,
-          stories: group.stories.map((story) =>
-            story.id === storyId ? { ...story, isViewed: true } : story
-          ),
-          hasUnviewed: group.stories.some(
-            (s) => !s.isViewed && s.id !== storyId
-          ),
-        }))
-      );
-    } catch (error) {
-      console.error("Error marking story as viewed:", error);
-    }
+    setStories((prev) =>
+      prev.map((group) => ({
+        ...group,
+        stories: group.stories.map((s) =>
+          s.id === storyId ? { ...s, isViewed: true } : s
+        ),
+        hasUnviewed: group.stories.some(
+          (s) => !s.isViewed && s.id !== storyId
+        ),
+      }))
+    );
   };
 
-  const handleCreateStoryClick = () => setShowCreateModal(true);
+  /* ---------------- IMAGE UPLOAD ---------------- */
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Image size should be less than 5MB");
-        return;
-      }
-      if (!file.type.startsWith("image/")) {
-        alert("Please upload an image file");
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => setNewStoryImage(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Only image files allowed");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image must be < 5MB");
+      return;
+    }
+
+    try {
+      setUploading(true);
+      const imageUrl = await uploadToCloudinary(file);
+      setNewStoryImage(imageUrl);
+    } catch {
+      alert("Image upload failed");
+    } finally {
+      setUploading(false);
     }
   };
+
+  /* ---------------- CREATE STORY ---------------- */
 
   const handleCreateStory = async () => {
     if (!newStoryText.trim() && !newStoryImage) {
-      alert("Please add text or image to your story");
+      alert("Add text or image");
       return;
     }
+
     try {
       setUploading(true);
-      const response = await fetch("/api/onesocial/stories", {
+
+      const res = await fetch("/api/onesocial/stories", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: newStoryText.trim(),
           images: newStoryImage ? [newStoryImage] : [],
           type: "story",
         }),
       });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          setShowCreateModal(false);
-          setNewStoryText("");
-          setNewStoryImage(null);
-          fetchStories();
-          alert("Story posted successfully!");
-        }
-      } else {
-        alert("Failed to create story");
-      }
-    } catch (error) {
-      console.error("Error creating story:", error);
-      alert("Error creating story");
+
+      if (!res.ok) throw new Error();
+
+      setShowCreateModal(false);
+      setNewStoryText("");
+      setNewStoryImage(null);
+      fetchStories();
+    } catch {
+      alert("Story create failed");
     } finally {
       setUploading(false);
     }
   };
 
+  /* ---------------- FORMAT ---------------- */
+
   const formatStoriesForComponent = () =>
-    stories.map((storyGroup, index) => ({
+    stories.map((group, index) => ({
       id: (index + 1).toString(),
-      name: storyGroup.user.displayName || storyGroup.user.username,
-      photo: storyGroup.user.avatarUrl || defaultAvatar.src,
-      time:
-        new Date(storyGroup.stories[0]?.createdAt || Date.now()).getTime() /
-        1000,
-      items: storyGroup.stories.map((story) => ({
+      name: group.user.displayName || group.user.username,
+      photo: group.user.avatarUrl || defaultAvatar.src,
+      time: Date.now() / 1000,
+      items: group.stories.map((story) => ({
         id: story.id,
         src: story.images[0] || "",
-        type: story.type === "video" ? "video" : "photo",
         preview: story.images[0] || "",
+        type: "photo",
         length: 5,
         text: story.text,
-        link: "",
-        linkText: false,
         time: new Date(story.createdAt).getTime() / 1000,
         isViewed: story.isViewed,
         onView: () => markStoryAsViewed(story.id),
       })),
     }));
 
-  const CreateStoryModal = () => {
-    if (!showCreateModal) return null;
-    
-
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-        <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-          <div className="flex justify-between items-center p-4 border-b">
-            <h3 className="text-lg font-semibold">Create a Story</h3>
-            <button
-              onClick={() => setShowCreateModal(false)}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
-              disabled={uploading}
-            >
-              ×
-            </button>
-          </div>
-
-          <div className="p-4">
-            <div className="mb-4">
-              <textarea
-                ref={textareaRef}
-                value={newStoryText}
-                onChange={(e) => {
-                  const textarea = e.target;
-                  const { selectionStart, selectionEnd } = textarea;
-                  setNewStoryText(textarea.value);
-                  setTimeout(() => {
-                    textarea.setSelectionRange(selectionStart, selectionEnd);
-                  }, 0);
-                }}
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={4}
-                placeholder="What's on your mind?"
-                maxLength={500}
-                disabled={uploading}
-                autoFocus
-              />
-              <p className="text-sm text-gray-500 mt-1">
-                {newStoryText.length}/500
-              </p>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-gray-700 mb-2">Add Photo</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="w-full p-2 border rounded-lg"
-                disabled={uploading}
-              />
-              {newStoryImage && (
-                <div className="mt-3 relative">
-                  <Image
-                    src={newStoryImage}
-                    alt="Story preview"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto rounded-lg object-cover"
-                  />
-                  <button
-                    onClick={() => setNewStoryImage(null)}
-                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                    disabled={uploading}
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="text-sm text-gray-500 mb-4">
-              <p className="font-semibold mb-1">
-                Story will disappear after 24 hours
-              </p>
-              <p>Your friends will see this in their stories feed</p>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 p-4 border-t">
-            <button
-              type="button"
-              onClick={() => setShowCreateModal(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg"
-              disabled={uploading}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleCreateStory}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50"
-              disabled={uploading || (!newStoryText.trim() && !newStoryImage)}
-            >
-              {uploading ? "Posting..." : "Post Story"}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  /* ---------------- UI ---------------- */
 
   return (
     <>
       <div className="flex gap-2 -mb-3">
-        {/* Create Story Button */}
-        <div className="relative">
-          <div
-            className="
-              border-2 border-dashed 
-              h-[150px] 
-              w-[120px]
-              shadow-none 
-              flex 
-              items-center 
-              justify-center 
-              text-center 
-              rounded-lg
-              bg-white
-              border-gray-300
-              hover:border-gray-400
-              transition-colors
-              duration-200
-              cursor-pointer
-            "
-            onClick={handleCreateStoryClick}
-          >
-            <div className="relative">
-              <div className="relative w-12 h-12 mx-auto mb-2">
-                <div className="w-full h-full rounded-full overflow-hidden border-2 border-white">
-                  {userAvatar ? (
-                    <Image
-                      src={userAvatar}
-                      alt="Your avatar"
-                      width={48}
-                      height={48}
-                      className="object-cover w-full h-full"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 rounded-full" />
-                  )}
-                </div>
-                <div className="absolute -bottom-1 -right-1 bg-blue-600 rounded-full w-6 h-6 flex items-center justify-center border-2 border-white">
-                  <FaPlus className="text-white text-xs" />
-                </div>
+        {/* CREATE STORY */}
+        <div
+          onClick={() => setShowCreateModal(true)}
+          className="h-[150px] w-[120px] border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer bg-white"
+        >
+          <div className="text-center">
+            <div className="relative w-12 h-12 mx-auto mb-2">
+              <Image
+                src={userAvatar || defaultAvatar}
+                alt="avatar"
+                fill
+                className="rounded-full object-cover"
+              />
+              <div className="absolute -bottom-1 -right-1 bg-blue-600 w-6 h-6 rounded-full flex items-center justify-center">
+                <FaPlus className="text-white text-xs" />
               </div>
-              <h6 className="text-sm text-gray-600 font-medium">Create story</h6>
             </div>
+            <p className="text-sm text-gray-600">Create story</p>
           </div>
         </div>
 
-        {/* Stories List */}
+        {/* STORIES */}
         {loading ? (
           <div className="flex gap-2">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="w-[120px] h-[150px] bg-gray-200 animate-pulse rounded-lg"
+                className="w-[120px] h-[150px] bg-gray-200 rounded-lg animate-pulse"
               />
             ))}
           </div>
         ) : stories.length > 0 ? (
-          <StoryComponent
-            stories={formatStoriesForComponent()}
-            onStoryView={markStoryAsViewed}
-          />
+          <StoryComponent stories={formatStoriesForComponent()} />
         ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-gray-500 text-sm">No stories from friends yet</p>
-          </div>
+          <p className="text-sm text-gray-500">No stories yet</p>
         )}
       </div>
 
-      <CreateStoryModal />
+      {/* MODAL */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+          <div className="bg-white rounded-lg w-full max-w-md">
+            <div className="p-4 border-b font-semibold">Create Story</div>
+
+            <div className="p-4">
+              <textarea
+                value={newStoryText}
+                onChange={(e) => setNewStoryText(e.target.value)}
+                className="w-full border rounded-lg p-3"
+                placeholder="What's on your mind?"
+                maxLength={500}
+                autoFocus
+              />
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="mt-3"
+              />
+
+              {newStoryImage && (
+                <Image
+                  src={newStoryImage}
+                  alt="preview"
+                  width={400}
+                  height={300}
+                  className="mt-3 rounded-lg"
+                />
+              )}
+            </div>
+
+            <div className="flex justify-end gap-2 p-4 border-t">
+              <button onClick={() => setShowCreateModal(false)}>
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateStory}
+                disabled={uploading}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+              >
+                {uploading ? "Posting..." : "Post"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -1,13 +1,23 @@
-"use client"
+"use client";
 
-
-import { interestsData } from './data'
-import Image from 'next/image'
-import { BsBriefcase, BsCalendarDate, BsEnvelope, BsGeoAlt, BsHeart, BsPencilSquare, BsPlusCircleDotted, BsThreeDots, BsTrash } from 'react-icons/bs'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-
+import { interestsData } from "./data";
+import Image from "next/image";
+import {
+  BsBriefcase,
+  BsCalendarDate,
+  BsEnvelope,
+  BsGeoAlt,
+  BsHeart,
+  BsPencilSquare,
+  BsPlusCircleDotted,
+  BsThreeDots,
+  BsTrash,
+} from "react-icons/bs";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "next/navigation";
+import { useSession } from "@/app/SessionProvider";
 
 const Interests = () => {
   return (
@@ -37,20 +47,20 @@ const Interests = () => {
                   </Link>
                   {item.name}
                 </h6>
-                <p className="truncate text-xs text-gray-500">{item.description}</p>
+                <p className="truncate text-xs text-gray-500">
+                  {item.description}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
-}
-
-
+  );
+};
 
 const ActionDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative ml-auto">
@@ -88,29 +98,37 @@ const ActionDropdown = () => {
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
 const About = () => {
-  const [profile, setProfile] = useState(null)
+  const [profile, setProfile] = useState(null);
+  const params = useParams();
+  const { user } = useSession();
+  const usernames = user.username;
 
   // API'den profil bilgilerini al
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('/api/onesocial/profile')
+        const response = await axios.get(
+          `/api/onesocial/profile/${usernames}`
+        );
         if (response.data.success) {
-          setProfile(response.data.data.user) // API'den gelen veriyi profile state'ine atıyoruz
+          setProfile(response.data.data.user);
         }
       } catch (error) {
-        console.error("Profile bilgileri alınırken bir hata oluştu:", error)
+        console.error("Profile bilgileri alınırken bir hata oluştu:", error);
       }
+    };
+
+    if (usernames) {
+      fetchProfile();
     }
+  }, [usernames]); // user.username değiştiğinde fetchProfile tekrar çalışır
 
-    fetchProfile()
-  }, [])
-
-  if (!profile) return <div>Loading...</div> // Eğer profil verisi gelmemişse, yükleniyor mesajı göster
+  if (!profile) return <div>Loading...</div>; // Eğer profil verisi gelmemişse, yükleniyor mesajı göster
 
   return (
     <div className="space-y-6">
@@ -127,7 +145,8 @@ const About = () => {
               <ActionDropdown />
             </div>
             <p className="text-sm text-gray-600">
-              {profile.bio || 'No bio available'} {/* Bio'nun API'den gelen değerini göster */}
+              {profile.bio || "No bio available"}{" "}
+              {/* Bio'nun API'den gelen değerini göster */}
             </p>
           </div>
 
@@ -137,7 +156,10 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsCalendarDate className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Born: <span className="ml-1 font-medium text-gray-900">{profile.birthDate || 'Unknown'}</span>
+                Born:{" "}
+                <span className="ml-1 font-medium text-gray-900">
+                  {profile.birthDate || "Unknown"}
+                </span>
               </p>
               <ActionDropdown />
             </div>
@@ -146,7 +168,10 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsHeart className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Status: <span className="ml-1 font-medium text-gray-900">{profile.status || 'Unknown'}</span>
+                Status:{" "}
+                <span className="ml-1 font-medium text-gray-900">
+                  {profile.status || "Unknown"}
+                </span>
               </p>
               <ActionDropdown />
             </div>
@@ -155,7 +180,9 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsBriefcase className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                <span className="font-medium text-gray-900">{profile.job || 'No job information'}</span>
+                <span className="font-medium text-gray-900">
+                  {profile.job || "No job information"}
+                </span>
               </p>
               <ActionDropdown />
             </div>
@@ -164,7 +191,10 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsGeoAlt className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Lives in: <span className="ml-1 font-medium text-gray-900">{profile.location || 'Unknown'}</span>
+                Lives in:{" "}
+                <span className="ml-1 font-medium text-gray-900">
+                  {profile.location || "Unknown"}
+                </span>
               </p>
               <ActionDropdown />
             </div>
@@ -173,7 +203,10 @@ const About = () => {
             <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
               <p className="text-sm text-gray-600">
                 <BsEnvelope className="mr-2 inline-block h-4 w-4 text-gray-400" />
-                Email: <span className="ml-1 font-medium text-gray-900">{profile.email || 'No email available'}</span>
+                Email:{" "}
+                <span className="ml-1 font-medium text-gray-900">
+                  {profile.email || "No email available"}
+                </span>
               </p>
               <ActionDropdown />
             </div>
@@ -202,7 +235,7 @@ const About = () => {
       {/* Interests Card */}
       <Interests />
     </div>
-  )
-}
+  );
+};
 
-export default About
+export default About;

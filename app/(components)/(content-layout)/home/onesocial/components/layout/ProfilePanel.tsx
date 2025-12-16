@@ -8,6 +8,7 @@ import type { ProfilePanelLink } from '../../types/data'
 
 import avatar7 from '@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/07.jpg'
 import bgBannerImg from '@/app/(components)/(content-layout)/home/onesocial/assets/images/bg/01.jpg'
+import { useSession } from '@/app/SessionProvider';
 
 type ProfilePanelProps = {
   links: ProfilePanelLink[]
@@ -40,6 +41,7 @@ const ProfilePanel = ({ links }: ProfilePanelProps) => {
   const [userData, setUserData] = useState<UserData | null>(null)
   const [stats, setStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const {user}=useSession();
 
   // Kullanıcı verilerini fetch et
   useEffect(() => {
@@ -63,7 +65,7 @@ const ProfilePanel = ({ links }: ProfilePanelProps) => {
         const data = await response.json()
         
         if (data.success) {
-          setUserData(data.user)
+          setUserData(data.users)
           setStats(data.stats)
         }
       } catch (err) {
@@ -158,7 +160,7 @@ const ProfilePanel = ({ links }: ProfilePanelProps) => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-full overflow-hidden">
         <div
           className="h-12 bg-cover bg-center"
-          style={{ backgroundImage: `url(${bgBannerImg.src})` }}
+          style={{ backgroundImage: `url(${userData?.avatarUrl})` }}
         />
 
         <div className="pt-0 px-4">
@@ -221,24 +223,16 @@ const ProfilePanel = ({ links }: ProfilePanelProps) => {
               <div className="h-8 w-px bg-gray-300" />
               <div className="text-center">
                 <h6 className="font-bold text-lg mb-0">
-                  {loading ? (
-                    <div className="h-6 w-12 mx-auto bg-gray-200 animate-pulse rounded" />
-                  ) : (
-                    getFollowersCount()
-                  )}
+                  {stats?.following}
                 </h6>
-                <p className="text-xs text-gray-500">Friends</p>
+                <p className="text-xs text-gray-500">Following</p>
               </div>
               <div className="h-8 w-px bg-gray-300" />
               <div className="text-center">
                 <h6 className="font-bold text-lg mb-0">
-                  {loading ? (
-                    <div className="h-6 w-8 mx-auto bg-gray-200 animate-pulse rounded" />
-                  ) : (
-                    getFollowingCount()
-                  )}
+                    {stats?.followers}
                 </h6>
-                <p className="text-xs text-gray-500">Requests</p>
+                <p className="text-xs text-gray-500">Followers</p>
               </div>
             </div>
           </div>
@@ -271,7 +265,7 @@ const ProfilePanel = ({ links }: ProfilePanelProps) => {
         <div className="text-center py-3 border-t border-gray-200 mt-4">
           <Link 
             className="inline-block text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors"
-            href="/profile/feed"
+            href={`/home/onesocial/profile/${user.username}`}
           >
             View Profile
           </Link>

@@ -29,7 +29,7 @@ const TopHeader = () => {
         <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
           {/* Messaging Icon */}
           <Link
-            href="/messaging"
+            href="/home/chat"
             className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Messaging"
           >
@@ -38,7 +38,7 @@ const TopHeader = () => {
 
           {/* Settings Icon */}
           <Link
-            href="/settings/account"
+            href="/home/onesocial/settings/account"
             className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Settings"
           >

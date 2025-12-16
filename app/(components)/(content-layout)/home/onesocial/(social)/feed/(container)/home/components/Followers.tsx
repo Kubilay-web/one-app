@@ -282,41 +282,7 @@ const Followers = () => {
                   </button>
                 )}
 
-                {/* Friend Request Button */}
-                {!user.isFollowing && (
-                  <button
-                    onClick={() => {
-                      if (user.hasRequested?.isIncoming) {
-                        handleAcceptFriendRequest(user.id, user.hasRequested.id)
-                      } else {
-                        handleFriendRequest(user.id)
-                      }
-                    }}
-                    disabled={friendRequestLoading[user.id]}
-                    className={clsx(
-                      'px-3 py-1 text-sm rounded-lg transition-colors',
-                      user.hasRequested
-                        ? user.hasRequested.status === 'accepted'
-                          ? 'bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400'
-                          : user.hasRequested.isIncoming
-                            ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                        : 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                    )}
-                  >
-                    {friendRequestLoading[user.id] ? (
-                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                    ) : user.hasRequested ? (
-                      user.hasRequested.status === 'accepted' 
-                        ? 'Friends' 
-                        : user.hasRequested.isIncoming
-                          ? 'Accept'
-                          : 'Requested'
-                    ) : (
-                      'Add Friend'
-                    )}
-                  </button>
-                )}
+            
               </div>
             </div>
           ))

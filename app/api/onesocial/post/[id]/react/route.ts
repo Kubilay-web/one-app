@@ -135,3 +135,68 @@ export async function POST(
     }, { status: 500 })
   }
 }
+
+
+
+
+
+// GET /api/postsocial/[id]/react - Post'a yapılan beğenileri kontrol et
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { user } = await validateRequest();
+
+    if (!user?.id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized',
+        },
+        { status: 401 }
+      );
+    }
+
+    const postId = params.id;
+
+    // Kullanıcının bu post'a bir reaksiyonu olup olmadığını kontrol et
+    const existingReact = await db.react.findFirst({
+      where: {
+        postRefId: postId,
+        reactById: user.id,
+      },
+    });
+
+    const reacts = await db.react.findMany({
+      where: {
+        postRefId: postId,
+      },
+      include: {
+        reactBy: {
+          select: {
+            id: true,
+            username: true,
+            displayName: true,
+            avatarUrl: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      reacts,  // Bu post'a yapılan tüm reaksiyonlar
+      isLiked: existingReact ? existingReact.react === 'like' : false, // Kullanıcı beğendi mi?
+    });
+  } catch (error) {
+    console.error('React error:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to fetch react status',
+      },
+      { status: 500 }
+    );
+  }
+}

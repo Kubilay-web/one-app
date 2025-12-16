@@ -1,11 +1,15 @@
+// app/api/onesocial/profile/[username]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { validateRequest } from '@/app/auth';
 import db from "@/app/lib/db";
 
-// GET: Profil bilgilerini getir
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  context: { params: { username: string } }
+) {
   try {
     const { user } = await validateRequest();
+    const { username } = await context.params;
 
     if (!user) {
       return NextResponse.json(
@@ -14,117 +18,67 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // URL'den username parametresini al
-    const { searchParams } = new URL(request.url);
-    const username = searchParams.get('username');
-
-    let users;
-
-    if (username) {
-      // Belirli bir kullanıcının profilini getir
-      users = await db.user.findUnique({
-        where: { username },
-        select: {
-          id: true,
-          username: true,
-          displayName: true,
-          email: true,
-          avatarUrl: true,
-          bio: true,
-          image: true,
-          location: true,
-          portfolio: true,
-          bannerUrl: true,
-          cover: true,
-          role: true,
-          createdAt: true,
-          UserDetails: {
-            select: {
-              biosocial: true,
-              otherName: true,
-              job: true,
-              workplace: true,
-              highSchool: true,
-              college: true,
-              currentCity: true,
-              hometown: true,
-              relationship: true,
-              instagram: true,
-            }
-          },
-          posts: {
-            select: { id: true },
-          },
-          followers: {
-            select: { id: true },
-          },
-          following: {
-            select: { id: true },
-          },
-        }
-      });
-
-      if (!users) {
-        return NextResponse.json(
-          { success: false, message: 'User not found' },
-          { status: 404 }
-        );
+    // Belirli bir kullanıcının profilini getir
+    const profileUser = await db.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+        displayName: true,
+        email: true,
+        avatarUrl: true,
+        bio: true,
+        location: true,
+        portfolio: true,
+        bannerUrl: true,
+        cover: true,
+        role: true,
+        createdAt: true,
+        UserDetails: {
+          select: {
+            biosocial: true,
+            otherName: true,
+            job: true,
+            workplace: true,
+            highSchool: true,
+            college: true,
+            currentCity: true,
+            hometown: true,
+            relationship: true,
+            instagram: true,
+          }
+        },
+        posts: {
+          select: { id: true },
+        },
+        followers: {
+          select: { id: true },
+        },
+        following: {
+          select: { id: true },
+        },
       }
-    } else {
-      // Mevcut kullanıcının profilini getir
-      users = await db.user.findUnique({
-        where: { id: user.id },
-        select: {
-          id: true,
-          username: true,
-          displayName: true,
-          email: true,
-          avatarUrl: true,
-          bio: true,
-          image: true,
-          location: true,
-          portfolio: true,
-          bannerUrl: true,
-          cover: true,
-          role: true,
-          createdAt: true,
-          UserDetails: {
-            select: {
-              biosocial: true,
-              otherName: true,
-              job: true,
-              workplace: true,
-              highSchool: true,
-              college: true,
-              currentCity: true,
-              hometown: true,
-              relationship: true,
-              instagram: true,
-            }
-          },
-          posts: {
-            select: { id: true },
-          },
-          followers: {
-            select: { id: true },
-          },
-          following: {
-            select: { id: true },
-          },
-        }
-      });
+    });
+
+    if (!profileUser) {
+      return NextResponse.json(
+        { success: false, message: 'User not found' },
+        { status: 404 }
+      );
     }
 
-    // Eğer UserDetails verisi varsa, kullanıcı ile birleştir
+    // Kullanıcı detaylarını birleştir
     const formattedUser = {
-      ...users,
-      // UserDetails varsa birleştir
-      ...(users.UserDetails && users.UserDetails[0] ? users.UserDetails[0] : {}),
-      UserDetails: undefined, // Orijinal UserDetails'ı temizle
+      ...profileUser,
+      ...(profileUser.UserDetails && profileUser.UserDetails[0] 
+        ? profileUser.UserDetails[0] 
+        : {}
+      ),
+      UserDetails: undefined,
       stats: {
-        posts: users.posts?.length || 0,
-        followers: users.followers?.length || 0,
-        following: users.following?.length || 0,
+        posts: profileUser.posts?.length || 0,
+        followers: profileUser.followers?.length || 0,
+        following: profileUser.following?.length || 0,
       },
       posts: undefined,
       followers: undefined,
@@ -135,8 +89,8 @@ export async function GET(request: NextRequest) {
     const friends = await db.friendRequest.findMany({
       where: {
         OR: [
-          { userId: user.id, status: 'accepted' },
-          { friendId: user.id, status: 'accepted' }
+          { userId: profileUser.id, status: 'accepted' },
+          { friendId: profileUser.id, status: 'accepted' }
         ]
       },
       take: 8,
@@ -163,7 +117,7 @@ export async function GET(request: NextRequest) {
     // Fotoğrafları getir
     const photos = await db.postSocial.findMany({
       where: {
-        userId: user.id,
+        userId: profileUser.id,
         images: {
           isEmpty: false
         }
@@ -180,14 +134,14 @@ export async function GET(request: NextRequest) {
 
     // Arkadaşları formatla
     const formattedFriends = friends.map(friend => {
-      const friendUser = friend.userId === user.id ? friend.friend : friend.user;
+      const friendUser = friend.userId === profileUser.id ? friend.friend : friend.user;
       return {
         id: friendUser.id,
         username: friendUser.username,
         name: friendUser.displayName || friendUser.username,
         avatar: friendUser.avatarUrl || '/default-avatar.png',
-        isStory: Math.random() > 0.5, // Mock data
-        mutualCount: Math.floor(Math.random() * 50) + 1 // Mock data
+        isStory: Math.random() > 0.5,
+        mutualCount: Math.floor(Math.random() * 50) + 1
       };
     });
 
@@ -201,8 +155,8 @@ export async function GET(request: NextRequest) {
       data: {
         user: formattedUser,
         friends: formattedFriends,
-        photos: formattedPhotos.slice(0, 9),
-        isCurrentUser: !username || username === user.username
+        photos: formattedPhotos,
+        isCurrentUser: username === user.username
       }
     });
 
@@ -215,15 +169,27 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// PATCH: Profil bilgilerini güncelle
-export async function PATCH(request: NextRequest) {
+// PATCH: Profil bilgilerini güncelle (sadece kendi profili için)
+export async function PATCH(
+  request: NextRequest,
+  context: { params: { username: string } }
+) {
   try {
     const { user } = await validateRequest();
+    const { username } = await context.params;
 
     if (!user) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 401 }
+      );
+    }
+
+    // Sadece kendi profili güncellenebilir
+    if (username !== user.username) {
+      return NextResponse.json(
+        { success: false, message: 'You can only update your own profile' },
+        { status: 403 }
       );
     }
 
@@ -236,7 +202,6 @@ export async function PATCH(request: NextRequest) {
       avatarUrl,
       bannerUrl,
       cover,
-      // Facebook özel alanları
       biosocial,
       otherName,
       job,

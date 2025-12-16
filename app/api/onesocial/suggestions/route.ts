@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from "@/app/lib/db"
 import { validateRequest } from '@/app/auth'
 
+
+
 // GET /api/onesocial/suggestions - Takip edilebilecek kişileri öner
 export async function GET(request: NextRequest) {
   try {
@@ -54,12 +56,55 @@ export async function GET(request: NextRequest) {
     // 3. Önerilecek kişileri bul
     let suggestedUsers = []
 
-    // 3.1. Ortak takipçilere sahip kişiler
+    // 3.1. Takip edilen kişilerin takip ettiklerini bul
+    if (followingIds.length > 0) {
+      const followingOfFollowing = await db.followSocial.findMany({
+        where: {
+          followerId: { in: followingIds },
+          followingId: { notIn: excludedIds }
+        },
+        include: {
+          following: {
+            include: {
+              UserDetails: {
+                select: {
+                  job: true,
+                  workplace: true,
+                  biosocial: true
+                }
+              },
+              postsocial: {
+                select: {
+                  id: true
+                }
+              }
+            }
+          }
+        }
+      })
+
+      // Null olan veya following bilgisi eksik olan kayıtları filtrele
+      const validFollowingOfFollowing = followingOfFollowing.filter(item => 
+        item.following && item.following.id
+      )
+
+      // Benzersiz kullanıcıları ekle
+      validFollowingOfFollowing.forEach(item => {
+        const followingUser = item.following
+        if (!suggestedUsers.find(u => u.id === followingUser.id) &&
+            !excludedIds.includes(followingUser.id)) {
+          suggestedUsers.push(followingUser)
+        }
+      })
+    }
+
+    // 4. Ortak takipçilere sahip kişileri bul
     const usersWithCommonFollowers = await db.user.findMany({
       where: {
         AND: [
           { id: { notIn: excludedIds } }, // Kendimi ve takip ettiklerimi hariç tut
-          { id: { notIn: requestedFriendIds } } // Arkadaşlık isteği gönderdiğim kişileri hariç tut
+          { id: { notIn: requestedFriendIds } }, // Arkadaşlık isteği gönderdiğim kişileri hariç tut
+          { id: { notIn: suggestedUsers.map(u => u.id) } } // Zaten eklenmiş olanları hariç tut
         ]
       },
       include: {
@@ -90,46 +135,10 @@ export async function GET(request: NextRequest) {
           }
         }
       },
-      take: 20 // Daha sonra filtreleyeceğiz
+      take: 50 // Daha fazla veri çekiyoruz
     })
 
-    // 3.2. Takip edilen kişilerin takip ettiklerini bul
-    if (followingIds.length > 0) {
-      const followingOfFollowing = await db.followSocial.findMany({
-        where: {
-          followerId: { in: followingIds },
-          followingId: { notIn: excludedIds }
-        },
-        include: {
-          following: {
-            include: {
-              UserDetails: {
-                select: {
-                  job: true,
-                  workplace: true,
-                  biosocial: true
-                }
-              },
-              postsocial: {
-                select: {
-                  id: true
-                }
-              }
-            }
-          }
-        }
-      })
-
-      // Benzersiz kullanıcıları ekle
-      followingOfFollowing.forEach(item => {
-        if (!suggestedUsers.find(u => u.id === item.following.id) &&
-            !excludedIds.includes(item.following.id)) {
-          suggestedUsers.push(item.following)
-        }
-      })
-    }
-
-    // 4. Kullanıcıları sırala ve puanlandır
+    // 5. Kullanıcıları puanlandır ve sırala
     const scoredUsers = usersWithCommonFollowers.map(user => {
       let score = 0
       
@@ -151,23 +160,47 @@ export async function GET(request: NextRequest) {
         score += 2
       }
 
-      // Kullanıcı aktivitesi (post sayısı) - safe check ekliyorum
+      // Kullanıcı aktivitesi (post sayısı)
       const postCount = user.postsocial?.length || 0
       score += postCount
 
       return {
         ...user,
         score,
-        postCount // Debug için ekliyorum
+        postCount
       }
     })
 
-    // Puanı en yüksek olanları al
-    const topUsers = scoredUsers
+    // 6. Suggested users'a puan ekleyelim
+    const suggestedScoredUsers = suggestedUsers.map(user => {
+      let score = 50 // Başlangıç puanı - takip ettiğim kişilerin takip ettikleri
+
+      // Ortak takipçi puanı ekleyelim
+      const commonFollowers = user.FollowSocials?.filter(f => 
+        followingIds.includes(f.followerId)
+      ).length || 0
+      score += commonFollowers * 15
+
+      // Post sayısına göre puan
+      const postCount = user.postsocial?.length || 0
+      score += postCount * 2
+
+      return {
+        ...user,
+        score,
+        postCount
+      }
+    })
+
+    // 7. Tüm kullanıcıları birleştir ve sırala
+    const allUsers = [...scoredUsers, ...suggestedScoredUsers]
+      .filter(user => user.id && user.displayName) // Geçerli kullanıcıları filtrele
+
+    const topUsers = allUsers
       .sort((a, b) => b.score - a.score)
       .slice(skip, skip + limit)
 
-    // 5. Yanıtı formatla
+    // 8. Yanıtı formatla
     const formattedUsers = topUsers.map(user => {
       const userDetails = user.UserDetails?.[0]
       
@@ -190,7 +223,7 @@ export async function GET(request: NextRequest) {
         name: user.displayName || user.username,
         username: user.username,
         avatar: user.avatarUrl || '/default-avatar.png',
-        bio: userDetails?.biosocial || user.bio,
+        bio: userDetails?.biosocial || user.bio || '',
         role: userDetails?.job || 'User',
         workplace: userDetails?.workplace,
         mutualFollowers: user.FollowSocials?.filter(f => 
@@ -216,8 +249,8 @@ export async function GET(request: NextRequest) {
       pagination: {
         page,
         limit,
-        total: scoredUsers.length,
-        hasMore: skip + limit < scoredUsers.length
+        total: allUsers.length,
+        hasMore: skip + limit < allUsers.length
       }
     })
   } catch (error) {
@@ -228,4 +261,3 @@ export async function GET(request: NextRequest) {
     }, { status: 500 })
   }
 }
-
