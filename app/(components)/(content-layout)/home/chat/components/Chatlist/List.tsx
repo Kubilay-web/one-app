@@ -4,6 +4,7 @@ import { useSession } from "@/app/SessionProvider";
 import React, { useEffect, useState } from "react";
 import { useChatStore } from "@/app/chat-store/useChatSotre";
 import ChatListItem from "./ChatLIstItem";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface Contact {
   messageId?: string;
@@ -82,10 +83,15 @@ function List() {
     };
   }, [from, connectSocket, socket, setOnlineUsers]);
 
-  if (loading) return <div className="mt-5 ml-2">Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-full mt-5">
+        <ClipLoader size={40} color="#4fa94d" />
+      </div>
+    );
 
   return (
-    <div className="bg-colors-search-input-container-background flex-auto overflow-auto max-h-full p-4">
+    <div className="bg-white flex-auto overflow-auto max-h-full p-4">
       {filteredContacts.length > 0
         ? filteredContacts.map((contact) => (
             <ChatListItem data={contact} key={contact.id || contact.userId} />

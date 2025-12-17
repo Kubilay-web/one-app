@@ -76,26 +76,26 @@ function ContactsList({ toggleContactList }: ContactsListProps) {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-white">
       <div className="h-24 flex items-end px-3 py-4">
-        <div className="flex items-center gap-12 text-white">
+        <div className="flex items-center gap-12 text-black">
           <BiArrowBack
-            className="cursor-pointer text-xl"
+            className="cursor-pointer text-xl text-black"
             onClick={toggleContactList}
           />
           <span>New Chat</span>
         </div>
       </div>
 
-      <div className="bg-colors-search-input-container-background h-full flex-auto overflow-auto">
+      <div className="bg-white flex-auto overflow-auto">
         {/* Search Bar */}
-        <div className="flex py-3 items-center gap-3 h-14">
-          <div className="bg-colors-panel-header-background flex items-center gap-5 px-3 py-1 rounded-lg flex-grow mx-4">
-            <BiSearchAlt2 className="text-panel-header-icon text-white cursor-pointer text-lg" />
+        <div className="flex py-3 items-center gap-3 h-14 bg-white">
+          <div className="bg-gray-600 flex items-center gap-5 px-3 py-1 rounded-lg flex-grow mx-4">
+            <BiSearchAlt2 className="text-panel-header-icon text-gray-100 cursor-pointer text-lg" />
             <input
               type="text"
               placeholder="Search Contacts"
-              className="bg-transparent text-sm focus:outline-none text-white placeholder-red-200 w-full border-none"
+              className="border-gray-400 text-sm focus:outline-none placeholder:text-black text-black placeholder-gray-600 w-full border-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -107,7 +107,7 @@ function ContactsList({ toggleContactList }: ContactsListProps) {
           {loading ? (
             <div>Loading contacts...</div>
           ) : Object.keys(filteredContacts).length === 0 ? (
-            <div className="text-gray-400 text-center mt-4">
+            <div className="text-black text-center mt-4">
               No contacts found
             </div>
           ) : (
@@ -131,6 +131,8 @@ function ContactsList({ toggleContactList }: ContactsListProps) {
             )
           )}
         </div>
+
+        
       </div>
     </div>
   );

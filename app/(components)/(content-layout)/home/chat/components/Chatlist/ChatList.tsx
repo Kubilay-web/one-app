@@ -16,7 +16,7 @@ function ChatList() {
   };
 
   return (
-    <div className="bg-colors-panel-header-background panel-container h-[100vh] flex flex-col max-h-screen z-20">
+    <div className="bg-white panel-container h-[100vh] flex flex-col max-h-screen z-20">
       {!showContactList ? (
         <>
           {" "}

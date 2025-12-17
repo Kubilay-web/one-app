@@ -20,19 +20,19 @@ function ChatListHeader({ toggleContactList }: ChatListHeaderProps) {
   };
 
   return (
-    <div className="h-16 px-4 py-3 flex justify-between items-center">
+    <div className="h-16 px-4 py-3 flex justify-between items-center bg-white">
       <div className="cursor-pointer">
         <Avatar type="sm" image={user?.avatarUrl} />
       </div>
       <div className="flex gap-6">
         <BsFillChatLeftTextFill
-          className="text-panel-header-icon cursor-pointer text-xl"
+          className="text-panel-header-icon cursor-pointer text-xl text-black"
           title="New Chat"
           onClick={handleAllContactsPage}
         />
         <>
           <BsThreeDotsVertical
-            className="text-panel-header-icon cursor-pointer text-xl"
+            className="text-panel-header-icon cursor-pointer text-xl text-black"
             title="Menu"
           />
         </>

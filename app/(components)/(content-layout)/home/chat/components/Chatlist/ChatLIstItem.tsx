@@ -28,7 +28,7 @@ function ChatListItem({
   return (
     <div
       onClick={handleContact}
-      className={`flex cursor-pointer items-center hover:bg-colors-background-default-hover`}
+      className={`flex bg-white cursor-pointer items-center hover:bg-gray-50`}
     >
       <div className="min-w-fit px-5 pt-3 pb-1">
         <Avatar type="lg" image={data.avatarUrl} />
@@ -36,9 +36,9 @@ function ChatListItem({
       <div className="min-h-full flex flex-col justify-center mt-3 pr-2 w-full">
         <div className="flex justify-between">
           <div>
-            <span className="text-white">{data?.username}</span>
+            <span className="font-semibold text-gray-900 truncate">{data?.username}</span>
           </div>
-           {!isContactPage && (
+           {/* {!isContactPage && (
             <div>
               <span
                 className={`${
@@ -50,7 +50,7 @@ function ChatListItem({
                 {calculateTime(data.createdAt)}
               </span>
             </div>
-          )} 
+          )}  */}
         </div>
 
         <div className="flex border-b border-colors-conversation-border pb-2 pt-1 p3-2">
@@ -64,7 +64,7 @@ function ChatListItem({
                     <MessageStatus messageStatus={data.messageStatus} />
                   )}
                   {data.type === "text" && (
-                    <span className="truncate">{data.message}</span>
+                    <span className="text-sm text-gray-500 truncate">{data.message}</span>
                   )}
                   {data.type === "audio" && (
                     <span className="flex gap-1 items-center">

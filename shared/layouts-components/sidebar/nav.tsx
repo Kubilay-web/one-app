@@ -257,6 +257,13 @@ export const getMenuItems = (user) => [
             title: "Profile",
           },
           {
+            path: "/home/chat",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Chat",
+          },
+          {
             path: "/home/onesocial/profile/events",
             type: "link",
             active: false,

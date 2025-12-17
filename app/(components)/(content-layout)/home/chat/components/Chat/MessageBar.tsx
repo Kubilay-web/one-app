@@ -8,6 +8,9 @@ import { useSession } from "@/app/SessionProvider";
 import { useChatStore } from "@/app/chat-store/useChatSotre";
 import EmojiPicker from "emoji-picker-react";
 import CaptureAudio from "../common/CaptureAudio";
+import { FaFaceSmile, FaPaperPlane } from "react-icons/fa6";
+import TextFormInput from "../../../onesocial/components/form/TextFormInput";
+import Picker from "@emoji-mart/react";
 
 function MessageBar() {
   const { user } = useSession();
@@ -40,9 +43,9 @@ function MessageBar() {
 
   const handleEmojiModal = () => setShowEmojiPicker(!showEmojiPicker);
 
-  const handleEmojiClick = (emoji: { emoji: string }) => {
-    setMessage((prev) => prev + emoji.emoji);
-  };
+const handleEmojiClick = (emoji: any) => {
+  setMessage((prev) => prev + emoji.native);
+};
 
   const handleFileChange = (selectedFile: File) => {
     setFile(selectedFile);
@@ -82,8 +85,8 @@ function MessageBar() {
             ? file.type.startsWith("video")
               ? "video"
               : file.type.startsWith("audio")
-              ? "audio"
-              : "image"
+                ? "audio"
+                : "image"
             : null,
         ]
           .filter(Boolean)
@@ -111,8 +114,8 @@ function MessageBar() {
               ? file.type.startsWith("video")
                 ? "video"
                 : file.type.startsWith("audio")
-                ? "audio"
-                : "image"
+                  ? "audio"
+                  : "image"
               : null,
           ]
             .filter(Boolean)
@@ -148,7 +151,7 @@ function MessageBar() {
 
   return (
     <div
-      className="bg-colors-panel-header-background h-auto px-4 py-3 flex flex-col gap-2 relative rounded-t-lg"
+      className="flex flex-col h-full bg-white rounded-lg shadow-sm border border-gray-200"
       onDrop={handleDrop}
       onDragOver={handleDragOver}
     >
@@ -179,10 +182,10 @@ function MessageBar() {
         </div>
       )}
 
-      <div className="flex items-center gap-3 w-full">
+      {/* <div className="border-t border-gray-200 p-4">
         <div className="flex gap-3 relative">
           <BsEmojiSmile
-            className="text-colors-panel-header-icon cursor-pointer text-2xl"
+            className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
             id="emoji-open"
             onClick={handleEmojiModal}
           />
@@ -231,6 +234,73 @@ function MessageBar() {
             className="text-colors-panel-header-icon cursor-pointer text-3xl"
           />
         )}
+      </div> */}
+
+      <div className="border-t border-gray-200 p-4">
+        <div className="flex items-end space-x-2">
+          <div className="flex-1">
+            <input
+              name="newMessage"
+              placeholder="Type a message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              className="w-full text-black placeholder:text-gray-600 focus:outline-none"
+            />
+          </div>
+
+          {/* Emoji Picker */}
+          <div className="relative">
+            <div
+              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
+              onClick={handleEmojiModal}
+            >
+              <FaFaceSmile size={20} />
+            </div>
+
+            {showEmojiPicker && (
+              <div className="absolute bottom-full right-0 mb-2 z-50">
+                  <Picker onEmojiSelect={handleEmojiClick} theme="light" />
+              </div>
+            )}
+
+            {/* <label>
+              <ImAttachment className="text-colors-panel-header-icon cursor-pointer text-2xl" />
+              <input
+                type="file"
+                className="hidden"
+                onChange={(e) =>
+                  e.target.files && handleFileChange(e.target.files[0])
+                }
+              />
+            </label> */}
+          </div>
+
+          {/* Attachment Button */}
+          <div className="relative">
+            <label className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 cursor-pointer transition-colors flex items-center justify-center">
+              <ImAttachment size={20} />
+              <input
+                type="file"
+                className="hidden"
+                onChange={(e) =>
+                  e.target.files && handleFileChange(e.target.files[0])
+                }
+              />
+            </label>
+          </div>
+          {loading ? (
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-gray-700 border-solid"></div>
+          ) : (
+            <button
+              type="submit"
+              className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+              onClick={sendMessage}
+            >
+              <FaPaperPlane size={20} />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

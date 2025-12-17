@@ -24,17 +24,17 @@ function SearchBar() {
   };
 
   return (
-    <div className="bg-colors-search-input-container-background flex py-3 pl-5 items-center gap-3 h-14">
-      <div className="bg-colors-panel-header-background flex items-center gap-5 px-3 py-1 rounded-lg flex-grow">
-        <BiSearchAlt2 className="text-panel-header-icon text-white cursor-pointer text-lg" />
+    <div className="bg-white border-r border-gray-200 flex py-3 pl-5 items-center gap-3 h-14">
+      <div className="bg-white border-r border-gray-200 flex items-center gap-5 px-3 py-1 rounded-lg flex-grow relative">
+        <BiSearchAlt2 className="text-panel-header-icon text-gray-600 cursor-pointer text-lg absolute left-6" />
         <input
-          type="text"
-          placeholder="Search or start a new chat"
-          className="bg-transparent text-sm focus:outline-none w-full border-none
-           !text-white placeholder:text-white placeholder:opacity-100"
+          type="search"
+          placeholder="Search for chats..."
+          className="w-full px-4 py-2 pl-10 pr-10 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-600 transition-colors"
+          aria-label="Search chats"
         />
       </div>
-      <BsFilter className="text-panel-header-icon text-white cursor-pointer text-lg pr-5 pl-3" />
+      {/* <BsFilter className="text-panel-header-icon text-white cursor-pointer text-lg pr-5 pl-3" /> */}
     </div>
   );
 }
