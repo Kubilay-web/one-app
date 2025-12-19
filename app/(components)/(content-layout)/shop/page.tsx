@@ -633,13 +633,13 @@ const LandingPage = () => {
                         <div className="card-img-top border-b border-dashed border-defaultborder dark:border-defaultborder/10 ">
                           <Link
                             scroll={false}
-                            href={`/shop/productdetails/${product.slug}`}
+                            href={`/shop/productdetails/${product.name}`}
                             className="stretched-link"
                           ></Link>
                           <div className="btns-container-1 items-center gap-1">
                             <Link
                               scroll={false}
-                              href={`/shop/productdetails/${product.slug}`}
+                              href={`/shop/productdetails/${product.name}`}
                               className="ti-btn ti-btn-icon ti-btn-primary !rounded-full"
                             >
                               <i className="ti ti-eye text-[0.875rem]"></i>
@@ -699,7 +699,7 @@ const LandingPage = () => {
                               </Link>
                               <h6 className="mb-1 font-semibold text-[1rem]">
                                 <Link
-                                  href={`/shop/productdetails/${product.slug}`}
+                                  href={`/shop/productdetails/${product.name}`}
                                 >
                                   {product.name}
                                 </Link>
@@ -863,7 +863,7 @@ const LandingPage = () => {
                               <div className="img-box-1 bg-light rounded">
                                 <Link
                                   scroll={false}
-                                  href={`/shop/productdetails/${product.slug}`}
+                                  href={`/shop/productdetails/${product.name}`}
                                 >
                                   <div className="relative w-full h-32">
                                     <Image
@@ -889,7 +889,7 @@ const LandingPage = () => {
                                   </Link>
                                   <h6 className="mb-1 font-semibold">
                                     <Link
-                                      href={`/shop/productdetails/${product.slug}`}
+                                      href={`/shop/productdetails/${product.name}`}
                                     >
                                       {product.name}
                                     </Link>
@@ -1059,13 +1059,13 @@ const LandingPage = () => {
                         <div className="card-img-top border-b border-dashed border-defaultborder dark:border-defaultborder/10 ">
                           <Link
                             scroll={false}
-                            href={`/shop/productdetails/${product.slug}`}
+                            href={`/shop/productdetails/${product.name}`}
                             className="stretched-link"
                           ></Link>
                           <div className="btns-container-1 items-center gap-1">
                             <Link
                               scroll={false}
-                              href={`/shop/productdetails/${product.slug}`}
+                              href={`/shop/productdetails/${product.name}`}
                               className="ti-btn ti-btn-icon ti-btn-primary !rounded-full"
                             >
                               <i className="ti ti-eye text-[0.875rem]"></i>
@@ -1125,7 +1125,7 @@ const LandingPage = () => {
                               </Link>
                               <h6 className="mb-1 font-semibold text-[1rem]">
                                 <Link
-                                  href={`/shop/productdetails/${product.slug}`}
+                                  href={`/shop/productdetails/${product.name}`}
                                 >
                                   {product.name}
                                 </Link>
@@ -1299,7 +1299,7 @@ const LandingPage = () => {
                             <div className="img-box-1 bg-light rounded">
                               <Link
                                 scroll={false}
-                                href={`/shop/productdetails/${product.slug}`}
+                                href={`/shop/productdetails/${product.name}`}
                               >
                                 <div className="relative w-full h-32">
                                   <Image
@@ -1326,7 +1326,7 @@ const LandingPage = () => {
                                 <h6 className="font-semibold mb-1">
                                   <Link
                                     scroll={false}
-                                    href={`/shop/productdetails/${product.slug}`}
+                                    href={`/shop/productdetails/${product.name}`}
                                   >
                                     {product.name}
                                   </Link>
@@ -1550,13 +1550,13 @@ const LandingPage = () => {
                                 <div className="card-img-top border-b border-dashed border-defaultborder dark:border-defaultborder/10 ">
                                   <Link
                                     scroll={false}
-                                    href={`/shop/productdetails/${product.slug}`}
+                                    href={`/shop/productdetails/${product.name}`}
                                     className="stretched-link"
                                   ></Link>
                                   <div className="btns-container-1 items-center gap-1">
                                     <Link
                                       scroll={false}
-                                      href={`/shop/productdetails/${product.slug}`}
+                                      href={`/shop/productdetails/${product.name}`}
                                       className="ti-btn ti-btn-icon ti-btn-primary !rounded-full"
                                     >
                                       <i className="ti ti-eye text-[0.875rem]"></i>
@@ -1616,7 +1616,7 @@ const LandingPage = () => {
                                       </Link>
                                       <h6 className="mb-1 font-semibold text-[1rem]">
                                         <Link
-                                          href={`/shop/productdetails/${product.slug}`}
+                                          href={`/shop/productdetails/${product.name}`}
                                         >
                                           {product.name}
                                         </Link>

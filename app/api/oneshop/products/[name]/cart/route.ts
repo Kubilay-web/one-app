@@ -2,22 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import db from '@/app/lib/db';
 import { validateRequest } from '@/app/auth';
 
-
-
 // POST: Ürünü sepete ekle
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }  // Promise olarak değiştir
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    // Önce params'ı resolve et
+    const { slug } = await params;
+    
     const { user } = await validateRequest();
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // params'ı await ile çöz
-    const { slug } = await params;
-    
     const body = await req.json();
     const { sizeId, quantity = 1 } = body;
 
@@ -128,7 +126,7 @@ export async function POST(
         size: size.size,
         price: size.price,
         quantity,
-        shippingFee: 0, // Shipping fee hesaplama fonksiyonu ile güncellenecek
+        shippingFee: 0,
         totalPrice: size.price * quantity,
         storeId: productVariant.product.storeId,
       },
@@ -150,19 +148,19 @@ export async function POST(
   }
 }
 
-// GET: Sepetteki ürünleri getir (Opsiyonel - eğer GET methodu da varsa)
+// GET: Sepetteki ürünleri getir
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }  // Burada da aynı şekilde
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    // Önce params'ı resolve et
+    const { slug } = await params;
+    
     const { user } = await validateRequest();
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    // params'ı await ile çöz
-    const { slug } = await params;
 
     // Belirli bir ürün için cart item kontrolü
     const productVariant = await db.productVariant.findFirst({
@@ -201,19 +199,19 @@ export async function GET(
   }
 }
 
-// DELETE: Sepetten ürünü çıkar (Opsiyonel)
+// DELETE: Sepetten ürünü çıkar
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }  // Burada da aynı şekilde
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    // Önce params'ı resolve et
+    const { slug } = await params;
+    
     const { user } = await validateRequest();
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    // params'ı await ile çöz
-    const { slug } = await params;
     
     const { searchParams } = new URL(req.url);
     const sizeId = searchParams.get('sizeId');
@@ -283,7 +281,6 @@ async function updateCartTotals(cartId: string) {
   });
 
   const subTotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
-  // Shipping fee hesaplaması burada yapılabilir
   const shippingFees = 0;
   const total = subTotal + shippingFees;
 
