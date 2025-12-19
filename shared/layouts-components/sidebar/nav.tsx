@@ -237,6 +237,45 @@ export const getMenuItems = (user) => [
     active: false,
     children: [
       {
+        title: "OneShop",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/shop",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+          {
+            path: `/shop/browse`,
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Browse",
+          },
+          {
+            path: "/shop/cart",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Cart",
+          },
+
+          {
+            path: "/shop/checkout",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Checkout",
+          },
+        ],
+      },
+
+
+      {
         title: "OneSocial",
         icon: Dashboardicon,
         type: "sub",
@@ -263,7 +302,7 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Chat",
           },
-    
+
           {
             path: "/home/onesocial/notifications",
             type: "link",
@@ -271,247 +310,245 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Notifications",
           },
-
-     
         ],
       },
 
-      {
-        title: "Social",
-        icon: Dashboardicon,
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/facebook/pages/home",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Home",
-          },
-          {
-            path: "/home/facebook/pages/friends",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Friends",
-          },
-          {
-            path: `/home/facebook/pages/profile/${user.username}`,
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Profile",
-          },
-          {
-            path: `/home/facebook/pages/notifications`,
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Notifications",
-          },
-        ],
-      },
+      // {
+      //   title: "Social",
+      //   icon: Dashboardicon,
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       path: "/home/facebook/pages/home",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Home",
+      //     },
+      //     {
+      //       path: "/home/facebook/pages/friends",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Friends",
+      //     },
+      //     {
+      //       path: `/home/facebook/pages/profile/${user.username}`,
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Profile",
+      //     },
+      //     {
+      //       path: `/home/facebook/pages/notifications`,
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Notifications",
+      //     },
+      //   ],
+      // },
 
       //
 
-      {
-        title: "Social2",
-        icon: Dashboardicon,
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/social",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Social Main",
-          },
-          {
-            path: "/home/social/notifications",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Notifications",
-          },
-          {
-            path: "/home/chat",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Messages",
-          },
-          {
-            path: "/home/social/bookmarks",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Bookmarks",
-          },
-        ],
-      },
+      // {
+      //   title: "Social2",
+      //   icon: Dashboardicon,
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       path: "/home/social",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Social Main",
+      //     },
+      //     {
+      //       path: "/home/social/notifications",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Notifications",
+      //     },
+      //     {
+      //       path: "/home/chat",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Messages",
+      //     },
+      //     {
+      //       path: "/home/social/bookmarks",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Bookmarks",
+      //     },
+      //   ],
+      // },
 
       //
 
-      {
-        title: "Shop",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/shop",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Shop Main",
-          },
-          {
-            path: "/home/shop/browse",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Browse",
-          },
-          {
-            path: "/home/shop/cart",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Cart",
-          },
-          // {
-          //   path: "/home/shop/checkout",
-          //   type: "link",
-          //   active: false,
-          //   selected: false,
-          //   title: "Checkout",
-          // },
+      // {
+      //   title: "Shop",
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       path: "/home/shop",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Shop Main",
+      //     },
+      //     {
+      //       path: "/home/shop/browse",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Browse",
+      //     },
+      //     {
+      //       path: "/home/shop/cart",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Cart",
+      //     },
+      //     // {
+      //     //   path: "/home/shop/checkout",
+      //     //   type: "link",
+      //     //   active: false,
+      //     //   selected: false,
+      //     //   title: "Checkout",
+      //     // },
 
-          {
-            title: "Profile",
-            type: "sub",
-            active: false,
-            children: [
-              // {
-              //   path: "/home/shop/profile/overview",
-              //   type: "link",
-              //   active: false,
-              //   selected: false,
-              //   title: "Overview",
-              // },
-              {
-                path: "/home/shop/profile/orders",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Orders",
-              },
-              {
-                path: "/home/shop/profile/payment",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Payment",
-              },
-              {
-                path: "/home/shop/profile/addresses",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Addresses",
-              },
-              {
-                path: "/home/shop/profile/reviews",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Reviews",
-              },
-            ],
-          },
+      //     {
+      //       title: "Profile",
+      //       type: "sub",
+      //       active: false,
+      //       children: [
+      //         // {
+      //         //   path: "/home/shop/profile/overview",
+      //         //   type: "link",
+      //         //   active: false,
+      //         //   selected: false,
+      //         //   title: "Overview",
+      //         // },
+      //         {
+      //           path: "/home/shop/profile/orders",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Orders",
+      //         },
+      //         {
+      //           path: "/home/shop/profile/payment",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Payment",
+      //         },
+      //         {
+      //           path: "/home/shop/profile/addresses",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Addresses",
+      //         },
+      //         {
+      //           path: "/home/shop/profile/reviews",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Reviews",
+      //         },
+      //       ],
+      //     },
 
-          {
-            path: "/home/shop/seller/apply",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Seller Apply",
-          },
-        ],
-      },
+      //     {
+      //       path: "/home/shop/seller/apply",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Seller Apply",
+      //     },
+      //   ],
+      // },
       //
 
-      {
-        title: "Shop2",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/store/about",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "About",
-          },
+      // {
+      //   title: "Shop2",
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       path: "/home/store/about",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "About",
+      //     },
 
-          {
-            path: "/home/store/cart",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Cart",
-          },
+      //     {
+      //       path: "/home/store/cart",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Cart",
+      //     },
 
-          {
-            path: "/home/store/collection",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Collection",
-          },
+      //     {
+      //       path: "/home/store/collection",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Collection",
+      //     },
 
-          {
-            path: "/home/store/contact",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Contact",
-          },
+      //     {
+      //       path: "/home/store/contact",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Contact",
+      //     },
 
-          {
-            path: "/home/store",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Home",
-          },
+      //     {
+      //       path: "/home/store",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Home",
+      //     },
 
-          {
-            path: "/home/store/orders",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Orders",
-          },
+      //     {
+      //       path: "/home/store/orders",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Orders",
+      //     },
 
-          {
-            path: "/home/store/place-order",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Place Order",
-          },
+      //     {
+      //       path: "/home/store/place-order",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Place Order",
+      //     },
 
-          {
-            path: "/home/store/verify",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Verify",
-          },
-        ],
-      },
+      //     {
+      //       path: "/home/store/verify",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Verify",
+      //     },
+      //   ],
+      // },
 
       //Jobs
 
