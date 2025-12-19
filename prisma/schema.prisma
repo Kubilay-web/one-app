@@ -98,7 +98,7 @@ model User {
 
   NotificationSocial  NotificationSocial[] @relation("NotificationFromUser")
   NotificationSocials NotificationSocial[] @relation("NotificationToUser")
-  ExperienceSocial ExperienceSocial[]
+  ExperienceSocial    ExperienceSocial[]
 
   //Facebook Social2
 
@@ -111,19 +111,16 @@ model User {
 
   //Video
 
-  videos         Video[]
-  videoViews     VideoView[]
-  videoReactions VideoReaction[]
-  subscriptions  Subscription[]  @relation("ViewerSubscriptions")
-  subscribers    Subscription[]  @relation("CreatorSubscribers")
-  commentsVideo  CommentVideo[]
-  playlists      Playlist[]
+  videos           Video[]
+  videoViews       VideoView[]
+  videoReactions   VideoReaction[]
+  subscriptions    Subscription[]    @relation("ViewerSubscriptions")
+  subscribers      Subscription[]    @relation("CreatorSubscribers")
+  commentsVideo    CommentVideo[]
+  playlists        Playlist[]
   commentReactions CommentReaction[]
 
   //Video
-
-
-
 
   @@map("users")
 }
@@ -1740,13 +1737,12 @@ model OnlineUser {
 
 //Social2 Facebook
 
-
-
 model PostSocial {
   id         String          @id @default(auto()) @map("_id") @db.ObjectId
   type       String? // "story", "post", "profilePicture", "cover" vb.
   text       String?
   images     String[]        @default([])
+  videos     String[]        @default([])
   background String?
   user       User            @relation(fields: [userId], references: [id])
   userId     String
@@ -1754,28 +1750,27 @@ model PostSocial {
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
 
-  React React[]
-  SavedPost SavedPost[]
-  
+   React     React[]
+   SavedPost SavedPost[]
 
   expiresAt DateTime? // Story'nin son kullanma tarihi (24 saat)
-  viewers   Json?     // Story'yi kimler gördü
+  viewers   Json? // Story'yi kimler gördü
 }
 
 model ExperienceSocial {
-  id         String          @id @default(auto()) @map("_id") @db.ObjectId
-  title           String
-  companyName     String
-  companyLogo     String?
-  location        String?
-  description     String?
-  startDate       DateTime
-  endDate         DateTime?
-  currentlyWorking Boolean @default(false)
-  userId          String
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  companyName      String
+  companyLogo      String?
+  location         String?
+  description      String?
+  startDate        DateTime
+  endDate          DateTime?
+  currentlyWorking Boolean   @default(false)
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model CommentSocial {
@@ -1785,7 +1780,7 @@ model CommentSocial {
   commentBy   User       @relation(fields: [commentById], references: [id])
   commentById String
   commentAt   DateTime   @default(now())
-  post        PostSocial @relation(fields: [postId], references: [id])
+  post        PostSocial @relation(fields: [postId], references: [id],onDelete: Cascade)
   postId      String     @db.ObjectId
 }
 
@@ -1823,7 +1818,7 @@ model FollowSocial {
   followerId  String
   followingId String
 
-  follower  User @relation("FollowerRelation", fields: [followerId], references: [id])
+  follower  User  @relation("FollowerRelation", fields: [followerId], references: [id])
   following User? @relation("FollowingRelation", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
@@ -1841,7 +1836,7 @@ enum ReactType {
 model React {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   react     ReactType
-  postRef   PostSocial @relation(fields: [postRefId], references: [id])
+  postRef   PostSocial @relation(fields: [postRefId], references: [id] , onDelete:Cascade)
   postRefId String     @db.ObjectId
   reactBy   User       @relation(fields: [reactById], references: [id])
   reactById String
@@ -1852,7 +1847,7 @@ model React {
 
 model SavedPost {
   id      String     @id @default(auto()) @map("_id") @db.ObjectId
-  post    PostSocial @relation(fields: [postId], references: [id])
+  post    PostSocial @relation(fields: [postId], references: [id],onDelete: Cascade)
   postId  String     @db.ObjectId
   savedAt DateTime   @default(now())
 
@@ -2062,11 +2057,7 @@ model VideoCategory {
 
 //VideoClone
 
-
-
-
 //////////////////////////////////
-
 
 model ProfileInstagram {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
@@ -2118,6 +2109,5 @@ model FollowerInstagram {
   followedProfileId     String   @db.ObjectId
   createdAt             DateTime @default(now())
 }
-
 
 //////////////////////////////////

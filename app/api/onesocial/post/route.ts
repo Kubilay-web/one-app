@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/lib/db";
-import { validateRequest } from '@/app/auth';
-import { v2 as cloudinary } from 'cloudinary';
+import { validateRequest } from "@/app/auth";
+import { v2 as cloudinary } from "cloudinary";
 
 // Cloudinary konfigürasyonu
 cloudinary.config({
@@ -11,19 +11,21 @@ cloudinary.config({
 });
 
 // Base64'i Cloudinary'e yükleme fonksiyonu
-const uploadBase64ToCloudinary = async (base64Data: string, type: 'image' | 'video' = 'image'): Promise<string> => {
+const uploadBase64ToCloudinary = async (
+  base64Data: string,
+  type: "image" | "video" = "image"
+): Promise<string> => {
   try {
     const uploadResult = await cloudinary.uploader.upload(base64Data, {
       resource_type: type,
-      folder: 'social-posts',
-      transformation: type === 'image' ? [
-        { width: 1000, height: 1000, crop: 'limit' }
-      ] : [],
+      folder: "social-posts",
+      transformation:
+        type === "image" ? [{ width: 1000, height: 1000, crop: "limit" }] : [],
     });
-    
+
     return uploadResult.secure_url; // Yüklenen medya URL'sini döndürüyoruz
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
+    console.error("Cloudinary upload error:", error);
     throw error;
   }
 };
@@ -34,33 +36,39 @@ export async function POST(request: NextRequest) {
     const { user } = await validateRequest();
 
     if (!user?.id) {
-      return NextResponse.json({
-        success: false,
-        error: 'Unauthorized'
-      }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+        },
+        { status: 401 }
+      );
     }
 
     const body = await request.json();
-    let { text, images = [], background, type = 'post' } = body;
+    let { text, images = [], videos = [], background, type } = body;
 
     // Base64 resimleri Cloudinary'e yükle
     const cloudinaryUrls: string[] = [];
 
     if (images && images.length > 0) {
       for (const image of images) {
-        if (typeof image === 'string' && image.startsWith('data:')) {
+        if (typeof image === "string" && image.startsWith("data:")) {
           try {
             // Dosya tipini belirle (image veya video)
-            const fileType = image.includes('data:video') ? 'video' : 'image';
+            const fileType = image.includes("data:video") ? "video" : "image";
 
-            const cloudinaryUrl = await uploadBase64ToCloudinary(image, fileType);
+            const cloudinaryUrl = await uploadBase64ToCloudinary(
+              image,
+              fileType
+            );
             cloudinaryUrls.push(cloudinaryUrl);
           } catch (uploadError) {
-            console.error('Cloudinary upload failed:', uploadError);
+            console.error("Cloudinary upload failed:", uploadError);
             // Hata durumunda orijinal base64'ü ekle (ama tavsiye edilmez)
             cloudinaryUrls.push(image); // Veya hata mesajı döndürülebilir.
           }
-        } else if (typeof image === 'string') {
+        } else if (typeof image === "string") {
           // Zaten URL ise direkt ekle
           cloudinaryUrls.push(image);
         }
@@ -73,6 +81,7 @@ export async function POST(request: NextRequest) {
         type,
         text,
         images: cloudinaryUrls, // Cloudinary URL'leri
+        videos: videos,
         background,
         userId: user.id,
         createdAt: new Date(),
@@ -110,13 +119,16 @@ export async function POST(request: NextRequest) {
         comments: [],
         reacts: [],
       },
-      message: 'Post created successfully',
+      message: "Post created successfully",
     });
   } catch (error) {
-    console.error('Create post error:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Failed to create post'
-    }, { status: 500 });
+    console.error("Create post error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to create post",
+      },
+      { status: 500 }
+    );
   }
 }

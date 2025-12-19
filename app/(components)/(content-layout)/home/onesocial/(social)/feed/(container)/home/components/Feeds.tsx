@@ -1,120 +1,111 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getAllFeeds } from "../../../../../helpers/data";
-import Image from "next/image";
-import type { ReactNode } from "react";
-import {
-  BsBookmark,
-  BsBookmarkCheck,
-  BsChatFill,
-  BsEnvelope,
-  BsFlag,
-  BsHeart,
-  BsHeartFill,
-  BsInfoCircle,
-  BsLink,
-  BsPencilSquare,
-  BsPersonX,
-  BsReplyFill,
-  BsSendFill,
-  BsShare,
-  BsSlashCircle,
-  BsThreeDots,
-  BsXCircle,
-} from "react-icons/bs";
-import People from "./People";
-
-import avatar4 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/avatar/04.jpg";
-import logo11 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/logo/11.svg";
-import logo12 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/logo/12.svg";
-import logo13 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/logo/13.svg";
-import postImg2 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/post/3by2/02.jpg";
-import postImg4 from "@/app/(components)/(content-layout)/home/onesocial/assets/images/post/3by2/03.jpg";
+import { useEffect, useMemo } from "react";
 import PostCard from "../../../../../components/cards/PostCard";
-import Link from "next/link";
 import LoadMoreButton from "./LoadMoreButton";
-import SuggestedStories from "./SuggestedStories";
-import axios from "axios";
-import usePostStore from "@/app/social-store/post";
+import usePostStore, { Activity, Post } from "@/app/social-store/post";
 
-const ActionMenu = ({ name }: { name?: string }) => {
-  const [isOpen, setIsOpen] = useState(false);
+/* =======================
+   ACTIVITY CARD
+======================= */
+const ActivityCard = ({ activity }: { activity: Activity }) => {
+  const handleClick = () => {
+    const el = document.getElementById(`post-${activity.postId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("ring", "ring-blue-400", "ring-offset-2");
+      setTimeout(() => {
+        el.classList.remove("ring", "ring-blue-400", "ring-offset-2");
+      }, 1500);
+    }
+  };
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 rounded-md transition-colors duration-200"
-      >
-        <BsThreeDots size={18} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700">
-          <div className="py-1">
-            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-              <BsBookmark className="mr-3" size={18} />
-              Save post
-            </button>
-            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-              <BsPersonX className="mr-3" size={18} />
-              Unfollow {name}
-            </button>
-            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-              <BsXCircle className="mr-3" size={18} />
-              Hide post
-            </button>
-            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-              <BsSlashCircle className="mr-3" size={18} />
-              Block
-            </button>
-            <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-              <BsFlag className="mr-3" size={18} />
-              Report post
-            </button>
-          </div>
-        </div>
-      )}
+    <div
+      onClick={handleClick}
+      className="flex items-start gap-3 bg-blue-50 dark:bg-gray-800 p-4 rounded-xl border border-blue-100 dark:border-gray-700 cursor-pointer hover:bg-blue-100/60 transition"
+    >
+      <img
+        src={activity.actor.avatarUrl || "/default-avatar.png"}
+        alt={activity.actor.username}
+        className="w-9 h-9 rounded-full object-cover"
+      />
+      <div className="flex-1">
+        <p className="text-sm text-gray-800 dark:text-gray-200">
+          <span className="font-semibold">{activity.actor.username}</span>{" "}
+          {activity.type === "like"
+            ? "gönderiyi beğendi"
+            : "gönderiye yorum yaptı"}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">
+          {new Date(activity.createdAt).toLocaleString("tr-TR")}
+        </p>
+      </div>
     </div>
   );
 };
 
-
-
+/* =======================
+   FEEDS
+======================= */
 const Feeds = () => {
-  const { posts, fetchPosts } = usePostStore();
+  const { posts, activities, fetchPosts, fetchActivities } = usePostStore();
 
   useEffect(() => {
     fetchPosts();
+    fetchActivities();
   }, []);
 
+  /* =======================
+     ACTIVITY → POST MAP
+  ======================= */
+  const activitiesByPostId = useMemo(() => {
+    return activities.reduce<Record<string, Activity[]>>((acc, activity) => {
+      if (!acc[activity.postId]) acc[activity.postId] = [];
+      acc[activity.postId].push(activity);
+      return acc;
+    }, {});
+  }, [activities]);
 
+  /* =======================
+     RENDER
+  ======================= */
   return (
-    <div className="space-y-4">
-      {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          id={post.id}
-          createdAt={post.createdAt}
-          caption={post.text}
-          photos={post.images}
-          socialUser={{
-            name: post.user.username,
-            avatar: post.user.avatarUrl,
-          }}
-          likesCount={post.likesCount}
-          comments={post.comments}
-          commentsCount={post.commentsCount}
-          isVideo={false}
-        />
-      ))}
+    <div className="space-y-6">
+      {posts.map((post) => {
+        const relatedActivities = activitiesByPostId[post.id] || [];
+
+        return (
+          <div key={post.id} className="space-y-3">
+            {/* POST */}
+            <div id={`post-${post.id}`}>
+              <PostCard
+                id={post.id}
+                createdAt={post.createdAt}
+                caption={post.text}
+                photos={post.images}
+                videos={post.videos}
+                socialUser={{
+                  id: post.user.id,
+                  name: post.user.username,
+                  avatar: post.user.avatarUrl,
+                }}
+                likesCount={post.likesCount}
+                isVideo={false}
+              />
+            </div>
+
+            {/* ACTIVITY’LER */}
+            {relatedActivities.map((activity) => (
+              <ActivityCard key={activity.id} activity={activity} />
+            ))}
+          </div>
+        );
+      })}
 
       <LoadMoreButton />
     </div>
   );
 };
-
 
 export default Feeds;

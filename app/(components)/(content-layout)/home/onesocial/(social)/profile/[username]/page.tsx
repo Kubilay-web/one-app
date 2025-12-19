@@ -636,7 +636,6 @@ const ProfileLayout = ({ children }: ChildrenType) => {
   const isCurrentUser = profileData?.isCurrentUser || false;
   const experiences = profileData?.experiences
 
-  console.log("user--", user);
 
   const friends = profileData?.friends || [];
   const photos = profileData?.photos || [];

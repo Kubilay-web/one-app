@@ -263,14 +263,7 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Chat",
           },
-          {
-            path: "/home/onesocial/profile/events",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Events",
-          },
-
+    
           {
             path: "/home/onesocial/notifications",
             type: "link",
@@ -279,13 +272,7 @@ export const getMenuItems = (user) => [
             title: "Notifications",
           },
 
-          {
-            path: "/home/onesocial/settings/account",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Account",
-          },
+     
         ],
       },
 

@@ -50,135 +50,43 @@ const SimpleFileUpload = ({
   multiple = true,
   onFilesSelected,
 }: SimpleFileUploadProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
+    if (!files.length) return;
 
-    // Yeni dosyaları ve preview URL'lerini ekle
-    const newFiles = [...selectedFiles, ...files];
-    const newUrls = files.map((file) => URL.createObjectURL(file));
-    const allUrls = [...previewUrls, ...newUrls];
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
 
-    setSelectedFiles(newFiles);
-    setPreviewUrls(allUrls);
+    onFilesSelected(files, previewUrls);
 
-    // Parent'a gönder
-    onFilesSelected(newFiles, allUrls);
-
-    // Input'u resetle (aynı dosyayı tekrar seçebilmek için)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const removeFile = (index: number) => {
-    // Object URL'yi temizle
-    URL.revokeObjectURL(previewUrls[index]);
-
-    const newFiles = selectedFiles.filter((_, i) => i !== index);
-    const newUrls = previewUrls.filter((_, i) => i !== index);
-
-    setSelectedFiles(newFiles);
-    setPreviewUrls(newUrls);
-
-    // Parent'ı güncelle
-    onFilesSelected(newFiles, newUrls);
-  };
-
-  // Component unmount olduğunda object URL'leri temizle
-  useEffect(() => {
-    return () => {
-      previewUrls.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, []);
-
-  // Video için ikon seçimi
-  const getIcon = () => {
-    if (accept.includes("video")) {
-      return <BsCameraReelsFill className="text-gray-400 text-2xl mb-2" />;
-    }
-    return <BsImageFill className="text-gray-400 text-2xl mb-2" />;
+    // Aynı dosya tekrar seçilebilsin diye
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   return (
-    <div className="mt-4">
+    <>
       <input
-        ref={fileInputRef}
+        ref={inputRef}
         type="file"
         accept={accept}
         multiple={multiple}
-        onChange={handleFileChange}
+        onChange={handleChange}
         className="hidden"
-        id={`file-input-${accept}`}
+        id="photo-upload"
       />
-      <label
-        htmlFor={`file-input-${accept}`}
-        className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg hover:border-blue-400 transition-colors"
-      >
-        {getIcon()}
-        <span className="text-gray-600 font-medium">
-          {accept.includes("image") ? "Upload images" : "Upload videos"}
-        </span>
-        <span className="text-gray-500 text-sm mt-1">
-          Click to browse files
-        </span>
-        <span className="text-xs text-gray-400 mt-2">
-          {accept.includes("image")
-            ? "JPG, PNG, GIF supported"
-            : "MP4, MOV, AVI supported"}
-        </span>
-      </label>
 
-      {previewUrls.length > 0 && (
-        <div className="mt-4">
-          <p className="text-sm font-medium text-gray-700 mb-2">
-            Selected {previewUrls.length}{" "}
-            {previewUrls.length === 1 ? "file" : "files"}
-          </p>
-          <div className="grid grid-cols-3 gap-3">
-            {previewUrls.map((url, i) => (
-              <div key={i} className="relative group">
-                <div className="aspect-square overflow-hidden rounded-lg bg-gray-100 border">
-                  {accept.includes("image") ? (
-                    <img
-                      src={url}
-                      alt={`Preview ${i + 1}`}
-                      className="w-full h-full object-cover"
-                      onLoad={() => console.log(`Image ${i} loaded`)}
-                      onError={() => console.log(`Image ${i} failed to load`)}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-800">
-                      <BsCameraReelsFill className="text-white text-2xl" />
-                      <span className="text-xs text-white absolute bottom-1 left-1 bg-black bg-opacity-50 px-1 rounded">
-                        Video
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    removeFile(i);
-                  }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors z-10"
-                  type="button"
-                  title="Remove file"
-                >
-                  ×
-                </button>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg" />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+      <label
+        htmlFor="photo-upload"
+        className="flex flex-col items-center justify-center
+                   border-2 border-dashed border-gray-300
+                   rounded-lg p-6 cursor-pointer
+                   hover:border-blue-400 transition"
+      >
+        <BsImageFill className="text-2xl text-gray-400 mb-2" />
+        <span className="text-sm text-gray-600">Click or drag images here</span>
+      </label>
+    </>
   );
 };
 
@@ -606,6 +514,8 @@ const CreatePostCard = () => {
     }
   };
 
+  const { setFeedMode, fetchPosts } = usePostStore();
+
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
@@ -705,6 +615,17 @@ const CreatePostCard = () => {
             Feeling /Activity
           </button>
 
+          <button
+            type="button"
+            className="flex items-center bg-gray-100 hover:bg-gray-200 py-1 px-2 rounded transition-colors"
+            onClick={async () => {
+              setFeedMode("discover");
+              await fetchPosts();
+            }}
+          >
+            🌍 Discover One
+          </button>
+
           <div className="relative ml-auto">
             <button
               className="flex items-center bg-gray-100 hover:bg-gray-200 py-1 px-2 rounded transition-colors"
@@ -755,138 +676,144 @@ const CreatePostCard = () => {
         onClose={togglePhotoModel}
         title="Add post photo"
       >
-        <div className="p-4">
-          <div className="flex mb-3">
-            <div className="relative w-8 h-8 mr-2 flex-shrink-0">
+        <div className="p-4 space-y-4">
+          {/* Header / Avatar + Textarea */}
+          <div className="flex gap-2">
+            <div className="relative w-8 h-8 flex-shrink-0">
               {loading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
               ) : (
                 <Image
-                  className="rounded-full object-cover w-full h-full"
                   src={userAvatar || avatar3}
                   alt="User avatar"
                   width={32}
                   height={32}
+                  className="rounded-full object-cover"
                 />
               )}
             </div>
-            <div className="w-full">
-              <textarea
-                ref={photoTextareaRef}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none placeholder-gray-500"
-                rows={3}
-                placeholder="Share your thoughts..."
-                value={photoContent}
-                onChange={handlePhotoTextareaChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const textarea = e.target as HTMLTextAreaElement;
-                    setCursorPositionPhoto(textarea.selectionStart + 1);
-                  }
-                }}
-                onSelect={(e) => {
-                  const textarea = e.target as HTMLTextAreaElement;
-                  setCursorPositionPhoto(textarea.selectionStart);
-                }}
-                disabled={isPostingPhoto}
-              />
-            </div>
+
+            <textarea
+              ref={photoTextareaRef}
+              className="w-full p-2 border border-gray-300 rounded-lg resize-none
+                   focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={3}
+              placeholder="Share your thoughts..."
+              value={photoContent}
+              onChange={handlePhotoTextareaChange}
+              onSelect={(e) =>
+                setCursorPositionPhoto(
+                  (e.target as HTMLTextAreaElement).selectionStart
+                )
+              }
+              disabled={isPostingPhoto}
+            />
           </div>
 
-          {/* Basit dosya yükleme */}
+          {/* File Upload */}
           <SimpleFileUpload
             accept="image/*"
-            multiple={true}
+            multiple
             onFilesSelected={handlePhotoFilesSelected}
           />
+
+          {/* Preview */}
+          {photoPreviewUrls.length > 0 && (
+            <div className="grid grid-cols-3 gap-2">
+              {photoPreviewUrls.map((url, i) => (
+                <div key={i} className="relative aspect-square">
+                  <Image
+                    src={url}
+                    alt={`preview-${i}`}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+
         <ModalFooter>
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors disabled:opacity-50"
             onClick={togglePhotoModel}
             disabled={isPostingPhoto}
+            className="px-4 py-2 text-sm bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Cancel
           </button>
+
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handlePhotoPostSubmit}
             disabled={
               isPostingPhoto ||
               (!photoContent.trim() && uploadedImageFiles.length === 0)
             }
+            className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md
+                 hover:bg-blue-700 disabled:opacity-50"
           >
-            {isPostingPhoto ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                Posting...
-              </>
-            ) : (
-              "Post"
-            )}
+            {isPostingPhoto ? "Posting..." : "Post"}
           </button>
         </ModalFooter>
       </Modal>
 
       {/* Video Modal */}
+
       <Modal
         isOpen={isOpenVideo}
         onClose={toggleVideoModel}
         title="Add post video"
       >
-        <div className="p-4">
-          <div className="flex mb-3">
-            <div className="relative w-8 h-8 mr-2 flex-shrink-0">
+        <div className="p-4 space-y-4">
+          {/* Avatar + Textarea */}
+          <div className="flex gap-2">
+            <div className="relative w-8 h-8 flex-shrink-0">
               {loading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
               ) : (
                 <Image
-                  className="rounded-full object-cover w-full h-full"
                   src={userAvatar || avatar3}
                   alt="User avatar"
                   width={32}
                   height={32}
+                  className="rounded-full object-cover"
                 />
               )}
             </div>
-            <div className="w-full">
-              <textarea
-                ref={videoTextareaRef}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none placeholder-gray-500"
-                rows={3}
-                placeholder="Share your thoughts..."
-                value={videoContent}
-                onChange={handleVideoTextareaChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const textarea = e.target as HTMLTextAreaElement;
-                    setCursorPositionVideo(textarea.selectionStart + 1);
-                  }
-                }}
-                onSelect={(e) => {
-                  const textarea = e.target as HTMLTextAreaElement;
-                  setCursorPositionVideo(textarea.selectionStart);
-                }}
-                disabled={isPostingVideo}
-              />
-            </div>
+
+            <textarea
+              ref={videoTextareaRef}
+              className="w-full p-2 border border-gray-300 rounded-lg resize-none
+                   focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={3}
+              placeholder="Share your thoughts..."
+              value={videoContent}
+              onChange={handleVideoTextareaChange}
+              onSelect={(e) =>
+                setCursorPositionVideo(
+                  (e.target as HTMLTextAreaElement).selectionStart
+                )
+              }
+              disabled={isPostingVideo}
+            />
           </div>
 
+          {/* File Upload */}
           <SimpleFileUpload
             accept="video/*"
-            multiple={true}
+            multiple
             onFilesSelected={handleVideoFilesSelected}
           />
 
-          {/* Bilgi kutusu */}
+          {/* Video info list */}
           {uploadedVideoFiles.length > 0 && (
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+            <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-100">
               <p className="text-sm font-medium text-blue-700 mb-1">
                 Selected {uploadedVideoFiles.length} video(s)
               </p>
-              <ul className="text-xs text-blue-600">
+              <ul className="text-xs text-blue-600 space-y-1">
                 {uploadedVideoFiles.map((file, i) => (
                   <li key={i} className="truncate">
                     • {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
@@ -896,31 +823,29 @@ const CreatePostCard = () => {
             </div>
           )}
         </div>
+
         <ModalFooter>
           <button
             type="button"
-            className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors disabled:opacity-50"
             disabled={isPostingVideo}
+            className="flex items-center px-4 py-2 text-sm bg-gray-100
+                 rounded-md hover:bg-gray-200 disabled:opacity-50"
           >
-            <BsCameraVideoFill className="mr-1" /> Live video
+            <BsCameraVideoFill className="mr-1" />
+            Live video
           </button>
+
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleVideoPostSubmit}
             disabled={
               isPostingVideo ||
               (!videoContent.trim() && uploadedVideoFiles.length === 0)
             }
+            className="px-4 py-2 text-sm text-white bg-blue-600
+                 rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {isPostingVideo ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                Posting...
-              </>
-            ) : (
-              "Post"
-            )}
+            {isPostingVideo ? "Posting..." : "Post"}
           </button>
         </ModalFooter>
       </Modal>

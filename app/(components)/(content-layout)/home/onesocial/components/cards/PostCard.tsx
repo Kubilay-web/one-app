@@ -14,18 +14,107 @@ import {
   BsXCircle,
   BsSlashCircle,
   BsFlag,
-  BsHandThumbsUp, // Like için boş ikon
+  BsHandThumbsUp,
+  BsTrash, // Like için boş ikon
 } from "react-icons/bs";
 import GlightBox from "../GlightBox";
 import CommentItem from "./components/CommentItem";
 import VideoPlayer from "./components/VideoPlayer";
 import { useSession } from "@/app/SessionProvider";
+import usePostStore from "@/app/social-store/post";
 
-const ActionMenu = ({ name }: { name?: string }) => {
+const ActionMenu = ({
+  name,
+  postId,
+  currentUserId,
+}: {
+  name?: string;
+  postId: string;
+  currentUserId: string;
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const toggleSavePost = usePostStore((state) => state.toggleSavePost);
+  const deletePost = usePostStore((state) => state.deletePost);
+  const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
 
-  
+  const post = usePostStore((state) =>
+    state.posts.find((p) => p.id === postId)
+  );
+
+  const { user } = useSession();
+
+  const isOwnPost = user.id === currentUserId;
+
+  if (!post) return null;
+
+  const handleSave = async () => {
+    try {
+      await toggleSavePost(postId); // async state güncelle
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDropdownOpen(false); // menüyü kapat
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+    try {
+      await deletePost(postId);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDropdownOpen(false);
+    }
+  };
+
+  const handleFollowToggle = async () => {
+  if (!name) return;
+
+  try {
+    const endpoint = isFollowing
+      ? `/api/onesocial/follow/unfollow/${name}`
+      : `/api/onesocial/follow/${name}`;
+
+    const method = isFollowing ? "DELETE" : "POST";
+
+    const res = await fetch(endpoint, {
+      method,
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    // local toggle
+    setIsFollowing(!isFollowing);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setDropdownOpen(false);
+  }
+};
+
+  useEffect(() => {
+
+
+    const fetchStatus = async () => {
+      try {
+        const res = await fetch(`/api/onesocial/follow/status/${name}`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setIsFollowing(data.isFollowing);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchStatus();
+  }, [name]);
 
   return (
     <div className="relative">
@@ -38,20 +127,37 @@ const ActionMenu = ({ name }: { name?: string }) => {
       {dropdownOpen && (
         <div className="absolute right-0 mt-1 w-56 bg-white rounded-md shadow-lg z-10 border">
           <div className="py-1">
-            <Link
-              href="#"
-              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            <button
+              onClick={handleSave}
+              className="flex items-center px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100"
             >
-              <BsBookmark size={22} className="mr-2" />
-              Save post
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              <BsPersonX size={22} className="mr-2" />
-              Unfollow {name}
-            </Link>
+              {post.isSaved ? (
+                <BsBookmark size={22} className="mr-2 text-blue-600" />
+              ) : (
+                <BsBookmark size={22} className="mr-2" />
+              )}
+              {post.isSaved ? "Saved" : "Save post"}
+            </button>
+
+            {/* Delete Post — sadece kendi post'larında */}
+            {user.id === currentUserId && (
+              <button
+                onClick={handleDelete}
+                className="flex items-center px-4 py-2 w-full text-sm text-red-600 hover:bg-gray-100"
+              >
+                <BsTrash size={22} className="mr-2" />
+                Delete post
+              </button>
+            )}
+            {!isOwnPost && (
+              <button
+                onClick={handleFollowToggle}
+                className="flex items-center px-4 py-2 w-full text-sm hover:bg-gray-100"
+              >
+                <BsPersonX size={22} className="mr-2" />
+                {isFollowing ? `Unfollow ${name}` : `Follow ${name}`}
+              </button>
+            )}
             <Link
               href="#"
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -87,10 +193,9 @@ const PostCard = ({
   caption,
   image,
   photos,
+  videos,
   socialUser,
   likesCount: initialLikesCount,
-  comments,
-  commentsCount,
   isVideo,
   isLiked: initialIsLiked = false, // Başlangıçta beğenilme durumu
 }) => {
@@ -100,8 +205,14 @@ const PostCard = ({
   const [likesCount, setLikesCount] = useState(initialLikesCount || 0);
   const [isLoading, setIsLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
-  const [images, setImages] = useState(null); // Görsel eklemek için bir durum
   const { user } = useSession();
+
+  //Comment
+
+  const post = usePostStore((state) => state.posts.find((p) => p.id === id));
+
+  const comments = post?.comments ?? [];
+  const commentsCount = post?.commentsCount ?? 0;
 
   // Like/Unlike fonksiyonu
   const handleLike = async () => {
@@ -142,6 +253,8 @@ const PostCard = ({
     }
   };
 
+  const addCommentToPost = usePostStore((state) => state.addCommentToPost);
+
   // Kullanıcının bu post'u beğenip beğenmediğini kontrol et
   useEffect(() => {
     const checkIfLiked = async () => {
@@ -174,40 +287,29 @@ const PostCard = ({
     checkIfLiked();
   }, [id, user?.id]);
 
-
-
   const handleAddComment = async (e) => {
     e.preventDefault();
-
-    if (!newComment.trim()) {
-      alert("Yorum boş olamaz!");
-      return;
-    }
+    if (!newComment.trim()) return;
 
     try {
       const response = await fetch(`/api/onesocial/post/${id}/comments`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
-          content: newComment,
-          image, // Görsel varsa buraya eklenir
+          comment: newComment.trim(),
         }),
       });
 
       const data = await response.json();
+      if (!data.success) throw new Error(data.error);
 
-      if (data.success) {
-        setNewComment("");
-        setImages(null); // Yorum başarılıysa formu sıfırla
-        alert("Yorum başarıyla eklendi!");
-      } else {
-        alert(`Yorum eklenirken hata oluştu: ${data.error}`);
-      }
+      // ✅ BİREBİR BACKEND SHAPE
+      addCommentToPost(id, data.comment);
+
+      setNewComment("");
     } catch (error) {
-      console.error("Yorum eklerken hata:", error);
-      alert("Yorum eklerken bir hata oluştu!");
+      console.error("Comment error:", error);
     }
   };
 
@@ -219,8 +321,8 @@ const PostCard = ({
           <div className="relative w-12 h-12 mr-3">
             <Image
               className="rounded-full object-cover w-full h-full"
-              src={socialUser.avatar}
-              alt={socialUser.name}
+              src={socialUser?.avatar || "/default-avatar.png"}
+              alt={socialUser?.name}
               width={48}
               height={48}
             />
@@ -228,7 +330,7 @@ const PostCard = ({
           <div>
             <div className="flex items-center space-x-2">
               <h6 className="font-semibold cursor-pointer hover:text-blue-600">
-                {socialUser.name}
+                {socialUser?.name}
               </h6>
               <span className="text-sm text-gray-500">
                 {timeSince(createdAt)}
@@ -236,7 +338,11 @@ const PostCard = ({
             </div>
           </div>
         </div>
-        <ActionMenu name={socialUser.name} />
+        <ActionMenu
+          name={socialUser.name}
+          postId={id}
+          currentUserId={socialUser.id}
+        />
       </div>
 
       {/* Content */}
@@ -252,7 +358,7 @@ const PostCard = ({
             />
           </div>
         )}
-        {photos && (
+        {photos && photos.length > 0 && (
           <div className="grid grid-cols-2 gap-3">
             {photos.map((photo, idx) => (
               <GlightBox key={idx} href={photo} data-gallery="image-popup">
@@ -268,7 +374,7 @@ const PostCard = ({
             ))}
           </div>
         )}
-        {isVideo && <VideoPlayer />}
+        {/* {!isVideo && <VideoPlayer />} */}
       </div>
 
       {/* Actions */}

@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   BsBookmark,
   BsBookmarkCheck,
@@ -28,6 +28,7 @@ import Link from 'next/link'
 
 const ActionMenu = ({ name }: { name?: string }) => {
   const [isOpen, setIsOpen] = useState(false)
+ 
 
   return (
     <div className="relative">
