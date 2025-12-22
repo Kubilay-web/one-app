@@ -10,8 +10,8 @@ import nextConfig from "@/next.config";
 import { logout } from "@/app/(components)/(authentication-layout)/authentication/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/app/SessionProvider";
-import { Menu } from "@/app/(components)/(content-layout)/home/facebook/svg";
-import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
+// import { Menu } from "@/app/(components)/(content-layout)/home/facebook/svg";
+// import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
 import Flag from "react-world-flags";
 import "./style.css"
 
@@ -986,12 +986,12 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
               </div>
 
               {/* All Menu */}
-              <div className="circle_icon hover1" ref={allmenu}>
+              {/* <div className="circle_icon hover1" ref={allmenu}>
                 <div onClick={() => setShowAllMenu((prev) => !prev)}>
                   <Menu />
                 </div>
                 {showAllMenu && <AllMenu />}
-              </div>
+              </div> */}
 
               {/* Profil */}
               <div className="header-element md:!px-[0.5rem] px-2 ti-dropdown hs-dropdown !items-center [--placement:bottom-right] rtl:[--placement:bottom-left]">

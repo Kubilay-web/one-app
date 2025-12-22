@@ -36,7 +36,7 @@ const Cover = () => {
           toast.error(error);
         } else {
           toast.success('Login successful!');
-          router.push("/home/facebook/pages/home");
+          router.push("/home/onesocial/feed/home");
         }
       } catch (err) {
         setError("An unexpected error occurred");
