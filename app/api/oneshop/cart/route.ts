@@ -1,390 +1,302 @@
-import { NextRequest, NextResponse } from 'next/server';
-import db from '@/app/lib/db';
-import { validateRequest } from '@/app/auth';
+// import { NextRequest, NextResponse } from "next/server";
+// import db from "@/app/lib/db";
+// export async function GET(request: NextRequest) {
+//   try {
+//     const session = await getServerSession(authOptions);
+    
+//     if (!session?.user) {
+//       return NextResponse.json(
+//         { error: "Unauthorized" },
+//         { status: 401 }
+//       );
+//     }
 
-// GET: Sepeti getir
-export async function GET(req: NextRequest) {
-  try {
-    const {user} = await validateRequest();
-    if (!user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+//     const cart = await prisma.cart.findUnique({
+//       where: { userId: session.user.id },
+//       include: {
+//         cartItems: {
+//           include: {
+//             store: {
+//               select: {
+//                 id: true,
+//                 name: true,
+//                 url: true,
+//                 logo: true,
+//               },
+//             },
+//           },
+//         },
+//         coupon: {
+//           select: {
+//             id: true,
+//             code: true,
+//             discount: true,
+//           },
+//         },
+//       },
+//     });
 
-    const cart = await db.cart.findUnique({
-      where: {
-        userId: user.id,
-      },
-      include: {
-        cartItems: {
-          include: {
-            store: {
-              select: {
-                id: true,
-                name: true,
-                url: true,
-              },
-            },
-          },
-        },
-        coupon: true,
-      },
-    });
+//     if (!cart) {
+//       // Create empty cart if not exists
+//       const newCart = await prisma.cart.create({
+//         data: {
+//           userId: session.user.id,
+//           subTotal: 0,
+//           total: 0,
+//           shippingFees: 0,
+//         },
+//         include: {
+//           cartItems: {
+//             include: {
+//               store: {
+//                 select: {
+//                   id: true,
+//                   name: true,
+//                   url: true,
+//                   logo: true,
+//                 },
+//               },
+//             },
+//           },
+//           coupon: {
+//             select: {
+//               id: true,
+//               code: true,
+//               discount: true,
+//             },
+//           },
+//         },
+//       });
+      
+//       return NextResponse.json({
+//         cart: newCart,
+//         items: newCart.cartItems,
+//       });
+//     }
 
-    if (!cart) {
-      // Eğer sepet yoksa oluştur
-      const newCart = await db.cart.create({
-        data: {
-          userId: user.id,
-          subTotal: 0,
-          total: 0,
-          shippingFees: 0,
-        },
-      });
-      return NextResponse.json({ cart: newCart, items: [] });
-    }
+//     return NextResponse.json({
+//       cart,
+//       items: cart.cartItems,
+//     });
+//   } catch (error) {
+//     console.error("Fetch cart error:", error);
+//     return NextResponse.json(
+//       { error: "Failed to fetch cart" },
+//       { status: 500 }
+//     );
+//   }
+// }
 
-    return NextResponse.json({
-      cart,
-      items: cart.cartItems,
-    });
-  } catch (error) {
-    console.error('Cart fetch error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch cart' },
-      { status: 500 }
-    );
-  }
-}
+// export async function POST(request: NextRequest) {
+//   try {
+//     const session = await getServerSession(authOptions);
+    
+//     if (!session?.user) {
+//       return NextResponse.json(
+//         { error: "Unauthorized" },
+//         { status: 401 }
+//       );
+//     }
 
-// POST: Sepete ürün ekle
-export async function POST(req: NextRequest) {
-  try {
-     const {user} = await validateRequest();
-    if (!user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+//     const body = await request.json();
+//     const {
+//       productId,
+//       variantId,
+//       sizeId,
+//       productSlug,
+//       variantSlug,
+//       sku,
+//       name,
+//       image,
+//       size,
+//       price,
+//       quantity,
+//       shippingFee,
+//     } = body;
 
-    const body = await req.json();
-    const {
-      productId,
-      variantId,
-      sizeId,
-      productSlug,
-      variantSlug,
-      sku,
-      name,
-      image,
-      size,
-      price,
-      quantity = 1,
-      storeId,
-    } = body;
+//     // Validate required fields
+//     if (!productId || !variantId || !sizeId || !price) {
+//       return NextResponse.json(
+//         { error: "Missing required fields" },
+//         { status: 400 }
+//       );
+//     }
 
-    // Store'u kontrol et
-    const store = await db.store.findUnique({
-      where: { id: storeId },
-    });
+//     // Get or create cart
+//     let cart = await prisma.cart.findUnique({
+//       where: { userId: session.user.id },
+//       include: {
+//         cartItems: true,
+//         coupon: true,
+//       },
+//     });
 
-    if (!store) {
-      return NextResponse.json({ error: 'Store not found' }, { status: 404 });
-    }
+//     if (!cart) {
+//       cart = await prisma.cart.create({
+//         data: {
+//           userId: session.user.id,
+//           subTotal: 0,
+//           total: 0,
+//           shippingFees: 0,
+//         },
+//         include: {
+//           cartItems: true,
+//           coupon: true,
+//         },
+//       });
+//     }
 
-    // Kullanıcının sepetini bul veya oluştur
-    let cart = await db.cart.findUnique({
-      where: { userId: user.id },
-      include: { cartItems: true },
-    });
+//     // Check if product variant exists
+//     const variant = await prisma.productVariant.findUnique({
+//       where: { id: variantId },
+//       include: {
+//         product: {
+//           include: {
+//             store: true,
+//           },
+//         },
+//         sizes: {
+//           where: { id: sizeId },
+//         },
+//       },
+//     });
 
-    if (!cart) {
-      cart = await db.cart.create({
-        data: {
-          userId: user.id,
-          subTotal: 0,
-          total: 0,
-          shippingFees: 0,
-        },
-      });
-    }
+//     if (!variant) {
+//       return NextResponse.json(
+//         { error: "Product variant not found" },
+//         { status: 404 }
+//       );
+//     }
 
-    // Aynı ürün var mı kontrol et
-    const existingItem = cart.cartItems.find(
-      (item) =>
-        item.variantId === variantId &&
-        item.sizeId === sizeId &&
-        item.storeId === storeId
-    );
+//     if (variant.sizes.length === 0) {
+//       return NextResponse.json(
+//         { error: "Size not available" },
+//         { status: 400 }
+//       );
+//     }
 
-    if (existingItem) {
-      // Miktarı güncelle
-      const updatedItem = await db.cartItem.update({
-        where: { id: existingItem.id },
-        data: {
-          quantity: existingItem.quantity + quantity,
-          totalPrice: (existingItem.quantity + quantity) * price,
-        },
-      });
+//     const selectedSize = variant.sizes[0];
+    
+//     // Check stock
+//     if (selectedSize.quantity < quantity) {
+//       return NextResponse.json(
+//         { error: "Not enough stock available" },
+//         { status: 400 }
+//       );
+//     }
 
-      // Sepet toplamlarını güncelle
-      await updateCartTotals(cart.id);
-    } else {
-      // Yeni ürün ekle
-      await db.cartItem.create({
-        data: {
-          cartId: cart.id,
-          productId,
-          variantId,
-          sizeId,
-          productSlug,
-          variantSlug,
-          sku,
-          name,
-          image,
-          size,
-          price,
-          quantity,
-          shippingFee: await calculateShippingFee(storeId, quantity),
-          totalPrice: price * quantity,
-          storeId,
-        },
-      });
+//     // Calculate total price for this item
+//     const itemPrice = price || selectedSize.price;
+//     const itemDiscount = selectedSize.discount || 0;
+//     const discountedPrice = itemDiscount > 0 
+//       ? itemPrice - (itemPrice * itemDiscount / 100)
+//       : itemPrice;
+//     const itemTotalPrice = discountedPrice * quantity;
 
-      // Sepet toplamlarını güncelle
-      await updateCartTotals(cart.id);
-    }
+//     // Check if item already exists in cart
+//     const existingItem = await prisma.cartItem.findFirst({
+//       where: {
+//         cartId: cart.id,
+//         variantId,
+//         sizeId,
+//       },
+//     });
 
-    // Güncellenmiş sepeti döndür
-    const updatedCart = await db.cart.findUnique({
-      where: { id: cart.id },
-      include: {
-        cartItems: {
-          include: {
-            store: {
-              select: {
-                id: true,
-                name: true,
-                url: true,
-              },
-            },
-          },
-        },
-      },
-    });
+//     if (existingItem) {
+//       // Update existing item
+//       const newQuantity = existingItem.quantity + quantity;
+//       const newTotalPrice = discountedPrice * newQuantity;
 
-    return NextResponse.json({
-      success: true,
-      cart: updatedCart,
-    });
-  } catch (error) {
-    console.error('Add to cart error:', error);
-    return NextResponse.json(
-      { error: 'Failed to add item to cart' },
-      { status: 500 }
-    );
-  }
-}
+//       await prisma.cartItem.update({
+//         where: { id: existingItem.id },
+//         data: {
+//           quantity: newQuantity,
+//           totalPrice: newTotalPrice,
+//         },
+//       });
+//     } else {
+//       // Create new cart item
+//       await prisma.cartItem.create({
+//         data: {
+//           cartId: cart.id,
+//           productId,
+//           variantId,
+//           sizeId,
+//           productSlug,
+//           variantSlug,
+//           sku,
+//           name,
+//           image,
+//           size,
+//           price: discountedPrice,
+//           quantity,
+//           shippingFee: shippingFee || 0,
+//           totalPrice: itemTotalPrice,
+//           storeId: variant.product.storeId,
+//         },
+//       });
+//     }
 
-// PUT: Sepet öğesini güncelle
-export async function PUT(req: NextRequest) {
-  try {
-     const {user} = await validateRequest();
-    if (!user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+//     // Recalculate cart totals
+//     const updatedCartItems = await prisma.cartItem.findMany({
+//       where: { cartId: cart.id },
+//     });
 
-    const { searchParams } = new URL(req.url);
-    const itemId = searchParams.get('itemId');
-    const body = await req.json();
-    const { quantity } = body;
+//     const subTotal = updatedCartItems.reduce((sum, item) => sum + item.totalPrice, 0);
+//     const shippingFees = updatedCartItems.reduce((sum, item) => sum + item.shippingFee, 0);
+    
+//     let total = subTotal + shippingFees;
+    
+//     // Apply coupon discount if exists
+//     if (cart.coupon) {
+//       const discountAmount = (cart.coupon.discount / 100) * subTotal;
+//       total = subTotal - discountAmount + shippingFees;
+//     }
 
-    if (!itemId || quantity === undefined) {
-      return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
-    }
+//     // Update cart totals
+//     const updatedCart = await prisma.cart.update({
+//       where: { id: cart.id },
+//       data: {
+//         subTotal,
+//         total,
+//         shippingFees,
+//       },
+//       include: {
+//         cartItems: {
+//           include: {
+//             store: {
+//               select: {
+//                 id: true,
+//                 name: true,
+//                 url: true,
+//                 logo: true,
+//               },
+//             },
+//           },
+//           orderBy: {
+//             createdAt: 'desc',
+//           },
+//         },
+//         coupon: {
+//           select: {
+//             id: true,
+//             code: true,
+//             discount: true,
+//           },
+//         },
+//       },
+//     });
 
-    // Sepet öğesini bul
-    const cartItem = await db.cartItem.findUnique({
-      where: { id: itemId },
-      include: { cart: true },
-    });
-
-    if (!cartItem || cartItem.cart.userId !== user.id) {
-      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
-    }
-
-    if (quantity <= 0) {
-      // Eğer miktar 0 veya daha az ise, öğeyi sil
-      await db.cartItem.delete({
-        where: { id: itemId },
-      });
-    } else {
-      // Miktarı güncelle
-      await db.cartItem.update({
-        where: { id: itemId },
-        data: {
-          quantity,
-          totalPrice: cartItem.price * quantity,
-        },
-      });
-    }
-
-    // Sepet toplamlarını güncelle
-    await updateCartTotals(cartItem.cartId);
-
-    // Güncellenmiş sepeti döndür
-    const updatedCart = await db.cart.findUnique({
-      where: { id: cartItem.cartId },
-      include: {
-        cartItems: {
-          include: {
-            store: {
-              select: {
-                id: true,
-                name: true,
-                url: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      cart: updatedCart,
-    });
-  } catch (error) {
-    console.error('Update cart error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update cart' },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE: Sepet öğesini sil
-export async function DELETE(req: NextRequest) {
-  try {
-     const {user} = await validateRequest();
-    if (!user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { searchParams } = new URL(req.url);
-    const itemId = searchParams.get('itemId');
-
-    if (!itemId) {
-      return NextResponse.json({ error: 'Item ID required' }, { status: 400 });
-    }
-
-    // Sepet öğesini bul
-    const cartItem = await db.cartItem.findUnique({
-      where: { id: itemId },
-      include: { cart: true },
-    });
-
-    if (!cartItem || cartItem.cart.userId !== user.id) {
-      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
-    }
-
-    // Öğeyi sil
-    await db.cartItem.delete({
-      where: { id: itemId },
-    });
-
-    // Sepet toplamlarını güncelle
-    await updateCartTotals(cartItem.cartId);
-
-    // Güncellenmiş sepeti döndür
-    const updatedCart = await db.cart.findUnique({
-      where: { id: cartItem.cartId },
-      include: {
-        cartItems: {
-          include: {
-            store: {
-              select: {
-                id: true,
-                name: true,
-                url: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      cart: updatedCart,
-    });
-  } catch (error) {
-    console.error('Delete cart item error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete item from cart' },
-      { status: 500 }
-    );
-  }
-}
-
-// Yardımcı fonksiyonlar
-async function updateCartTotals(cartId: string) {
-  const cartItems = await db.cartItem.findMany({
-    where: { cartId },
-  });
-
-  const subTotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
-  const shippingFees = cartItems.reduce(
-    (sum, item) => sum + item.shippingFee,
-    0
-  );
-  const total = subTotal + shippingFees;
-
-  await db.cart.update({
-    where: { id: cartId },
-    data: {
-      subTotal,
-      shippingFees,
-      total,
-    },
-  });
-}
-
-async function calculateShippingFee(storeId: string, quantity: number) {
-  const store = await db.store.findUnique({
-    where: { id: storeId },
-    include: {
-      shippingRates: {
-        where: {
-          country: {
-            name: 'Turkey', // Varsayılan ülke
-          },
-        },
-      },
-    },
-  });
-
-  if (!store?.shippingRates?.[0]) {
-    return store?.defaultShippingFeeFixed || 0;
-  }
-
-  const rate = store.shippingRates[0];
-  let shippingFee = 0;
-
-  switch (store.defaultShippingService) {
-    case 'ITEM':
-      shippingFee =
-        rate.shippingFeePerItem +
-        Math.max(0, quantity - 1) * rate.shippingFeeForAdditionalItem;
-      break;
-    case 'WEIGHT':
-      // Varsayılan ağırlık hesaplaması
-      const weightPerItem = 0.5; // kg
-      shippingFee = rate.shippingFeePerKg * weightPerItem * quantity;
-      break;
-    case 'FIXED':
-      shippingFee = rate.shippingFeeFixed;
-      break;
-    default:
-      shippingFee = store.defaultShippingFeeFixed || 0;
-  }
-
-  return shippingFee;
-}
+//     return NextResponse.json({
+//       cart: updatedCart,
+//       items: updatedCart.cartItems,
+//       message: "Product added to cart successfully",
+//     });
+//   } catch (error) {
+//     console.error("Add to cart error:", error);
+//     return NextResponse.json(
+//       { error: "Failed to add to cart" },
+//       { status: 500 }
+//     );
+//   }
+// }

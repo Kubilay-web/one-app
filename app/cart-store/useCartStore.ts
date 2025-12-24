@@ -40,7 +40,7 @@ export const useCartStore = create(
           (item) =>
             item.productId === product.productId &&
             item.variantId === product.variantId &&
-            item.sizeId === product.sizeId,
+            item.sizeId === product.sizeId
         );
         if (cartItem) {
           const updatedCart = cart.map((item) =>
@@ -48,7 +48,7 @@ export const useCartStore = create(
             item.variantId === product.variantId &&
             item.sizeId === product.sizeId
               ? { ...item, quantity: item.quantity + product.quantity }
-              : item,
+              : item
           );
           set((state) => ({
             cart: updatedCart,
@@ -77,13 +77,13 @@ export const useCartStore = create(
           item.variantId === product.variantId &&
           item.sizeId === product.sizeId
             ? { ...item, quantity }
-            : item,
+            : item
         );
 
         const totalItems = updatedCart.length;
         const totalPrice = updatedCart.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0,
+          0
         );
         set(() => ({
           cart: updatedCart,
@@ -99,12 +99,12 @@ export const useCartStore = create(
               item.productId === product.productId &&
               item.variantId === product.variantId &&
               item.sizeId === product.sizeId
-            ),
+            )
         );
         const totalItems = updatedCart.length;
         const totalPrice = updatedCart.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0,
+          0
         );
         set(() => ({
           cart: updatedCart,
@@ -115,6 +115,7 @@ export const useCartStore = create(
         // Manually sync with localStorage after removal
         localStorage.setItem("cart", JSON.stringify(updatedCart));
       },
+
       removeMultipleFromCart: (products: CartProductType[]) => {
         const cart = get().cart;
         const updatedCart = cart.filter(
@@ -123,13 +124,13 @@ export const useCartStore = create(
               (product) =>
                 product.productId === item.productId &&
                 product.variantId === item.variantId &&
-                product.sizeId === item.sizeId,
-            ),
+                product.sizeId === item.sizeId
+            )
         );
         const totalItems = updatedCart.length;
         const totalPrice = updatedCart.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0,
+          0
         );
 
         set(() => ({
@@ -155,7 +156,7 @@ export const useCartStore = create(
         const totalItems = newCart.length;
         const totalPrice = newCart.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0,
+          0
         );
         set(() => ({
           cart: newCart,
@@ -163,9 +164,14 @@ export const useCartStore = create(
           totalPrice,
         }));
       },
+
+      clearCart: () => {
+        localStorage.removeItem("cart");
+        set({ cart: [], totalItems: 0, totalPrice: 0 });
+      },
     }),
     {
       name: "cart",
-    },
-  ),
+    }
+  )
 );

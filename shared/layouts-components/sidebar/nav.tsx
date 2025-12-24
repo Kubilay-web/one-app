@@ -256,6 +256,14 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Browse",
           },
+
+          {
+            path: `/shop/profile`,
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Profile",
+          },
           {
             path: "/shop/cart",
             type: "link",
@@ -273,7 +281,6 @@ export const getMenuItems = (user) => [
           },
         ],
       },
-
 
       {
         title: "OneSocial",

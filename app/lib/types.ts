@@ -313,6 +313,7 @@ export type CartProductType = {
   variantName: string;
   image: string;
   variantImage: string;
+  sku:string;
   sizeId: string;
   size: string;
   quantity: number;
@@ -326,6 +327,7 @@ export type CartProductType = {
   deliveryTimeMin: number;
   deliveryTimeMax: number;
   isFreeShipping: boolean;
+  totalPrice:number;
 };
 
 export type ProductVariantDataType = {

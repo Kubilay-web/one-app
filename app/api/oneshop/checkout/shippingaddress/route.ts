@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/app/lib/db';
+import db from "@/app/lib/db";
 import { validateRequest } from '@/app/auth';
 
-// GET: Tüm shipping adreslerini getir
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const {user} = await validateRequest();
-    if (!user?.id) {
+    
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(shippingAddresses);
   } catch (error) {
-    console.error('Fetch shipping addresses error:', error);
+    console.error('Error fetching shipping addresses:', error);
     return NextResponse.json(
       { error: 'Failed to fetch shipping addresses' },
       { status: 500 }
@@ -32,30 +32,18 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST: Yeni shipping adresi ekle
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const {user} = await validateRequest();
-    if (!user?.id) {
+    
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
-    const {
-      firstName,
-      lastName,
-      phone,
-      address1,
-      address2,
-      state,
-      city,
-      zip_code,
-      countryId,
-      default: isDefault,
-    } = body;
-
-    // Eğer default olarak işaretlenmişse, diğer adresleri default'tan çıkar
-    if (isDefault) {
+    const data = await request.json();
+    
+    // If setting as default, update all other addresses
+    if (data.default) {
       await db.shippingAddress.updateMany({
         where: {
           userId: user.id,
@@ -69,59 +57,47 @@ export async function POST(req: NextRequest) {
 
     const shippingAddress = await db.shippingAddress.create({
       data: {
-        firstName,
-        lastName,
-        phone,
-        address1,
-        address2,
-        state,
-        city,
-        zip_code,
-        default: isDefault || false,
+        ...data,
         userId: user.id,
-        countryId,
       },
       include: {
         country: true,
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      shippingAddress,
-    });
+    return NextResponse.json({ shippingAddress });
   } catch (error) {
-    console.error('Create shipping address error:', error);
+    console.error('Error adding shipping address:', error);
     return NextResponse.json(
-      { error: 'Failed to create shipping address' },
+      { error: 'Failed to add shipping address' },
       { status: 500 }
     );
   }
 }
 
-// PUT: Shipping adresini güncelle
-export async function PUT(req: NextRequest) {
+export async function PUT(request: NextRequest) {
   try {
     const {user} = await validateRequest();
-    if (!user?.id) {
+    
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const addressId = searchParams.get('id');
-    const body = await req.json();
-
-    if (!addressId) {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
       return NextResponse.json({ error: 'Address ID required' }, { status: 400 });
     }
 
-    const { default: isDefault, ...updateData } = body;
-
-    // Eğer default olarak işaretlenmişse, diğer adresleri default'tan çıkar
-    if (isDefault) {
+    const data = await request.json();
+    
+    // If setting as default, update all other addresses
+    if (data.default) {
       await db.shippingAddress.updateMany({
         where: {
           userId: user.id,
+          id: { not: id },
           default: true,
         },
         data: {
@@ -132,24 +108,18 @@ export async function PUT(req: NextRequest) {
 
     const shippingAddress = await db.shippingAddress.update({
       where: {
-        id: addressId,
+        id,
         userId: user.id,
       },
-      data: {
-        ...updateData,
-        default: isDefault,
-      },
+      data,
       include: {
         country: true,
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      shippingAddress,
-    });
+    return NextResponse.json({ shippingAddress });
   } catch (error) {
-    console.error('Update shipping address error:', error);
+    console.error('Error updating shipping address:', error);
     return NextResponse.json(
       { error: 'Failed to update shipping address' },
       { status: 500 }
@@ -157,34 +127,31 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// DELETE: Shipping adresini sil
-export async function DELETE(req: NextRequest) {
+export async function DELETE(request: NextRequest) {
   try {
     const {user} = await validateRequest();
-    if (!user?.id) {
+    
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const addressId = searchParams.get('id');
-
-    if (!addressId) {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
       return NextResponse.json({ error: 'Address ID required' }, { status: 400 });
     }
 
     await db.shippingAddress.delete({
       where: {
-        id: addressId,
+        id,
         userId: user.id,
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Shipping address deleted',
-    });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Delete shipping address error:', error);
+    console.error('Error deleting shipping address:', error);
     return NextResponse.json(
       { error: 'Failed to delete shipping address' },
       { status: 500 }
