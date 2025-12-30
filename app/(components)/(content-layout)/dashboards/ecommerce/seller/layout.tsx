@@ -9,6 +9,6 @@ export default async function SellerDashboardLayout({
 }) {
   const { user } = await validateRequest();
 
-  if (user.roleshop  !== "SELLER") redirect("/");
+  // if (user.roleshop  !== "SELLER") redirect("/");
   return <div>{children}</div>;
 }

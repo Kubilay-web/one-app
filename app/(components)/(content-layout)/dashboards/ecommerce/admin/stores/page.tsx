@@ -423,13 +423,7 @@ export default function AdminStoresPage() {
                   <Download className="w-4 h-4" />
                   Export
                 </button>
-                <Link
-                  href="/admin/stores/new"
-                  className="ti-btn ti-btn-primary flex items-center gap-2"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Store
-                </Link>
+         
               </div>
             </div>
           </div>

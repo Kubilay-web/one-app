@@ -27,11 +27,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
             <div className="flex flex-col gap-y-1">
               {user?.username}
               <span className="text-muted-foreground">{user?.email}</span>
-              <span className="w-fit">
+              {/* <span className="w-fit">
                 <Badge variant="secondary" className="capitalize">
                   {role?.toLocaleLowerCase()} Dashboard
                 </Badge>
-              </span>
+              </span> */}
             </div>
           </div>
         </Button>

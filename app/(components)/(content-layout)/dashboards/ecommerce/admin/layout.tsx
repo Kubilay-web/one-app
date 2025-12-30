@@ -9,14 +9,19 @@ export default async function Layout({
 }) {
   const { user } = await validateRequest();
 
-  if (user?.roleshop !== "ADMIN") redirect("/");
+  // Admin kontrolü örneği
+  // if (user?.roleshop !== "ADMIN") redirect("/");
 
   return (
-    <div className="flex gap-3 h-full w-full">
-      <Sidebar isAdmin />
-      <div>
-        <div>{children}</div>
+    <div className="flex flex-col gap-10 md:flex-row h-full w-full">
+      {/* Sidebar */}
+
+      <div className="w-full md:w-64 flex-shrink-0">
+        <Sidebar isAdmin />
       </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-4 overflow-auto">{children}</div>
     </div>
   );
 }

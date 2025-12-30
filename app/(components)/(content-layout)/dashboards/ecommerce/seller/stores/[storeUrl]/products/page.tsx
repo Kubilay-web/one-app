@@ -414,7 +414,7 @@ const SellerProductsPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen w-full">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto text-blue-600" />
           <p className="mt-2 text-gray-600">Loading products...</p>
@@ -451,7 +451,7 @@ const SellerProductsPage = () => {
           </div>
           
           <div className="flex items-center gap-4">
-            <Link href={`/seller/stores/${params.storeUrl}/products/new`}>
+            <Link href={`/dashboards/ecommerce/seller/stores/${params.storeUrl}/products/new`}>
               <Button className="gap-2">
                 <Plus className="h-4 w-4" />
                 Add Product

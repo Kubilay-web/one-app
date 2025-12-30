@@ -20,6 +20,17 @@ const LandingPage = async () => {
     <Fragment>
       {/* <!-- Start::app-content --> */}
       <div className="main-content landing-main ecommerce-main">
+        <div className="flex justify-end w-full">
+          <Link
+            scroll={false}
+            href="/shop/seller/apply"
+            className="ti-btn ti-btn-primary menu-btn"
+          >
+            Become A Seller{" "}
+            <i className="ti ti-arrow-right ms-1 d-inline-block"></i>
+          </Link>
+        </div>
+
         {/* <!-- Start:: Section-1 --> */}
         <section className="section-sm relative">
           <div className="container main-banner-container">
@@ -33,7 +44,7 @@ const LandingPage = async () => {
                       navigation={true}
                       autoplay={true}
                       className="mySwiper swiper-navigation"
-                    /> */}
+                    />  */}
                   </div>
                 </div>
               </div>
