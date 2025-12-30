@@ -1969,99 +1969,82 @@ export const getMenuItems = (user) => [
         type: "sub",
         active: false,
         children: [
+          // 🔹 ADMIN
           {
             title: "Admin",
             type: "sub",
             active: false,
             children: [
               {
-                path: "/dashboards/shop/admin/categories",
+                path: "/dashboards/ecommerce/admin/categories",
                 type: "link",
-                active: false,
-                selected: false,
                 title: "Categories",
               },
               {
-                path: "/dashboards/shop/admin/categories/new",
+                path: "/dashboards/ecommerce/admin/offer-tags",
                 type: "link",
-                active: false,
-                selected: false,
-                title: "Categories New",
-              },
-
-              {
-                path: "/dashboards/shop/admin/offer-tags",
-                type: "link",
-                active: false,
-                selected: false,
                 title: "Offer Tags",
               },
-
               {
-                path: "/dashboards/shop/admin/offer-tags/new",
+                path: "/dashboards/ecommerce/admin/stores",
                 type: "link",
-                active: false,
-                selected: false,
-                title: "Offer Tags New",
-              },
-
-              {
-                path: "/dashboards/shop/admin/stores",
-                type: "link",
-                active: false,
-                selected: false,
                 title: "Stores",
               },
-
               {
-                path: "/dashboards/shop/admin/subCategories",
+                path: "/dashboards/ecommerce/admin/subcategories",
                 type: "link",
-                active: false,
-                selected: false,
                 title: "SubCategories",
               },
+            ],
+          },
 
+          // 🔹 SELLER
+          {
+            title: "Seller",
+            type: "sub",
+            active: false,
+            children: [
               {
-                path: "/dashboards/shop/admin/subCategories/new",
+                path: "/dashboards/ecommerce/seller/",
                 type: "link",
                 active: false,
                 selected: false,
-                title: "SubCategories New",
+                title: "Main",
               },
             ],
           },
         ],
       },
 
-      {
-        title: "Shop2",
-        icon: Dashboardicon,
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/dashboards/store/add",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Add Items",
-          },
-          {
-            path: "/dashboards/store/list",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "List Items",
-          },
-          {
-            path: "/dashboards/store/orders",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Orders",
-          },
-        ],
-      },
+      // {
+      //   title: "Shop2",
+      //   icon: Dashboardicon,
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       path: "/dashboards/store/add",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Add Items",
+      //     },
+      //     {
+      //       path: "/dashboards/store/list",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "List Items",
+      //     },
+      //     {
+      //       path: "/dashboards/store/orders",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Orders",
+      //     },
+      //   ],
+      // },
 
       {
         title: "News",

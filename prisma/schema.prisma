@@ -15,6 +15,12 @@ enum Role {
   WRITER
 }
 
+enum RoleShop {
+  USER
+  ADMIN
+  SELLER
+}
+
 enum RoleJob {
   CANDIDATE
   ADMIN
@@ -42,6 +48,7 @@ model User {
 
   role                  Role           @default(USER)
   rolejob               RoleJob        @default(CANDIDATE)
+  roleshop              RoleShop       @default(USER)
   sessions              Session[]      @relation("UserSessions")
   posts                 Post[]         @relation("UserPosts")
   following             Follow[]       @relation("Following")
@@ -749,6 +756,10 @@ model OrderGroup {
   status OrderStatus @default(Pending)
 
   items OrderItem[] @relation("OrderItemToGroup")
+
+  trackingNumber  String?
+  shippingCompany String?
+  note            String?
 
   shippingService     String
   shippingDeliveryMin Int
@@ -1750,8 +1761,8 @@ model PostSocial {
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
 
-   React     React[]
-   SavedPost SavedPost[]
+  React     React[]
+  SavedPost SavedPost[]
 
   expiresAt DateTime? // Story'nin son kullanma tarihi (24 saat)
   viewers   Json? // Story'yi kimler gördü
@@ -1780,7 +1791,7 @@ model CommentSocial {
   commentBy   User       @relation(fields: [commentById], references: [id])
   commentById String
   commentAt   DateTime   @default(now())
-  post        PostSocial @relation(fields: [postId], references: [id],onDelete: Cascade)
+  post        PostSocial @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId      String     @db.ObjectId
 }
 
@@ -1836,7 +1847,7 @@ enum ReactType {
 model React {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   react     ReactType
-  postRef   PostSocial @relation(fields: [postRefId], references: [id] , onDelete:Cascade)
+  postRef   PostSocial @relation(fields: [postRefId], references: [id], onDelete: Cascade)
   postRefId String     @db.ObjectId
   reactBy   User       @relation(fields: [reactById], references: [id])
   reactById String
@@ -1847,7 +1858,7 @@ model React {
 
 model SavedPost {
   id      String     @id @default(auto()) @map("_id") @db.ObjectId
-  post    PostSocial @relation(fields: [postId], references: [id],onDelete: Cascade)
+  post    PostSocial @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId  String     @db.ObjectId
   savedAt DateTime   @default(now())
 
@@ -2111,3 +2122,5 @@ model FollowerInstagram {
 }
 
 //////////////////////////////////
+
+////

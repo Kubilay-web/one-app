@@ -4,37 +4,27 @@ export const adminDashboardSidebarOptions: DashboardSidebarMenuInterface[] = [
   {
     label: "Dashboard",
     icon: "dashboard",
-    link: "/dashboard/admin",
+    link: "/dashboards/ecommerce/admin",
   },
   {
     label: "Stores",
     icon: "store",
-    link: "/dashboard/admin/stores",
-  },
-  {
-    label: "Orders",
-    icon: "box-list",
-    link: "/dashboard/admin/orders",
+    link: "/dashboards/ecommerce/admin/stores",
   },
   {
     label: "Categories",
     icon: "categories",
-    link: "/dashboard/admin/categories",
+    link: "/dashboards/ecommerce/admin/categories",
   },
   {
     label: "Sub-Categories",
     icon: "categories",
-    link: "/dashboard/admin/subCategories",
+    link: "/dashboards/ecommerce/admin/subcategories",
   },
   {
     label: "Offer Tags",
     icon: "offer",
-    link: "/dashboard/admin/offer-tags",
-  },
-  {
-    label: "Coupons",
-    icon: "coupon",
-    link: "/dashboard/admin/coupons",
+    link: "/dashboards/ecommerce/admin/offer-tags",
   },
 ];
 
@@ -53,11 +43,6 @@ export const SellerDashboardSidebarOptions: DashboardSidebarMenuInterface[] = [
     label: "Orders",
     icon: "box-list",
     link: "orders",
-  },
-  {
-    label: "Inventory",
-    icon: "inventory",
-    link: "inventory",
   },
   {
     label: "Coupons",

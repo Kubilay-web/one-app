@@ -922,12 +922,12 @@ const handlePlaceOrder = async () => {
                       }
                     `}
                   >
-                    <div className="flex items-center gap-3">
+                    <div onClick={handlePlaceOrder} className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
                         <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <p className="font-medium">Credit/Debit Card</p>
+                        <p className="font-medium">Credit/Debit Card with Stripe</p>
                         <p className="text-sm text-gray-500">
                           Pay securely with your card
                         </p>
@@ -1009,125 +1009,10 @@ const handlePlaceOrder = async () => {
                 {/* Card Details Form */}
 
                 {/* Card Details Form */}
-                {paymentMethod === "card" && (
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mb-6">
-                    <h3 className="text-lg font-semibold mb-4">Card Details</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          Card Number *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          placeholder="1234 5678 9012 3456"
-                          value={cardDetails.number}
-                          onChange={(e) =>
-                            setCardDetails({
-                              ...cardDetails,
-                              number: e.target.value
-                                .replace(/\D/g, "")
-                                .replace(/(.{4})/g, "$1 ")
-                                .trim(),
-                            })
-                          }
-                          maxLength={19}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          Name on Card *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          placeholder="John Doe"
-                          value={cardDetails.name}
-                          onChange={(e) =>
-                            setCardDetails({
-                              ...cardDetails,
-                              name: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-2">
-                            Expiry Date (MM/YY) *
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                            placeholder="MM/YY"
-                            value={cardDetails.expiry}
-                            onChange={(e) =>
-                              setCardDetails({
-                                ...cardDetails,
-                                expiry: e.target.value
-                                  .replace(/\D/g, "")
-                                  .replace(/(.{2})/, "$1/"),
-                              })
-                            }
-                            maxLength={5}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-2">
-                            CVV *
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                            placeholder="123"
-                            value={cardDetails.cvv}
-                            onChange={(e) =>
-                              setCardDetails({
-                                ...cardDetails,
-                                cvv: e.target.value.replace(/\D/g, ""),
-                              })
-                            }
-                            maxLength={4}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          id="saveCard"
-                          checked={cardSaved}
-                          onChange={(e) => setCardSaved(e.target.checked)}
-                          className="rounded"
-                        />
-                        <label htmlFor="saveCard" className="text-sm">
-                          Save card for future purchases
-                        </label>
-                      </div>
-                      {/* Stripe Güvenlik Logoları */}
-                      <div className="pt-2">
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <Shield className="w-4 h-4 text-green-600" />
-                          <span>Secured by</span>
-                          <div className="flex items-center gap-1">
-                            <div className="w-8 h-5 bg-blue-900 rounded flex items-center justify-center text-[10px] text-white font-bold">
-                              Visa
-                            </div>
-                            <div className="w-8 h-5 bg-red-600 rounded flex items-center justify-center text-[10px] text-white font-bold">
-                              MC
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              
 
                 {/* Security Note - Güncellenmiş */}
-                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                {/* <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-5 h-5 text-green-600" />
                     <p className="font-medium">Secure Payment with Stripe</p>
@@ -1137,10 +1022,10 @@ const handlePlaceOrder = async () => {
                     store your card details. All transactions are encrypted and
                     PCI compliant.
                   </p>
-                </div>
+                </div> */}
 
                 {/* Security Note */}
-                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                {/* <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-5 h-5 text-green-600" />
                     <p className="font-medium">Secure Payment</p>
@@ -1149,7 +1034,7 @@ const handlePlaceOrder = async () => {
                     Your payment information is encrypted and secure. We don't
                     store your card details.
                   </p>
-                </div>
+                </div> */}
               </div>
 
               <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
@@ -1160,7 +1045,7 @@ const handlePlaceOrder = async () => {
                   Back to Personal Details
                 </button>
 
-                <button
+                {/* <button
                   onClick={handlePlaceOrder}
                   className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
                   disabled={!paymentMethod || loading}
@@ -1176,7 +1061,7 @@ const handlePlaceOrder = async () => {
                       <CheckCircle className="w-4 h-4" />
                     </>
                   )}
-                </button>
+                </button> */}
               </div>
             </div>
           )}
