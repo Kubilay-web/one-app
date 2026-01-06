@@ -23,15 +23,11 @@ export default async function SellerStoreDashboardLayout({
   });
 
   return (
-    <div className="flex flex-col gap-10 md:flex-row h-full w-full">
-      {/* Sidebar */}
-
-      <div className="w-full md:w-64 flex-shrink-0">
-        <Sidebar stores={stores} />
+    <div className="flex gap-3 h-full w-full">
+      <Sidebar stores={stores} />
+      <div>
+        <div>{children}</div>
       </div>
-
-      {/* Main Content */}
-      <div className="flex-1 p-4 overflow-auto">{children}</div>
     </div>
   );
 }

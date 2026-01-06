@@ -49,6 +49,8 @@ model User {
   role                  Role           @default(USER)
   rolejob               RoleJob        @default(CANDIDATE)
   roleshop              RoleShop       @default(USER)
+
+  
   sessions              Session[]      @relation("UserSessions")
   posts                 Post[]         @relation("UserPosts")
   following             Follow[]       @relation("Following")

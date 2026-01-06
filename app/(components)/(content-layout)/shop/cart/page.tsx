@@ -158,8 +158,7 @@ const CartPage = () => {
   const getTotal = () => {
     const subTotal = getSubTotal();
     const shippingFees = getShippingFees();
-    const tax = subTotal * 0.18;
-    return subTotal + shippingFees + tax;
+    return subTotal + shippingFees;
   };
 
   const getItemCount = () => {
@@ -192,6 +191,7 @@ const CartPage = () => {
     return <CartSkeleton />;
   }
 
+
   if (cart.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -213,6 +213,7 @@ const CartPage = () => {
       </div>
     );
   }
+  
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -341,7 +342,7 @@ const CartPage = () => {
             </div>
             <div className="p-6 space-y-4">
               {/* Delivery Options */}
-              <div>
+              {/* <div>
                 <p className="font-medium mb-2">Delivery Options</p>
                 <div className="grid grid-cols-2 gap-2">
                   <button
@@ -370,9 +371,9 @@ const CartPage = () => {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                   Delivered by {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}
                 </p>
-              </div>
+              </div> */}
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4"></div>
+              {/* <div className="border-t border-gray-200 dark:border-gray-700 pt-4"></div> */}
 
               {/* Coupon Code */}
               <div>
@@ -410,10 +411,6 @@ const CartPage = () => {
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span>${shippingFees.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tax (18%)</span>
-                  <span>${(subTotal * 0.18).toFixed(2)}</span>
                 </div>
               </div>
 

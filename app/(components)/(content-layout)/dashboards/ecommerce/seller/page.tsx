@@ -16,6 +16,8 @@ export default async function SellerDashboardPage() {
     },
   });
 
+  console.log("stores",stores)
+
   if (stores.length === 0) {
     redirect("/dashboards/ecommerce/seller/stores/new");
     return;

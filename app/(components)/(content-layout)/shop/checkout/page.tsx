@@ -29,8 +29,7 @@ const Checkout = () => {
   const { toast } = useToast();
 
   // Cart store
-  const { cart, totalItems, totalPrice, setCart } = useCartStore();
-
+  const { cart, totalItems, totalPrice, setCart, clearCart } = useCartStore();
 
   console.log("cart",cart)
 
@@ -78,16 +77,8 @@ const Checkout = () => {
     default: false,
   });
 
-  // Card details state
-  const [cardDetails, setCardDetails] = useState({
-    number: "",
-    name: "",
-    expiry: "",
-    cvv: "",
-  });
-
-  const [cardSaved, setCardSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Fetch data on mount
   useEffect(() => {
@@ -116,15 +107,9 @@ const Checkout = () => {
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
-  const getShippingFees = () => {
-    return shippingMethod === "express" ? 9.99 : 4.99;
-  };
-
   const getTotal = () => {
     const subTotal = getSubTotal();
-    const shippingFees = getShippingFees();
-    const tax = subTotal * 0.18;
-    return subTotal + shippingFees + tax;
+    return subTotal ;
   };
 
   const getItemCount = () => {
@@ -135,7 +120,6 @@ const Checkout = () => {
     const grouped: StoreGroupedItems = {};
 
     cart.forEach((item) => {
-      // Store ID'sini item'dan alabilirsiniz, şimdilik sabit değer
       const storeId = "store-1";
       if (!grouped[storeId]) {
         grouped[storeId] = [];
@@ -149,7 +133,6 @@ const Checkout = () => {
   // Calculate totals
   const subTotal = getSubTotal();
   const total = getTotal();
-  const shippingFees = getShippingFees();
   const itemCount = getItemCount();
   const storeGroupedItems = getStoreGroupedItems();
 
@@ -231,79 +214,83 @@ const Checkout = () => {
   };
 
   // Handle order placement
-
-  // Handle order placement
-
-  // Handle order placement
-
-  // Checkout component - Güncellenmiş handlePlaceOrder
-const handlePlaceOrder = async () => {
-  if (!selectedAddressId) {
-    toast({
-      title: "Error",
-      description: "Please select a shipping address.",
-      variant: "destructive",
-    });
-    return;
-  }
-
-  if (!paymentMethod) {
-    toast({
-      title: "Error",
-      description: "Please select a payment method.",
-      variant: "destructive",
-    });
-    return;
-  }
-
-  // Cart validation - useCartStore'dan kontrol et
-  if (cart.length === 0) {
-    toast({
-      title: "Error",
-      description: "Your cart is empty. Please add items to your cart.",
-      variant: "destructive",
-    });
-    return;
-  }
-
-  setLoading(true);
-  try {
-    const result = await placeOrder();
-
-    if (result.success) {
-      if (result.paymentUrl && paymentMethod === 'card') {
-        // Stripe Checkout'e yönlendir
-        window.location.href = result.paymentUrl;
-      } else {
-        toast({
-          title: "Order Placed!",
-          description: "Your order has been placed successfully.",
-        });
-        
-        // Move to confirmation step for COD/UPI
-        if (paymentMethod === 'cod' || paymentMethod === 'upi') {
-          setStep(4);
-        }
-      }
-    } else {
+  const handlePlaceOrder = async () => {
+    if (!selectedAddressId) {
       toast({
         title: "Error",
-        description: result.error || "Failed to place order.",
+        description: "Please select a shipping address.",
         variant: "destructive",
       });
+      return;
     }
-  } catch (error: any) {
-    toast({
-      title: "Error",
-      description: error.message || "An unexpected error occurred.",
-      variant: "destructive",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
 
+    if (!paymentMethod) {
+      toast({
+        title: "Error",
+        description: "Please select a payment method.",
+        variant: "destructive",
+      });
+      return;
+    }
 
+    if (cart.length === 0) {
+      toast({
+        title: "Error",
+        description: "Your cart is empty. Please add items to your cart.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const result = await placeOrder();
+
+      if (result.success) {
+        if (result.paymentUrl && (paymentMethod === 'card' || paymentMethod === 'paypal')) {
+          // Stripe veya PayPal Checkout'e yönlendir
+          window.location.href = result.paymentUrl;
+        } else {
+          toast({
+            title: "Order Placed!",
+            description: "Your order has been placed successfully.",
+          });
+          
+          // Clear cart on successful order
+          clearCart();
+          
+          // Move to confirmation step for COD/UPI
+          if (paymentMethod === 'cod' || paymentMethod === 'upi') {
+            setStep(3);
+          }
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "Failed to place order.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Handle payment method selection
+  const handlePaymentMethodSelect = async (method: string) => {
+    setPaymentMethod(method);
+    
+    // If it's a card payment, automatically proceed to place order
+    if (method === 'card' || method === 'paypal') {
+      await handlePlaceOrder();
+    }
+  };
 
   // Loading state
   if (loading || checkoutLoading) {
@@ -346,9 +333,6 @@ const handlePlaceOrder = async () => {
     );
   }
 
-  // Stripe'ı yükle
-  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
-
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
@@ -359,10 +343,10 @@ const handlePlaceOrder = async () => {
         </p>
       </div>
 
-      {/* Progress Steps */}
+      {/* Progress Steps - 3 adıma düşürüldü */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          {[1, 2, 3, 4].map((stepNumber) => (
+        <div className="flex items-center justify-center mb-4">
+          {[1, 2, 3].map((stepNumber) => (
             <div key={stepNumber} className="flex items-center">
               <div
                 className={`
@@ -376,10 +360,10 @@ const handlePlaceOrder = async () => {
               >
                 {stepNumber}
               </div>
-              {stepNumber < 4 && (
+              {stepNumber < 3 && (
                 <div
                   className={`
-                  h-1 w-16 mx-2
+                  h-1 w-32 mx-2
                   ${step > stepNumber ? "bg-blue-600" : "bg-gray-200 dark:bg-gray-700"}
                 `}
                 />
@@ -387,31 +371,24 @@ const handlePlaceOrder = async () => {
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-sm max-w-md mx-auto">
           <span
             className={
               step === 1 ? "text-blue-600 font-medium" : "text-gray-500"
             }
           >
-            Shipping
+            Shipping Address
           </span>
           <span
             className={
               step === 2 ? "text-blue-600 font-medium" : "text-gray-500"
             }
           >
-            Personal Details
+            Payment Method
           </span>
           <span
             className={
               step === 3 ? "text-blue-600 font-medium" : "text-gray-500"
-            }
-          >
-            Payment
-          </span>
-          <span
-            className={
-              step === 4 ? "text-blue-600 font-medium" : "text-gray-500"
             }
           >
             Confirmation
@@ -738,49 +715,6 @@ const handlePlaceOrder = async () => {
                     </div>
                   </form>
                 )}
-
-                {/* Shipping Method */}
-                {/* <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-3">Shipping Method</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <button
-                      onClick={() => setShippingMethod('standard')}
-                      className={`
-                        p-4 border rounded-lg text-left transition-all
-                        ${shippingMethod === 'standard'
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
-                        }
-                      `}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium">Standard Delivery</p>
-                          <p className="text-sm text-gray-500">5-7 business days</p>
-                        </div>
-                        <p className="font-semibold">${shippingFees.toFixed(2)}</p>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setShippingMethod('express')}
-                      className={`
-                        p-4 border rounded-lg text-left transition-all
-                        ${shippingMethod === 'express'
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
-                        }
-                      `}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium">Express Delivery</p>
-                          <p className="text-sm text-gray-500">2-3 business days</p>
-                        </div>
-                        <p className="font-semibold">${(shippingFees * 1.5).toFixed(2)}</p>
-                      </div>
-                    </button>
-                  </div>
-                </div> */}
               </div>
 
               <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end">
@@ -789,105 +723,6 @@ const handlePlaceOrder = async () => {
                   className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
                   disabled={!selectedAddressId}
                 >
-                  Continue to Personal Details
-                  <User className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 2: Personal Details */}
-          {step === 2 && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <User className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold">Personal Details</h2>
-                </div>
-                <p className="text-gray-500">
-                  Complete your personal information
-                </p>
-              </div>
-
-              <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                      placeholder="First Name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                      placeholder="Last Name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                      placeholder="Email"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                      placeholder="Phone"
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium mb-2">
-                      Order Note (Optional)
-                    </label>
-                    <textarea
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                      rows={3}
-                      placeholder="Any special instructions for your order..."
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md mb-6">
-                  <MapPin className="w-5 h-5 text-blue-600" />
-                  <p className="text-sm text-blue-600 dark:text-blue-400">
-                    Selected Address:{" "}
-                    {
-                      shippingAddresses.find((a) => a.id === selectedAddressId)
-                        ?.address1
-                    }
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
-                <button
-                  onClick={prevStep}
-                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  Back to Shipping
-                </button>
-                <button
-                  onClick={nextStep}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
-                >
                   Continue to Payment
                   <CreditCard className="w-4 h-4" />
                 </button>
@@ -895,8 +730,8 @@ const handlePlaceOrder = async () => {
             </div>
           )}
 
-          {/* Step 3: Payment */}
-          {step === 3 && (
+          {/* Step 2: Payment (Eski Step 3) */}
+          {step === 2 && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-2">
@@ -909,10 +744,72 @@ const handlePlaceOrder = async () => {
               </div>
 
               <div className="p-6">
+                {/* Order Note Section */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Order Note (Optional)
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+                    rows={3}
+                    placeholder="Any special instructions for your order..."
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
+                </div>
+
+                {/* Selected Address Display */}
+                {selectedAddressId && (
+                  <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-blue-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="font-medium text-blue-800 dark:text-blue-400 mb-1">
+                          Shipping to:
+                        </p>
+                        {(() => {
+                          const address = shippingAddresses.find((a) => a.id === selectedAddressId);
+                          return address ? (
+                            <>
+                              <p className="text-sm text-blue-700 dark:text-blue-300">
+                                {address.firstName} {address.lastName}
+                              </p>
+                              <p className="text-sm text-blue-600 dark:text-blue-400">
+                                {address.address1}
+                                {address.address2 && `, ${address.address2}`}
+                              </p>
+                              <p className="text-sm text-blue-600 dark:text-blue-400">
+                                {address.city}, {address.state} {address.zip_code}
+                              </p>
+                              <p className="text-sm text-blue-600 dark:text-blue-400">
+                                {address.country?.name}
+                              </p>
+                              <p className="text-sm text-blue-600 dark:text-blue-400">
+                                Phone: {address.phone}
+                              </p>
+                            </>
+                          ) : (
+                            <p className="text-sm text-blue-600 dark:text-blue-400">
+                              Address not found
+                            </p>
+                          );
+                        })()}
+                      </div>
+                      <button
+                        onClick={() => setStep(1)}
+                        className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Payment Method Selection */}
                 <div className="space-y-4 mb-6">
                   <button
-                    onClick={() => setPaymentMethod("card")}
+                    onClick={() => handlePaymentMethodSelect("card")}
+                    disabled={isProcessing}
                     className={`
                       w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
                       ${
@@ -920,9 +817,10 @@ const handlePlaceOrder = async () => {
                           ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                           : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
                       }
+                      ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
                     `}
                   >
-                    <div onClick={handlePlaceOrder} className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
                         <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       </div>
@@ -952,7 +850,49 @@ const handlePlaceOrder = async () => {
                   </button>
 
                   <button
+                    onClick={() => handlePaymentMethodSelect("paypal")}
+                    disabled={isProcessing}
+                    className={`
+                      w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
+                      ${
+                        paymentMethod === "paypal"
+                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+                      }
+                      ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
+                    `}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
+                        <Image
+                          src="/images/payment/paypal.png"
+                          alt="PayPal"
+                          width={24}
+                          height={24}
+                          className="object-contain"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-medium">PayPal</p>
+                        <p className="text-sm text-gray-500">
+                          Pay securely with PayPal
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <Image
+                        src="/images/payment/paypal-logo.png"
+                        alt="PayPal"
+                        width={60}
+                        height={20}
+                        className="object-contain"
+                      />
+                    </div>
+                  </button>
+
+                  <button
                     onClick={() => setPaymentMethod("cod")}
+                    disabled={isProcessing}
                     className={`
                       w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
                       ${
@@ -960,6 +900,7 @@ const handlePlaceOrder = async () => {
                           ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                           : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
                       }
+                      ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
                     `}
                   >
                     <div className="flex items-center gap-3">
@@ -977,6 +918,7 @@ const handlePlaceOrder = async () => {
 
                   <button
                     onClick={() => setPaymentMethod("upi")}
+                    disabled={isProcessing}
                     className={`
                       w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
                       ${
@@ -984,6 +926,7 @@ const handlePlaceOrder = async () => {
                           ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                           : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
                       }
+                      ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
                     `}
                   >
                     <div className="flex items-center gap-3">
@@ -1006,68 +949,54 @@ const handlePlaceOrder = async () => {
                   </button>
                 </div>
 
-                {/* Card Details Form */}
-
-                {/* Card Details Form */}
-              
-
-                {/* Security Note - Güncellenmiş */}
-                {/* <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Shield className="w-5 h-5 text-green-600" />
-                    <p className="font-medium">Secure Payment with Stripe</p>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Your payment is processed securely through Stripe. We never
-                    store your card details. All transactions are encrypted and
-                    PCI compliant.
-                  </p>
-                </div> */}
-
                 {/* Security Note */}
-                {/* <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-5 h-5 text-green-600" />
                     <p className="font-medium">Secure Payment</p>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Your payment information is encrypted and secure. We don't
-                    store your card details.
+                    Your payment is processed securely through Stripe or PayPal. 
+                    We never store your card details. All transactions are encrypted 
+                    and PCI compliant.
                   </p>
-                </div> */}
+                </div>
               </div>
 
               <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
                 <button
                   onClick={prevStep}
                   className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                  disabled={isProcessing}
                 >
-                  Back to Personal Details
+                  Back to Address
                 </button>
 
-                {/* <button
-                  onClick={handlePlaceOrder}
-                  className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
-                  disabled={!paymentMethod || loading}
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Place Order
-                      <CheckCircle className="w-4 h-4" />
-                    </>
-                  )}
-                </button> */}
+                {(paymentMethod === 'cod' || paymentMethod === 'upi') && (
+                  <button
+                    onClick={handlePlaceOrder}
+                    className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
+                    disabled={!paymentMethod || isProcessing}
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        Place Order
+                        <CheckCircle className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           )}
 
-          {/* Step 4: Confirmation */}
-          {step === 4 && (
+          {/* Step 3: Confirmation (Eski Step 4) */}
+          {step === 3 && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="p-12 text-center">
                 <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
@@ -1104,10 +1033,12 @@ const handlePlaceOrder = async () => {
                     <span className="text-gray-600">Payment Method</span>
                     <span className="font-medium">
                       {paymentMethod === "card"
-                        ? "Credit Card"
-                        : paymentMethod === "cod"
-                          ? "Cash on Delivery"
-                          : "UPI"}
+                        ? "Credit Card (Stripe)"
+                        : paymentMethod === "paypal"
+                          ? "PayPal"
+                          : paymentMethod === "cod"
+                            ? "Cash on Delivery"
+                            : "UPI"}
                     </span>
                   </div>
                 </div>
@@ -1186,17 +1117,7 @@ const handlePlaceOrder = async () => {
 
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
-                    <span>
-                      $
-                      {shippingMethod === "express"
-                        ? (shippingFees * 1.5).toFixed(2)
-                        : shippingFees.toFixed(2)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tax (18%)</span>
-                    <span>${(subTotal * 0.18).toFixed(2)}</span>
+                    <span className="font-medium">Free</span>
                   </div>
 
                   <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">

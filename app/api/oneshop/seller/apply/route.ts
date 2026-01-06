@@ -1,70 +1,96 @@
-// app/api/seller/apply/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import db from '@/app/lib/db';
-import { validateRequest } from '@/app/auth';
+import { NextRequest, NextResponse } from "next/server";
+import db from "@/app/lib/db";
+import { RoleShop, StoreStatus } from "@prisma/client";
+import { validateRequest } from "@/app/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    // Kullanıcı oturumunu kontrol et
-    const {user} = await validateRequest();
-    
+    const { user } = await validateRequest();
+
     if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+
+    if (!body.name || !body.email || !body.phone || !body.url) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
+        { error: "Missing required fields" },
+        { status: 400 }
       );
     }
 
-    // Request body'den form verilerini al
-    const formData = await request.json();
-    
-    // 1. Önce kullanıcının roleshop alanını SELLER olarak güncelle
-    const updatedUser = await db.user.update({
-      where: {
-        id: user.id
-      },
-      data: {
-        roleshop: 'SELLER'
-      }
+    // 🔴 DB'DEN GERÇEK USER'I TEKRAR ÇEK
+    const dbUser = await db.user.findUnique({
+      where: { id: user.id },
+      select: { id: true, roleshop: true }
     });
 
-    // 2. Store kaydını oluştur
-    const store = await db.store.create({
-      data: {
-        name: formData.name,
-        description: formData.description,
-        email: formData.email,
-        phone: formData.phone,
-        url: formData.url,
-        logo: formData.logo,
-        cover: formData.cover,
-        defaultShippingService: formData.defaultShippingService || 'International Delivery',
-        defaultShippingFeePerItem: formData.defaultShippingFeePerItem || 0,
-        defaultShippingFeeForAdditionalItem: formData.defaultShippingFeeForAdditionalItem || 0,
-        defaultShippingFeePerKg: formData.defaultShippingFeePerKg || 0,
-        defaultShippingFeeFixed: formData.defaultShippingFeeFixed || 0,
-        defaultDeliveryTimeMin: formData.defaultDeliveryTimeMin || 7,
-        defaultDeliveryTimeMax: formData.defaultDeliveryTimeMax || 31,
-        returnPolicy: formData.returnPolicy || 'Return in 30 days.',
-        userId: user.id,
-        status: 'PENDING' // Başlangıçta PENDING olarak ayarla
-      }
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (dbUser.roleshop === RoleShop.SELLER) {
+      return NextResponse.json(
+        { error: "Already seller" },
+        { status: 400 }
+      );
+    }
+
+    // 🔥 TRANSACTION
+    const result = await db.$transaction(async (tx) => {
+      const updatedUser = await tx.user.update({
+        where: { id: user.id },
+        data: {
+          roleshop: RoleShop.SELLER
+        }
+      });
+
+      const store = await tx.store.create({
+        data: {
+          name: body.name,
+          description: body.description || "",
+          email: body.email,
+          phone: body.phone,
+          url: body.url,
+          logo: body.logo || "/default-store-logo.png",
+          cover: body.cover || "/default-store-cover.jpg",
+          defaultShippingService:
+            body.defaultShippingService || "International Delivery",
+          defaultShippingFeePerItem: Number(body.defaultShippingFeePerItem) || 0,
+          defaultShippingFeeForAdditionalItem:
+            Number(body.defaultShippingFeeForAdditionalItem) || 0,
+          defaultShippingFeePerKg: Number(body.defaultShippingFeePerKg) || 0,
+          defaultShippingFeeFixed: Number(body.defaultShippingFeeFixed) || 0,
+          defaultDeliveryTimeMin: Number(body.defaultDeliveryTimeMin) || 7,
+          defaultDeliveryTimeMax: Number(body.defaultDeliveryTimeMax) || 31,
+          returnPolicy: body.returnPolicy || "Return in 30 days",
+          userId: user.id,
+          status: StoreStatus.PENDING,
+          averageRating: 0,
+          featured: false
+        }
+      });
+
+      return { updatedUser, store };
     });
+
+    // ✅ DB'DEN TEKRAR OKU (KANIT)
+    const finalUser = await db.user.findUnique({
+      where: { id: user.id },
+      select: { id: true, roleshop: true }
+    });
+
 
     return NextResponse.json({
       success: true,
-      message: 'Store application submitted successfully',
-      user: {
-        id: updatedUser.id,
-        roleshop: updatedUser.roleshop
-      },
-      store: store
+      user: finalUser,
+      store: result.store
     });
-
-  } catch (error) {
-    console.error('Error applying for seller:', error);
+  } catch (err: any) {
+    console.error("APPLY SELLER ERROR:", err);
     return NextResponse.json(
-      { error: 'Failed to submit application' },
+      { error: "Internal server error", detail: err.message },
       { status: 500 }
     );
   }

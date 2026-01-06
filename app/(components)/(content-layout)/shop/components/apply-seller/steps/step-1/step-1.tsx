@@ -11,6 +11,7 @@ import UserDetails from "./user-details";
 
 export default function Step1({ step, setStep }) {
   const [user, setUser] = useState<any>(null);
+
   useEffect(() => {
     const fetchUser = async () => {
       const userData = await UserInfo();
