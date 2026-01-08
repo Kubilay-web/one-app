@@ -1605,6 +1605,13 @@ const ProductDetails = () => {
         (selectedSize.price -
           (selectedSize.price * selectedSize.discount) / 100) *
         quantity,
+
+
+            // STORE BİLGİLERİ - EKSİK OLAN KISIM
+    storeId: product.store?.id || "",
+    storeName: product.store?.name || "",
+    storeLogo: product.store?.logo || "",
+    storeUrl: product.store?.id ? `/store/${product.store.id}` : "",
     };
 
     addToCart(cartItem);

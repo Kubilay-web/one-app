@@ -328,6 +328,12 @@ export type CartProductType = {
   deliveryTimeMax: number;
   isFreeShipping: boolean;
   totalPrice:number;
+
+    // Store bilgileri - BU KISIM EKSİK
+  storeId: string;
+  storeName: string;
+  storeLogo?: string;
+  storeUrl?: string;
 };
 
 export type ProductVariantDataType = {
@@ -708,3 +714,60 @@ type ErrorResponse = ActionResponse<undefined> & { success: false };
 
 type APIErrorResponse = NextResponse<ErrorResponse>;
 type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
+
+
+
+
+
+
+export interface AppliedCouponType {
+  couponId: string;
+  code: string;
+  discountPercentage: number;
+  discountAmount: number;
+  storeId: string;
+  storeName: string;
+  subtotal: number;
+  totalAfterDiscount: number;
+}
+
+export interface CouponValidationRequest {
+  couponCode: string;
+  userId?: string;
+}
+
+export interface CouponValidationResponse {
+  valid: boolean;
+  message: string;
+  coupon?: {
+    id: string;
+    code: string;
+    discount: number;
+    storeName: string;
+  };
+}
+
+export interface CouponApplyRequest {
+  couponCode: string;
+  cart: CartProductType[];
+}
+
+export interface CouponApplyResponse {
+  success: boolean;
+  message: string;
+  coupon?: AppliedCouponType;
+}
+
+export interface CouponRemoveRequest {
+  couponId: string;
+  userId?: string;
+}
+
+export interface CouponRemoveResponse {
+  success: boolean;
+  message: string;
+  coupon?: {
+    id: string;
+    code: string;
+  };
+}

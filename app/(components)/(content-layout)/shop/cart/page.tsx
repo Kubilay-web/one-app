@@ -5,8 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/app/cart-store/useCartStore";
 import { useToast } from "@/app/projects/components/ui/use-toast";
-import { Trash2, Plus, Minus, Heart, Truck, Tag, ShoppingBag } from "lucide-react";
-import { CartProductType } from "@/app/lib/types";
+import {
+  Trash2,
+  Plus,
+  Minus,
+  Heart,
+  Truck,
+  Tag,
+  ShoppingBag,
+} from "lucide-react";
+import { AppliedCouponType, CartProductType } from "@/app/lib/types";
+import { useSession } from "@/app/SessionProvider";
 
 interface CartItemType {
   id: string;
@@ -40,19 +49,42 @@ const CartPage = () => {
   const { toast } = useToast();
   const [couponCode, setCouponCode] = useState("");
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-  const [shippingMethod, setShippingMethod] = useState<"free" | "express">("free");
+  const [shippingMethod, setShippingMethod] = useState<"free" | "express">(
+    "free"
+  );
   const [loading, setLoading] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCouponType | null>(
+    null
+  );
 
-  // LocalStorage'dan cart'ı yükle
+  const { user } = useSession();
+
+  // LocalStorage'dan cart ve coupon'ı yükle
   useEffect(() => {
     const loadCart = () => {
       try {
         setLoading(true);
+        
+        // Cart'ı yükle
         const savedCart = localStorage.getItem("cart");
         if (savedCart) {
           const parsedCart: CartProductType[] = JSON.parse(savedCart);
           setCart(parsedCart);
         }
+        
+        // Applied coupon'ı yükle
+        const savedCoupon = localStorage.getItem("appliedCoupon");
+        if (savedCoupon) {
+          try {
+            const parsedCoupon: AppliedCouponType = JSON.parse(savedCoupon);
+            setAppliedCoupon(parsedCoupon);
+            console.log("Loaded coupon from localStorage:", parsedCoupon);
+          } catch (e) {
+            console.error("Failed to parse coupon from localStorage:", e);
+            localStorage.removeItem("appliedCoupon"); // Geçersiz veriyi temizle
+          }
+        }
+        
       } catch (error) {
         console.error("Failed to load cart from localStorage:", error);
       } finally {
@@ -63,9 +95,12 @@ const CartPage = () => {
     loadCart();
   }, [setCart]);
 
-  const handleQuantityChange = (product: CartProductType, newQuantity: number) => {
+  const handleQuantityChange = (
+    product: CartProductType,
+    newQuantity: number
+  ) => {
     if (newQuantity < 1) return;
-    
+
     try {
       updateProductQuantity(product, newQuantity);
       toast({
@@ -82,8 +117,9 @@ const CartPage = () => {
   };
 
   const handleRemoveItem = (product: CartProductType) => {
-    if (!confirm("Are you sure you want to remove this item from your cart?")) return;
-    
+    if (!confirm("Are you sure you want to remove this item from your cart?"))
+      return;
+
     try {
       removeFromCart(product);
       toast({
@@ -109,21 +145,70 @@ const CartPage = () => {
       return;
     }
 
+    // Zaten uygulanmış bir kupon varsa, önce onu kaldır
+    if (appliedCoupon) {
+      await handleRemoveCoupon();
+    }
+
     setIsApplyingCoupon(true);
+
     try {
-      // Burada coupon API çağrısı yapabilirsiniz
-      // Şimdilik simüle ediyoruz
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Coupon applied",
-        description: "Coupon has been applied successfully.",
+      // 1. Kuponu doğrula
+      const validateResponse = await fetch("/api/oneshop/coupon/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          couponCode: couponCode.trim().toUpperCase(),
+          userId: user?.id,
+        }),
       });
+
+      const validateData = await validateResponse.json();
+
+      if (!validateData.valid) {
+        throw new Error(validateData.message || "Invalid coupon");
+      }
+
+      // 2. Doğrulandıysa kuponu uygula
+      const applyResponse = await fetch("/api/oneshop/coupon/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          couponCode: couponCode.trim().toUpperCase(),
+          cart: cart,
+        }),
+      });
+
+      const applyData = await applyResponse.json();
+
+      if (!applyResponse.ok || !applyData.success) {
+        throw new Error(applyData.message || "Failed to apply coupon");
+      }
+
+      // 3. Kuponu localStorage'a ve state'e kaydet
+      localStorage.setItem('appliedCoupon', JSON.stringify(applyData.coupon));
+      setAppliedCoupon(applyData.coupon);
       setCouponCode("");
+
+      // 4. Cart store'u güncelle (indirimli toplam için)
+      const { totalPrice } = useCartStore.getState();
+      const discountedTotal = totalPrice - applyData.coupon.discountAmount;
+      
+      useCartStore.setState({
+        totalPrice: discountedTotal > 0 ? discountedTotal : 0
+      });
+
+      // 5. Başarılı mesajı göster
+      toast({
+        title: "Success!",
+        description: applyData.message || "Coupon has been applied successfully.",
+      });
+
     } catch (error) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to apply coupon.",
+        description:
+          error instanceof Error ? error.message : "Failed to apply coupon.",
         variant: "destructive",
       });
     } finally {
@@ -131,16 +216,51 @@ const CartPage = () => {
     }
   };
 
-  const handleRemoveCoupon = () => {
+  const handleRemoveCoupon = async () => {
+    if (!appliedCoupon) return;
+
     try {
+      const response = await fetch("/api/oneshop/coupon/remove", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          couponId: appliedCoupon.couponId,
+          userId: user?.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Failed to remove coupon");
+      }
+
+      // 1. LocalStorage'dan kaldır
+      localStorage.removeItem('appliedCoupon');
+      
+      // 2. State'den kaldır
+      setAppliedCoupon(null);
+      
+      // 3. Cart store'ta totalPrice'ı orijinal değerine döndür
+      const { cart } = useCartStore.getState();
+      const originalTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      
+      useCartStore.setState({
+        totalPrice: originalTotal
+      });
+
       toast({
         title: "Coupon removed",
-        description: "Coupon has been removed.",
+        description: data.message || "Coupon has been removed.",
       });
+      
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to remove coupon.",
+        description:
+          error instanceof Error ? error.message : "Failed to remove coupon.",
         variant: "destructive",
       });
     }
@@ -148,17 +268,25 @@ const CartPage = () => {
 
   // Helper functions
   const getSubTotal = () => {
-    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const getShippingFees = () => {
     return shippingMethod === "free" ? 0 : 9.99;
   };
 
+  // Toplam hesaplamasını güncelle (indirim uygula)
   const getTotal = () => {
     const subTotal = getSubTotal();
     const shippingFees = getShippingFees();
-    return subTotal + shippingFees;
+    let total = subTotal + shippingFees;
+
+    // Eğer uygulanmış bir kupon varsa, indirimi uygula
+    if (appliedCoupon) {
+      total -= appliedCoupon.discountAmount;
+    }
+
+    return total > 0 ? total : 0;
   };
 
   const getItemCount = () => {
@@ -168,8 +296,8 @@ const CartPage = () => {
   // Store'a göre gruplama (simüle edilmiş)
   const getStoreGroupedItems = () => {
     const grouped: Record<string, CartProductType[]> = {};
-    
-    cart.forEach(item => {
+
+    cart.forEach((item) => {
       // Store ID'sini item'dan alabilirsiniz, şimdilik sabit değer
       const storeId = "store-1";
       if (!grouped[storeId]) {
@@ -177,7 +305,7 @@ const CartPage = () => {
       }
       grouped[storeId].push(item);
     });
-    
+
     return grouped;
   };
 
@@ -191,7 +319,6 @@ const CartPage = () => {
     return <CartSkeleton />;
   }
 
-
   if (cart.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -201,7 +328,8 @@ const CartPage = () => {
           </div>
           <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
           <p className="text-gray-500 mb-8">
-            Looks like you haven't added any items to your cart yet. Start shopping to add items.
+            Looks like you haven't added any items to your cart yet. Start
+            shopping to add items.
           </p>
           <Link
             href="/shop"
@@ -213,7 +341,11 @@ const CartPage = () => {
       </div>
     );
   }
-  
+
+  console.log("Cart items:", cart);
+  console.log("Applied coupon:", appliedCoupon);
+  console.log("Calculated total:", total);
+  console.log("Cart store totalPrice:", totalPrice);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -228,28 +360,16 @@ const CartPage = () => {
         {/* Cart Items */}
         <div className="lg:col-span-2">
           {Object.entries(storeGroupedItems).map(([storeId, storeItems]) => (
-            <div key={storeId} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
-              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
-                        S
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-semibold">Store {storeId.split('-')[1]}</h3>
-                  </div>
-                  <Link
-                    href={`/store/${storeId}`}
-                    className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
-                  >
-                    Visit Store
-                  </Link>
-                </div>
-              </div>
+            <div
+              key={storeId}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6"
+            >
               <div>
                 {storeItems.map((item) => (
-                  <div key={`${item.productId}-${item.variantId}-${item.sizeId}`} className="p-6 border-t border-gray-100 dark:border-gray-700">
+                  <div
+                    key={`${item.productId}-${item.variantId}-${item.sizeId}`}
+                    className="p-6 border-t border-gray-100 dark:border-gray-700"
+                  >
                     <div className="flex gap-4">
                       {/* Product Image */}
                       <div className="relative w-24 h-24 flex-shrink-0">
@@ -279,7 +399,9 @@ const CartPage = () => {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                            <p className="font-bold">
+                              ${(item.price * item.quantity).toFixed(2)}
+                            </p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
                               ${item.price.toFixed(2)} each
                             </p>
@@ -292,7 +414,9 @@ const CartPage = () => {
                             {/* Quantity Selector */}
                             <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
                               <button
-                                onClick={() => handleQuantityChange(item, item.quantity - 1)}
+                                onClick={() =>
+                                  handleQuantityChange(item, item.quantity - 1)
+                                }
                                 disabled={item.quantity <= 1}
                                 className="h-8 w-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                               >
@@ -302,7 +426,9 @@ const CartPage = () => {
                                 {item.quantity}
                               </span>
                               <button
-                                onClick={() => handleQuantityChange(item, item.quantity + 1)}
+                                onClick={() =>
+                                  handleQuantityChange(item, item.quantity + 1)
+                                }
                                 className="h-8 w-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
                               >
                                 <Plus className="w-3 h-3" />
@@ -341,40 +467,6 @@ const CartPage = () => {
               <h3 className="text-lg font-semibold">Order Summary</h3>
             </div>
             <div className="p-6 space-y-4">
-              {/* Delivery Options */}
-              {/* <div>
-                <p className="font-medium mb-2">Delivery Options</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => setShippingMethod("free")}
-                    className={`flex items-center px-3 py-2 rounded-md border ${
-                      shippingMethod === "free"
-                        ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-700 dark:text-blue-400"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    <Truck className="w-4 h-4 mr-2" />
-                    Free Delivery
-                  </button>
-                  <button
-                    onClick={() => setShippingMethod("express")}
-                    className={`flex items-center px-3 py-2 rounded-md border ${
-                      shippingMethod === "express"
-                        ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-700 dark:text-blue-400"
-                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    <Truck className="w-4 h-4 mr-2" />
-                    Express Delivery
-                  </button>
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  Delivered by {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                </p>
-              </div> */}
-
-              {/* <div className="border-t border-gray-200 dark:border-gray-700 pt-4"></div> */}
-
               {/* Coupon Code */}
               <div>
                 <p className="font-medium mb-2">Coupon Code</p>
@@ -395,10 +487,36 @@ const CartPage = () => {
                     {isApplyingCoupon ? "Applying..." : "Apply"}
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  10% off on first purchase
-                </p>
               </div>
+
+              {appliedCoupon && (
+                <div className="p-4 mb-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="flex items-center">
+                        <Tag className="w-4 h-4 mr-2 text-green-600 dark:text-green-400" />
+                        <span className="font-medium text-green-700 dark:text-green-300">
+                          {appliedCoupon.couponCode}
+                        </span>
+                      </div>
+                      <p className="text-sm text-green-600 dark:text-green-400 mt-1">
+                        {appliedCoupon.discountPercentage}% discount applied
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-green-700 dark:text-green-300">
+                        -${appliedCoupon.discountAmount.toFixed(2)}
+                      </p>
+                      <button
+                        onClick={handleRemoveCoupon}
+                        className="text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 mt-1"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4"></div>
 
@@ -412,6 +530,12 @@ const CartPage = () => {
                   <span>Shipping</span>
                   <span>${shippingFees.toFixed(2)}</span>
                 </div>
+                {appliedCoupon && (
+                  <div className="flex justify-between text-green-600 dark:text-green-400">
+                    <span>Discount ({appliedCoupon.couponCode})</span>
+                    <span>-${appliedCoupon.discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
               </div>
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4"></div>
@@ -472,7 +596,10 @@ const CartSkeleton = () => (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div
+            key={i}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+          >
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
               <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>

@@ -28,7 +28,7 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
       setLoading(true);
       const res = await saveUserCart(cartItems);
       console.log("res-->", res);
-      if (res) router.push("/home/shop/checkout");
+      if (res) router.push("/shop/checkout");
       setLoading(false);
     } catch (error: any) {
       toast.error(error.toString());

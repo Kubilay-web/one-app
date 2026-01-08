@@ -888,7 +888,7 @@ model Coupon {
   id        String @id @default(cuid()) @map("_id")
   code      String @unique
   startDate String
-  endDate   String
+  endDate   String?
   discount  Int
 
   storeId String

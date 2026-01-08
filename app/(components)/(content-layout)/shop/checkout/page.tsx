@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useCartStore } from "@/app/cart-store/useCartStore";
 import { useCheckoutStore } from "@/app/oneshopstore/cartstore/checkoutstore";
 import { useToast } from "@/app/projects/components/ui/use-toast";
-import { loadStripe } from "@stripe/stripe-js";
 import {
   Truck,
   User,
@@ -18,6 +17,9 @@ import {
   MapPin,
   Package,
   Shield,
+  Tag,
+  X,
+  Calendar,
 } from "lucide-react";
 import { CartProductType } from "@/app/lib/types";
 
@@ -29,9 +31,10 @@ const Checkout = () => {
   const { toast } = useToast();
 
   // Cart store
-  const { cart, totalItems, totalPrice, setCart, clearCart } = useCartStore();
+  const { cart, totalPrice, appliedCoupon, setCart, clearCart, removeCoupon } =
+    useCartStore();
 
-  console.log("cart",cart)
+  console.log("cart", cart);
 
   // Checkout store
   const {
@@ -44,6 +47,10 @@ const Checkout = () => {
     countries,
     isLoading: checkoutLoading,
     error,
+    shippingFee,
+    estimatedDeliveryDays,
+    shippingService,
+    calculatedShipping,
 
     setStep,
     nextStep,
@@ -57,6 +64,7 @@ const Checkout = () => {
     setPaymentMethod,
     setShippingMethod,
     setNote,
+    calculateShippingFee,
     placeOrder,
     resetCheckout,
   } = useCheckoutStore();
@@ -79,6 +87,7 @@ const Checkout = () => {
 
   const [loading, setLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [shippingCalculated, setShippingCalculated] = useState(false);
 
   // Fetch data on mount
   useEffect(() => {
@@ -102,14 +111,78 @@ const Checkout = () => {
     fetchCountries();
   }, [setCart, fetchShippingAddresses, fetchCountries]);
 
+  // Adres veya sepet değiştiğinde shipping fee hesapla
+
+
+
+// Adres veya sepet değiştiğinde shipping fee hesapla
+useEffect(() => {
+  const calculateShipping = async () => {
+    if (selectedAddressId && cart.length > 0) {
+      const selectedAddress = shippingAddresses.find(
+        (addr) => addr.id === selectedAddressId
+      );
+
+    const storeIds = [...new Set(cart.map(item => item.storeId).filter(Boolean))];
+
+
+      if (selectedAddress && selectedAddress.countryId) {
+        // Tüm store'ların item'larını birleştir
+        const allItems = cart.map((item) => ({
+          productId: item.productId,
+          variantId: item.variantId,
+          sizeId: item.sizeId,
+          quantity: item.quantity,
+          price: item.price,
+          storeId: item.storeId || "default-store",
+        }));
+
+        // API'ye tüm item'ları gönder
+        await calculateShippingFee(
+          allItems,
+          selectedAddress.countryId,
+          storeIds[0]
+        );
+        setShippingCalculated(true);
+      }
+    }
+  };
+
+  if (selectedAddressId && shippingAddresses.length > 0 && cart.length > 0) {
+    calculateShipping();
+  }
+}, [selectedAddressId, cart, shippingAddresses, calculateShippingFee]);
+
+
+
   // Helper functions
   const getSubTotal = () => {
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
+  const getShippingFees = () => {
+    // Hesaplanmış shipping fee varsa onu kullan
+    if (calculatedShipping && shippingFee > 0) {
+      // Express shipping için ekstra ücret
+      return shippingMethod === "express" ? shippingFee + 9.99 : shippingFee;
+    }
+
+    // Yoksa shipping method'a göre hesapla
+    return shippingMethod === "express" ? 9.99 : 0;
+  };
+
+  // Total hesaplama
   const getTotal = () => {
     const subTotal = getSubTotal();
-    return subTotal ;
+    const shippingFees = getShippingFees();
+    let total = subTotal + shippingFees;
+
+    // Eğer uygulanmış bir kupon varsa, indirimi uygula
+    if (appliedCoupon) {
+      total -= appliedCoupon.discountAmount;
+    }
+
+    return total > 0 ? total : 0;
   };
 
   const getItemCount = () => {
@@ -120,7 +193,7 @@ const Checkout = () => {
     const grouped: StoreGroupedItems = {};
 
     cart.forEach((item) => {
-      const storeId = "store-1";
+      const storeId = item.storeId || "unknown-store"; // item.storeId'yi kullan
       if (!grouped[storeId]) {
         grouped[storeId] = [];
       }
@@ -132,9 +205,21 @@ const Checkout = () => {
 
   // Calculate totals
   const subTotal = getSubTotal();
+  const shippingFees = getShippingFees();
   const total = getTotal();
   const itemCount = getItemCount();
   const storeGroupedItems = getStoreGroupedItems();
+
+  // Debug için console.log
+  useEffect(() => {
+    console.log("Checkout Debug:");
+    console.log("- Cart items:", cart.length);
+    console.log("- Applied Coupon:", appliedCoupon);
+    console.log("- Subtotal:", subTotal.toFixed(2));
+    console.log("- Shipping Fees:", shippingFees.toFixed(2));
+    console.log("- Calculated Shipping Fee:", shippingFee.toFixed(2));
+    console.log("- Calculated Total:", total.toFixed(2));
+  }, [cart, appliedCoupon, subTotal, shippingFees, shippingFee, total]);
 
   // Handle address form
   const handleAddressSubmit = async (e: React.FormEvent) => {
@@ -213,6 +298,52 @@ const Checkout = () => {
     }
   };
 
+  // Handle address selection with shipping calculation
+  const handleAddressSelect = (addressId: string) => {
+    setSelectedAddress(addressId);
+  };
+
+  // Kupon kaldırma fonksiyonu
+  const handleRemoveCouponClick = async () => {
+    if (!appliedCoupon) return;
+
+    if (!confirm("Are you sure you want to remove this coupon?")) return;
+
+    try {
+      // API'ye kupon kaldırma isteği gönder
+      const response = await fetch("/api/oneshop/coupon/remove", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          couponId: appliedCoupon.couponId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Failed to remove coupon");
+      }
+
+      // Store'dan kuponu kaldır
+      removeCoupon();
+
+      toast({
+        title: "Coupon removed",
+        description: "Coupon has been removed from your order.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error ? error.message : "Failed to remove coupon.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Handle order placement
   const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
@@ -247,7 +378,10 @@ const Checkout = () => {
       const result = await placeOrder();
 
       if (result.success) {
-        if (result.paymentUrl && (paymentMethod === 'card' || paymentMethod === 'paypal')) {
+        if (
+          result.paymentUrl &&
+          (paymentMethod === "card" || paymentMethod === "paypal")
+        ) {
           // Stripe veya PayPal Checkout'e yönlendir
           window.location.href = result.paymentUrl;
         } else {
@@ -255,12 +389,12 @@ const Checkout = () => {
             title: "Order Placed!",
             description: "Your order has been placed successfully.",
           });
-          
+
           // Clear cart on successful order
           clearCart();
-          
+
           // Move to confirmation step for COD/UPI
-          if (paymentMethod === 'cod' || paymentMethod === 'upi') {
+          if (paymentMethod === "cod" || paymentMethod === "upi") {
             setStep(3);
           }
         }
@@ -284,13 +418,38 @@ const Checkout = () => {
 
   // Handle payment method selection
   const handlePaymentMethodSelect = async (method: string) => {
-    setPaymentMethod(method);
-    
+    setPaymentMethod(method as any);
+
     // If it's a card payment, automatically proceed to place order
-    if (method === 'card' || method === 'paypal') {
+    if (method === "card" || method === "paypal") {
       await handlePlaceOrder();
     }
   };
+
+  // Calculate delivery date
+  const getDeliveryDate = () => {
+    const today = new Date();
+    const minDate = new Date(today);
+    minDate.setDate(today.getDate() + estimatedDeliveryDays.min);
+
+    const maxDate = new Date(today);
+    maxDate.setDate(today.getDate() + estimatedDeliveryDays.max);
+
+    return {
+      min: minDate.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      }),
+      max: maxDate.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      }),
+    };
+  };
+
+  const deliveryDate = getDeliveryDate();
 
   // Loading state
   if (loading || checkoutLoading) {
@@ -343,7 +502,7 @@ const Checkout = () => {
         </p>
       </div>
 
-      {/* Progress Steps - 3 adıma düşürüldü */}
+      {/* Progress Steps */}
       <div className="mb-8">
         <div className="flex items-center justify-center mb-4">
           {[1, 2, 3].map((stepNumber) => (
@@ -396,6 +555,52 @@ const Checkout = () => {
         </div>
       </div>
 
+      {/* Shipping Information Card */}
+      {selectedAddressId &&
+        calculatedShipping &&
+        shippingFee > 0 &&
+        step < 3 && (
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+            <div className="flex items-start gap-3">
+              <Truck className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div className="flex-1">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="font-medium text-blue-800 dark:text-blue-400">
+                      Shipping Information
+                    </p>
+                    <p className="text-sm text-blue-600 dark:text-blue-300">
+                      {shippingService}
+                      {shippingMethod === "express" && " • Express Shipping"}
+                    </p>
+                  </div>
+                  <p className="font-bold text-blue-700 dark:text-blue-300">
+                    ${shippingFees.toFixed(2)}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+                  <Calendar className="w-4 h-4" />
+                  <span>
+                    Estimated delivery: {deliveryDate.min} - {deliveryDate.max}
+                  </span>
+                </div>
+                {(() => {
+                  const address = shippingAddresses.find(
+                    (a) => a.id === selectedAddressId
+                  );
+                  return (
+                    address && (
+                      <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                        Shipping to: {address.country?.name}
+                      </p>
+                    )
+                  );
+                })()}
+              </div>
+            </div>
+          </div>
+        )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Checkout Content */}
         <div className="lg:col-span-2">
@@ -410,7 +615,7 @@ const Checkout = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-2">
-                  <Truck className="w-5 h-5 text-blue-600" />
+                  <MapPin className="w-5 h-5 text-blue-600" />
                   <h2 className="text-xl font-semibold">Shipping Address</h2>
                 </div>
                 <p className="text-gray-500">
@@ -432,7 +637,7 @@ const Checkout = () => {
                             : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
                         }
                       `}
-                      onClick={() => setSelectedAddress(address.id)}
+                      onClick={() => handleAddressSelect(address.id)}
                     >
                       <div className="flex justify-between items-start">
                         <div>
@@ -730,7 +935,7 @@ const Checkout = () => {
             </div>
           )}
 
-          {/* Step 2: Payment (Eski Step 3) */}
+          {/* Step 2: Payment */}
           {step === 2 && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -744,19 +949,7 @@ const Checkout = () => {
               </div>
 
               <div className="p-6">
-                {/* Order Note Section */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium mb-2">
-                    Order Note (Optional)
-                  </label>
-                  <textarea
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                    rows={3}
-                    placeholder="Any special instructions for your order..."
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  />
-                </div>
+
 
                 {/* Selected Address Display */}
                 {selectedAddressId && (
@@ -768,7 +961,9 @@ const Checkout = () => {
                           Shipping to:
                         </p>
                         {(() => {
-                          const address = shippingAddresses.find((a) => a.id === selectedAddressId);
+                          const address = shippingAddresses.find(
+                            (a) => a.id === selectedAddressId
+                          );
                           return address ? (
                             <>
                               <p className="text-sm text-blue-700 dark:text-blue-300">
@@ -779,7 +974,8 @@ const Checkout = () => {
                                 {address.address2 && `, ${address.address2}`}
                               </p>
                               <p className="text-sm text-blue-600 dark:text-blue-400">
-                                {address.city}, {address.state} {address.zip_code}
+                                {address.city}, {address.state}{" "}
+                                {address.zip_code}
                               </p>
                               <p className="text-sm text-blue-600 dark:text-blue-400">
                                 {address.country?.name}
@@ -825,7 +1021,9 @@ const Checkout = () => {
                         <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <p className="font-medium">Credit/Debit Card with Stripe</p>
+                        <p className="font-medium">
+                          Credit/Debit Card with Stripe
+                        </p>
                         <p className="text-sm text-gray-500">
                           Pay securely with your card
                         </p>
@@ -916,7 +1114,7 @@ const Checkout = () => {
                     </div>
                   </button>
 
-                  <button
+                  {/* <button
                     onClick={() => setPaymentMethod("upi")}
                     disabled={isProcessing}
                     className={`
@@ -946,7 +1144,7 @@ const Checkout = () => {
                         </p>
                       </div>
                     </div>
-                  </button>
+                  </button> */}
                 </div>
 
                 {/* Security Note */}
@@ -956,9 +1154,9 @@ const Checkout = () => {
                     <p className="font-medium">Secure Payment</p>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Your payment is processed securely through Stripe or PayPal. 
-                    We never store your card details. All transactions are encrypted 
-                    and PCI compliant.
+                    Your payment is processed securely through Stripe or PayPal.
+                    We never store your card details. All transactions are
+                    encrypted and PCI compliant.
                   </p>
                 </div>
               </div>
@@ -972,7 +1170,7 @@ const Checkout = () => {
                   Back to Address
                 </button>
 
-                {(paymentMethod === 'cod' || paymentMethod === 'upi') && (
+                {(paymentMethod === "cod" || paymentMethod === "upi") && (
                   <button
                     onClick={handlePlaceOrder}
                     className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
@@ -995,7 +1193,7 @@ const Checkout = () => {
             </div>
           )}
 
-          {/* Step 3: Confirmation (Eski Step 4) */}
+          {/* Step 3: Confirmation */}
           {step === 3 && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="p-12 text-center">
@@ -1009,6 +1207,47 @@ const Checkout = () => {
                 </p>
 
                 <div className="max-w-md mx-auto bg-gray-50 dark:bg-gray-900 rounded-lg p-6 mb-6">
+                  {/* Shipping Information */}
+                  <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center">
+                        <Truck className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
+                        <span className="font-medium text-blue-700 dark:text-blue-300">
+                          {shippingMethod === "express"
+                            ? "Express Shipping"
+                            : "Standard Shipping"}
+                        </span>
+                      </div>
+                      <span className="font-bold text-blue-700 dark:text-blue-300">
+                        ${shippingFees.toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400">
+                      <Calendar className="w-3 h-3" />
+                      <span>
+                        Estimated delivery: {deliveryDate.min} -{" "}
+                        {deliveryDate.max}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Coupon Information in Order Confirmation */}
+                  {appliedCoupon && (
+                    <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Tag className="w-4 h-4 mr-2 text-green-600 dark:text-green-400" />
+                          <span className="font-medium text-green-700 dark:text-green-300">
+                            {appliedCoupon.couponCode}
+                          </span>
+                        </div>
+                        <span className="font-bold text-green-700 dark:text-green-300">
+                          -${appliedCoupon.discountAmount.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-gray-600">Order ID</span>
                     <span className="font-mono font-bold">
@@ -1017,19 +1256,6 @@ const Checkout = () => {
                     </span>
                   </div>
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-gray-600">Estimated Delivery</span>
-                    <span className="font-medium">
-                      {new Date(
-                        Date.now() +
-                          (shippingMethod === "express" ? 3 : 7) *
-                            24 *
-                            60 *
-                            60 *
-                            1000
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
                     <span className="text-gray-600">Payment Method</span>
                     <span className="font-medium">
                       {paymentMethod === "card"
@@ -1068,65 +1294,265 @@ const Checkout = () => {
             {/* Order Summary */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold">Order Summary</h3>
-                <p className="text-sm text-gray-500">
-                  {itemCount} item{itemCount !== 1 ? "s" : ""}
-                </p>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-lg font-semibold">Order Summary</h3>
+                    <p className="text-sm text-gray-500">
+                      {itemCount} item{itemCount !== 1 ? "s" : ""}
+                    </p>
+                  </div>
+                  {appliedCoupon && (
+                    <div className="flex items-center text-green-600 dark:text-green-400">
+                      <Tag className="w-4 h-4 mr-1" />
+                      <span className="text-sm font-medium">
+                        {appliedCoupon.couponCode}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="p-4">
                 {/* Order Items */}
-                <div className="space-y-4 max-h-96 overflow-y-auto mb-4">
-                  {Object.values(storeGroupedItems)
-                    .flat()
-                    .map((item, index) => (
-                      <div
-                        key={`${item.productId}-${item.variantId}-${item.sizeId}-${index}`}
-                        className="flex gap-3"
-                      >
-                        <div className="relative w-16 h-16 flex-shrink-0">
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fill
-                            className="object-cover rounded-md"
-                            sizes="64px"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">
-                            {item.name}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Size: {item.size} × {item.quantity}
-                          </p>
-                          <p className="text-sm font-semibold">
-                            ${(item.price * item.quantity).toFixed(2)}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
+            
+                {Object.keys(storeGroupedItems).length > 1 && (
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                      <h3 className="text-lg font-semibold">
+                        Stores in Your Order
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {Object.keys(storeGroupedItems).length} store
+                        {Object.keys(storeGroupedItems).length !== 1 ? "s" : ""}
+                      </p>
+                    </div>
+                    <div className="p-4">
+                      <div className="space-y-3">
+                        {Object.entries(storeGroupedItems).map(
+                          ([storeId, items], index) => {
+                            const storeInfo = items[0];
+                            const storeTotal = items.reduce(
+                              (sum, item) => sum + item.price * item.quantity,
+                              0
+                            );
 
+                            return (
+                              <div
+                                key={storeId}
+                                className="flex items-center justify-between"
+                              >
+                                <div className="flex items-center gap-3">
+                                  {storeInfo.storeLogo && (
+                                    <div className="relative w-10 h-10">
+                                      <Image
+                                        src={storeInfo.storeLogo}
+                                        alt={storeInfo.storeName}
+                                        width={40}
+                                        height={40}
+                                        className="object-cover rounded-full"
+                                      />
+                                    </div>
+                                  )}
+                                  <div>
+                                    <p className="font-medium text-sm">
+                                      {storeInfo.storeName}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                      {items.length} item
+                                      {items.length !== 1 ? "s" : ""}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <p className="font-medium text-sm">
+                                    ${storeTotal.toFixed(2)}
+                                  </p>
+                                  {storeInfo.storeUrl && (
+                                    <Link
+                                      href={storeInfo.storeUrl}
+                                      className="text-xs text-blue-600 hover:underline"
+                                    >
+                                      Visit store
+                                    </Link>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {/* Price Breakdown */}
                 <div className="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+                  {/* Subtotal - İndirim varsa indirimli toplamı göster */}
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">${subTotal.toFixed(2)}</span>
+                    <span className="text-gray-600">
+                      {appliedCoupon
+                        ? "Subtotal (Before Discount)"
+                        : "Subtotal"}
+                    </span>
+                    <span
+                      className={`${appliedCoupon ? "text-gray-500 line-through" : "font-medium"}`}
+                    >
+                      ${subTotal.toFixed(2)}
+                    </span>
                   </div>
 
-                  <div className="flex justify-between">
+                  {/* İndirim satırı (sadece kupon varsa göster) */}
+                  {appliedCoupon && (
+                    <>
+                      <div className="flex justify-between text-green-600 dark:text-green-400">
+                        <span className="flex items-center">
+                          <Tag className="w-3 h-3 mr-1" />
+                          Discount ({appliedCoupon.couponCode})
+                        </span>
+                        <span>-${appliedCoupon.discountAmount.toFixed(2)}</span>
+                      </div>
+
+                      {/* İndirimli subtotal */}
+                      <div className="flex justify-between font-medium pb-2 border-b border-gray-100 dark:border-gray-700">
+                        <span>Discounted Subtotal</span>
+                        <span>
+                          $
+                          {(subTotal - appliedCoupon.discountAmount).toFixed(2)}
+                        </span>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Shipping */}
+                  <div className="flex justify-between pt-2">
                     <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium">Free</span>
+                    <span className="font-medium">
+                      {shippingFees === 0 ? (
+                        "Free"
+                      ) : (
+                        <>
+                          ${shippingFees.toFixed(2)}
+                          {calculatedShipping && (
+                            <span className="text-xs text-gray-500 ml-1">
+                              (
+                              {shippingMethod === "express"
+                                ? "Express"
+                                : "Standard"}
+                              )
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </span>
                   </div>
 
-                  <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                  {/* Total */}
+                  <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
                     <span>Total</span>
                     <span>${total.toFixed(2)}</span>
                   </div>
+
+                  {/* Kupon kaldırma butonu (sadece kupon varsa ve ödeme yapılmamışsa) */}
+                  {appliedCoupon && step < 3 && (
+                    <div className="pt-3">
+                      <button
+                        onClick={handleRemoveCouponClick}
+                        className="w-full flex items-center justify-center gap-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 py-2 border border-red-200 dark:border-red-800 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                        Remove Coupon
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
+
+            {/* Applied Coupon Info Card - Sadece kupon varsa göster */}
+            {appliedCoupon && (
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm border border-green-200 dark:border-green-700 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    <h4 className="font-medium text-green-800 dark:text-green-400">
+                      Coupon Applied
+                    </h4>
+                  </div>
+                  <span className="text-xs font-medium px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
+                    {appliedCoupon.discountPercentage}% OFF
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-green-700 dark:text-green-300">
+                      Code:{" "}
+                      <span className="font-mono font-bold">
+                        {appliedCoupon.couponCode}
+                      </span>
+                    </span>
+                    <span className="font-bold text-green-700 dark:text-green-300">
+                      -${appliedCoupon.discountAmount.toFixed(2)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-green-600 dark:text-green-400">
+                    You saved ${appliedCoupon.discountAmount.toFixed(2)} on this
+                    order
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Shipping Information Card */}
+            {selectedAddressId && calculatedShipping && shippingFee > 0 && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm border border-blue-100 dark:border-blue-700 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <h4 className="font-medium text-blue-800 dark:text-blue-400">
+                      Shipping Details
+                    </h4>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-blue-700 dark:text-blue-300">
+                      Service
+                    </span>
+                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                      {shippingService}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-blue-700 dark:text-blue-300">
+                      Delivery Time
+                    </span>
+                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                      {estimatedDeliveryDays.min}-{estimatedDeliveryDays.max}{" "}
+                      days
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-blue-700 dark:text-blue-300">
+                      Method
+                    </span>
+                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                      {shippingMethod === "express"
+                        ? "Express (+$9.99)"
+                        : "Standard"}
+                    </span>
+                  </div>
+                  <div className="pt-2 border-t border-blue-100 dark:border-blue-700">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-blue-800 dark:text-blue-400">
+                        Total Shipping
+                      </span>
+                      <span className="font-bold text-blue-800 dark:text-blue-400">
+                        ${shippingFees.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Security Assurance */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
