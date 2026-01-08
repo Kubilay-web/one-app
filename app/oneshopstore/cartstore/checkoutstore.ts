@@ -44,6 +44,8 @@ interface CheckoutStore {
   };
   shippingService: string;
   calculatedShipping: boolean;
+  isProcessingPayment: boolean; 
+
 
   // Actions
   setStep: (step: number) => void;
@@ -97,6 +99,7 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
   estimatedDeliveryDays: { min: 7, max: 31 },
   shippingService: "Standard Delivery",
   calculatedShipping: false,
+  isProcessingPayment: false, // Yeni ekle
 
   // Step actions
   setStep: (step) => set({ step }),
@@ -330,6 +333,8 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
 
       const data = await response.json();
 
+      useCartStore.getState().setShippingFee(data.shippingFee)
+
       set({
         shippingFee: data.shippingFee,
         estimatedDeliveryDays: data.estimatedDeliveryDays,
@@ -387,7 +392,8 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
       if (!paymentMethod) throw new Error('Please select a payment method');
       
       // Get cart directly
-      const { cart, appliedCoupon } = useCartStore.getState();
+      const { cart, appliedCoupon,totalPrice } = useCartStore.getState();
+      
       
       if (!cart || cart.length === 0) {
         throw new Error('Your cart is empty');
@@ -407,7 +413,7 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
         price: Number(item.price),
         quantity: Number(item.quantity),
         shippingFee: item.shippingFee || 0,
-        totalPrice: item.totalPrice || Number(item.price) * Number(item.quantity),
+        totalPrice: totalPrice ,
       }));
       
       // Shipping fee'i hesapla (eğer hesaplanmadıysa)
@@ -423,7 +429,7 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
       const discountAmount = appliedCoupon?.discountAmount || 0;
       
       // Total hesapla
-      const total = Math.max(0, subTotal - discountAmount + finalShippingFee);
+      const total = totalPrice;
       
       const orderData = {
         shippingAddressId: selectedAddressId,
@@ -431,7 +437,6 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
         shippingMethod,
         note,
         shippingFee: finalShippingFee,
-        subTotal,
         total,
         discountAmount,
         cartItems,
