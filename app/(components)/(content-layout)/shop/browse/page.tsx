@@ -628,12 +628,12 @@ const BrowsePage = () => {
                                 )}
                                 <div className="card-img-top border-b border-dashed border-defaultborder dark:border-defaultborder/10 ">
                                   <Link
-                                    href={`/ecommerce/customer/product-details/${product.slug}`}
+                                    href={`/shop/productdetails/${product.slug}`}
                                     className="stretched-link"
                                   ></Link>
                                   <div className="btns-container-1 items-center gap-1">
                                     <Link
-                                      href={`/ecommerce/customer/product-details/${product.slug}`}
+                                      href={`/shop/productdetails/${product.slug}`}
                                       className="ti-btn ti-btn-icon ti-btn-primary !rounded-full"
                                     >
                                       <i className="ti ti-eye text-[0.875rem]"></i>
@@ -654,7 +654,7 @@ const BrowsePage = () => {
                                     </div>
                                     <div className="hs-tooltip ti-main-tooltip">
                                       <Link
-                                        href="/ecommerce/customer/cart"
+                                        href="/shop/cart"
                                         className="hs-tooltip-toggle ti-btn ti-btn-icon ti-btn-primary !rounded-full"
                                       >
                                         <i className="ti ti-shopping-cart-plus text-[0.875rem]"></i>
@@ -697,15 +697,15 @@ const BrowsePage = () => {
                                             </div>
                                           )}
                                         </div>
-                                        <Link
-                                          href={`/ecommerce/customer/shop?store=${product.store.id}`}
+                                        <div
+                          
                                           className="inline-block text-primary text-[0.8125rem] font-semibold hover:underline"
                                         >
                                           {product.store.name}
-                                        </Link>
+                                        </div>
                                       </div>
                                       <h6 className="mb-1 font-semibold text-[1rem]">
-                                        <Link href={`/ecommerce/customer/product-details/${product.slug}`}>
+                                        <Link href={`/shop/productdetails/${product.slug}`}>
                                           {product.name}
                                         </Link>
                                       </h6>
@@ -752,7 +752,7 @@ const BrowsePage = () => {
                                   </div>
                                 </div>
                                 <Link
-                                  href="/ecommerce/customer/cart"
+                                  href="/shop/cart"
                                   className="ti-btn ti-btn-soft-primary ti-btn-lg !border-0 btn-style-1 !m-0 !rounded-tl-md  rtl:!rounded-tr-md rtl:!rounded-tl-none"
                                 >
                                   <i className="ti ti-shopping-cart-plus me-1"></i>Add to Cart

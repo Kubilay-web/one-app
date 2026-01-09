@@ -2127,3 +2127,43 @@ model FollowerInstagram {
 //////////////////////////////////
 
 ////
+
+
+
+// prisma/schema.prisma
+model LandingPageSection {
+  id        String   @id @default(cuid()) @map("_id")
+  type      String   // banner, categories, deals, products, newsletter, stats, features, cta, download, limited, hero
+  title     String?
+  subtitle  String?
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  data      Json     @default("{}")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  images    LandingPageImage[]
+  
+  @@map("landing_page_sections")
+  @@index([type])
+  @@index([order])
+}
+
+model LandingPageImage {
+  id        String   @id @default(cuid()) @map("_id")
+  sectionId String
+  url       String
+  alt       String?
+  type      String   // main, gallery, thumbnail, background, icon, side
+  order     Int      @default(0)
+  
+  section LandingPageSection @relation(fields: [sectionId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("landing_page_images")
+  @@index([sectionId])
+  @@index([type])
+}

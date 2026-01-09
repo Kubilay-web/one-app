@@ -467,7 +467,7 @@ const SellerNewProductsPage = () => {
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <Link
-            href={`/seller/stores/${params.storeUrl}/products`}
+            href={`/dashboards/ecommerce/seller/stores/${params.storeUrl}/products`}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-4 w-4" />

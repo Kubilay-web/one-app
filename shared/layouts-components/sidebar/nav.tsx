@@ -1975,6 +1975,11 @@ export const getMenuItems = (user) => [
             type: "sub",
             active: false,
             children: [
+                  {
+                path: "/dashboards/ecommerce/admin/homepage",
+                type: "link",
+                title: "Landing Page",
+              },
               {
                 path: "/dashboards/ecommerce/admin/categories",
                 type: "link",
