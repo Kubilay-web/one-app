@@ -33,55 +33,66 @@ export async function GET(request: NextRequest, { params }: Params) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: Params) {
+
+
+
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
+    const sectionId = params.id;
     const body = await request.json();
-    
+
     const section = await db.landingPageSection.update({
-      where: { id: params.id },
+      where: { id: sectionId },
       data: {
+        type: body.type,
         title: body.title,
         subtitle: body.subtitle,
         active: body.active,
         order: body.order,
-        data: body.data,
-        updatedAt: new Date()
+        data: body.data || {}
       },
       include: {
         images: true
       }
     });
-    
+
     return NextResponse.json(section);
   } catch (error) {
-    console.error("Error updating section:", error);
+    console.error('PUT Section Error:', error);
     return NextResponse.json(
-      { error: "Failed to update section" },
+      { error: 'Failed to update section' },
       { status: 500 }
     );
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: Params) {
+
+
+
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    // Delete associated images first
-    await db.landingPageImage.deleteMany({
-      where: { sectionId: params.id }
-    });
-    
-    // Delete the section
+    const sectionId = params.id;
+
     await db.landingPageSection.delete({
-      where: { id: params.id }
+      where: { id: sectionId }
     });
-    
+
     return NextResponse.json({ 
       success: true,
-      message: "Section deleted successfully" 
+      message: 'Section deleted successfully' 
     });
   } catch (error) {
-    console.error("Error deleting section:", error);
+    console.error('DELETE Section Error:', error);
     return NextResponse.json(
-      { error: "Failed to delete section" },
+      { error: 'Failed to delete section' },
       { status: 500 }
     );
   }

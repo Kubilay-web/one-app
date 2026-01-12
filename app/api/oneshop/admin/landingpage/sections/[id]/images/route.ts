@@ -22,31 +22,42 @@ export async function GET(request: NextRequest, { params }: Params) {
   }
 }
 
-export async function POST(request: NextRequest, { params }: Params) {
+
+
+
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
+    const sectionId = params.id;
     const body = await request.json();
-    console.log("POST request body:", body);
-    
+
+    const { url, alt, type = 'gallery', order = 0 } = body;
+
+    if (!url) {
+      return NextResponse.json(
+        { error: 'Image URL is required' },
+        { status: 400 }
+      );
+    }
+
     const image = await db.landingPageImage.create({
       data: {
-        sectionId: params.sectionId,
-        url: body.url,
-        alt: body.alt || null,
-        type: body.type || "gallery",
-        order: body.order || 0,
-        link: body.link || null,
-        productSlug: body.productSlug || null,
-        variantId: body.variantId || null,
-        size: body.size || null,
-      },
+        sectionId,
+        url,
+        alt: alt || 'Image',
+        type,
+        order
+      }
     });
-    
-    console.log("Created image:", image);
-    return NextResponse.json(image);
-  } catch (error: any) {
-    console.error("Error creating image:", error);
+
+    return NextResponse.json(image, { status: 201 });
+  } catch (error) {
+    console.error('POST Image Error:', error);
     return NextResponse.json(
-      { error: `Failed to add image: ${error.message}` },
+      { error: 'Failed to add image' },
       { status: 500 }
     );
   }

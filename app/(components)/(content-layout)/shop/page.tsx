@@ -44,7 +44,7 @@
 //                       navigation={true}
 //                       autoplay={true}
 //                       className="mySwiper swiper-navigation"
-//                     />  
+//                     />
 //                   </div> */}
 //                 </div>
 //               </div>
@@ -1914,13 +1914,6 @@
 
 // export default LandingPage;
 
-
-
-
-
-
-
-
 import db from "@/app/lib/db";
 import { getProducts } from "@/app/queries/product";
 import Image from "next/image";
@@ -1938,21 +1931,21 @@ const LandingPage = async () => {
       orderBy: { order: "asc" },
       include: {
         images: {
-          orderBy: { order: "asc" }
-        }
-      }
-    })
+          orderBy: { order: "asc" },
+        },
+      },
+    }),
   ]);
 
   const { products } = productsData;
 
   // Bölüm resimlerini alma fonksiyonu
   const getSectionImages = (sectionId: string, type?: string) => {
-    const section = sections.find(s => s.id === sectionId);
+    const section = sections.find((s) => s.id === sectionId);
     if (!section) return [];
-    
+
     if (type) {
-      return section.images.filter(img => img.type === type);
+      return section.images.filter((img) => img.type === type);
     }
     return section.images;
   };
@@ -1960,34 +1953,34 @@ const LandingPage = async () => {
   // Bölümleri oluşturma fonksiyonu
   const renderSection = (section: any) => {
     const sectionImages = getSectionImages(section.id);
-    
+
     switch (section.type) {
-      case 'banner':
-      case 'hero':
+      case "banner":
+      case "hero":
         return renderBannerSection(section, sectionImages);
-      case 'categories':
+      case "categories":
         return renderCategoriesSection(section, sectionImages);
-      case 'deals':
+      case "deals":
         return renderDealsSection(section, sectionImages);
-      case 'products':
+      case "products":
         return renderProductsSection(section, products);
-      case 'newsletter':
+      case "newsletter":
         return renderNewsletterSection(section, sectionImages);
-      case 'limited':
+      case "limited":
         return renderLimitedDealsSection(section, products);
-      case 'special':
+      case "special":
         return renderSpecialProductsSection(section, products);
-      case 'newest':
+      case "newest":
         return renderNewestArrivalsSection(section, products);
-      case 'all-products':
+      case "all-products":
         return renderAllProductsSection(section, products);
-      case 'features':
+      case "features":
         return renderFeaturesSection(section, sectionImages);
-      case 'cta':
+      case "cta":
         return renderCTASection(section, sectionImages);
-      case 'testimonials':
+      case "testimonials":
         return renderTestimonialsSection(section, sectionImages);
-      case 'brands':
+      case "brands":
         return renderBrandsSection(section, sectionImages);
       default:
         return renderGenericSection(section, sectionImages);
@@ -1996,10 +1989,8 @@ const LandingPage = async () => {
 
   // Banner Bölümü - NormalCarousel ile
   const renderBannerSection = (section: any, images: any[]) => {
-    const mainBanners = images.filter(img => img.type === 'main');
-    const sideBanners = images.filter(img => img.type === 'side');
-    
-
+    const mainBanners = images.filter((img) => img.type === "main");
+    const sideBanners = images.filter((img) => img.type === "side");
 
     return (
       <section className="section-sm relative">
@@ -2009,7 +2000,7 @@ const LandingPage = async () => {
               <div className="box hero-banner !border-0">
                 <div className="box-body ecommerce-swiper !p-0">
                   {mainBanners.length > 0 ? (
-                    <NormalCarousel 
+                    <NormalCarousel
                       images={mainBanners}
                       autoplay={section.data?.autoplay !== false}
                       delay={section.data?.delay || 5000}
@@ -2017,7 +2008,9 @@ const LandingPage = async () => {
                     />
                   ) : (
                     <div className="h-96 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
-                      <p className="text-gray-500">No banner images found for {section.title}</p>
+                      <p className="text-gray-500">
+                        No banner images found for {section.title}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -2026,20 +2019,30 @@ const LandingPage = async () => {
             <div className="xl:col-span-4 col-span-12">
               <div className="grid grid-cols-12 gap-x-6">
                 {sideBanners.slice(0, 2).map((banner, idx) => (
-                  <div key={banner.id || idx} className="xl:col-span-12 lg:col-span-6 col-span-12">
-                    <div className={`box banner banner-${idx + 2} custom-box border-0 shadow-none`}>
+                  <div
+                    key={banner.id || idx}
+                    className="xl:col-span-12 lg:col-span-6 col-span-12"
+                  >
+                    <div
+                      className={`box banner banner-${idx + 2} custom-box border-0 shadow-none`}
+                    >
                       <div className="box-body !p-6">
                         <Link
-                          href={"/shop"}
+                          href={banner.link || "#"} // Değişken olarak kullan
                           className="stretched-link"
                         ></Link>
                         <div className="grid grid-cols-12 gap-x-6 items-center">
                           <div className="md:col-span-8 col-span-12">
                             <h5 className="mb-3 font-medium">
-                              {banner.alt || section.data?.bannerTitles?.[idx] || section.title}
+                              {banner.alt ||
+                                section.data?.bannerTitles?.[idx] ||
+                                section.title}
                             </h5>
-                            <p className={`mb-2 text-[0.8125rem] text-${section.data?.bannerColors?.[idx] || 'secondary'} font-medium`}>
-                              {section.data?.bannerDiscounts?.[idx] || "30% Discount"}
+                            <p
+                              className={`mb-2 text-[0.8125rem] text-${section.data?.bannerColors?.[idx] || "secondary"} font-medium`}
+                            >
+                              {section.data?.bannerDiscounts?.[idx] ||
+                                "30% Discount"}
                             </p>
                             <div className="flex items-baseline">
                               <h4 className="font-medium mb-0">
@@ -2068,8 +2071,13 @@ const LandingPage = async () => {
                 {sideBanners.length === 0 && (
                   <>
                     {[1, 2].map((idx) => (
-                      <div key={idx} className="xl:col-span-12 lg:col-span-6 col-span-12">
-                        <div className={`box banner banner-${idx} custom-box border-0 shadow-none`}>
+                      <div
+                        key={idx}
+                        className="xl:col-span-12 lg:col-span-6 col-span-12"
+                      >
+                        <div
+                          className={`box banner banner-${idx} custom-box border-0 shadow-none`}
+                        >
                           <div className="box-body !p-6">
                             <div className="grid grid-cols-12 gap-x-6 items-center">
                               <div className="md:col-span-8 col-span-12">
@@ -2081,7 +2089,9 @@ const LandingPage = async () => {
                                 </p>
                                 <div className="flex items-baseline">
                                   <h4 className="font-medium mb-0">$120</h4>
-                                  <span className="text-[0.8125rem] ms-2 line-through text-gray-500">$399</span>
+                                  <span className="text-[0.8125rem] ms-2 line-through text-gray-500">
+                                    $399
+                                  </span>
                                 </div>
                               </div>
                               <div className="md:col-span-4 col-span-12 relative h-32">
@@ -2106,10 +2116,12 @@ const LandingPage = async () => {
 
   // Kategoriler Bölümü
   const renderCategoriesSection = (section: any, images: any[]) => {
-    const categoryImages = images.filter(img => img.type === 'thumbnail' || img.type === 'icon');
-    
+    const categoryImages = images.filter(
+      (img) => img.type === "thumbnail" || img.type === "icon"
+    );
+
     console.log(`${section.type} Section - Images:`, images.length);
-    console.log('Category images:', categoryImages.length);
+    console.log("Category images:", categoryImages.length);
 
     // Section data'dan kategorileri al veya default oluştur
     let categories = [];
@@ -2121,17 +2133,60 @@ const LandingPage = async () => {
         id: idx + 1,
         title: img.alt || `Category ${idx + 1}`,
         items: `${Math.floor(Math.random() * 200) + 50} items`,
-        colorClass: ["primary", "secondary", "success", "warning", "info", "danger"][idx % 6]
+        colorClass: [
+          "primary",
+          "secondary",
+          "success",
+          "warning",
+          "info",
+          "danger",
+        ][idx % 6],
       }));
     } else {
       // Default kategoriler
       categories = [
-        { id: 1, title: "Electronics", icon: "device-mobile", colorClass: "primary", items: "93 items" },
-        { id: 2, title: "Fashion", icon: "shirt", colorClass: "secondary", items: "156 items" },
-        { id: 3, title: "Home & Garden", icon: "home", colorClass: "success", items: "87 items" },
-        { id: 4, title: "Sports", icon: "ball-football", colorClass: "warning", items: "64 items" },
-        { id: 5, title: "Books", icon: "book", colorClass: "info", items: "231 items" },
-        { id: 6, title: "Toys", icon: "toy-brick", colorClass: "danger", items: "45 items" }
+        {
+          id: 1,
+          title: "Electronics",
+          icon: "device-mobile",
+          colorClass: "primary",
+          items: "93 items",
+        },
+        {
+          id: 2,
+          title: "Fashion",
+          icon: "shirt",
+          colorClass: "secondary",
+          items: "156 items",
+        },
+        {
+          id: 3,
+          title: "Home & Garden",
+          icon: "home",
+          colorClass: "success",
+          items: "87 items",
+        },
+        {
+          id: 4,
+          title: "Sports",
+          icon: "ball-football",
+          colorClass: "warning",
+          items: "64 items",
+        },
+        {
+          id: 5,
+          title: "Books",
+          icon: "book",
+          colorClass: "info",
+          items: "231 items",
+        },
+        {
+          id: 6,
+          title: "Toys",
+          icon: "toy-brick",
+          colorClass: "danger",
+          items: "45 items",
+        },
       ];
     }
 
@@ -2142,17 +2197,19 @@ const LandingPage = async () => {
             <div className="xl:col-span-12 col-span-12">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
-                  <div className="heading-title">{section.title || "Top Categories"}</div>
+                  <div className="heading-title">
+                    {section.title || "Top Categories"}
+                  </div>
                   <div className="heading-description">
                     {section.subtitle || "Browse Through The Top Categories"}
                   </div>
                 </div>
                 <div className="min-w-fit">
                   <Link
-                    href={section.data?.viewAllLink || "/shop"}
+                    href={section.data?.viewAllLink || "/shop/browse"}
                     className="ti-btn btn-wave ti-btn-primary"
                   >
-                    {section.data?.viewAllText || "View All Categories"} 
+                    {section.data?.viewAllText || "View All Categories"}
                     <i className="bi bi-arrow-right rtl:rotate-180 inline-flex items-center"></i>
                   </Link>
                 </div>
@@ -2166,7 +2223,7 @@ const LandingPage = async () => {
                   key={cat.id || idx}
                 >
                   <div
-                    className={`link-tag link-tag-${cat.colorClass || 'primary'} !rounded-full`}
+                    className={`link-tag link-tag-${cat.colorClass || "primary"} !rounded-full`}
                   >
                     <Link
                       href={"/shop/browse"}
@@ -2185,16 +2242,21 @@ const LandingPage = async () => {
                               />
                             </div>
                           ) : cat.icon ? (
-                            <i className={`ti ti-${cat.icon} text-[1.25rem]`}></i>
+                            <i
+                              className={`ti ti-${cat.icon} text-[1.25rem]`}
+                            ></i>
                           ) : (
                             <i className="ti ti-category text-[1.25rem]"></i>
                           )}
                         </span>
                       </div>
                       <div className="flex-grow link-tag-body">
-                        <p className="mb-0 text-truncate">{cat.title || `Category ${idx + 1}`}</p>
+                        <p className="mb-0 text-truncate">
+                          {cat.title || `Category ${idx + 1}`}
+                        </p>
                         <span className="text-[0.6875rem] font-normal">
-                          {cat.items || `${Math.floor(Math.random() * 100) + 50} items`}
+                          {cat.items ||
+                            `${Math.floor(Math.random() * 100) + 50} items`}
                         </span>
                       </div>
                     </div>
@@ -2210,10 +2272,12 @@ const LandingPage = async () => {
 
   // Today Deals Bölümü
   const renderDealsSection = (section: any, images: any[]) => {
-    const dealImages = images.filter(img => img.type === 'main' || img.type === 'gallery');
-    
+    const dealImages = images.filter(
+      (img) => img.type === "main" || img.type === "gallery"
+    );
+
     console.log(`${section.type} Section - Images:`, images.length);
-    console.log('Deal images:', dealImages.length);
+    console.log("Deal images:", dealImages.length);
 
     // Section data'dan deal'leri al veya default oluştur
     let deals = [];
@@ -2223,16 +2287,36 @@ const LandingPage = async () => {
       deals = dealImages.map((img, idx) => ({
         id: idx + 1,
         title: img.alt || `Deal ${idx + 1}`,
-        description: `Get amazing discounts on ${img.alt || 'selected items'}`,
-        color: ["primary", "secondary", "success", "warning", "info", "danger"][idx % 6],
+        description: `Get amazing discounts on ${img.alt || "selected items"}`,
+        color: ["primary", "secondary", "success", "warning", "info", "danger"][
+          idx % 6
+        ],
         save: `$${Math.floor(Math.random() * 200) + 50}`,
-        discount: `${Math.floor(Math.random() * 50) + 10}%`
+        discount: `${Math.floor(Math.random() * 50) + 10}%`,
       }));
     } else {
       deals = [
-        { id: 1, color: "primary", save: "$100", discount: "30%", title: "Household appliances" },
-        { id: 2, color: "secondary", save: "$220", discount: "45%", title: "Vegetable products" },
-        { id: 3, color: "success", save: "$150", discount: "30%", title: "Electrical appliances" }
+        {
+          id: 1,
+          color: "primary",
+          save: "$100",
+          discount: "30%",
+          title: "Household appliances",
+        },
+        {
+          id: 2,
+          color: "secondary",
+          save: "$220",
+          discount: "45%",
+          title: "Vegetable products",
+        },
+        {
+          id: 3,
+          color: "success",
+          save: "$150",
+          discount: "30%",
+          title: "Electrical appliances",
+        },
       ];
     }
 
@@ -2243,7 +2327,9 @@ const LandingPage = async () => {
             <div className="xl:col-span-12 col-span-12">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section text-start">
-                  <div className="heading-title">{section.title || "Today Deals"}</div>
+                  <div className="heading-title">
+                    {section.title || "Today Deals"}
+                  </div>
                   <div className="heading-description">
                     {section.subtitle || "Grab the today offers"}
                   </div>
@@ -2260,25 +2346,35 @@ const LandingPage = async () => {
               </div>
             </div>
             {deals.slice(0, 3).map((deal: any, idx: number) => (
-              <div className="md:col-span-12 lg:col-span-4 col-span-12" key={deal.id || idx}>
-                <div className={`box card-style-4 card-style-4-${deal.color || 'primary'}`}>
+              <div
+                className="md:col-span-12 lg:col-span-4 col-span-12"
+                key={deal.id || idx}
+              >
+                <div
+                  className={`box card-style-4 card-style-4-${deal.color || "primary"}`}
+                >
                   <div className="box-body">
                     <div className="flex items-start mb-4">
                       <div className="flex-grow">
                         <h4 className="text-[1.25rem] mb-2">Save</h4>
-                        <h4 className={`font-semibold text-${deal.color || 'primary'}`}>
-                          {deal.save || `$${Math.floor(Math.random() * 200) + 50}`}
+                        <h4
+                          className={`font-semibold text-${deal.color || "primary"}`}
+                        >
+                          {deal.save ||
+                            `$${Math.floor(Math.random() * 200) + 50}`}
                         </h4>
                         <p className="mb-0 text-textmuted dark:text-textmuted/50">
-                          {deal.description || `Explore now and get ${deal.discount || '30%'} discount on ${deal.title || 'products'}`}
+                          {deal.description ||
+                            `Explore now and get ${deal.discount || "30%"} discount on ${deal.title || "products"}`}
                         </p>
                       </div>
                       <div className="min-w-fit">
                         <Link
                           href={`/deals/${deal.id || idx}`}
-                          className={`ti-btn ti-btn-sm ti-btn-${deal.color || 'primary'}`}
+                          className={`ti-btn ti-btn-sm ti-btn-${deal.color || "primary"}`}
                         >
-                          {section.data?.buttonText || "Explore"} <i className="ti ti-arrow-right ms-1"></i>
+                          {section.data?.buttonText || "Explore"}{" "}
+                          <i className="ti ti-arrow-right ms-1"></i>
                         </Link>
                       </div>
                     </div>
@@ -2324,7 +2420,9 @@ const LandingPage = async () => {
         <section className="section">
           <div className="container">
             <div className="text-center py-12">
-              <p className="text-gray-500">No products available for {section.title}</p>
+              <p className="text-gray-500">
+                No products available for {section.title}
+              </p>
             </div>
           </div>
         </section>
@@ -2338,14 +2436,17 @@ const LandingPage = async () => {
             <div className="xl:col-span-12 col-span-12">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
-                  <div className="heading-title">{section.title || "Popular Products"}</div>
+                  <div className="heading-title">
+                    {section.title || "Popular Products"}
+                  </div>
                   <div className="heading-description">
-                    {section.subtitle || "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"}
+                    {section.subtitle ||
+                      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"}
                   </div>
                 </div>
                 <div className="min-w-fit">
                   <Link
-                    href={section.data?.viewAllLink || "/products"}
+                    href={section.data?.viewAllLink || "/shop/browse"}
                     className="text-primary font-semibold text-[0.875rem]"
                   >
                     <u>{section.data?.viewAllText || "More Deals"}</u>
@@ -2384,19 +2485,23 @@ const LandingPage = async () => {
 
   // Newsletter Bölümü
   const renderNewsletterSection = (section: any, images: any[]) => {
-    const backgroundImage = images.find(img => img.type === 'background');
+    const backgroundImage = images.find((img) => img.type === "background");
 
     console.log(`${section.type} Section - Images:`, images.length);
-    console.log('Background image:', backgroundImage?.url);
+    console.log("Background image:", backgroundImage?.url);
 
     return (
-      <section 
+      <section
         className="section bg-banner-2 !text-white"
-        style={backgroundImage ? {
-          backgroundImage: `url(${backgroundImage.url})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        } : {}}
+        style={
+          backgroundImage
+            ? {
+                backgroundImage: `url(${backgroundImage.url})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : {}
+        }
       >
         <div className="container">
           <div className="grid grid-cols-12 gap-x-6 justify-center pt-5 pb-5">
@@ -2414,12 +2519,18 @@ const LandingPage = async () => {
             <div className="lg:col-span-1 col-span-12 text-center"></div>
             <div className="lg:col-span-4 col-span-12 text-center"></div>
             <div className="lg:col-span-4 col-span-12 !text-center">
-              <form action="/api/subscribe" method="POST" className="custom-form-group">
+              <form
+                action="/api/subscribe"
+                method="POST"
+                className="custom-form-group"
+              >
                 <input
                   type="email"
                   name="email"
                   className="form-control !rounded-full shadow-sm !py-3 bg-white/90"
-                  placeholder={section.data?.placeholder || "Enter Your Email.."}
+                  placeholder={
+                    section.data?.placeholder || "Enter Your Email.."
+                  }
                   aria-label="Email address"
                   required
                 />
@@ -2440,10 +2551,10 @@ const LandingPage = async () => {
 
   // Features Bölümü
   const renderFeaturesSection = (section: any, images: any[]) => {
-    const featureImages = images.filter(img => img.type === 'icon');
-    
+    const featureImages = images.filter((img) => img.type === "icon");
+
     console.log(`${section.type} Section - Images:`, images.length);
-    console.log('Feature images:', featureImages.length);
+    console.log("Feature images:", featureImages.length);
 
     // Section data'dan feature'ları al veya default oluştur
     let features = [];
@@ -2453,14 +2564,31 @@ const LandingPage = async () => {
       features = featureImages.map((img, idx) => ({
         title: img.alt || `Feature ${idx + 1}`,
         description: `Premium feature for your convenience`,
-        color: ["primary", "secondary", "success", "warning", "info", "danger"][idx % 6],
-        icon: "star"
+        color: ["primary", "secondary", "success", "warning", "info", "danger"][
+          idx % 6
+        ],
+        icon: "star",
       }));
     } else {
       features = [
-        { title: "Free Delivery", description: "Consetetur eirmod dolor stet justo gubergren", color: "info", icon: "truck-delivery" },
-        { title: "Great Deals & Offers", description: "Consetetur eirmod dolor stet justo gubergren", color: "warning", icon: "tags" },
-        { title: "Easy Returns", description: "Consetetur eirmod dolor stet justo gubergren", color: "danger", icon: "arrow-back-up" }
+        {
+          title: "Free Delivery",
+          description: "Consetetur eirmod dolor stet justo gubergren",
+          color: "info",
+          icon: "truck-delivery",
+        },
+        {
+          title: "Great Deals & Offers",
+          description: "Consetetur eirmod dolor stet justo gubergren",
+          color: "warning",
+          icon: "tags",
+        },
+        {
+          title: "Easy Returns",
+          description: "Consetetur eirmod dolor stet justo gubergren",
+          color: "danger",
+          icon: "arrow-back-up",
+        },
       ];
     }
 
@@ -2471,9 +2599,12 @@ const LandingPage = async () => {
             <div className="xl:col-span-12 col-span-12">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
-                  <div className="heading-title">{section.title || "Why Shop With Us"}</div>
+                  <div className="heading-title">
+                    {section.title || "Why Shop With Us"}
+                  </div>
                   <div className="heading-description">
-                    {section.subtitle || "We provide the best shopping experience"}
+                    {section.subtitle ||
+                      "We provide the best shopping experience"}
                   </div>
                 </div>
               </div>
@@ -2481,12 +2612,17 @@ const LandingPage = async () => {
             {features.slice(0, 3).map((feature: any, idx: number) => {
               const featureImage = featureImages[idx];
               return (
-                <div className="xl:col-span-4 col-span-12" key={feature.id || idx}>
+                <div
+                  className="xl:col-span-4 col-span-12"
+                  key={feature.id || idx}
+                >
                   <div className="box card-style-3 custom-card">
                     <div className="box-body">
                       <div className="flex items-start gap-4">
                         <div className="min-w-fit">
-                          <span className={`avatar bg-${feature.color || 'primary'} text-white`}>
+                          <span
+                            className={`avatar bg-${feature.color || "primary"} text-white`}
+                          >
                             {featureImage ? (
                               <div className="relative w-6 h-6">
                                 <Image
@@ -2497,12 +2633,16 @@ const LandingPage = async () => {
                                 />
                               </div>
                             ) : (
-                              <i className={`ti ti-${feature.icon || 'star'} text-[1.25rem]`}></i>
+                              <i
+                                className={`ti ti-${feature.icon || "star"} text-[1.25rem]`}
+                              ></i>
                             )}
                           </span>
                         </div>
                         <div className="flex-grow">
-                          <p className={`mb-0 font-semibold text-[1rem] text-${feature.color || 'primary'}`}>
+                          <p
+                            className={`mb-0 font-semibold text-[1rem] text-${feature.color || "primary"}`}
+                          >
                             {feature.title}
                           </p>
                           <p className="mb-0 text-[0.8125rem] text-textmuted dark:text-textmuted/50">
@@ -2521,10 +2661,11 @@ const LandingPage = async () => {
     );
   };
 
-
   // CTA Bölümü
   const renderCTASection = (section: any, images: any[]) => {
-    const ctaImage = images.find(img => img.type === 'main' || img.type === 'side');
+    const ctaImage = images.find(
+      (img) => img.type === "main" || img.type === "side"
+    );
 
     console.log(`${section.type} Section - Images:`, images.length);
 
@@ -2545,10 +2686,16 @@ const LandingPage = async () => {
                 </div>
               </div>
             )}
-            <div className={ctaImage ? "xl:col-span-8 md:col-span-8 col-span-12" : "xl:col-span-12 col-span-12"}>
+            <div
+              className={
+                ctaImage
+                  ? "xl:col-span-8 md:col-span-8 col-span-12"
+                  : "xl:col-span-12 col-span-12"
+              }
+            >
               <div className="my-6">
                 <h2 className="font-semibold mb-4 text-white">
-                  {section.title || "Start Your Online Business Here"} 
+                  {section.title || "Start Your Online Business Here"}
                   <Link
                     href={section.data?.signupLink || "/shop/seller/apply"}
                     className="text-white text-decoration-line"
@@ -2558,7 +2705,8 @@ const LandingPage = async () => {
                   </Link>
                 </h2>
                 <p className="mb-4 text-white">
-                  {section.subtitle || "Est amet sit vero sanctus labore no sed nonumy. Sit ipsum sanctus ea magna est. Aliquyam sed amet. Kasd diam rebum sit ipsum ipsum."}
+                  {section.subtitle ||
+                    "Est amet sit vero sanctus labore no sed nonumy. Sit ipsum sanctus ea magna est. Aliquyam sed amet. Kasd diam rebum sit ipsum ipsum."}
                 </p>
                 <Link
                   href={section.data?.buttonLink || "/shop/seller/apply"}
@@ -2574,11 +2722,11 @@ const LandingPage = async () => {
     );
   };
 
-
-
   // Testimonials Bölümü (Yeni eklenen)
   const renderTestimonialsSection = (section: any, images: any[]) => {
-    const testimonialImages = images.filter(img => img.type === 'thumbnail' || img.type === 'icon');
+    const testimonialImages = images.filter(
+      (img) => img.type === "thumbnail" || img.type === "icon"
+    );
 
     console.log(`${section.type} Section - Images:`, images.length);
 
@@ -2593,13 +2741,31 @@ const LandingPage = async () => {
         role: "Verified Buyer",
         rating: 5,
         comment: "Great products and excellent service!",
-        avatar: img.url
+        avatar: img.url,
       }));
     } else {
       testimonials = [
-        { id: 1, name: "John Doe", role: "Verified Buyer", rating: 5, comment: "Amazing products and fast delivery!" },
-        { id: 2, name: "Jane Smith", role: "Premium Member", rating: 4, comment: "Great quality and customer service." },
-        { id: 3, name: "Mike Johnson", role: "Return Customer", rating: 5, comment: "Best shopping experience ever!" }
+        {
+          id: 1,
+          name: "John Doe",
+          role: "Verified Buyer",
+          rating: 5,
+          comment: "Amazing products and fast delivery!",
+        },
+        {
+          id: 2,
+          name: "Jane Smith",
+          role: "Premium Member",
+          rating: 4,
+          comment: "Great quality and customer service.",
+        },
+        {
+          id: 3,
+          name: "Mike Johnson",
+          role: "Return Customer",
+          rating: 5,
+          comment: "Best shopping experience ever!",
+        },
       ];
     }
 
@@ -2610,7 +2776,9 @@ const LandingPage = async () => {
             <div className="xl:col-span-12 col-span-12  p-3">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
-                  <div className="heading-title">{section.title || "Customer Reviews"}</div>
+                  <div className="heading-title">
+                    {section.title || "Customer Reviews"}
+                  </div>
                   <div className="heading-description">
                     {section.subtitle || "What our customers say"}
                   </div>
@@ -2618,12 +2786,17 @@ const LandingPage = async () => {
               </div>
             </div>
             {testimonials.slice(0, 3).map((testimonial: any, idx: number) => (
-              <div className="xl:col-span-4 lg:col-span-6 col-span-12" key={testimonial.id || idx}>
+              <div
+                className="xl:col-span-4 lg:col-span-6 col-span-12"
+                key={testimonial.id || idx}
+              >
                 <div className="box">
                   <div className="box-body">
                     <div className="flex items-center mb-4">
                       <div className="flex-grow">
-                        <h6 className="font-semibold mb-1">{testimonial.name}</h6>
+                        <h6 className="font-semibold mb-1">
+                          {testimonial.name}
+                        </h6>
                         <p className="mb-0 text-[0.8125rem] text-textmuted dark:text-textmuted/50">
                           {testimonial.role}
                         </p>
@@ -2653,10 +2826,12 @@ const LandingPage = async () => {
 
   // Brands Bölümü (Yeni eklenen)
   const renderBrandsSection = (section: any, images: any[]) => {
-    const brandImages = images.filter(img => img.type === 'thumbnail' || img.type === 'icon');
+    const brandImages = images.filter(
+      (img) => img.type === "thumbnail" || img.type === "icon"
+    );
 
     console.log(`${section.type} Section - Images:`, images.length);
-    console.log('Brand images:', brandImages.length);
+    console.log("Brand images:", brandImages.length);
 
     // Eğer resim yoksa placeholder göster
     if (brandImages.length === 0) {
@@ -2668,7 +2843,9 @@ const LandingPage = async () => {
               <div className="xl:col-span-12 col-span-12">
                 <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                   <div className="heading-section !text-start">
-                    <div className="heading-title">{section.title || "Featured Brands"}</div>
+                    <div className="heading-title">
+                      {section.title || "Featured Brands"}
+                    </div>
                     <div className="heading-description">
                       {section.subtitle || "Shop from trusted brands"}
                     </div>
@@ -2697,7 +2874,9 @@ const LandingPage = async () => {
             <div className="xl:col-span-12 col-span-12">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
-                  <div className="heading-title">{section.title || "Featured Brands"}</div>
+                  <div className="heading-title">
+                    {section.title || "Featured Brands"}
+                  </div>
                   <div className="heading-description">
                     {section.subtitle || "Shop from trusted brands"}
                   </div>
@@ -2735,7 +2914,9 @@ const LandingPage = async () => {
             <div className="xl:col-span-12 col-span-12">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
-                  <div className="heading-title">{section.title || "Section Title"}</div>
+                  <div className="heading-title">
+                    {section.title || "Section Title"}
+                  </div>
                   <div className="heading-description">
                     {section.subtitle || "Section description goes here"}
                   </div>
@@ -2746,7 +2927,10 @@ const LandingPage = async () => {
               <div className="xl:col-span-12 col-span-12">
                 <div className="grid grid-cols-12 gap-x-6">
                   {images.map((image, idx) => (
-                    <div key={image.id || idx} className="lg:col-span-3 md:col-span-4 sm:col-span-6 col-span-12">
+                    <div
+                      key={image.id || idx}
+                      className="lg:col-span-3 md:col-span-4 sm:col-span-6 col-span-12"
+                    >
                       <div className="box p-4 text-center">
                         <div className="relative h-48 mb-4">
                           <Image
@@ -2756,7 +2940,9 @@ const LandingPage = async () => {
                             className="object-contain"
                           />
                         </div>
-                        <h6 className="font-semibold">{image.alt || `Image ${idx + 1}`}</h6>
+                        <h6 className="font-semibold">
+                          {image.alt || `Image ${idx + 1}`}
+                        </h6>
                       </div>
                     </div>
                   ))}
@@ -2765,7 +2951,9 @@ const LandingPage = async () => {
             ) : (
               <div className="xl:col-span-12 col-span-12">
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No content available for {section.title || "this section"}</p>
+                  <p className="text-gray-500">
+                    No content available for {section.title || "this section"}
+                  </p>
                 </div>
               </div>
             )}
@@ -2777,33 +2965,48 @@ const LandingPage = async () => {
 
   // Eksik section tipleri için render fonksiyonları
   const renderLimitedDealsSection = (section: any, allProducts: any[]) => {
-    console.log(`${section.type} Section - Products:`, allProducts?.length || 0);
+    console.log(
+      `${section.type} Section - Products:`,
+      allProducts?.length || 0
+    );
     return renderProductsSection(section, allProducts);
   };
 
   const renderSpecialProductsSection = (section: any, allProducts: any[]) => {
-    console.log(`${section.type} Section - Products:`, allProducts?.length || 0);
+    console.log(
+      `${section.type} Section - Products:`,
+      allProducts?.length || 0
+    );
     return renderProductsSection(section, allProducts);
   };
 
   const renderNewestArrivalsSection = (section: any, allProducts: any[]) => {
-    console.log(`${section.type} Section - Products:`, allProducts?.length || 0);
+    console.log(
+      `${section.type} Section - Products:`,
+      allProducts?.length || 0
+    );
     return renderProductsSection(section, allProducts);
   };
 
   const renderAllProductsSection = (section: any, allProducts: any[]) => {
-    console.log(`${section.type} Section - Products:`, allProducts?.length || 0);
+    console.log(
+      `${section.type} Section - Products:`,
+      allProducts?.length || 0
+    );
     return renderProductsSection(section, allProducts);
   };
 
   // Debug için console log
   console.log("Total sections:", sections.length);
-  console.log("Sections data:", sections.map(s => ({ 
-    id: s.id, 
-    type: s.type, 
-    title: s.title,
-    imageCount: s.images.length 
-  })));
+  console.log(
+    "Sections data:",
+    sections.map((s) => ({
+      id: s.id,
+      type: s.type,
+      title: s.title,
+      imageCount: s.images.length,
+    }))
+  );
 
   return (
     <Fragment>
@@ -2822,11 +3025,7 @@ const LandingPage = async () => {
         {/* Database'den gelen tüm bölümleri render et */}
         {sections.map((section) => {
           console.log(`Rendering section: ${section.type} - ${section.title}`);
-          return (
-            <Fragment key={section.id}>
-              {renderSection(section)}
-            </Fragment>
-          );
+          return <Fragment key={section.id}>{renderSection(section)}</Fragment>;
         })}
       </div>
       {/* <!-- End::app-content --> */}
