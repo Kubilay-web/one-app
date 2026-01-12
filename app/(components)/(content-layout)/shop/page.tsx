@@ -1999,9 +1999,7 @@ const LandingPage = async () => {
     const mainBanners = images.filter(img => img.type === 'main');
     const sideBanners = images.filter(img => img.type === 'side');
     
-    console.log(`${section.type} Section - Images:`, images.length);
-    console.log('Main banners:', mainBanners.length);
-    console.log('Side banners:', sideBanners.length);
+
 
     return (
       <section className="section-sm relative">
@@ -2032,13 +2030,13 @@ const LandingPage = async () => {
                     <div className={`box banner banner-${idx + 2} custom-box border-0 shadow-none`}>
                       <div className="box-body !p-6">
                         <Link
-                          href={section.data?.bannerLinks?.[idx] || banner.alt?.toLowerCase().includes('shop') ? "/shop" : "/deals"}
+                          href={"/shop"}
                           className="stretched-link"
                         ></Link>
                         <div className="grid grid-cols-12 gap-x-6 items-center">
                           <div className="md:col-span-8 col-span-12">
                             <h5 className="mb-3 font-medium">
-                              {banner.alt || section.data?.bannerTitles?.[idx] || section.title || `Special Offer ${idx + 1}`}
+                              {banner.alt || section.data?.bannerTitles?.[idx] || section.title}
                             </h5>
                             <p className={`mb-2 text-[0.8125rem] text-${section.data?.bannerColors?.[idx] || 'secondary'} font-medium`}>
                               {section.data?.bannerDiscounts?.[idx] || "30% Discount"}
@@ -2171,7 +2169,7 @@ const LandingPage = async () => {
                     className={`link-tag link-tag-${cat.colorClass || 'primary'} !rounded-full`}
                   >
                     <Link
-                      href={`/shop?category=${cat.title?.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') || 'all'}`}
+                      href={"/shop/browse"}
                       className="stretched-link"
                     ></Link>
                     <div className="flex items-center gap-2">
@@ -2368,7 +2366,7 @@ const LandingPage = async () => {
               <div className="xl:col-span-12 col-span-12">
                 <div className="text-end">
                   <Link
-                    href="/products"
+                    href="/shop"
                     className="ti-btn ti-btn-primary ti-btn-icon ti-btn-lg !rounded-full"
                     data-bs-toggle="tooltip"
                     title="View All"
@@ -2401,7 +2399,7 @@ const LandingPage = async () => {
         } : {}}
       >
         <div className="container">
-          <div className="grid grid-cols-12 gap-x-6 justify-center">
+          <div className="grid grid-cols-12 gap-x-6 justify-center pt-5 pb-5">
             <div className="lg:col-span-1 col-span-12 text-center"></div>
             <div className="lg:col-span-10 col-span-12 text-center">
               <div className="mb-4">
@@ -2552,7 +2550,7 @@ const LandingPage = async () => {
                 <h2 className="font-semibold mb-4 text-white">
                   {section.title || "Start Your Online Business Here"} 
                   <Link
-                    href={section.data?.signupLink || "/signup"}
+                    href={section.data?.signupLink || "/shop/seller/apply"}
                     className="text-white text-decoration-line"
                   >
                     {" "}
@@ -2563,7 +2561,7 @@ const LandingPage = async () => {
                   {section.subtitle || "Est amet sit vero sanctus labore no sed nonumy. Sit ipsum sanctus ea magna est. Aliquyam sed amet. Kasd diam rebum sit ipsum ipsum."}
                 </p>
                 <Link
-                  href={section.data?.buttonLink || "/signup"}
+                  href={section.data?.buttonLink || "/shop/seller/apply"}
                   className="ti-btn ti-btn-light ti-btn-lg"
                 >
                   {section.data?.buttonText || "Signup Now"}
@@ -2609,7 +2607,7 @@ const LandingPage = async () => {
       <section className="section bg-white dark:bg-bodybg">
         <div className="container">
           <div className="grid grid-cols-12 gap-x-6">
-            <div className="xl:col-span-12 col-span-12">
+            <div className="xl:col-span-12 col-span-12  p-3">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
                   <div className="heading-title">{section.title || "Customer Reviews"}</div>

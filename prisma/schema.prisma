@@ -2150,18 +2150,26 @@ model LandingPageSection {
   @@index([order])
 }
 
+
+
 model LandingPageImage {
-  id        String   @id @default(cuid()) @map("_id")
-  sectionId String
-  url       String
-  alt       String?
-  type      String   // main, gallery, thumbnail, background, icon, side
-  order     Int      @default(0)
+  id          String   @id @default(cuid()) @map("_id")
+  sectionId   String
+  url         String
+  alt         String?
+  type        String   // main, gallery, thumbnail, background, icon, side
+  order       Int      @default(0)
   
-  section LandingPageSection @relation(fields: [sectionId], references: [id])
+  // Ürün link alanları
+  link        String?  // Tam link: /shop/productdetails/urun-slugu?variant=xxx
+  productSlug String?  // Sadece ürün slug'ı
+  variantId   String?  // Varyant ID
+  size        String?  // large, medium, small
   
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  section     LandingPageSection @relation(fields: [sectionId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   
   @@map("landing_page_images")
   @@index([sectionId])

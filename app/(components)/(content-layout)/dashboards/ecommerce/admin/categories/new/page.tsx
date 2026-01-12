@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
-import dynamic from 'next/dynamic';
-import { Fragment, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import dynamic from "next/dynamic";
+import { Fragment, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Dynamic imports for better performance
 const SpkSelect = dynamic(
-  () => import('@/shared/@spk-reusable-components/spk-packages/spk-reactselect'),
+  () =>
+    import("@/shared/@spk-reusable-components/spk-packages/spk-reactselect"),
   { ssr: false }
 );
 
@@ -29,99 +30,128 @@ const AdminNewCategoryPage = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [formData, setFormData] = useState<CategoryFormData>({
-    name: '',
-    image: '',
-    url: '',
-    featured: false
+    name: "",
+    image: "",
+    url: "",
+    featured: false,
   });
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
-    
-    if (type === 'checkbox') {
+
+    if (type === "checkbox") {
       const checkbox = e.target as HTMLInputElement;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: checkbox.checked
+        [name]: checkbox.checked,
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
 
       // Auto-generate URL from name
-      if (name === 'name') {
+      if (name === "name") {
         const urlSlug = value
           .toLowerCase()
-          .replace(/[^\w\s]/gi, '')
-          .replace(/\s+/g, '-');
-        setFormData(prev => ({
+          .replace(/[^\w\s]/gi, "")
+          .replace(/\s+/g, "-");
+        setFormData((prev) => ({
           ...prev,
-          url: urlSlug
+          url: urlSlug,
         }));
       }
     }
   };
 
   // Handle image upload
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
 
+
+  // handleImageUpload fonksiyonunu güncelleyin
+const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files;
+  if (!files || files.length === 0) return;
+
+  // Tüm dosyaları döngü ile işleyin
+  const uploadPromises = Array.from(files).map(async (file) => {
     // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!validTypes.includes(file.type)) {
-      toast.error('Invalid file type. Please upload JPEG, PNG, WebP, or GIF.');
-      return;
+    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+    if (!file.type.startsWith("image/") && !validTypes.includes(file.type)) {
+      toast.error(`Invalid file type for ${file.name}: ${file.type}`);
+      return null;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('File size exceeds 5MB limit.');
-      return;
+      toast.error(`File ${file.name} size exceeds 5MB limit.`);
+      return null;
     }
-
-    setUploadingImage(true);
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
-      const response = await fetch('/api/oneshop/admin/categories/upload', {
-        method: 'POST',
+      const response = await fetch("/api/oneshop/admin/categories/upload", {
+        method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Upload failed');
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Upload failed");
       }
 
       const data = await response.json();
-      
-      if (data.success) {
-        setFormData(prev => ({
-          ...prev,
-          image: data.fileUrl
-        }));
-        toast.success('Image uploaded successfully!');
-      } else {
-        throw new Error(data.error || 'Upload failed');
-      }
+      return {
+        name: file.name,
+        url: data.fileUrl,
+        publicId: data.publicId,
+        size: file.size,
+      };
     } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload image. Please try again.');
-    } finally {
-      setUploadingImage(false);
+      console.error(`Upload error for ${file.name}:`, error);
+      toast.error(`Failed to upload ${file.name}`);
+      return null;
     }
-  };
+  });
+
+  setUploadingImage(true);
+
+  try {
+    const results = await Promise.all(uploadPromises);
+    const successfulUploads = results.filter(result => result !== null);
+    
+    if (successfulUploads.length > 0) {
+      // İlk başarılı yüklenen resmi formData'ya ekleyin
+      setFormData((prev) => ({
+        ...prev,
+        image: successfulUploads[0].url,
+      }));
+      
+      toast.success(`${successfulUploads.length} image(s) uploaded successfully!`);
+    }
+    
+    // Eğer multiple upload için galeri yapıyorsanız:
+    // setGalleryImages(prev => [...prev, ...successfulUploads.map(img => img.url)]);
+    
+  } catch (error) {
+    console.error("Batch upload error:", error);
+  } finally {
+    setUploadingImage(false);
+    // Input'u resetleyin
+    e.target.value = '';
+  }
+};
 
   // Remove uploaded image
   const handleRemoveImage = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      image: ''
+      image: "",
     }));
   };
 
@@ -131,10 +161,10 @@ const AdminNewCategoryPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/oneshop/admin/categories', {
-        method: 'POST',
+      const response = await fetch("/api/oneshop/admin/categories", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -142,19 +172,20 @@ const AdminNewCategoryPage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create category');
+        throw new Error(data.error || "Failed to create category");
       }
 
-      toast.success('Category created successfully!');
-      
+      toast.success("Category created successfully!");
+
       // Redirect to categories list after a short delay
       setTimeout(() => {
-        router.push('/ecommerce/admin/categories');
+        router.push("/ecommerce/admin/categories");
       }, 1500);
-
     } catch (error: any) {
-      console.error('Error creating category:', error);
-      toast.error(error.message || 'Failed to create category. Please try again.');
+      console.error("Error creating category:", error);
+      toast.error(
+        error.message || "Failed to create category. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -162,8 +193,12 @@ const AdminNewCategoryPage = () => {
 
   // Handle cancel
   const handleCancel = () => {
-    if (window.confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
-      router.push('/ecommerce/admin/categories');
+    if (
+      window.confirm(
+        "Are you sure you want to cancel? Any unsaved changes will be lost."
+      )
+    ) {
+      router.push("/ecommerce/admin/categories");
     }
   };
 
@@ -177,10 +212,10 @@ const AdminNewCategoryPage = () => {
         <div className="border-b border-defaultborder dark:border-defaultborder/10 py-4 page-breadcrumb">
           <div className="container">
             <Seo title={"New Category - Admin"} />
-            <Pageheader 
-              Updated={true} 
-              breadcrumbs={['Apps', 'Ecommerce', 'Admin', 'Categories']} 
-              currentpage="New Category" 
+            <Pageheader
+              Updated={true}
+              breadcrumbs={["Apps", "Ecommerce", "Admin", "Categories"]}
+              currentpage="New Category"
             />
           </div>
         </div>
@@ -197,11 +232,12 @@ const AdminNewCategoryPage = () => {
                         <div className="box-title flex-grow-1">
                           Create New Category
                         </div>
-                        <Link 
+                        <Link
                           href="/ecommerce/admin/categories"
                           className="ti-btn ti-btn-outline-light btn-wave waves-effect waves-light !text-dark !m-0"
                         >
-                          <i className="bi bi-arrow-left rtl:rotate-180 inline-flex me-1"></i> Back to Categories
+                          <i className="bi bi-arrow-left rtl:rotate-180 inline-flex me-1"></i>{" "}
+                          Back to Categories
                         </Link>
                       </div>
                       <div className="box-body">
@@ -240,7 +276,8 @@ const AdminNewCategoryPage = () => {
                                 required
                               />
                               <p className="text-xs text-textmuted dark:text-textmuted/50 mt-1">
-                                This will be used in the URL. Use lowercase letters, numbers, and hyphens.
+                                This will be used in the URL. Use lowercase
+                                letters, numbers, and hyphens.
                               </p>
                             </div>
 
@@ -249,7 +286,7 @@ const AdminNewCategoryPage = () => {
                               <label className="ti-form-label">
                                 Category Image *
                               </label>
-                              
+
                               {/* Image Preview */}
                               {formData.image && (
                                 <div className="mb-3">
@@ -277,8 +314,8 @@ const AdminNewCategoryPage = () => {
                               {/* Upload Button */}
                               <div className="btn-list">
                                 <div>
-                                  <label 
-                                    htmlFor="category-image-upload" 
+                                  <label
+                                    htmlFor="category-image-upload"
                                     className="sr-only"
                                   >
                                     Choose file
@@ -302,7 +339,8 @@ const AdminNewCategoryPage = () => {
                                     </p>
                                   )}
                                   <p className="mb-0 mt-2 text-[0.75rem] text-textmuted dark:text-textmuted/50">
-                                    Recommended size: 400x400 pixels. Max file size: 5MB. Supports: JPG, PNG, WebP, GIF.
+                                    Recommended size: 400x400 pixels. Max file
+                                    size: 5MB. Supports: JPG, PNG, WebP, GIF.
                                   </p>
                                 </div>
                               </div>
@@ -319,16 +357,17 @@ const AdminNewCategoryPage = () => {
                                   checked={formData.featured}
                                   onChange={handleInputChange}
                                 />
-                                <label 
-                                  htmlFor="featured" 
+                                <label
+                                  htmlFor="featured"
                                   className="ti-form-checkbox-label ms-2"
                                 >
                                   Mark as Featured Category
                                 </label>
                               </div>
                               <p className="text-xs text-textmuted dark:text-textmuted/50 mt-1">
-                                  Featured categories will be highlighted on the homepage.
-                                </p>
+                                Featured categories will be highlighted on the
+                                homepage.
+                              </p>
                             </div>
 
                             {/* Buttons */}
@@ -345,7 +384,12 @@ const AdminNewCategoryPage = () => {
                                 <button
                                   type="submit"
                                   className="ti-btn ti-btn-primary btn-wave waves-effect waves-light"
-                                  disabled={loading || uploadingImage || !formData.name || !formData.image}
+                                  disabled={
+                                    loading ||
+                                    uploadingImage ||
+                                    !formData.name ||
+                                    !formData.image
+                                  }
                                 >
                                   {loading ? (
                                     <>
@@ -353,7 +397,7 @@ const AdminNewCategoryPage = () => {
                                       Creating...
                                     </>
                                   ) : (
-                                    'Create Category'
+                                    "Create Category"
                                   )}
                                 </button>
                               </div>
@@ -380,9 +424,12 @@ const AdminNewCategoryPage = () => {
                               <i className="bi bi-check-circle-fill"></i>
                             </div>
                             <div>
-                              <h6 className="text-sm font-semibold mb-1">Naming Conventions</h6>
+                              <h6 className="text-sm font-semibold mb-1">
+                                Naming Conventions
+                              </h6>
                               <p className="text-xs text-textmuted dark:text-textmuted/50">
-                                Use clear, descriptive names that customers will understand.
+                                Use clear, descriptive names that customers will
+                                understand.
                               </p>
                             </div>
                           </div>
@@ -392,9 +439,12 @@ const AdminNewCategoryPage = () => {
                               <i className="bi bi-check-circle-fill"></i>
                             </div>
                             <div>
-                              <h6 className="text-sm font-semibold mb-1">URL Slugs</h6>
+                              <h6 className="text-sm font-semibold mb-1">
+                                URL Slugs
+                              </h6>
                               <p className="text-xs text-textmuted dark:text-textmuted/50">
-                                Keep URLs short, lowercase, and use hyphens instead of spaces.
+                                Keep URLs short, lowercase, and use hyphens
+                                instead of spaces.
                               </p>
                             </div>
                           </div>
@@ -404,9 +454,12 @@ const AdminNewCategoryPage = () => {
                               <i className="bi bi-check-circle-fill"></i>
                             </div>
                             <div>
-                              <h6 className="text-sm font-semibold mb-1">Images</h6>
+                              <h6 className="text-sm font-semibold mb-1">
+                                Images
+                              </h6>
                               <p className="text-xs text-textmuted dark:text-textmuted/50">
-                                Use high-quality, square images with transparent backgrounds when possible.
+                                Use high-quality, square images with transparent
+                                backgrounds when possible.
                               </p>
                             </div>
                           </div>
@@ -416,9 +469,12 @@ const AdminNewCategoryPage = () => {
                               <i className="bi bi-check-circle-fill"></i>
                             </div>
                             <div>
-                              <h6 className="text-sm font-semibold mb-1">Featured Categories</h6>
+                              <h6 className="text-sm font-semibold mb-1">
+                                Featured Categories
+                              </h6>
                               <p className="text-xs text-textmuted dark:text-textmuted/50">
-                                Featured categories appear prominently on the homepage and get more visibility.
+                                Featured categories appear prominently on the
+                                homepage and get more visibility.
                               </p>
                             </div>
                           </div>
@@ -437,12 +493,20 @@ const AdminNewCategoryPage = () => {
                       <div className="box-body">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="text-center p-3 bg-light dark:bg-black/20 rounded">
-                            <div className="text-2xl font-bold text-primary">0</div>
-                            <div className="text-xs text-textmuted dark:text-textmuted/50">Subcategories</div>
+                            <div className="text-2xl font-bold text-primary">
+                              0
+                            </div>
+                            <div className="text-xs text-textmuted dark:text-textmuted/50">
+                              Subcategories
+                            </div>
                           </div>
                           <div className="text-center p-3 bg-light dark:bg-black/20 rounded">
-                            <div className="text-2xl font-bold text-primary">0</div>
-                            <div className="text-xs text-textmuted dark:text-textmuted/50">Products</div>
+                            <div className="text-2xl font-bold text-primary">
+                              0
+                            </div>
+                            <div className="text-xs text-textmuted dark:text-textmuted/50">
+                              Products
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -465,25 +529,34 @@ const AdminNewCategoryPage = () => {
                 </h3>
               </div>
               <h6 className="mb-4 opacity-90 text-white">
-                Labore no sed ipsum ipsum nonumy. Sit ipsum sanctus ea
-                magna est. Kasd diam rebum sit ipsum ipsum erat et kasd.Est amet sit vero sanctus labore no
-                sed ipsum ipsum nonumy vero sanctus labore..
+                Labore no sed ipsum ipsum nonumy. Sit ipsum sanctus ea magna
+                est. Kasd diam rebum sit ipsum ipsum erat et kasd.Est amet sit
+                vero sanctus labore no sed ipsum ipsum nonumy vero sanctus
+                labore..
               </h6>
               <div className="btn-list">
-                <Link scroll={false} href="#!" className="ti-btn bg-black app-store relative">
-                  <Image 
-                    src="../../../assets/images/media/apps/play-store.png" 
-                    alt="Google Play" 
+                <Link
+                  scroll={false}
+                  href="#!"
+                  className="ti-btn bg-black app-store relative"
+                >
+                  <Image
+                    src="../../../assets/images/media/apps/play-store.png"
+                    alt="Google Play"
                     width={20}
                     height={20}
                     className="absolute left-3 top-1/2 transform -translate-y-1/2"
                   />
                   Google Play
                 </Link>
-                <Link scroll={false} href="#!" className="ti-btn bg-black app-store relative">
-                  <Image 
-                    src="../../../assets/images/media/apps/apple-store.png" 
-                    alt="App Store" 
+                <Link
+                  scroll={false}
+                  href="#!"
+                  className="ti-btn bg-black app-store relative"
+                >
+                  <Image
+                    src="../../../assets/images/media/apps/apple-store.png"
+                    alt="App Store"
                     width={20}
                     height={20}
                     className="absolute left-3 top-1/2 transform -translate-y-1/2"

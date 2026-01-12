@@ -16,11 +16,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
+    // Validate file type (allow all image types)
+    if (!file.type.startsWith('image/')) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.' },
+        { error: 'Invalid file type. Please upload an image.' },
         { status: 400 }
       );
     }
@@ -42,7 +41,7 @@ export async function POST(request: NextRequest) {
       cloudinary.uploader.upload_stream(
         {
           folder: 'categories',
-          resource_type: 'image',
+          resource_type: 'image', // tüm resimleri image olarak kabul eder
         },
         (error, result) => {
           if (error) reject(error);
