@@ -1,4 +1,3 @@
-// app/components/multi-step-form/apply-seller-multi-form.tsx
 "use client";
 import { StoreType } from "@/app/lib/types";
 import { useState } from "react";
@@ -8,7 +7,6 @@ import Step1 from "./steps/step-1/step-1";
 import Step2 from "./steps/setp-2/step-2";
 import Step3 from "./steps/setp-3/step-3";
 import Step4 from "./steps/step-4/step-4";
-import { useRouter } from "next/navigation";
 import { useSession } from "@/app/SessionProvider";
 
 export default function ApplySellerMultiForm() {
@@ -16,7 +14,6 @@ export default function ApplySellerMultiForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useSession();
-  const router = useRouter();
 
   const [formData, setFormData] = useState<StoreType>({
     name: "",
@@ -36,7 +33,6 @@ export default function ApplySellerMultiForm() {
     returnPolicy: "",
   });
 
-  // Form gönderim işlemi
   const handleSubmit = async () => {
     if (!user) {
       setError("You must be logged in to apply as a seller");
@@ -47,71 +43,62 @@ export default function ApplySellerMultiForm() {
     setError(null);
 
     try {
-      const response = await fetch('/api/oneshop/seller/apply', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("/api/oneshop/seller/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to submit application');
+        throw new Error(result.error || "Failed to submit application");
       }
 
-      // Başarılı oldu, 4. adıma geç
       setStep(4);
-
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Submission error:', err);
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Step3'ten gelen verileri alıp gönderim yap
-  const handleStep3Complete = () => {
-    handleSubmit();
-  };
-
   return (
-    <div className="grid lg:grid-cols-[400px_1fr]">
-      <Instructions />
-      <div className="relative w-full p-5">
+    <div className="flex flex-col lg:flex-row w-full min-h-screen lg:h-screen lg:overflow-hidden">
+      {/* Instructions */}
+      <div className="w-full lg:w-1/2 lg:h-full lg:overflow-y-auto">
+        <Instructions />
+      </div>
+
+      {/* Form */}
+      <div className="relative w-full lg:w-1/2 lg:h-full lg:overflow-y-auto p-5">
         <ProgressBar step={step} />
-        
+
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-600">{error}</p>
           </div>
         )}
 
-        {/* Steps */}
-        {step === 1 ? (
-          <Step1 step={step} setStep={setStep} />
-        ) : step === 2 ? (
+        {step === 1 && <Step1 step={step} setStep={setStep} />}
+        {step === 2 && (
           <Step2
             formData={formData}
             setFormData={setFormData}
             step={step}
             setStep={setStep}
           />
-        ) : step === 3 ? (
+        )}
+        {step === 3 && (
           <Step3
             formData={formData}
             setFormData={setFormData}
             step={step}
             setStep={setStep}
-            onComplete={handleStep3Complete}
+            onComplete={handleSubmit}
             isSubmitting={isSubmitting}
           />
-        ) : step === 4 ? (
-          <Step4 />
-        ) : null}
+        )}
+        {step === 4 && <Step4 />}
       </div>
     </div>
   );

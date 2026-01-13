@@ -25,7 +25,7 @@ export default function UserDetails() {
     }
   };
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-y-4">
+    <div className="flex w-full h-full flex-col items-center justify-center gap-y-4">
       <div className="relative">
         {/* User Image */}
         <Image

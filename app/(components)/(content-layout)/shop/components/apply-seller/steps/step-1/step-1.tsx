@@ -24,15 +24,15 @@ export default function Step1({ step, setStep }) {
   if (!user) return null;
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <AnimatedContainer>
         {user ? (
           <UserDetails />
         ) : (
           <div className="h-full">
             <div className="flex h-full flex-col justify-center space-y-4">
-              <div className="w-full rounded-lg border border-blue-200 bg-blue-100 text-sm text-blue-800">
-                <div className="flex p-4">
+              <div className="w-full h-full rounded-lg border border-blue-200 bg-blue-100 text-sm text-blue-800">
+                <div className="flex h-full p-4">
                   Please sign in (Or sign up if you are new) to start
                 </div>
               </div>

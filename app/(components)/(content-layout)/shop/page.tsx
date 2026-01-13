@@ -2433,6 +2433,7 @@ const LandingPage = async () => {
       <section className="section">
         <div className="container">
           <div className="grid grid-cols-12 gap-x-6">
+            {/* Header */}
             <div className="xl:col-span-12 col-span-12">
               <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
                 <div className="heading-section !text-start">
@@ -2455,14 +2456,46 @@ const LandingPage = async () => {
                 </div>
               </div>
             </div>
+
+            {/* Products */}
             {sectionProducts.map((product, i) => (
               <div
                 className="lg:col-span-3 md:col-span-4 sm:col-span-6 col-span-12"
                 key={product.id || i}
               >
-                <ProductCard product={product} />
+                <div className="box card-style-2">
+                  <div className="box-body !p-0">
+                    {/* Top-left badge */}
+                    {product.badge && (
+                      <span
+                        className={`badge bg-${product.badgeColor}/[0.15] text-${product.badgeColor} text-pink top-left-badge`}
+                      >
+                        {product.badge}
+                      </span>
+                    )}
+
+                    {/* Top-right badge */}
+                    {product.rightBadgeColor && (
+                      <div
+                        className={`badge top-right-badge bg-${product.rightBadgeColor} !text-white`}
+                      >
+                        <div className="badge-icon">
+                          <i
+                            className={`ti ti-${product.badgeIcon} text-[0.875rem]`}
+                          ></i>
+                        </div>
+                        <div className="badge-text">{product.text}</div>
+                      </div>
+                    )}
+
+                    {/* ProductCard Component */}
+                    <ProductCard product={product} gridFriendly />
+                  </div>
+                </div>
               </div>
             ))}
+
+            {/* View All Button */}
             {sectionProducts.length > 0 && (
               <div className="xl:col-span-12 col-span-12">
                 <div className="text-end">

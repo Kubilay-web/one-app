@@ -4,8 +4,10 @@ import { poppingTransition } from "./transition";
 
 export default function AnimatedContainer({
   children,
+  className = "",
 }: {
   children: ReactNode;
+  className?: string;
 }) {
   return (
     <motion.div
@@ -13,9 +15,9 @@ export default function AnimatedContainer({
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="h-[calc(100vh-200px)]"
+      className={`w-full flex flex-col ${className}`}
     >
-      <div className="flex h-full flex-col overflow-y-auto px-2 pt-4">
+      <div className="flex-1 overflow-visible lg:overflow-y-auto px-2 pt-4">
         {children}
       </div>
     </motion.div>

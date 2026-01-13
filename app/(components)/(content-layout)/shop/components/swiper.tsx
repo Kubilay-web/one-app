@@ -28,7 +28,7 @@ export default function ProductCardImageSwiper({
 
   return (
     <div
-      className="relative mb-2 h-[200px] w-full overflow-hidden rounded-2xl bg-white contrast-[90%]"
+      className="relative mb-2 h-[300px] w-full overflow-hidden rounded-2xl bg-white contrast-[90%]"
       onMouseEnter={() => swiperRef.current.swiper.autoplay.start()}
       onMouseLeave={() => {
         swiperRef.current.swiper.autoplay.stop();
@@ -41,8 +41,7 @@ export default function ProductCardImageSwiper({
             <Image
               src={img.url}
               alt=""
-              width={400}
-              height={400}
+             fill
               className="block h-[200px] w-48 object-cover sm:w-[192px]"
             />
           </SwiperSlide>
