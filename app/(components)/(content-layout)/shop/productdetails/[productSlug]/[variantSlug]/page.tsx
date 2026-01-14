@@ -1259,6 +1259,15 @@
 //   )
 // }
 
+
+
+
+////////////////
+
+
+
+
+
 "use client";
 
 import { useEffect, useState, Suspense, Fragment } from "react";
@@ -1353,6 +1362,7 @@ interface ProductImage {
 interface Color {
   id: string;
   name: string;
+  code?: string;
 }
 
 interface Spec {
@@ -1580,12 +1590,33 @@ const ProductDetails = () => {
     }
   }, [selectedVariant, product, wishlistItems, user]);
 
+  // Calculate shipping fee
+  const calculateShippingFee = () => {
+    if (!product || !selectedSize) return 0;
+    
+    if (product.freeShippingForAllCountries) return 0;
+    
+    // Base shipping fee
+    let fee = 5;
+    
+    // Add weight-based fee
+    const weight = selectedVariant?.weight || 0;
+    if (weight > 5) {
+      fee += 2;
+    }
+    
+    return fee;
+  };
+
   // Add to cart
   const handleAddToCart = () => {
     if (!product || !selectedVariant || !selectedSize) {
       toast.error("Please select size and variant");
       return;
     }
+
+    const discountPrice = selectedSize.price - (selectedSize.price * selectedSize.discount) / 100;
+    const shippingFee = calculateShippingFee();
 
     const cartItem: CartProductType = {
       productId: product.id,
@@ -1594,28 +1625,56 @@ const ProductDetails = () => {
       productSlug: product.slug,
       variantSlug: selectedVariant.slug,
       sku: selectedVariant.sku,
-      name: `${product.name} - ${selectedVariant.variantName}`,
+      name: product.name,
       image: selectedImage?.url || selectedVariant.variantImage,
       size: selectedSize.size,
-      price:
-        selectedSize.price - (selectedSize.price * selectedSize.discount) / 100,
+      price: discountPrice,
       quantity: quantity,
-      shippingFee: product.freeShippingForAllCountries ? 0 : 5,
-      totalPrice:
-        (selectedSize.price -
-          (selectedSize.price * selectedSize.discount) / 100) *
-        quantity,
-
-
-            // STORE BİLGİLERİ - EKSİK OLAN KISIM
-    storeId: product.store?.id || "",
-    storeName: product.store?.name || "",
-    storeLogo: product.store?.logo || "",
-    storeUrl: product.store?.id ? `/store/${product.store.id}` : "",
+      shippingFee: shippingFee,
+      totalPrice: discountPrice * quantity,
+      
+      // Store bilgileri
+      storeId: product.store?.id || "",
+      storeName: product.store?.name || "Unknown Store",
+      storeLogo: product.store?.logo || "/images/default-store.png",
+      storeUrl: product.store?.id ? `/store/${product.store.id}` : "#",
+      
+      // Variant bilgileri
+      variantName: selectedVariant.variantName,
+      variantImage: selectedVariant.variantImage,
+      
+      // Stok ve ağırlık
+      stock: selectedSize.quantity,
+      weight: selectedVariant.weight || 0,
+      
+      // Kargo bilgileri
+      shippingMethod: product.shippingFeeMethod || "standard",
+      shippingService: "Standard Delivery",
+      extraShippingFee: 0,
+      deliveryTimeMin: 3,
+      deliveryTimeMax: 7,
+      isFreeShipping: product.freeShippingForAllCountries,
+      
+      // İndirim
+      discount: selectedSize.discount,
+      discountedPrice: discountPrice,
+      
+      // Kategori
+      categoryId: product.category?.id,
+      categoryName: product.category?.name,
+      categoryUrl: product.category?.url
     };
 
-    addToCart(cartItem);
-    toast.success("Product added to cart!");
+    setAddingToCart(true);
+    try {
+      addToCart(cartItem);
+      toast.success("Product added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add to cart");
+    } finally {
+      setAddingToCart(false);
+    }
   };
 
   // Buy now
@@ -1632,7 +1691,11 @@ const ProductDetails = () => {
     }
 
     try {
-      const cartItem = {
+      // First add to cart
+      const discountPrice = selectedSize.price - (selectedSize.price * selectedSize.discount) / 100;
+      const shippingFee = calculateShippingFee();
+
+      const cartItem: CartProductType = {
         productId: product!.id,
         variantId: selectedVariant.id,
         sizeId: selectedSize.id,
@@ -1642,13 +1705,44 @@ const ProductDetails = () => {
         name: product!.name,
         image: selectedImage?.url || selectedVariant.variantImage,
         size: selectedSize.size,
-        price:
-          selectedSize.price -
-          (selectedSize.price * selectedSize.discount) / 100,
-        quantity,
-        shippingFee: 0,
+        price: discountPrice,
+        quantity: quantity,
+        shippingFee: shippingFee,
+        totalPrice: discountPrice * quantity,
+        
+        // Store bilgileri
+        storeId: product!.store?.id || "",
+        storeName: product!.store?.name || "Unknown Store",
+        storeLogo: product!.store?.logo || "/images/default-store.png",
+        storeUrl: product!.store?.id ? `/store/${product!.store.id}` : "#",
+        
+        // Variant bilgileri
+        variantName: selectedVariant.variantName,
+        variantImage: selectedVariant.variantImage,
+        
+        // Stok ve ağırlık
+        stock: selectedSize.quantity,
+        weight: selectedVariant.weight || 0,
+        
+        // Kargo bilgileri
+        shippingMethod: product!.shippingFeeMethod || "standard",
+        shippingService: "Standard Delivery",
+        extraShippingFee: 0,
+        deliveryTimeMin: 3,
+        deliveryTimeMax: 7,
+        isFreeShipping: product!.freeShippingForAllCountries,
+        
+        // İndirim
+        discount: selectedSize.discount,
+        discountedPrice: discountPrice,
+        
+        // Kategori
+        categoryId: product!.category?.id,
+        categoryName: product!.category?.name,
+        categoryUrl: product!.category?.url
       };
 
+      // Add to cart via API
       const cartResponse = await fetch("/api/oneshop/cart", {
         method: "POST",
         headers: {
@@ -1658,6 +1752,10 @@ const ProductDetails = () => {
       });
 
       if (cartResponse.ok) {
+        // Also add to local cart store
+        addToCart(cartItem);
+        
+        // Redirect to checkout
         router.push("/checkout");
       } else {
         throw new Error("Failed to add to cart");
@@ -1847,7 +1945,7 @@ const ProductDetails = () => {
                     <div className="ecommerce-gallery relative">
                       {selectedSize?.discount && selectedSize.discount > 0 && (
                         <span className="badge bg-warning tag-badge text-white">
-                          Featured
+                          {selectedSize.discount}% OFF
                         </span>
                       )}
                       <span className="ti-btn ti-btn-soft-primary classifyimage-btn !rounded-full cursor-pointer">
@@ -1920,7 +2018,6 @@ const ProductDetails = () => {
                           <span className="h3 font-semibold">
                             <sup className="text-[0.875rem]">$</sup>
                             {discountPrice.toFixed(2)}
-                            <sup className="text-[0.875rem]">.00</sup>
                           </span>
                           {selectedSize?.discount &&
                             selectedSize.discount > 0 && (
@@ -2051,6 +2148,32 @@ const ProductDetails = () => {
                       </div>
                     </div>
 
+                    {/* Store Info */}
+                    {product.store && (
+                      <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          {product.store.logo && (
+                            <div className="relative w-10 h-10">
+                              <Image
+                                src={product.store.logo}
+                                alt={product.store.name}
+                                fill
+                                className="object-cover rounded-full"
+                              />
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-semibold text-sm">
+                              Sold by: {product.store.name}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              Rating: {product.store.averageRating.toFixed(1)}/5
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Action Buttons */}
                     <div className="flex items-stretch gap-2 mb-0">
                       <button
@@ -2112,6 +2235,25 @@ const ProductDetails = () => {
                           <td>{spec.value}</td>
                         </tr>
                       ))}
+                      {/* Additional product info */}
+                      <tr>
+                        <th scope="row" className="font-semibold">
+                          Brand
+                        </th>
+                        <td>{product.brand || "Not specified"}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" className="font-semibold">
+                          Weight
+                        </th>
+                        <td>{selectedVariant?.weight || 0} kg</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" className="font-semibold">
+                          SKU
+                        </th>
+                        <td>{selectedVariant?.sku || "N/A"}</td>
+                      </tr>
                     </Spktables>
                   </div>
                 </div>
@@ -2126,9 +2268,9 @@ const ProductDetails = () => {
                   <p className="mb-3">{product.description}</p>
                   <p className="mb-3">{selectedVariant.variantDescription}</p>
                   <p className="mb-0">
-                    Labore no sed ipsum ipsum nonumy. Sit ipsum sanctus ea magna
-                    est. kasd.Est amet sit vero sanctus labore no sed ipsum
-                    ipsum nonumy vero sanctus labore..
+                    {product.freeShippingForAllCountries 
+                      ? "This product qualifies for free shipping to all countries."
+                      : "Standard shipping applies. Free shipping on orders over $150."}
                   </p>
                 </div>
               </div>
@@ -2191,7 +2333,6 @@ const ProductDetails = () => {
                     </div>
 
                     {/* Reviews Swiper */}
-
                     <div className="xxl:col-span-8 xl:col-span-12 lg:col-span-12 md:col-span-12 sm:col-span-12 col-span-12 xxl:mt-0 mt-3">
                       {reviews.length > 0 ? (
                         <SpkSwiperJs
@@ -2337,7 +2478,10 @@ const ProductDetails = () => {
                           <p className="text-gray-500 dark:text-gray-400">
                             No reviews yet
                           </p>
-                          <button className="mt-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                          <button 
+                            onClick={() => router.push(`/product/${product.slug}/${selectedVariant.slug}/review`)}
+                            className="mt-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                          >
                             Be the first to review
                           </button>
                         </div>
@@ -2376,6 +2520,50 @@ const ProductDetails = () => {
                       <button className="ti-btn ti-btn-sm ti-btn-icon ti-btn-soft-info btn-wave md:mb-0">
                         <i className="ri-facebook-line"></i>
                       </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Shipping Info */}
+              <div className="box">
+                <div className="box-header">
+                  <div className="box-title">Shipping Info</div>
+                </div>
+                <div className="box-body">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Truck className="text-primary" size={20} />
+                      <div>
+                        <p className="font-semibold text-sm">
+                          {product.freeShippingForAllCountries 
+                            ? "Free Worldwide Shipping"
+                            : `Shipping: $${calculateShippingFee().toFixed(2)}`}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {product.freeShippingForAllCountries
+                            ? "Delivered within 5-10 business days"
+                            : "Standard delivery: 3-7 business days"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Shield className="text-green-500" size={20} />
+                      <div>
+                        <p className="font-semibold text-sm">30-Day Returns</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Easy returns within 30 days of purchase
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="text-blue-500" size={20} />
+                      <div>
+                        <p className="font-semibold text-sm">Verified Quality</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Quality checked and verified
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2436,7 +2624,10 @@ const ProductDetails = () => {
                       ))}
                       <tr>
                         <td className="grid border-b-0">
-                          <button className="ti-btn ti-btn-soft-primary">
+                          <button 
+                            onClick={() => router.push(`/shop/category/${product.category?.url}`)}
+                            className="ti-btn ti-btn-soft-primary"
+                          >
                             View All Products
                           </button>
                         </td>
@@ -2456,7 +2647,7 @@ const ProductDetails = () => {
         <div className="container">
           <h5 className="heading-title">Related Products</h5>
           <p className="mb-4">
-            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+            Products you might be interested in
           </p>
           <SpkSwiperJs
             slides={TestimonialsSwiperComponent}
@@ -2480,18 +2671,18 @@ const ProductDetails = () => {
                 <div className="box-body">
                   <div className="flex items-start gap-3">
                     <div className="min-w-fit">
-                      {/* <span className="avatar bg-info text-white">
-                        <TruckDelivery className="text-[1.25rem]" />
-                      </span> */}
+                      <span className="avatar bg-info text-white">
+                        <Truck className="text-[1.25rem]" />
+                      </span>
                     </div>
                     <div className="flex-grow">
                       <p className="mb-0 font-semibold text-[1rem] text-info">
-                        Free Delivery
+                        {product.freeShippingForAllCountries ? "Free Worldwide Shipping" : "Reliable Delivery"}
                       </p>
                       <p className="mb-0 text-[0.8125rem] text-textmuted dark:text-textmuted/50">
                         {product.freeShippingForAllCountries
                           ? "Free shipping for all countries"
-                          : "Free shipping on orders over $150"}
+                          : "Fast and reliable delivery service"}
                       </p>
                     </div>
                   </div>
@@ -2511,10 +2702,10 @@ const ProductDetails = () => {
                     </div>
                     <div className="flex-grow">
                       <p className="mb-0 font-semibold text-[1rem] text-warning">
-                        Great Deals & Offers
+                        Best Price Guarantee
                       </p>
                       <p className="mb-0 text-[0.8125rem] text-textmuted dark:text-textmuted/50">
-                        Get exclusive discounts and special offers
+                        We guarantee the best price for this product
                       </p>
                     </div>
                   </div>
@@ -2528,9 +2719,9 @@ const ProductDetails = () => {
                 <div className="box-body">
                   <div className="flex items-start gap-3">
                     <div className="min-w-fit">
-                      {/* <span className="avatar bg-danger text-white">
-                        <ArrowBackUp className="text-[1.25rem]" />
-                      </span> */}
+                      <span className="avatar bg-danger text-white">
+                        <RefreshCw className="text-[1.25rem]" />
+                      </span>
                     </div>
                     <div className="flex-grow">
                       <p className="mb-0 font-semibold text-[1rem] text-danger">
@@ -2560,9 +2751,7 @@ const ProductDetails = () => {
               </h3>
             </div>
             <h6 className="mb-4 opacity-90 text-white">
-              Labore no sed ipsum ipsum nonumy. Sit ipsum sanctus ea magna est.
-              Kasd diam rebum sit ipsum ipsum erat et kasd.Est amet sit vero
-              sanctus labore no sed ipsum ipsum nonumy vero sanctus labore..
+              Shop on the go with our mobile app. Get exclusive deals, track your orders, and enjoy seamless shopping experience.
             </h6>
             <div className="btn-list">
               <Link

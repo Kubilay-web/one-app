@@ -304,37 +304,94 @@ export type ProductPageDataType = Prisma.PromiseReturnType<
   typeof getProductPageData
 >;
 
-export type CartProductType = {
+// export type CartProductType = {
+//   productId: string;
+//   variantId: string;
+//   productSlug: string;
+//   variantSlug: string;
+//   name: string;
+//   variantName: string;
+//   image: string;
+//   variantImage: string;
+//   sku:string;
+//   sizeId: string;
+//   size: string;
+//   quantity: number;
+//   price: number;
+//   stock: number;
+//   weight: number;
+//   shippingMethod: string;
+//   shippingService: string;
+//   shippingFee: number;
+//   extraShippingFee: number;
+//   deliveryTimeMin: number;
+//   deliveryTimeMax: number;
+//   isFreeShipping: boolean;
+//   totalPrice:number;
+
+//     // Store bilgileri - BU KISIM EKSİK
+//   storeId: string;
+//   storeName: string;
+//   storeLogo?: string;
+//   storeUrl?: string;
+// };
+
+
+
+
+// app/lib/types.ts
+
+export interface CartProductType {
   productId: string;
   variantId: string;
+  sizeId: string;
   productSlug: string;
   variantSlug: string;
+  sku: string;
   name: string;
-  variantName: string;
   image: string;
-  variantImage: string;
-  sku:string;
-  sizeId: string;
   size: string;
-  quantity: number;
   price: number;
+  quantity: number;
+  shippingFee: number;
+  totalPrice: number;
+  
+  // Store bilgileri
+  storeId: string;
+  storeName: string;
+  storeLogo: string;
+  storeUrl: string;
+  
+  // Variant bilgileri
+  variantName: string;
+  variantImage: string;
+  
+  // Stok ve ağırlık
   stock: number;
   weight: number;
+  
+  // Kargo bilgileri
   shippingMethod: string;
   shippingService: string;
-  shippingFee: number;
   extraShippingFee: number;
   deliveryTimeMin: number;
   deliveryTimeMax: number;
   isFreeShipping: boolean;
-  totalPrice:number;
+  
+  // İndirim
+  discount?: number;
+  discountedPrice?: number;
+  
+  // Kategori
+  categoryId?: string;
+  categoryName?: string;
+  categoryUrl?: string;
+}
 
-    // Store bilgileri - BU KISIM EKSİK
-  storeId: string;
-  storeName: string;
-  storeLogo?: string;
-  storeUrl?: string;
-};
+
+
+
+
 
 export type ProductVariantDataType = {
   id: string;
