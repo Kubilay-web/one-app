@@ -113,8 +113,6 @@
 
 //   // Adres veya sepet değiştiğinde shipping fee hesapla
 
-
-
 // // Adres veya sepet değiştiğinde shipping fee hesapla
 // useEffect(() => {
 //   const calculateShipping = async () => {
@@ -124,7 +122,6 @@
 //       );
 
 //     const storeIds = [...new Set(cart.map(item => item.storeId).filter(Boolean))];
-
 
 //       if (selectedAddress && selectedAddress.countryId) {
 //         // Tüm store'ların item'larını birleştir
@@ -152,8 +149,6 @@
 //     calculateShipping();
 //   }
 // }, [selectedAddressId, cart, shippingAddresses, calculateShippingFee]);
-
-
 
 //   // Helper functions
 //   const getSubTotal = () => {
@@ -950,7 +945,6 @@
 
 //               <div className="p-6">
 
-
 //                 {/* Selected Address Display */}
 //                 {selectedAddressId && (
 //                   <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
@@ -1314,7 +1308,7 @@
 
 //               <div className="p-4">
 //                 {/* Order Items */}
-            
+
 //                 {Object.keys(storeGroupedItems).length > 1 && (
 //                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
 //                     <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -1604,14 +1598,7 @@
 
 // export default Checkout;
 
-
-
-
 //////////////////
-
-
-
-
 
 // app/shop/checkout/page.tsx
 "use client";
@@ -1647,17 +1634,17 @@ const Checkout = () => {
   const { toast } = useToast();
 
   // Cart store - Tüm değerleri doğru şekilde al
-  const { 
-    cart, 
-    totalPrice, 
+  const {
+    cart,
+    totalPrice,
     subtotal: cartSubtotal,
     shippingFee: cartShippingFee,
-    appliedCoupon, 
-    setCart, 
-    clearCart, 
+    appliedCoupon,
+    setCart,
+    clearCart,
     removeCoupon,
     calculateSubtotal,
-    recalculateAll
+    recalculateAll,
   } = useCartStore();
 
   console.log("Checkout Cart:", cart);
@@ -1722,14 +1709,14 @@ const Checkout = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        
+
         // 1. Önce localStorage'dan cart-store'u kontrol et
         const cartStoreData = localStorage.getItem("cart-store");
         if (cartStoreData) {
           try {
             const parsedData = JSON.parse(cartStoreData);
             const cartFromStorage = parsedData.state?.cart || [];
-            
+
             if (cartFromStorage.length > 0) {
               console.log("Loading cart from cart-store:", cartFromStorage);
               setCart(cartFromStorage);
@@ -1748,13 +1735,9 @@ const Checkout = () => {
             console.error("Error parsing cart-store:", e);
           }
         }
-        
+
         // 2. Diğer dataları yükle
-        await Promise.all([
-          fetchShippingAddresses(),
-          fetchCountries()
-        ]);
-        
+        await Promise.all([fetchShippingAddresses(), fetchCountries()]);
       } catch (error) {
         console.error("Failed to load data:", error);
         toast({
@@ -1803,7 +1786,9 @@ const Checkout = () => {
         });
 
         // Store IDs to array
-        const storeIds = [...new Set(cart.map(item => item.storeId).filter(Boolean))];
+        const storeIds = [
+          ...new Set(cart.map((item) => item.storeId).filter(Boolean)),
+        ];
         const primaryStoreId = storeIds[0] || "default-store";
 
         await calculateShippingFee(
@@ -1811,9 +1796,8 @@ const Checkout = () => {
           selectedAddress.countryId,
           primaryStoreId
         );
-        
+
         setShippingCalculated(true);
-        
       } catch (error) {
         console.error("Failed to calculate shipping:", error);
         toast({
@@ -1898,7 +1882,18 @@ const Checkout = () => {
       shippingCalculated,
       shippingFee,
     });
-  }, [cart, appliedCoupon, cartSubtotal, totalPrice, subTotal, shippingFees, total, selectedAddressId, shippingCalculated, shippingFee]);
+  }, [
+    cart,
+    appliedCoupon,
+    cartSubtotal,
+    totalPrice,
+    subTotal,
+    shippingFees,
+    total,
+    selectedAddressId,
+    shippingCalculated,
+    shippingFee,
+  ]);
 
   // Handle address form
   const handleAddressSubmit = async (e: React.FormEvent) => {
@@ -1991,7 +1986,7 @@ const Checkout = () => {
     try {
       // Store'dan kuponu kaldır
       removeCoupon();
-      
+
       // Recalculate totals
       recalculateAll();
 
@@ -2010,85 +2005,107 @@ const Checkout = () => {
 
   // Handle order placement
   const handlePlaceOrder = async () => {
-    if (!selectedAddressId) {
-      toast({
-        title: "Error",
-        description: "Please select a shipping address.",
-        variant: "destructive",
-      });
-      return;
-    }
+  // Çift tıklamayı engelle
+  if (isProcessing) return;
+  
+  setIsProcessing(true);
+  
+  // Validasyon
+  if (!selectedAddressId) {
+    toast({
+      title: "Error",
+      description: "Please select a shipping address.",
+      variant: "destructive",
+    });
+    setIsProcessing(false);
+    return;
+  }
 
-    if (!paymentMethod) {
-      toast({
-        title: "Error",
-        description: "Please select a payment method.",
-        variant: "destructive",
-      });
-      return;
-    }
+  if (!paymentMethod) {
+    toast({
+      title: "Error",
+      description: "Please select a payment method.",
+      variant: "destructive",
+    });
+    setIsProcessing(false);
+    return;
+  }
 
-    if (cart.length === 0) {
-      toast({
-        title: "Error",
-        description: "Your cart is empty. Please add items to your cart.",
-        variant: "destructive",
-      });
-      return;
-    }
+  if (cart.length === 0) {
+    toast({
+      title: "Error",
+      description: "Your cart is empty.",
+      variant: "destructive",
+    });
+    setIsProcessing(false);
+    return;
+  }
 
-    setIsProcessing(true);
-    try {
-      const result = await placeOrder();
+  try {
+    const result = await placeOrder();
 
-      if (result.success) {
-        if (
-          result.paymentUrl &&
-          (paymentMethod === "card" || paymentMethod === "paypal")
-        ) {
-          // Stripe veya PayPal Checkout'e yönlendir
-          window.location.href = result.paymentUrl;
-        } else {
-          toast({
-            title: "Order Placed!",
-            description: "Your order has been placed successfully.",
-          });
-
-          // Clear cart on successful order
-          clearCart();
-
-          // Move to confirmation step for COD/UPI
-          if (paymentMethod === "cod" || paymentMethod === "upi") {
-            setStep(3);
-          }
-        }
-      } else {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to place order.",
-          variant: "destructive",
-        });
+    if (result.success) {
+      // Stripe veya PayPal için payment URL'ye yönlendir
+      if (result.paymentUrl && (paymentMethod === "card" || paymentMethod === "paypal")) {
+        window.location.href = result.paymentUrl;
+        return; // Yönlendirme yapıldı, devam etme
       }
-    } catch (error: any) {
+      
+      // COD için success göster
+      if (paymentMethod === "cod" || paymentMethod === "upi") {
+        toast({
+          title: "Order Placed!",
+          description: "Your order has been placed successfully.",
+        });
+        
+        clearCart();
+        setStep(3);
+      }
+    } else {
       toast({
         title: "Error",
-        description: error.message || "An unexpected error occurred.",
+        description: result.error || "Failed to place order.",
         variant: "destructive",
       });
-    } finally {
+    }
+  } catch (error: any) {
+    toast({
+      title: "Error",
+      description: error.message || "An unexpected error occurred.",
+      variant: "destructive",
+    });
+  } finally {
+    // Eğer yönlendirme yapılmadıysa, işlemi sıfırla
+    if (!window.location.href.includes("stripe") && 
+        !window.location.href.includes("paypal")) {
       setIsProcessing(false);
     }
-  };
+  }
+};
+
 
   // Handle payment method selection
-  const handlePaymentMethodSelect = async (method: string) => {
-    setPaymentMethod(method as any);
 
-    // If it's a card payment, automatically proceed to place order
-    if (method === "card" || method === "paypal") {
+  // Tek tıklamayla direkt ödemeye yönlendiren fonksiyon
+const handlePaymentMethodSelect = async (method: string) => {
+  // Eğer zaten işlemdeyse, engelle
+  if (isProcessing) return;
+  
+  // Payment method'u set et
+  setPaymentMethod(method as any);
+  
+  // Stripe veya PayPal için direkt order işle
+  if (method === "card" || method === "paypal") {
+    setIsProcessing(true);
+    try {
       await handlePlaceOrder();
+    } catch (error) {
+      console.error("Payment error:", error);
+      setIsProcessing(false);
     }
-  };
+  }
+  // COD için sadece seç, buton göster
+};
 
   // Calculate delivery date
   const getDeliveryDate = () => {
@@ -2615,6 +2632,8 @@ const Checkout = () => {
           )}
 
           {/* Step 2: Payment */}
+
+          {/* Step 2: Payment */}
           {step === 2 && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -2678,21 +2697,21 @@ const Checkout = () => {
                   </div>
                 )}
 
-
-                {/* Payment Method Selection */}
+                {/* Payment Method Selection - TEK TIKLAMAYLA */}
                 <div className="space-y-4 mb-6">
+                  {/* Stripe Card Payment - TEK TIKLAMAYLA GİTSİN */}
                   <button
                     onClick={() => handlePaymentMethodSelect("card")}
                     disabled={isProcessing}
                     className={`
-                      w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
-                      ${
-                        paymentMethod === "card"
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                      }
-                      ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
-                    `}
+            w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
+            ${
+              paymentMethod === "card"
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+            }
+            ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
+          `}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
@@ -2709,30 +2728,37 @@ const Checkout = () => {
                     </div>
                     <div className="flex gap-2">
                       <div className="w-10 h-6 bg-blue-100 rounded flex items-center justify-center">
-                        <span className="text-xs font-bold text-blue-700">VISA</span>
+                        <span className="text-xs font-bold text-blue-700">
+                          VISA
+                        </span>
                       </div>
                       <div className="w-10 h-6 bg-red-100 rounded flex items-center justify-center">
-                        <span className="text-xs font-bold text-red-700">MC</span>
+                        <span className="text-xs font-bold text-red-700">
+                          MC
+                        </span>
                       </div>
                     </div>
                   </button>
 
+                  {/* PayPal - TEK TIKLAMAYLA GİTSİN */}
                   <button
                     onClick={() => handlePaymentMethodSelect("paypal")}
                     disabled={isProcessing}
                     className={`
-                      w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
-                      ${
-                        paymentMethod === "paypal"
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                      }
-                      ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
-                    `}
+            w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
+            ${
+              paymentMethod === "paypal"
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+            }
+            ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
+          `}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
-                        <span className="text-lg font-bold text-blue-700">P</span>
+                        <span className="text-lg font-bold text-blue-700">
+                          P
+                        </span>
                       </div>
                       <div>
                         <p className="font-medium">PayPal</p>
@@ -2742,22 +2768,25 @@ const Checkout = () => {
                       </div>
                     </div>
                     <div>
-                      <span className="text-lg font-bold text-blue-700">PayPal</span>
+                      <span className="text-lg font-bold text-blue-700">
+                        PayPal
+                      </span>
                     </div>
                   </button>
 
+                  {/* Cash on Delivery - TEK TIKLAMAYLA GİTSİN */}
                   <button
-                    onClick={() => setPaymentMethod("cod")}
+                    onClick={() => handlePaymentMethodSelect("cod")}
                     disabled={isProcessing}
                     className={`
-                      w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
-                      ${
-                        paymentMethod === "cod"
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                      }
-                      ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
-                    `}
+            w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between
+            ${
+              paymentMethod === "cod"
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+            }
+            ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
+          `}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded flex items-center justify-center">
@@ -2774,7 +2803,7 @@ const Checkout = () => {
                 </div>
 
                 {/* Order Note */}
-                <div className="mb-6">
+                {/* <div className="mb-6">
                   <label className="block text-sm font-medium mb-2">
                     Order Note (Optional)
                   </label>
@@ -2785,7 +2814,7 @@ const Checkout = () => {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                   />
-                </div>
+                </div> */}
 
                 {/* Security Note */}
                 <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
@@ -2810,6 +2839,7 @@ const Checkout = () => {
                   Back to Address
                 </button>
 
+                {/* COD için Place Order butonu */}
                 {(paymentMethod === "cod" || paymentMethod === "upi") && (
                   <button
                     onClick={handlePlaceOrder}
@@ -2960,7 +2990,10 @@ const Checkout = () => {
                 {/* Cart Items Preview */}
                 <div className="mb-4 max-h-80 overflow-y-auto">
                   {cart.slice(0, 3).map((item) => (
-                    <div key={`${item.productId}-${item.variantId}-${item.sizeId}`} className="flex items-center gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                    <div
+                      key={`${item.productId}-${item.variantId}-${item.sizeId}`}
+                      className="flex items-center gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
+                    >
                       <div className="relative w-16 h-16 flex-shrink-0">
                         <Image
                           src={item.image || "/placeholder-product.jpg"}
@@ -2974,7 +3007,9 @@ const Checkout = () => {
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{item.name}</p>
+                        <p className="font-medium text-sm truncate">
+                          {item.name}
+                        </p>
                         <p className="text-xs text-gray-500">
                           Size: {item.size} | {item.sku}
                         </p>
@@ -2987,7 +3022,8 @@ const Checkout = () => {
                   {cart.length > 3 && (
                     <div className="text-center py-2">
                       <p className="text-sm text-gray-500">
-                        +{cart.length - 3} more item{cart.length - 3 !== 1 ? 's' : ''}
+                        +{cart.length - 3} more item
+                        {cart.length - 3 !== 1 ? "s" : ""}
                       </p>
                     </div>
                   )}

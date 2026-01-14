@@ -1,149 +1,185 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { validateRequest } from '@/app/auth';
 import db from "@/app/lib/db";
+import { v2 as cloudinary } from 'cloudinary';
 
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
+});
+
+// GET all reviews for a product
 export async function GET(
   request: NextRequest,
   { params }: { params: { productSlug: string } }
 ) {
   try {
-    const { productSlug } = params;
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const skip = (page - 1) * limit;
-
     const product = await db.product.findUnique({
-      where: { slug: productSlug },
-      select: { id: true },
+      where: { slug: params.productSlug },
+      include: {
+        reviews: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                displayName: true,
+                avatarUrl: true
+              }
+            },
+            images: true
+          },
+          orderBy: { createdAt: 'desc' }
+        }
+      }
     });
 
     if (!product) {
-      return NextResponse.json(
-        { error: "Ürün bulunamadı" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
-    const [reviews, total] = await Promise.all([
-      db.review.findMany({
-        where: { productId: product.id },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              displayName: true,
-              avatarUrl: true,
-            },
-          },
-          images: {
-            select: {
-              url: true,
-              alt: true,
-            },
-          },
-        },
-        skip,
-        take: limit,
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-      db.review.count({
-        where: { productId: product.id },
-      }),
-    ]);
-
-    // Ortalama rating hesapla
-    const ratingStats = await db.review.aggregate({
-      where: { productId: product.id },
-      _avg: { rating: true },
-      _count: { id: true },
-    });
-
-    // Rating dağılımını hesapla
+    // Calculate rating statistics
     const ratingDistribution = await db.review.groupBy({
       by: ['rating'],
       where: { productId: product.id },
-      _count: { rating: true },
+      _count: { rating: true }
     });
 
+    const averageRating = product.reviews.length > 0 
+      ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
+      : 0;
+
     return NextResponse.json({
-      reviews,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
+      reviews: product.reviews,
       stats: {
-        averageRating: ratingStats._avg.rating || 0,
-        totalReviews: ratingStats._count.id,
+        averageRating,
         ratingDistribution,
-      },
+        totalReviews: product.reviews.length
+      }
     });
   } catch (error) {
-    console.error("Yorumlar getirme hatası:", error);
-    return NextResponse.json(
-      { error: "Yorumlar getirilirken bir hata oluştu" },
-      { status: 500 }
-    );
+    console.error('Error fetching reviews:', error);
+    return NextResponse.json({ error: 'Failed to fetch reviews' }, { status: 500 });
   }
 }
 
+// POST a new review
 export async function POST(
   request: NextRequest,
   { params }: { params: { productSlug: string } }
 ) {
   try {
-    const { productSlug } = params;
-    const body = await request.json();
-    const { userId, rating, review, variant, images } = body;
+    const { user } = await validateRequest();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const product = await db.product.findUnique({
-      where: { slug: productSlug },
-      select: { id: true },
+      where: { slug: params.productSlug }
     });
 
     if (!product) {
-      return NextResponse.json(
-        { error: "Ürün bulunamadı" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
-    // Kullanıcının bu varyant için daha önce yorum yapıp yapmadığını kontrol et
+    // Get user from database
+    const dbUser = await db.user.findUnique({
+      where: { id: user.id }
+    });
+
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const formData = await request.formData();
+    const rating = parseInt(formData.get('rating') as string);
+    const review = formData.get('review') as string;
+    const color = formData.get('color') as string;
+    const size = formData.get('size') as string;
+    const variant = formData.get('variant') as string;
+
+    // Validation
+    if (!rating || rating < 1 || rating > 5) {
+      return NextResponse.json({ error: 'Invalid rating. Must be between 1 and 5' }, { status: 400 });
+    }
+
+    if (!review || review.trim().length < 10) {
+      return NextResponse.json({ error: 'Review must be at least 10 characters long' }, { status: 400 });
+    }
+
+    // Check if user already reviewed this product variant
     const existingReview = await db.review.findFirst({
       where: {
         productId: product.id,
-        userId,
-        variant,
-      },
+        userId: dbUser.id,
+        variant: variant || ''
+      }
     });
 
     if (existingReview) {
-      return NextResponse.json(
-        { error: "Bu varyant için zaten yorum yapmışsınız" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'You already reviewed this variant' }, { status: 400 });
     }
 
+    // Upload images to Cloudinary
+    const imageFiles = formData.getAll('images[]') as File[];
+    const uploadedImages = [];
+
+    for (const file of imageFiles) {
+      if (file.size > 0) {
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+          
+          // Convert to base64 for Cloudinary upload
+          const base64String = `data:${file.type};base64,${buffer.toString('base64')}`;
+          
+          const uploadResult = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload(
+              base64String,
+              {
+                folder: `product-reviews/${product.id}`,
+                resource_type: 'auto',
+                transformation: [
+                  { width: 800, height: 800, crop: 'limit' }
+                ]
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+              }
+            );
+          }) as any;
+
+          uploadedImages.push({
+            url: uploadResult.secure_url,
+            alt: `Review image for ${product.name}`,
+            publicId: uploadResult.public_id
+          });
+        } catch (uploadError) {
+          console.error('Error uploading image:', uploadError);
+          // Continue with other images even if one fails
+        }
+      }
+    }
+
+    // Create review
     const newReview = await db.review.create({
       data: {
+        rating,
+        review: review.trim(),
+        color: color || '',
+        size: size || '',
+        variant: variant || '',
         productId: product.id,
-        userId,
-        rating: parseFloat(rating),
-        review,
-        variant,
-        color: body.color || '',
-        size: body.size || '',
-        quantity: body.quantity || '1',
+        userId: dbUser.id,
         images: {
-          create: images?.map((img: any) => ({
+          create: uploadedImages.map(img => ({
             url: img.url,
-            alt: img.alt || '',
-          })) || [],
-        },
+            alt: img.alt
+          }))
+        }
       },
       include: {
         user: {
@@ -151,35 +187,35 @@ export async function POST(
             id: true,
             username: true,
             displayName: true,
-            avatarUrl: true,
-          },
+            avatarUrl: true
+          }
         },
-        images: true,
-      },
+        images: true
+      }
     });
 
-    // Ürünün ortalama rating'ini güncelle
-    const reviews = await db.review.findMany({
-      where: { productId: product.id },
-      select: { rating: true },
+    // Update product rating and review count
+    const productReviews = await db.review.findMany({
+      where: { productId: product.id }
     });
 
-    const averageRating = reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length;
+    const avgRating = productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length;
 
     await db.product.update({
       where: { id: product.id },
       data: {
-        rating: averageRating,
-        numReviews: reviews.length,
-      },
+        rating: avgRating,
+        numReviews: productReviews.length
+      }
     });
 
-    return NextResponse.json(newReview, { status: 201 });
+    return NextResponse.json(newReview);
+
   } catch (error) {
-    console.error("Yorum oluşturma hatası:", error);
-    return NextResponse.json(
-      { error: "Yorum oluşturulurken bir hata oluştu" },
-      { status: 500 }
-    );
+    console.error('Error creating review:', error);
+    return NextResponse.json({ 
+      error: 'Failed to create review',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }

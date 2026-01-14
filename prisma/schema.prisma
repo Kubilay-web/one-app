@@ -590,7 +590,7 @@ model Review {
   rating       Float
   color        String
   size         String
-  quantity     String
+  quantity     String?
   likes        Int     @default(0)
 
   images    ReviewImage[] @relation("ReviewToReviewImage")
@@ -724,7 +724,8 @@ enum PaymentStatus {
 enum PaymentMethod {
   Paypal
   Stripe
-  
+  COD
+  UPI
 }
 
 model Order {
