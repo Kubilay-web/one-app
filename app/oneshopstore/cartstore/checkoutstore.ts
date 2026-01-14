@@ -44,8 +44,7 @@ interface CheckoutStore {
   };
   shippingService: string;
   calculatedShipping: boolean;
-  isProcessingPayment: boolean; 
-
+  isProcessingPayment: boolean;
 
   // Actions
   setStep: (step: number) => void;
@@ -67,7 +66,11 @@ interface CheckoutStore {
   setShippingMethod: (method: "standard" | "express") => void;
   setNote: (note: string) => void;
 
-  calculateShippingFee: (cartItems: any[], countryId: string, storeId?: string) => Promise<void>;
+  calculateShippingFee: (
+    cartItems: any[],
+    countryId: string,
+    storeId?: string
+  ) => Promise<void>;
   setShippingFee: (fee: number) => void;
   setEstimatedDeliveryDays: (days: { min: number; max: number }) => void;
   setShippingService: (service: string) => void;
@@ -273,22 +276,22 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
 
   setSelectedAddress: (id) => {
     set({ selectedAddressId: id });
-    
+
     // Adres değiştiğinde shipping fee hesapla
     const { cart } = useCartStore.getState();
     const { shippingAddresses, calculateShippingFee } = get();
-    
-    const selectedAddress = shippingAddresses.find(addr => addr.id === id);
+
+    const selectedAddress = shippingAddresses.find((addr) => addr.id === id);
     if (selectedAddress && selectedAddress.countryId && cart.length > 0) {
       calculateShippingFee(
-        cart.map(item => ({
+        cart.map((item) => ({
           productId: item.productId,
           variantId: item.variantId,
           sizeId: item.sizeId,
           quantity: item.quantity,
           price: item.price,
         })),
-        selectedAddress.countryId,
+        selectedAddress.countryId
       );
     }
   },
@@ -314,11 +317,11 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
   // Shipping fee calculation
   calculateShippingFee: async (cartItems, countryId, storeId) => {
     set({ isLoading: true, error: null });
-    
+
     try {
-      const response = await fetch('/api/oneshop/checkout/calculateshipping', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/oneshop/checkout/calculateshipping", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cartItems,
           countryId,
@@ -328,12 +331,12 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to calculate shipping fee');
+        throw new Error(error.error || "Failed to calculate shipping fee");
       }
 
       const data = await response.json();
 
-      useCartStore.getState().setShippingFee(data.shippingFee)
+      useCartStore.getState().setShippingFee(data.shippingFee);
 
       set({
         shippingFee: data.shippingFee,
@@ -347,7 +350,7 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
     } catch (error: any) {
       // Hata durumunda default değerleri kullan
       set({
-        error: error.message || 'Failed to calculate shipping fee',
+        error: error.message || "Failed to calculate shipping fee",
         isLoading: false,
         calculatedShipping: false,
         shippingFee: get().shippingMethod === "express" ? 9.99 : 0,
@@ -359,47 +362,51 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
   setShippingFee: (fee) => set({ shippingFee: fee }),
   setEstimatedDeliveryDays: (days) => set({ estimatedDeliveryDays: days }),
   setShippingService: (service) => set({ shippingService: service }),
-  resetShipping: () => set({ 
-    shippingFee: 0, 
-    estimatedDeliveryDays: { min: 7, max: 31 },
-    shippingService: 'Standard Delivery',
-    calculatedShipping: false,
-  }),
+  resetShipping: () =>
+    set({
+      shippingFee: 0,
+      estimatedDeliveryDays: { min: 7, max: 31 },
+      shippingService: "Standard Delivery",
+      calculatedShipping: false,
+    }),
 
   // Payment and shipping actions
   setPaymentMethod: (method) => set({ paymentMethod: method }),
-  setShippingMethod: (method) => set({ 
-    shippingMethod: method,
-    // Express shipping seçildiyse ekstra ücret ekle
-    shippingFee: method === "express" ? get().shippingFee + 9.99 : get().shippingFee
-  }),
+  setShippingMethod: (method) =>
+    set({
+      shippingMethod: method,
+      // Express shipping seçildiyse ekstra ücret ekle
+      shippingFee:
+        method === "express" ? get().shippingFee + 9.99 : get().shippingFee,
+    }),
   setNote: (note) => set({ note }),
 
   // Order placement with Stripe
+
   placeOrder: async () => {
     set({ isLoading: true, error: null });
     try {
-      const { 
-        selectedAddressId, 
-        paymentMethod, 
-        shippingMethod, 
+      const {
+        selectedAddressId,
+        paymentMethod,
+        shippingMethod,
         note,
         shippingFee,
-        calculatedShipping 
+        calculatedShipping,
       } = get();
-      
-      if (!selectedAddressId) throw new Error('Please select a shipping address');
-      if (!paymentMethod) throw new Error('Please select a payment method');
-      
+
+      if (!selectedAddressId)
+        throw new Error("Please select a shipping address");
+      if (!paymentMethod) throw new Error("Please select a payment method");
+
       // Get cart directly
-      const { cart, appliedCoupon,totalPrice } = useCartStore.getState();
-      
-      
+      const { cart, appliedCoupon, totalPrice } = useCartStore.getState();
+
       if (!cart || cart.length === 0) {
-        throw new Error('Your cart is empty');
+        throw new Error("Your cart is empty");
       }
-      
-      // Format cart items EXACTLY as backend expects
+
+      // Format cart items
       const cartItems = cart.map((item: any) => ({
         productId: item.productId,
         variantId: item.variantId,
@@ -413,24 +420,23 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
         price: Number(item.price),
         quantity: Number(item.quantity),
         shippingFee: item.shippingFee || 0,
-        totalPrice: totalPrice ,
+        totalPrice: totalPrice,
       }));
-      
-      // Shipping fee'i hesapla (eğer hesaplanmadıysa)
+
+      // Calculate shipping
       let finalShippingFee = shippingFee;
       if (!calculatedShipping || shippingFee === 0) {
         finalShippingFee = shippingMethod === "express" ? 9.99 : 0;
       }
-      
-      // Subtotal hesapla
-      const subTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      
-      // Discount hesapla
+
+      // Calculate total
+      const subTotal = cart.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
       const discountAmount = appliedCoupon?.discountAmount || 0;
-      
-      // Total hesapla
       const total = totalPrice;
-      
+
       const orderData = {
         shippingAddressId: selectedAddressId,
         paymentMethod,
@@ -440,39 +446,58 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
         total,
         discountAmount,
         cartItems,
-        appliedCoupon: appliedCoupon || null
+        appliedCoupon: appliedCoupon || null,
       };
-      
-      console.log('Order Data:', orderData);
-      
-      const response = await fetch('/api/oneshop/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+
+      console.log("Order Data:", orderData);
+
+      // Send order to backend
+      const response = await fetch("/api/oneshop/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to place order');
+        throw new Error(data.error || "Failed to place order");
       }
-      
-      if (paymentMethod !== 'card' && paymentMethod !== 'paypal') {
-        useCartStore.getState().clearCart();
+
+      // TÜM ÖDEME YÖNTEMLERİ İÇİN CART'I TEMİZLE
+      // Backend cart'ını temizle (API çağrısı gerekiyorsa)
+      try {
+        await fetch("/api/oneshop/cart", {
+          method: "DELETE",
+        });
+      } catch (error) {
+        console.error("Failed to clear backend cart:", error);
+        // Backend cart temizleme hatasında bile devam et
       }
-      
-      if (paymentMethod === 'cod' || paymentMethod === 'upi') {
+
+      // Frontend cart'ı temizle
+      useCartStore.getState().clearCart();
+
+      // Ödeme yöntemine göre yönlendirme
+      if (paymentMethod === "card" || paymentMethod === "paypal") {
+        // Stripe veya PayPal ödeme sayfasına yönlendir
+        if (data.paymentUrl) {
+          window.location.href = data.paymentUrl;
+          return;
+        } else {
+          throw new Error("No payment URL received");
+        }
+      } else {
+        // COD veya UPI için success sayfasına git
         set({ step: 3, isLoading: false });
+        return {
+          success: true,
+          order: data.order,
+          message: "Order placed successfully!",
+        };
       }
-      
-      return { 
-        success: true, 
-        order: data.order,
-        paymentUrl: data.paymentUrl,
-        sessionId: data.sessionId
-      };
     } catch (error: any) {
-      const errorMsg = error.message || 'Failed to place order';
+      const errorMsg = error.message || "Failed to place order";
       set({ error: errorMsg, isLoading: false });
       return { success: false, error: errorMsg };
     }
@@ -489,7 +514,7 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
       error: null,
       shippingFee: 0,
       estimatedDeliveryDays: { min: 7, max: 31 },
-      shippingService: 'Standard Delivery',
+      shippingService: "Standard Delivery",
       calculatedShipping: false,
     });
   },
