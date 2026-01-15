@@ -464,8 +464,6 @@ export const useCheckoutStore = create<CheckoutStore>((set, get) => ({
         throw new Error(data.error || "Failed to place order");
       }
 
-      // TÜM ÖDEME YÖNTEMLERİ İÇİN CART'I TEMİZLE
-      // Backend cart'ını temizle (API çağrısı gerekiyorsa)
       try {
         await fetch("/api/oneshop/cart", {
           method: "DELETE",

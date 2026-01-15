@@ -1261,12 +1261,6 @@
 
 ////////////////
 
-
-
-
-
-
-
 "use client";
 
 import { useEffect, useState, Suspense, Fragment, useRef } from "react";
@@ -1657,21 +1651,161 @@ const ProductDetails = () => {
     }
   }, [params.productSlug, params.variantSlug, user]);
 
+  // Add to wishlist function
+  const handleWishlistToggle = async () => {
+    if (!user) {
+      toast.error("Please login to add to wishlist");
+      router.push("/login");
+      return;
+    }
+
+    if (!product || !selectedVariant) return;
+
+    try {
+      const response = await fetch("/api/oneshop/wishlist/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: product.id,
+          variantId: selectedVariant.id,
+          sizeId: selectedSize?.id,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsInWishlist(data.inWishlist);
+        toast.success(
+          data.inWishlist ? "Added to wishlist!" : "Removed from wishlist"
+        );
+      }
+    } catch (error) {
+      console.error("Error toggling wishlist:", error);
+      toast.error("Failed to update wishlist");
+    }
+  };
+
+  // Delete review function
+  const handleDeleteReview = async (reviewId: string) => {
+    if (!confirm("Are you sure you want to delete this review?")) return;
+
+    try {
+      const response = await fetch(`/api/oneshop/reviews/${reviewId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setReviews(reviews.filter((r) => r.id !== reviewId));
+        toast.success("Review deleted successfully");
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      toast.error("Failed to delete review");
+    }
+  };
+
+  // Submit review function
+  const handleSubmitReview = async () => {
+    if (!user) {
+      toast.error("Please login to submit a review");
+      router.push("/login");
+      return;
+    }
+
+    if (!reviewData.rating) {
+      toast.error("Please select a rating");
+      return;
+    }
+
+    if (!reviewData.review.trim()) {
+      toast.error("Please write a review");
+      return;
+    }
+
+    if (!selectedVariant) {
+      toast.error("Please select a variant");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("rating", reviewData.rating.toString());
+      formData.append("review", reviewData.review);
+      formData.append("variant", selectedVariant.variantName);
+      formData.append("color", selectedColor?.name || "");
+      formData.append("size", selectedSize?.size || "");
+      formData.append("quantity", quantity.toString());
+
+      reviewData.images.forEach((file, index) => {
+        formData.append(`images[${index}]`, file);
+      });
+
+      const response = await fetch(
+        `/api/oneshop/products/${product?.slug}/reviews`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const newReview = await response.json();
+        setReviews([newReview, ...reviews]);
+        setReviewData({
+          rating: 0,
+          review: "",
+          color: "",
+          size: "",
+          variant: "",
+          images: [],
+        });
+        setShowReviewForm(false);
+        toast.success("Review submitted successfully!");
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      toast.error("Failed to submit review");
+    }
+  };
+
+  // Handle file upload for review images
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      setReviewData((prev) => ({
+        ...prev,
+        images: [...prev.images, ...fileArray],
+      }));
+    }
+  };
+
+  // Remove uploaded image
+  const handleRemoveImage = (index: number) => {
+    setReviewData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+  };
+
   // Zoom functionality
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isZooming || !imageContainerRef.current) return;
 
     const container = imageContainerRef.current;
     const rect = container.getBoundingClientRect();
-    
+
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
-    setZoomPosition({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
+
+    setZoomPosition({
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y)),
+    });
   };
 
   const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(5, prev + 0.5));
+    setZoomLevel((prev) => Math.min(5, prev + 0.5));
     if (!isZooming) {
       setIsZooming(true);
       setShowZoomOverlay(true);
@@ -1679,7 +1813,7 @@ const ProductDetails = () => {
   };
 
   const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(1, prev - 0.5));
+    setZoomLevel((prev) => Math.max(1, prev - 0.5));
     if (zoomLevel <= 1.5) {
       setIsZooming(false);
       setShowZoomOverlay(false);
@@ -1838,7 +1972,7 @@ const ProductDetails = () => {
                 <div className="box-body !p-2">
                   <div className="hs-tooltip ti-main-tooltip !absolute top-2 end-2 z-[1]">
                     <button
-                      // onClick={handleWishlistToggle}
+                      onClick={handleWishlistToggle}
                       className="hs-tooltip-toggle ti-btn ti-btn-icon !rounded-full !bg-white dark:!bg-bodybg top-wishlist-icon"
                     >
                       <i
@@ -1860,7 +1994,7 @@ const ProductDetails = () => {
                           {selectedSize.discount}% OFF
                         </span>
                       )}
-                      
+
                       {/* Zoom Controls */}
                       <div className="absolute top-3 right-3 z-10 flex gap-1">
                         <button
@@ -1895,27 +2029,31 @@ const ProductDetails = () => {
                       </div>
 
                       {/* Main Image Container */}
-                      <div 
+                      <div
                         ref={imageContainerRef}
                         className="relative aspect-square overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 cursor-zoom-in"
                         onMouseMove={handleMouseMove}
-                        onMouseEnter={() => isZooming && setShowZoomOverlay(true)}
+                        onMouseEnter={() =>
+                          isZooming && setShowZoomOverlay(true)
+                        }
                         onMouseLeave={() => setShowZoomOverlay(false)}
                         onClick={handleToggleZoom}
                       >
                         {/* Main Image */}
-                        <div 
-                          className={`relative w-full h-full transition-transform duration-300 ${isZooming ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
+                        <div
+                          className={`relative w-full h-full transition-transform duration-300 ${isZooming ? "cursor-zoom-out" : "cursor-zoom-in"}`}
                           style={{
                             transform: `scale(${zoomLevel})`,
-                            transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                            transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
                           }}
                         >
                           <Image
                             priority
                             fill
                             alt={product.name}
-                            src={selectedImage?.url || selectedVariant.variantImage}
+                            src={
+                              selectedImage?.url || selectedVariant.variantImage
+                            }
                             className="object-contain"
                             sizes="(max-width: 768px) 100vw, 50vw"
                           />
@@ -1925,7 +2063,7 @@ const ProductDetails = () => {
                         {showZoomOverlay && isZooming && (
                           <div className="absolute inset-0 pointer-events-none">
                             <div className="absolute inset-0 bg-black/5"></div>
-                            <div 
+                            <div
                               className="absolute w-32 h-32 border-2 border-white/80 shadow-lg rounded-lg pointer-events-none"
                               style={{
                                 left: `calc(${zoomPosition.x}% - 64px)`,
@@ -1944,41 +2082,45 @@ const ProductDetails = () => {
                       </div>
 
                       {/* Image Gallery Thumbnails */}
-                      {selectedVariant.images && selectedVariant.images.length > 0 && (
-                        <div className="mt-4">
-                          <div className="flex gap-2 overflow-x-auto pb-2">
-                            {selectedVariant.images.map((image, index) => (
-                              <button
-                                key={image.id}
-                                onClick={() => {
-                                  setSelectedImage(image);
-                                  handleResetZoom();
-                                }}
-                                className={`relative mt-10 flex-shrink-0 w-20 h-20 rounded border-2 ${selectedImage?.id === image.id ? 'border-primary' : 'border-transparent'}`}
-                              >
-                                <div className="relative w-full h-full rounded overflow-hidden">
-                                  <Image
-                                    fill
-                                    src={image.url}
-                                    alt={image.alt || `Product image ${index + 1}`}
-                                    className="object-cover"
-                                    sizes="80px"
-                                  />
-                                </div>
-                              </button>
-                            ))}
+                      {selectedVariant.images &&
+                        selectedVariant.images.length > 0 && (
+                          <div className="mt-4">
+                            <div className="flex gap-2 overflow-x-auto pb-2">
+                              {selectedVariant.images.map((image, index) => (
+                                <button
+                                  key={image.id}
+                                  onClick={() => {
+                                    setSelectedImage(image);
+                                    handleResetZoom();
+                                  }}
+                                  className={`relative mt-10 flex-shrink-0 w-20 h-20 rounded border-2 ${selectedImage?.id === image.id ? "border-primary" : "border-transparent"}`}
+                                >
+                                  <div className="relative w-full h-full rounded overflow-hidden">
+                                    <Image
+                                      fill
+                                      src={image.url}
+                                      alt={
+                                        image.alt ||
+                                        `Product image ${index + 1}`
+                                      }
+                                      className="object-cover"
+                                      sizes="80px"
+                                    />
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                            <div className="text-center mt-2">
+                              <span className="ti-btn ti-btn-soft-primary classifyimage-btn !rounded-full cursor-pointer text-sm">
+                                <ImageIcon
+                                  className="me-2 bg-primary !text-white feature-icons !border-0"
+                                  size={14}
+                                />
+                                {selectedVariant.images.length} Images
+                              </span>
+                            </div>
                           </div>
-                          <div className="text-center mt-2">
-                            <span className="ti-btn ti-btn-soft-primary classifyimage-btn !rounded-full cursor-pointer text-sm">
-                              <ImageIcon
-                                className="me-2 bg-primary !text-white feature-icons !border-0"
-                                size={14}
-                              />
-                              {selectedVariant.images.length} Images
-                            </span>
-                          </div>
-                        </div>
-                      )}
+                        )}
                     </div>
                   </div>
 
@@ -2281,81 +2423,276 @@ const ProductDetails = () => {
                             Write a Review
                           </button>
 
-                          {/* Reviews List */}
-                          {reviews.length > 0 ? (
-                            <div className="space-y-4">
-                              {reviews.map((review) => (
-                                <div className="box" key={review.id}>
-                                  <div className="box-body">
-                                    <div className="sm:flex block items-top mb-3">
-                                      <div className="flex flex-grow">
-                                        <div className="me-2">
-                                          <span className="avatar avatar-sm avatar-rounded relative">
-                                            {review.user.avatarUrl ? (
-                                              <Image
-                                                fill
-                                                src={review.user.avatarUrl}
-                                                alt={review.user.displayName}
-                                                sizes="32px"
-                                              />
-                                            ) : (
-                                              <div className="h-full w-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                                                {review.user.displayName?.charAt(
-                                                  0
-                                                ) || "U"}
-                                              </div>
-                                            )}
-                                          </span>
-                                        </div>
-                                        <div className="leading-none me-2">
-                                          <p className="mb-1 font-semibold text-[0.875rem]">
-                                            {review.user.displayName ||
-                                              review.user.username}
-                                          </p>
-                                          <div className="mb-1">
-                                            {getRatingStars(review.rating)}
-                                          </div>
-                                          <div className="text-[0.6875rem] text-textmuted dark:text-textmuted/50">
-                                            {new Date(
-                                              review.createdAt
-                                            ).toLocaleDateString("en-US", {
-                                              year: "numeric",
-                                              month: "long",
-                                              day: "numeric",
-                                            })}
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="sm:ps-0 sm:mt-0 mt-3 ps-2">
-                                        {review.user.id === user?.id && (
-                                          <button
-                                            onClick={() =>
-                                              handleDeleteReview(review.id)
-                                            }
-                                            className="ti-btn ti-btn-sm ti-btn-danger"
-                                          >
-                                            <Trash2 size={14} />
-                                          </button>
-                                        )}
-                                      </div>
+                          {/* Write Review Form */}
+                          {showReviewForm && (
+                            <div className="box mb-6 border-2 border-primary/20">
+                              <div className="box-header bg-primary/5 border-b border-primary/10">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="text-lg font-semibold text-primary">
+                                    Write Your Review
+                                  </h4>
+                                  <button
+                                    onClick={() => setShowReviewForm(false)}
+                                    className="ti-btn ti-btn-sm ti-btn-soft-light"
+                                  >
+                                    <X size={16} />
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="box-body">
+                                <div className="space-y-4">
+                                  {/* Rating Selection */}
+                                  <div>
+                                    <label className="block text-sm font-medium mb-2">
+                                      Rating{" "}
+                                      <span className="text-red-500">*</span>
+                                    </label>
+                                    <div className="flex items-center gap-2">
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                          key={star}
+                                          type="button"
+                                          onClick={() =>
+                                            setReviewData((prev) => ({
+                                              ...prev,
+                                              rating: star,
+                                            }))
+                                          }
+                                          className={`text-2xl ${
+                                            reviewData.rating >= star
+                                              ? "text-yellow-500"
+                                              : "text-gray-300 dark:text-gray-600"
+                                          } hover:text-yellow-400 transition-colors`}
+                                        >
+                                          ★
+                                        </button>
+                                      ))}
+                                      <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                                        {reviewData.rating}/5
+                                      </span>
                                     </div>
-                                    <p className="mb-3 ps-2">{review.review}</p>
-                                    {/* Review details */}
-                                    <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-gray-400 ps-2">
-                                      {review.size && (
-                                        <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                                          Size: {review.size}
-                                        </span>
-                                      )}
-                                      {review.color && (
-                                        <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                                          Color: {review.color}
-                                        </span>
+                                  </div>
+
+                                  {/* Review Text */}
+                                  <div>
+                                    <label className="block text-sm font-medium mb-2">
+                                      Review{" "}
+                                      <span className="text-red-500">*</span>
+                                    </label>
+                                    <textarea
+                                      value={reviewData.review}
+                                      onChange={(e) =>
+                                        setReviewData((prev) => ({
+                                          ...prev,
+                                          review: e.target.value,
+                                        }))
+                                      }
+                                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                      rows={4}
+                                      placeholder="Share your experience with this product..."
+                                    />
+                                  </div>
+
+                                  {/* Product Details */}
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                      <label className="block text-sm font-medium mb-2">
+                                        Color
+                                      </label>
+                                      <input
+                                        type="text"
+                                        value={selectedColor?.name || ""}
+                                        readOnly
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800"
+                                        placeholder="Selected color"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium mb-2">
+                                        Size
+                                      </label>
+                                      <input
+                                        type="text"
+                                        value={selectedSize?.size || ""}
+                                        readOnly
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800"
+                                        placeholder="Selected size"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium mb-2">
+                                        Variant
+                                      </label>
+                                      <input
+                                        type="text"
+                                        value={
+                                          selectedVariant?.variantName || ""
+                                        }
+                                        readOnly
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800"
+                                        placeholder="Selected variant"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  {/* Image Upload */}
+                                  <div>
+                                    <label className="block text-sm font-medium mb-2">
+                                      Upload Images (Optional)
+                                    </label>
+                                    <div className="space-y-3">
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={handleImageUpload}
+                                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                                      />
+                                      {reviewData.images.length > 0 && (
+                                        <div className="grid grid-cols-4 gap-2">
+                                          {reviewData.images.map(
+                                            (file, index) => (
+                                              <div
+                                                key={index}
+                                                className="relative aspect-square rounded-lg overflow-hidden border"
+                                              >
+                                                <Image
+                                                  src={URL.createObjectURL(
+                                                    file
+                                                  )}
+                                                  alt={`Preview ${index + 1}`}
+                                                  fill
+                                                  className="object-cover"
+                                                />
+                                                <button
+                                                  type="button"
+                                                  onClick={() =>
+                                                    handleRemoveImage(index)
+                                                  }
+                                                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                                >
+                                                  <X size={12} />
+                                                </button>
+                                              </div>
+                                            )
+                                          )}
+                                        </div>
                                       )}
                                     </div>
                                   </div>
+
+                                  {/* Submit Button */}
+                                  <div className="flex justify-end gap-3">
+                                    <button
+                                      onClick={() => setShowReviewForm(false)}
+                                      className="ti-btn ti-btn-outline"
+                                    >
+                                      Cancel
+                                    </button>
+                                    <button
+                                      onClick={handleSubmitReview}
+                                      className="ti-btn ti-btn-primary"
+                                      disabled={
+                                        !reviewData.rating ||
+                                        !reviewData.review.trim()
+                                      }
+                                    >
+                                      Submit Review
+                                    </button>
+                                  </div>
                                 </div>
-                              ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Reviews List */}
+
+                          {reviews.length > 0 ? (
+                            <div className="xxl:col-span-8 xl:col-span-12 lg:col-span-12 md:col-span-12 sm:col-span-12 col-span-12 xxl:mt-0 mt-3">
+                              <SpkSwiperJs
+                                slides={reviews.map((review) => (
+                                  <div className="swiper-slide">
+                                    {/* Aynı review kutusu içeriği */}
+                                    <div className="box" key={review.id}>
+                                      <div className="box-body">
+                                        <div className="sm:flex block items-top mb-3">
+                                          <div className="flex flex-grow">
+                                            <div className="me-2">
+                                              <span className="avatar avatar-sm avatar-rounded relative">
+                                                {review.user.avatarUrl ? (
+                                                  <Image
+                                                    fill
+                                                    src={review.user.avatarUrl}
+                                                    alt={
+                                                      review.user.displayName
+                                                    }
+                                                    sizes="32px"
+                                                  />
+                                                ) : (
+                                                  <div className="h-full w-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                                                    {review.user.displayName?.charAt(
+                                                      0
+                                                    ) || "U"}
+                                                  </div>
+                                                )}
+                                              </span>
+                                            </div>
+                                            <div className="leading-none me-2">
+                                              <p className="mb-1 font-semibold text-[0.875rem]">
+                                                {review.user.displayName ||
+                                                  review.user.username}
+                                              </p>
+                                              <div className="mb-1">
+                                                {getRatingStars(review.rating)}
+                                              </div>
+                                              <div className="text-[0.6875rem] text-textmuted dark:text-textmuted/50">
+                                                {new Date(
+                                                  review.createdAt
+                                                ).toLocaleDateString("en-US", {
+                                                  year: "numeric",
+                                                  month: "long",
+                                                  day: "numeric",
+                                                })}
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div className="sm:ps-0 sm:mt-0 mt-3 ps-2">
+                                            {review.user.id === user?.id && (
+                                              <button
+                                                onClick={() =>
+                                                  handleDeleteReview(review.id)
+                                                }
+                                                className="ti-btn ti-btn-sm ti-btn-danger"
+                                              >
+                                                <Trash2 size={14} />
+                                              </button>
+                                            )}
+                                          </div>
+                                        </div>
+                                        <p className="mb-3 ps-2">
+                                          {review.review}
+                                        </p>
+                                        <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-gray-400 ps-2">
+                                          {review.size && (
+                                            <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                                              Size: {review.size}
+                                            </span>
+                                          )}
+                                          {review.color && (
+                                            <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                                              Color: {review.color}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                                spaceBetween={30}
+                                centeredSlides={true}
+                                autoplay={true}
+                                className="mySwiper swiper swiper-reviews"
+                              />
                             </div>
                           ) : (
                             <div className="text-center py-8">
@@ -2683,7 +3020,9 @@ const ProductDetails = () => {
               slides={relatedProducts.map((product) => (
                 <div key={product.id} className="box">
                   <div className="box-body">
-                    <Link href={`/shop/productdetails/${product.slug}/${product.variantSlug}`}>
+                    <Link
+                      href={`/shop/productdetails/${product.slug}/${product.variantSlug}`}
+                    >
                       <div className="relative aspect-square mb-3">
                         <Image
                           fill
@@ -2854,5 +3193,3 @@ export default function ProductDetailsWrapper() {
     </Suspense>
   );
 }
-
-
