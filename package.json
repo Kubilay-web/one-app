@@ -269,7 +269,6 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "tiny-slider": "^2.9.4",
-    "ts-node": "^10.9.2",
     "uploader": "^3.48.3",
     "uploadthing": "^6.13.2",
     "use-onclickoutside": "^0.4.1",
@@ -288,7 +287,7 @@
     "@eslint/eslintrc": "^3",
     "@types/isotope-layout": "^3.0.14",
     "@types/lodash": "^4.17.14",
-    "@types/node": "^20",
+    "@types/node": "^20.19.30",
     "@types/react": "^19",
     "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19",
@@ -297,6 +296,7 @@
     "postcss": "^8.5.1",
     "prisma": "^6.13.0",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }

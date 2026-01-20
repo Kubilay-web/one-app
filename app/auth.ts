@@ -24,7 +24,8 @@ export const lucia = new Lucia(adapter, {
       googleId: databaseUserAttributes.googleId,
       role: databaseUserAttributes.role,
       rolejob: databaseUserAttributes.rolejob,
-      roleshop:databaseUserAttributes.roleshop
+      roleshop:databaseUserAttributes.roleshop,
+      roleestate:databaseUserAttributes.roleestate
     };
   },
 });
@@ -45,6 +46,7 @@ interface DatabaseUserAttributes {
   role: string | null;
   rolejob: string | null;
   roleshop:string|null;
+  roleestate:string|null;
   email: string;
 }
 

@@ -27,6 +27,14 @@ enum RoleJob {
   COMPANY
 }
 
+
+enum RoleRealEstate{
+  USER
+  ADMIN
+}
+
+
+
 model User {
   id           String  @id @map("_id") // MongoDB'de _id otomatik oluşturulur
   username     String  @unique
@@ -46,9 +54,10 @@ model User {
 
   reputation Int? @default(0)
 
-  role                  Role           @default(USER)
-  rolejob               RoleJob        @default(CANDIDATE)
-  roleshop              RoleShop       @default(USER)
+  role                  Role              @default(USER)
+  rolejob               RoleJob           @default(CANDIDATE)
+  roleshop              RoleShop          @default(USER)
+  roleestate            RoleRealEstate    @default(USER)
 
   
   sessions              Session[]      @relation("UserSessions")
@@ -130,6 +139,16 @@ model User {
   commentReactions CommentReaction[]
 
   //Video
+
+
+  //Real Estate
+
+ Property     Property[]
+  Query        Query[]
+  Subscription SubscriptionEstate[]
+  isActive Boolean @default(true)
+
+  //
 
   @@map("users")
 }
@@ -2175,4 +2194,73 @@ model LandingPageImage {
   @@map("landing_page_images")
   @@index([sectionId])
   @@index([type])
+}
+
+
+/////////////////////////////////////////////
+
+//Real Estate 
+
+
+
+// subscription model
+model SubscriptionEstate {
+  id        String   @id @default(cuid()) @map("_id")
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  plan      Json
+  paymentId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// property model
+model Property {
+  id               String   @id @default(cuid()) @map("_id")
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  name             String
+  description      String
+  type             String
+  status           String
+  price            Float
+  city             String
+  pincode          String
+  address          String
+  landmark         String
+  bedrooms         Int
+  bathrooms        Int
+  balconies        Int
+  furnishing       String
+  parking          String
+  floors           Int
+  area             Float
+  facing           String
+  age              Int
+  images           String[]
+  ownerName        String
+  ownerEmail       String
+  ownerPhone       String
+  showOwnerContact Boolean  @default(false)
+  isActive         Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Query     Query[]
+}
+
+// query model
+
+model Query {
+  id          String   @id @default(cuid()) @map("_id")
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
+  quoteAmount Float
+  name        String
+  phoneNumber String
+  message     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

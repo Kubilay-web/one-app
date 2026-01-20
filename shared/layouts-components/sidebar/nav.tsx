@@ -320,6 +320,53 @@ export const getMenuItems = (user) => [
         ],
       },
 
+      {
+        title: "Real Estate",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/realestate",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+          {
+            path: "/realestate/user/properties",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Properties",
+          },
+
+          {
+            path: "/realestate/user/account",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Account",
+          },
+
+          {
+            path: "/realestate/user/subscriptions",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Subscriptions",
+          },
+
+          {
+            path: "/realestate/user/queries",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Queries",
+          },
+        ],
+      },
+
       // {
       //   title: "Social",
       //   icon: Dashboardicon,
@@ -718,62 +765,62 @@ export const getMenuItems = (user) => [
         title: "News",
       },
 
-      {
-        title: "Real Estate",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: "/home/real-estate/admin",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Admin",
-          },
-          {
-            path: "/real-estate/details",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Details",
-          },
-          {
-            path: "/real-estate/landing",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Landing",
-          },
-          {
-            path: "/real-estate/search",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Search",
-          },
-          {
-            path: "/real-estate/user",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "User",
-          },
-          {
-            path: "/real-estate/user-profile",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "User Profile",
-          },
-          {
-            path: "/real-estate/vendor",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Vendor",
-          },
-        ],
-      },
+      // {
+      //   title: "Real Estate",
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       path: "/home/real-estate/admin",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Admin",
+      //     },
+      //     {
+      //       path: "/real-estate/details",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Details",
+      //     },
+      //     {
+      //       path: "/real-estate/landing",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Landing",
+      //     },
+      //     {
+      //       path: "/real-estate/search",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Search",
+      //     },
+      //     {
+      //       path: "/real-estate/user",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "User",
+      //     },
+      //     {
+      //       path: "/real-estate/user-profile",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "User Profile",
+      //     },
+      //     {
+      //       path: "/real-estate/vendor",
+      //       type: "link",
+      //       active: false,
+      //       selected: false,
+      //       title: "Vendor",
+      //     },
+      //   ],
+      // },
 
       {
         title: "Business",
@@ -1975,7 +2022,7 @@ export const getMenuItems = (user) => [
             type: "sub",
             active: false,
             children: [
-                  {
+              {
                 path: "/dashboards/ecommerce/admin/homepage",
                 type: "link",
                 title: "Landing Page",
@@ -2130,6 +2177,28 @@ export const getMenuItems = (user) => [
             active: false,
             selected: false,
             title: "Video Studio",
+          },
+        ],
+      },
+
+      {
+        title: "Real Estate",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/realestate/admin/properties",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Properties",
+          },
+          {
+            path: "/realestate/admin/users",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Admin Users",
           },
         ],
       },
