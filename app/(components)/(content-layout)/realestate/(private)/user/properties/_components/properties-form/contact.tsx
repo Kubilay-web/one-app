@@ -32,14 +32,49 @@ function Contact({
       // Form verilerini finalValues.contact ile birleştir
       const tempFinalValues = { ...finalValues, contact: formData };
 
-      // Cloudinary resimleri direkt kullan
+      // Veritabanına uygun şekilde tüm alanları formatla
       const valuesAsPerDb = {
-        ...tempFinalValues.basic,
-        ...tempFinalValues.location,
-        ...tempFinalValues.amenities,
-        ...tempFinalValues.contact,
-        images: tempFinalValues.media.images, // Cloudinary URL'leri
+        // Basic tabından gelenler
+        name: String(tempFinalValues.basic?.name || ""),
+        description: String(tempFinalValues.basic?.description || ""),
+        type: String(tempFinalValues.basic?.type || ""),
+        status: String(tempFinalValues.basic?.status || ""),
+        price: parseFloat(tempFinalValues.basic?.price || "0"),
+        
+        // Location tabından gelenler
+        city: String(tempFinalValues.location?.city || ""),
+        pincode: String(tempFinalValues.location?.pincode || ""),
+        address: String(tempFinalValues.location?.address || ""),
+        landmark: String(tempFinalValues.location?.landmark || ""),
+        
+        // Amenities tabından gelenler
+        bedrooms: parseInt(tempFinalValues.amenities?.bedrooms || "0"),
+        bathrooms: parseInt(tempFinalValues.amenities?.bathrooms || "0"),
+        balconies: parseInt(tempFinalValues.amenities?.balconies || "0"),
+        furnishing: String(tempFinalValues.amenities?.furnishing || ""),
+        parking: String(tempFinalValues.amenities?.parking || ""),
+        floors: parseInt(tempFinalValues.amenities?.floors || "0"),
+        area: parseFloat(tempFinalValues.amenities?.area || "0"),
+        facing: String(tempFinalValues.amenities?.facing || ""),
+        age: parseInt(tempFinalValues.amenities?.age || "0"),
+        
+        // Contact tabından gelenler
+        ownerName: String(formData.ownerName || ""),
+        ownerEmail: String(formData.ownerEmail || ""),
+        ownerPhone: String(formData.ownerPhone || ""),
+        showOwnerContact: formData.showOwnerContact === "true",
+        
+        // Media tabından gelenler
+        images: Array.isArray(tempFinalValues.media.images) 
+          ? tempFinalValues.media.images 
+          : [],
+        
+        // Varsayılan değerler
+        isActive: true,
       };
+
+      // Debug için konsola yazdır
+      console.log("Submitting to database:", valuesAsPerDb);
 
       let response = null;
       if (isEdit) {
@@ -55,6 +90,7 @@ function Contact({
       // Kaydettikten sonra user properties sayfasına yönlendir
       router.push("/realestate/user/properties");
     } catch (error: any) {
+      console.error("Error submitting property:", error);
       alert(error.message || "Something went wrong!");
     } finally {
       setLoading(false);
@@ -74,7 +110,7 @@ function Contact({
           Contact Information
         </div>
         <div className="box-subtitle">
-          Step {currentStep + 1} of 4 - Final Step
+          Step {currentStep + 1} of 5 - Final Step
         </div>
       </div>
       
@@ -217,7 +253,7 @@ function Contact({
           {/* Progress Bar */}
           <div className="mt-8 mb-6">
             <div className="flex justify-between text-sm text-textmuted dark:text-textmuted/50 mb-2">
-              <span>Step {currentStep + 1} of 4</span>
+              <span>Step {currentStep + 1} of 5</span>
               <span>100% Complete</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
