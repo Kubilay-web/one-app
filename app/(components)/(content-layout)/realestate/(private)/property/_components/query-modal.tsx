@@ -17,7 +17,19 @@ function QueryModal({ propertyId }: { propertyId: string }) {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await AddQuery({ ...formValues, propertyId });
+      
+      // Veritabanı schema'sına uygun formatta veri hazırla
+      const queryData = {
+        name: String(formValues.name || ""),
+        phoneNumber: String(formValues.phoneNumber || ""),
+        message: String(formValues.message || ""),
+        quoteAmount: parseFloat(formValues.quoteAmount || "0"), // Float'a çevir
+        propertyId: String(propertyId || ""),
+      };
+
+      console.log("Sending query data:", queryData);
+
+      const response = await AddQuery(queryData);
       if (response.error) throw new Error(response.error);
       alert("Query Sent Successfully");
       setShowQueryModal(false);
@@ -28,7 +40,8 @@ function QueryModal({ propertyId }: { propertyId: string }) {
         phoneNumber: "",
       });
     } catch (error: any) {
-      alert(error.message);
+      console.error("Error sending query:", error);
+      alert(error.message || "Failed to send query");
     } finally {
       setLoading(false);
     }
@@ -51,7 +64,7 @@ function QueryModal({ propertyId }: { propertyId: string }) {
         Query For More Info
       </button>
 
-      {/* Modal - hidden class'ı kaldırıldı */}
+      {/* Modal */}
       {showQueryModal && (
         <div className="hs-overlay hs-overlay-open:opacity-100 hs-overlay-open:duration-500 fixed top-0 start-0 z-[80] w-full h-full overflow-x-hidden overflow-y-auto">
           <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-7 opacity-100 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
@@ -97,7 +110,7 @@ function QueryModal({ propertyId }: { propertyId: string }) {
                   <div className="mb-3">
                     <label className="form-label">
                       <i className="ri-money-dollar-circle-line me-2 text-primary"></i>
-                      Quote Amount
+                      Quote Amount ($)
                     </label>
                     <input
                       type="number"
@@ -108,6 +121,8 @@ function QueryModal({ propertyId }: { propertyId: string }) {
                       onChange={handleChange}
                       required
                       disabled={loading}
+                      step="0.01"
+                      min="0"
                     />
                   </div>
 
