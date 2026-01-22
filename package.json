@@ -245,6 +245,7 @@
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
     "remixicon": "^4.6.0",
+    "resend": "^6.8.0",
     "responsive": "^2.0.0",
     "sass": "^1.83.0",
     "serverless-http": "^3.2.0",

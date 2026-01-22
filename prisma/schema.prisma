@@ -758,6 +758,8 @@ model Order {
   orderStatus   OrderStatus   @default(Pending)
   paymentStatus PaymentStatus @default(Pending)
 
+  currency        String   @default("USD")
+
   paymentMethod  PaymentMethod?
   paymentDetails PaymentDetails? @relation("PaymentDetailsToOrder")
 
@@ -933,7 +935,7 @@ model PaymentDetails {
   paymentMethod   String
   status          String
   amount          Float
-  currency        String
+ currency        String   @default("USD")  // YENİ: Currency alanı
 
   orderId String @unique
   order   Order  @relation("PaymentDetailsToOrder", fields: [orderId], references: [id], onDelete: Cascade)
