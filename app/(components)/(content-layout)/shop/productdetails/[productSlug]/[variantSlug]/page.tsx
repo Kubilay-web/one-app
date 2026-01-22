@@ -1495,7 +1495,7 @@ const ProductDetails = () => {
 
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
-    null
+    null,
   );
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [selectedColor, setSelectedColor] = useState<Color | null>(null);
@@ -1534,7 +1534,7 @@ const ProductDetails = () => {
   });
   const [newQuestion, setNewQuestion] = useState("");
   const [activeTab, setActiveTab] = useState<"reviews" | "questions">(
-    "reviews"
+    "reviews",
   );
 
   const addToCart = useCartStore((state) => state.addToCart);
@@ -1554,7 +1554,7 @@ const ProductDetails = () => {
 
         // Fetch product details
         const productResponse = await fetch(
-          `/api/oneshop/products/${params.productSlug}`
+          `/api/oneshop/products/${params.productSlug}`,
         );
         if (!productResponse.ok) throw new Error("Product not found");
         const productData: Product = await productResponse.json();
@@ -1562,7 +1562,7 @@ const ProductDetails = () => {
 
         // Fetch variant details
         const variantResponse = await fetch(
-          `/api/oneshop/products/${params.productSlug}/variants/${params.variantSlug}`
+          `/api/oneshop/products/${params.productSlug}/variants/${params.variantSlug}`,
         );
 
         let currentVariant = null;
@@ -1633,7 +1633,7 @@ const ProductDetails = () => {
             const isWishlisted = wishlistData.some(
               (item: WishlistItem) =>
                 item.productId === productData.id &&
-                item.variantId === currentVariant.id
+                item.variantId === currentVariant.id,
             );
             setIsInWishlist(isWishlisted);
           }
@@ -1676,7 +1676,7 @@ const ProductDetails = () => {
         const data = await response.json();
         setIsInWishlist(data.inWishlist);
         toast.success(
-          data.inWishlist ? "Added to wishlist!" : "Removed from wishlist"
+          data.inWishlist ? "Added to wishlist!" : "Removed from wishlist",
         );
       }
     } catch (error) {
@@ -1745,7 +1745,7 @@ const ProductDetails = () => {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
 
       if (response.ok) {
@@ -1838,10 +1838,38 @@ const ProductDetails = () => {
   };
 
   // Add to cart function
+
   const handleAddToCart = () => {
     if (!product || !selectedVariant || !selectedSize) {
       toast.error("Please select size and variant");
       return;
+    }
+
+    // Stock kontrolü
+    const availableStock = selectedSize.quantity || 0;
+    const existingCartItem = useCartStore
+      .getState()
+      .cart.find(
+        (item) =>
+          item.productId === product.id &&
+          item.variantId === selectedVariant.id &&
+          item.sizeId === selectedSize.id,
+      );
+
+    const alreadyInCart = existingCartItem ? existingCartItem.quantity : 0;
+    const totalRequested = alreadyInCart + quantity;
+
+    if (totalRequested > availableStock) {
+      const availableToAdd = Math.max(0, availableStock - alreadyInCart);
+
+      if (availableToAdd === 0) {
+        toast.error("This item is out of stock");
+        return;
+      } else {
+        toast.error(`Only ${availableToAdd} items available in stock`);
+        setQuantity(availableToAdd);
+        return;
+      }
     }
 
     const discountPrice =
@@ -1868,7 +1896,7 @@ const ProductDetails = () => {
       storeUrl: product.store?.id ? `/store/${product.store.id}` : "#",
       variantName: selectedVariant.variantName,
       variantImage: selectedVariant.variantImage,
-      stock: selectedSize.quantity,
+      stock: selectedSize.quantity, // Stock bilgisini ekliyoruz
       weight: selectedVariant.weight || 0,
       shippingMethod: product.shippingFeeMethod || "standard",
       shippingService: "Standard Delivery",
@@ -2379,7 +2407,7 @@ const ProductDetails = () => {
                           {/* Rating Distribution */}
                           {[5, 4, 3, 2, 1].map((rating) => {
                             const ratingData = ratingDistribution.find(
-                              (r) => r.rating === rating
+                              (r) => r.rating === rating,
                             );
                             const totalReviews = product.numReviews || 1;
                             const percentage = ratingData
@@ -2558,7 +2586,7 @@ const ProductDetails = () => {
                                               >
                                                 <Image
                                                   src={URL.createObjectURL(
-                                                    file
+                                                    file,
                                                   )}
                                                   alt={`Preview ${index + 1}`}
                                                   fill
@@ -2574,7 +2602,7 @@ const ProductDetails = () => {
                                                   <X size={12} />
                                                 </button>
                                               </div>
-                                            )
+                                            ),
                                           )}
                                         </div>
                                       )}
@@ -2631,7 +2659,7 @@ const ProductDetails = () => {
                                                 ) : (
                                                   <div className="h-full w-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
                                                     {review.user.displayName?.charAt(
-                                                      0
+                                                      0,
                                                     ) || "U"}
                                                   </div>
                                                 )}
@@ -2647,7 +2675,7 @@ const ProductDetails = () => {
                                               </div>
                                               <div className="text-[0.6875rem] text-textmuted dark:text-textmuted/50">
                                                 {new Date(
-                                                  review.createdAt
+                                                  review.createdAt,
                                                 ).toLocaleDateString("en-US", {
                                                   year: "numeric",
                                                   month: "long",
@@ -2754,7 +2782,7 @@ const ProductDetails = () => {
                                       </p>
                                       <div className="text-[0.6875rem] text-textmuted dark:text-textmuted/50">
                                         {new Date(
-                                          question.createdAt
+                                          question.createdAt,
                                         ).toLocaleDateString("en-US", {
                                           day: "numeric",
                                           month: "long",
@@ -2798,7 +2826,7 @@ const ProductDetails = () => {
                                           <i className="ri-time-line me-1"></i>
                                           Updated on{" "}
                                           {new Date(
-                                            question.updatedAt
+                                            question.updatedAt,
                                           ).toLocaleDateString("en-US", {
                                             day: "numeric",
                                             month: "short",

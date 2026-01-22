@@ -1600,6 +1600,9 @@
 
 //////////////////
 
+
+
+
 // app/shop/checkout/page.tsx
 "use client";
 
@@ -1831,17 +1834,23 @@ const Checkout = () => {
   };
 
   // Total hesaplama - Store'daki totalPrice'ı kullan
-  const getTotal = () => {
-    const currentShipping = getShippingFees();
-    let total = totalPrice;
 
-    // Store'daki totalPrice shipping dahil olmayabilir, kontrol et
-    if (total === cartSubtotal - (appliedCoupon?.discountAmount || 0)) {
-      total += currentShipping;
-    }
 
-    return Math.max(0, total);
-  };
+  // getTotal fonksiyonunu düzelt
+const getTotal = () => {
+  const currentShipping = getShippingFees();
+  let total = totalPrice;
+
+  // Store'daki totalPrice shipping dahil olmayabilir, kontrol et
+  if (total === cartSubtotal - (appliedCoupon?.discountAmount || 0)) {
+    total += currentShipping;
+  }
+
+  // Negatif total olmamasını garantile
+  return Math.max(0, total);
+};
+
+
 
   const getItemCount = () => {
     return cart.reduce((count, item) => count + item.quantity, 0);
@@ -2004,12 +2013,14 @@ const Checkout = () => {
   };
 
   // Handle order placement
-  const handlePlaceOrder = async () => {
-  // Çift tıklamayı engelle
+
+
+
+  // handlePlaceOrder fonksiyonunu güncelle
+const handlePlaceOrder = async () => {
   if (isProcessing) return;
-  
   setIsProcessing(true);
-  
+
   // Validasyon
   if (!selectedAddressId) {
     toast({
@@ -2044,23 +2055,22 @@ const Checkout = () => {
   try {
     const result = await placeOrder();
 
-    if (result.success) {
-      // Stripe veya PayPal için payment URL'ye yönlendir
-      if (result.paymentUrl && (paymentMethod === "card" || paymentMethod === "paypal")) {
-        window.location.href = result.paymentUrl;
-        return; // Yönlendirme yapıldı, devam etme
-      }
+    if (result.success && result.order?.id) {
+      // TÜM ödeme yöntemleri için order sayfasına yönlendir
+      clearCart();
+      resetCheckout();
       
-      // COD için success göster
-      if (paymentMethod === "cod" || paymentMethod === "upi") {
-        toast({
-          title: "Order Placed!",
-          description: "Your order has been placed successfully.",
-        });
-        
-        clearCart();
-        setStep(3);
-      }
+      // Toast mesajı göster
+      toast({
+        title: "Order Placed!",
+        description: "Redirecting to order details...",
+      });
+      
+      // 1 saniye sonra yönlendir (kullanıcı toast'ı görebilsin)
+      setTimeout(() => {
+        window.location.href = `/shop/order/${result.order.id}`;
+      }, 1000);
+      
     } else {
       toast({
         title: "Error",
@@ -2075,9 +2085,8 @@ const Checkout = () => {
       variant: "destructive",
     });
   } finally {
-    // Eğer yönlendirme yapılmadıysa, işlemi sıfırla
-    if (!window.location.href.includes("stripe") && 
-        !window.location.href.includes("paypal")) {
+    // Eğer yönlendirme yapılmadıysa işlemi sıfırla
+    if (!window.location.href.includes("/shop/order/")) {
       setIsProcessing(false);
     }
   }

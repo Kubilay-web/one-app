@@ -14,6 +14,7 @@ import { useSession } from "@/app/SessionProvider";
 // import AllMenu from "@/app/(components)/(content-layout)/home/facebook/components/header/AllMenu";
 import Flag from "react-world-flags";
 import "./style.css"
+import { useCartStore } from "@/app/cart-store/useCartStore";
 
 // Arama sonucu tipi
 interface SearchUser {
@@ -27,6 +28,9 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
   const { user } = useSession();
   const queryClient = useQueryClient();
   let { basePath } = nextConfig;
+  
+  // Cart store'u kullanın
+  const { cart, calculateSubtotal, getItemCount, removeFromCart } = useCartStore();
   
   // State'ler
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -68,31 +72,11 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
     }
   ]);
   
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      src: "/assets/images/ecommerce/png/30.png",
-      name: "SoundSync Headphones",
-      qty: "2",
-      color: "Ocean Blue",
-      oldpr: "99",
-      newpr: "75",
-      class: "cart-headset",
-      colorclass: "text-[#19719e]",
-    },
-    {
-      id: 2,
-      src: "/assets/images/ecommerce/png/31.png",
-      name: "Western Ladies Bag",
-      qty: "1",
-      color: "Blush Pink",
-      oldpr: "149",
-      newpr: "120",
-      class: "cart-handbag",
-      colorclass: "text-[#de8cb2]",
-    }
-  ]);
-
+  // Store'dan cart verilerini al
+  const cartItems = cart;
+  const cartTotal = calculateSubtotal();
+  const cartItemCount = getItemCount();
+  
   // Refs
   const allmenu = useRef(null);
   const overlayRef = useRef(null);
@@ -112,7 +96,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
     setIsSearching(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/search-header?q=${encodeURIComponent(query)}&currentUserId=${user.id}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/search-header?q=${encodeURIComponent(query)}&currentUserId=${user?.id}`
       );
       
       if (response.ok) {
@@ -293,9 +277,11 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
     setNotifications(notifications.filter(notification => notification.id !== id));
   };
 
-  // Cart işlemleri
-  const handleRemoveCartItem = (id: number) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
+  // Cart item silme işlemi
+  const handleRemoveCartItem = (item: any, event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    removeFromCart(item);
   };
 
   // Tema değiştirme
@@ -633,7 +619,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       d="M98.31,130.38ZM94.38,17.62h0A64.06,64.06,0,0,1,17.62,94.38h0A64.12,64.12,0,0,0,55,138.93h0a44.08,44.08,0,0,1,43.33-8.54,68.13,68.13,0,0,1,45.47-47.32l.15,0c0-1,.07-2,.07-3A64,64,0,0,0,94.38,17.62Z"
                       opacity="0.1"
                     ></path>
-                    <path d="M164,72a76.45,76.45,0,0,0-12.36,1A71.93,71.93,0,0,0,96.17,9.83a8,8,0,0,0-9.59,9.58A56.45,56.45,0,0,1,88,32,56.06,56.06,0,0,1,32,88a56.45,56.45,0,0,1-12.59-1.42,8,8,0,0,0-9.59,9.59,72.22,72.22,0,0,0,32.29,45.06A52,52,0,0,0,84,224h80a76,76,0,0,0,0-152ZM29.37,104c.87,0,1.75,0,2.63,0a72.08,72.08,0,0,0,72-72c0-.89,0-1.78,0-2.67a55.63,55.63,0,0,1,32,48,76.28,76.28,0,0,0-43,43.4A52,52,0,0,0,54,129.59,56.22,56.22,0,0,1,29.37,104ZM164,208H84a36,36,0,1,1,4.78-71.69c-.37,2.37-.63,4.79-.77,7.23a8,8,0,0,0,16,.92,58.91,58.91,0,0,1,1.88-11.81c0-.16.09-.32.12-.48A60.06,60.06,0,1,1,164,208Z"></path>
+                    <path d="M164,72a76.45,76.45,0,0,0-12.36,1A71.93,71.93,0,0,0,96.17,9.83a8,8,0,0,0-9.59,9.58A56.45,56.45,0,0,1,88,32,56.06,56.06,0,0,1,32,88a56.45,56.45,0,0,1-12.59-1.42a8,8,0,0,0-9.59,9.59,72.22,72.22,0,0,0,32.29,45.06A52,52,0,0,0,84,224h80a76,76,0,0,0,0-152ZM29.37,104c.87,0,1.75,0,2.63,0a72.08,72.08,0,0,0,72-72c0-.89,0-1.78,0-2.67a55.63,55.63,0,0,1,32,48,76.28,76.28,0,0,0-43,43.4A52,52,0,0,0,54,129.59,56.22,56.22,0,0,1,29.37,104ZM164,208H84a36,36,0,1,1,4.78-71.69c-.37,2.37-.63,4.79-.77,7.23a8,8,0,0,0,16,.92,58.91,58.91,0,0,1,1.88-11.81c0-.16.09-.32.12-.48A60.06,60.06,0,1,1,164,208Z"></path>
                   </svg>
                 </Link>
                 <Link
@@ -685,12 +671,12 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       className="relative inline-flex rounded-full h-[14.7px] w-[14px] text-[0.625rem] bg-primary text-white justify-center items-center"
                       id="cart-icon-badge"
                     >
-                      {cartItems.length}
+                      {cartItemCount}
                     </span>
                   </span>
                 </button>
                 <div
-                  className="main-header-dropdown !p-0 hs-dropdown-menu ti-dropdown-menu !w-[25rem] hidden"
+                  className="main-header-dropdown !p-0 hs-dropdown-menu ti-dropdown-menu !w-[25rem] hidden pt-0 overflow-hidden header-profile-dropdown"
                   aria-labelledby="dropdown-cart"
                 >
                   <div className="p-4">
@@ -701,12 +687,12 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                           className="badge bg-success/[0.15] text-success ms-1 text-[0.75rem] !rounded-full"
                           id="cart-data"
                         >
-                          {cartItems.length}
+                          {cartItemCount}
                         </span>
                       </p>
                       <Link
                         scroll={false}
-                        href="/ecommerce/customer/shop"
+                        href="/shop"
                         className="ti-btn ti-btn-soft-secondary ti-btn-sm btn-wave"
                       >
                         Continue Shopping <i className="ti ti-arrow-narrow-right ms-1"></i>
@@ -717,62 +703,53 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     <hr className="dropdown-divider dark:border-white/10" />
                   </div>
                   <ul className="list-none mb-0" id="header-cart-items-scroll">
-                    {cartItems.map((item) => (
+                    {cartItems.map((item, index) => (
                       <li
                         className="ti-dropdown-item !border-b !block dark:!border-defaultborder/10"
-                        key={item.id}
+                        key={`${item.productId}-${item.variantId}-${item.sizeId}-${index}`}
                       >
                         <div className="flex items-center cart-dropdown-item gap-4">
                           <div className="leading-none">
-                            <span className="avatar avatar-md bg-gray-300 dark:bg-light">
+                            <div className="avatar avatar-md bg-gray-300 dark:bg-light relative overflow-hidden rounded">
                               <Image
+                                src={item.image || "/assets/images/ecommerce/png/30.png"}
+                                alt={item.name}
                                 fill
-                                src={`${
-                                  process.env.NODE_ENV === "production" ? basePath : ""
-                                }${item.src}`}
-                                alt="img"
+                                className="object-contain p-1"
+                                sizes="48px"
                               />
-                            </span>
+                            </div>
                           </div>
                           <div className="flex-grow">
                             <div className="flex items-center justify-between mb-0">
                               <div className="mb-0 text-[0.875rem] font-medium">
                                 <Link
                                   scroll={false}
-                                  href="/ecommerce/customer/cart/"
+                                  href={`/shop/productdetails/${item.productSlug}/${item.variantSlug}`}
+                                  className="hover:text-primary"
                                 >
                                   {item.name}
                                 </Link>
                                 <div className="text-[0.6875rem] text-textmuted dark:text-textmuted/50">
-                                  <span> Qty : {item.qty},</span>
-                                  <span>
-                                    {" "}
-                                    Color :{" "}
-                                    <span
-                                      className={`${item.colorclass} font-semibold`}
-                                    >
-                                      {item.color}
-                                    </span>
-                                  </span>
+                                  <span> Qty : {item.quantity},</span>
+                                  <span> Size : {item.size}</span>
+                                  {item.color && <span>, Color : {item.color}</span>}
                                 </div>
                               </div>
                               <div className="text-end">
-                                <Link
-                                  scroll={false}
-                                  href="#!"
-                                  className="header-cart-remove dropdown-item-close"
-                                  onClick={(event) => {
-                                    event.stopPropagation();
-                                    handleRemoveCartItem(item.id);
-                                  }}
+                                <button
+                                  onClick={(event) => handleRemoveCartItem(item, event)}
+                                  className="header-cart-remove dropdown-item-close text-danger hover:text-danger/80"
                                 >
-                                  <i className="ri-delete-bin-line opacity-40"></i>
-                                </Link>
+                                  <i className="ri-delete-bin-line opacity-60 hover:opacity-100"></i>
+                                </button>
                                 <h6 className="font-medium mb-0 mt-1">
-                                  ${item.newpr}
-                                  <span className="line-through text-textmuted dark:text-textmuted/50 font-normal ms-1 text-[0.8125rem] inline-block">
-                                    ${item.oldpr}
-                                  </span>
+                                  ${(item.price * item.quantity).toFixed(2)}
+                                  {item.discount > 0 && (
+                                    <span className="text-xs text-success ms-1">
+                                      -{item.discount}%
+                                    </span>
+                                  )}
                                 </h6>
                               </div>
                             </div>
@@ -788,15 +765,23 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                     }`}
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <div className="font-medium text-[0.875rem]">Total :</div>
-                      <h5 className="mb-0 font-medium">$740</h5>
+                      <div className="font-medium text-[0.875rem]">Subtotal :</div>
+                      <h5 className="mb-0 font-medium">${cartTotal.toFixed(2)}</h5>
                     </div>
-                    <div className="text-center grid">
+                    <div className="text-center grid gap-2">
                       <Link
-                        href="/ecommerce/customer/checkout/"
+                        href="/shop/cart"
                         className="ti-btn ti-btn-primary btn-wave waves-effect waves-light"
                       >
-                        Proceed to checkout
+                        <i className="ri-shopping-cart-2-line me-2"></i>
+                        View Cart
+                      </Link>
+                      <Link
+                        href="/shop/checkout"
+                        className="ti-btn ti-btn-secondary btn-wave waves-effect waves-light"
+                      >
+                        <i className="ri-arrow-right-line me-2"></i>
+                        Checkout
                       </Link>
                     </div>
                   </div>
@@ -816,6 +801,12 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       <span className="mb-3 !font-normal text-[0.8125rem] block text-textmuted dark:text-textmuted/50">
                         Add some items to make me happy :)
                       </span>
+                      <Link
+                        href="/shop"
+                        className="ti-btn ti-btn-primary ti-btn-sm"
+                      >
+                        Start Shopping
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -1000,19 +991,30 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                   type="button"
                   className="hs-dropdown-toggle ti-dropdown-toggle !gap-2 !p-0 flex-shrink-0 sm:me-2 me-0 !rounded-full !shadow-none text-xs align-middle !border-0 !shadow-transparent"
                 >
-                  <Image
-                    fill
-                    src={user.avatarUrl}
-                    alt="Profile"
-                    className="avatar avatar-sm avatar-rounded inline-block"
-                  />
+                  {user?.avatarUrl ? (
+                    <div className="avatar avatar-sm avatar-rounded relative overflow-hidden">
+                      <Image
+                        src={user.avatarUrl}
+                        alt="Profile"
+                        fill
+                        className="object-cover"
+                        sizes="32px"
+                      />
+                    </div>
+                  ) : (
+                    <div className="avatar avatar-sm avatar-rounded bg-primary/10 text-primary flex items-center justify-center">
+                      <i className="ri-user-line text-[0.875rem]"></i>
+                    </div>
+                  )}
                 </button>
 
-                <div className="xl:block hidden dropdown-profile">
-                  <span className="font-medium leading-none">
-                    {user.username}
-                  </span>
-                </div>
+                {user && (
+                  <div className="xl:block hidden dropdown-profile">
+                    <span className="font-medium leading-none">
+                      {user.username}
+                    </span>
+                  </div>
+                )}
 
                 <ul className="main-header-dropdown ti-dropdown-menu hs-dropdown-menu !w-[11rem] hidden pt-0 overflow-hidden header-profile-dropdown">
                   <li>
@@ -1065,20 +1067,17 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       Support
                     </Link>
                   </li>
-                  <li
-                    onClick={() => {
-                      queryClient.clear();
-                      logout();
-                    }}
-                  >
-                    <Link
-                      scroll={false}
-                      className="ti-dropdown-item !py-[0.6rem] !px-4 flex items-center"
-                      href="/authentication/sign-in/cover"
+                  <li>
+                    <button
+                      onClick={() => {
+                        queryClient.clear();
+                        logout();
+                      }}
+                      className="ti-dropdown-item !py-[0.6rem] !px-4 flex items-center w-full text-left"
                     >
                       <i className="ti ti-logout me-2 text-[1.125rem] text-warning"></i>
                       Log Out
-                    </Link>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -1103,7 +1102,7 @@ const Header = ({ local_varaiable, ThemeChanger }: any) => {
                       d="M230.1,108.76,198.25,90.62c-.64-1.16-1.31-2.29-2-3.41l-.12-36A104.61,104.61,0,0,0,162,32L130,49.89c-1.34,0-2.69,0-4,0L94,32A104.58,104.58,0,0,0,59.89,51.25l-.16,36c-.7,1.12-1.37,2.26-2,3.41l-31.84,18.1a99.15,99.15,0,0,0,0,38.46l31.85,18.14c.64,1.16,1.31,2.29,2,3.41l.12,36A104.61,104.61,0,0,0,94,224l32-17.87c1.34,0,2.69,0,4,0L162,224a104.58,104.58,0,0,0,34.08-19.25l.16-36c.7-1.12,1.37-2.26,2-3.41l31.84-18.1A99.15,99.15,0,0,0,230.1,108.76ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z"
                       opacity="0.1"
                     ></path>
-                    <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67a8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A111.92,111.92,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.63a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67a8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73a8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.1,8.1,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8,8,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z"></path>
+                    <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67a8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A111.92,111.92,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4a106.47,106.47,0,0,0,0,41.56a8,8,0,0,0,3.89,5.4l29.83,17,.12,33.63a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67a8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73a8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.1,8.1,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8,8,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z"></path>
                   </svg>
                 </button>
               </div>

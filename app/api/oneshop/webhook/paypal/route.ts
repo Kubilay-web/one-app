@@ -5,38 +5,35 @@ import db from "@/app/lib/db";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const eventType = body.event_type;
-    const resource = body.resource;
+    const { event_type, resource } = body;
 
-    if (eventType === "CHECKOUT.ORDER.APPROVED" || eventType === "PAYMENT.CAPTURE.COMPLETED") {
-      const orderId = resource.purchase_units?.[0]?.reference_id;
-      const paypalOrderId = resource.id;
+    if (event_type === "CHECKOUT.ORDER.APPROVED") {
+      const orderId = resource.purchase_units[0].reference_id;
 
-      if (orderId) {
-        // Order'ı güncelle
-        await db.order.update({
-          where: { id: orderId },
-          data: {
-            paymentStatus: "Paid",
-            orderStatus: "Confirmed",
-          },
-        });
+      // Order'ı Paid olarak güncelle
+      await db.order.update({
+        where: { id: orderId },
+        data: {
+          paymentStatus: "Paid",
+          orderStatus: "Confirmed",
+        },
+      });
 
-        // PaymentDetails'ı güncelle
-        await db.paymentDetails.update({
-          where: { paymentInetntId: paypalOrderId },
-          data: {
-            status: "Completed",
-          },
-        });
-
-        console.log(`Order ${orderId} marked as Paid via PayPal`);
-      }
+      // PaymentDetails'ı güncelle
+      await db.paymentDetails.update({
+        where: { orderId: orderId },
+        data: {
+          status: "Completed",
+        },
+      });
     }
 
-    return NextResponse.json({ received: true });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("PayPal webhook error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Webhook processing failed" },
+      { status: 400 }
+    );
   }
 }

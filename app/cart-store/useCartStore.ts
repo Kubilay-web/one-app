@@ -321,9 +321,6 @@
 
 
 
-
-
-
 // app/cart-store/useCartStore.ts
 import { CartProductType } from "@/app/lib/types";
 import { create } from "zustand";
@@ -356,13 +353,13 @@ interface Actions {
   removeCoupon: () => void;
   setShippingFee: (fee: number) => void;
   clearCart: () => void;
-  
+
   // Hesaplama fonksiyonları
   calculateSubtotal: () => number;
   calculateDiscount: () => number;
   calculateTotal: () => number;
   recalculateAll: () => void;
-  
+
   // Yardımcı fonksiyonlar
   getItemCount: () => number;
 }
@@ -389,10 +386,7 @@ export const useCartStore = create(
       // HESAPLAMA FONKSİYONLARI
       calculateSubtotal: () => {
         const cart = get().cart;
-        return cart.reduce(
-          (sum, item) => sum + (item.price * item.quantity),
-          0
-        );
+        return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
       },
 
       calculateDiscount: () => {
@@ -415,11 +409,12 @@ export const useCartStore = create(
 
         set({
           subtotal,
-          totalPrice: total
+          totalPrice: total,
         });
       },
 
       // CART İŞLEMLERİ
+
       addToCart: (product: CartProductType) => {
         if (!product) return;
 
@@ -428,21 +423,49 @@ export const useCartStore = create(
           (item) =>
             item.productId === product.productId &&
             item.variantId === product.variantId &&
-            item.sizeId === product.sizeId
+            item.sizeId === product.sizeId,
         );
 
         let updatedCart: CartProductType[];
-        
+
         if (existingItemIndex > -1) {
-          // Ürün zaten sepette, miktarını güncelle
-          updatedCart = [...cart];
-          updatedCart[existingItemIndex] = {
-            ...updatedCart[existingItemIndex],
-            quantity: updatedCart[existingItemIndex].quantity + product.quantity,
-          };
+          // Ürün zaten sepette, miktarını güncelle ama stock kontrolü yap
+          const existingItem = cart[existingItemIndex];
+          const requestedQuantity = existingItem.quantity + product.quantity;
+          const availableStock = existingItem.stock || 0;
+
+          // Stock'tan fazla eklenmesini engelle
+          const finalQuantity = Math.min(requestedQuantity, availableStock);
+
+          if (finalQuantity <= 0) {
+            // Stock yoksa, ürünü sepetten kaldır
+            updatedCart = cart.filter(
+              (_, index) => index !== existingItemIndex,
+            );
+          } else {
+            updatedCart = [...cart];
+            updatedCart[existingItemIndex] = {
+              ...updatedCart[existingItemIndex],
+              quantity: finalQuantity,
+            };
+          }
         } else {
-          // Yeni ürün ekle
-          updatedCart = [...cart, { ...product }];
+          // Yeni ürün ekle ama stock kontrolü yap
+          const availableStock = product.stock || 0;
+          const finalQuantity = Math.min(product.quantity, availableStock);
+
+          if (finalQuantity <= 0) {
+            // Stock yoksa, ürün ekleme
+            updatedCart = [...cart];
+          } else {
+            updatedCart = [
+              ...cart,
+              {
+                ...product,
+                quantity: finalQuantity,
+              },
+            ];
+          }
         }
 
         set((state) => ({
@@ -458,13 +481,20 @@ export const useCartStore = create(
           return;
         }
 
+        // Stock kontrolü
+        const availableStock = product.stock || 0;
+        if (quantity > availableStock) {
+          // Stock'tan fazla olması durumunda maximum stock kadar ayarla
+          quantity = availableStock;
+        }
+
         const cart = get().cart;
         const updatedCart = cart.map((item) =>
           item.productId === product.productId &&
           item.variantId === product.variantId &&
           item.sizeId === product.sizeId
             ? { ...item, quantity }
-            : item
+            : item,
         );
 
         set(() => ({
@@ -482,7 +512,7 @@ export const useCartStore = create(
               item.productId === product.productId &&
               item.variantId === product.variantId &&
               item.sizeId === product.sizeId
-            )
+            ),
         );
 
         set(() => ({
@@ -500,8 +530,8 @@ export const useCartStore = create(
               (product) =>
                 product.productId === item.productId &&
                 product.variantId === item.variantId &&
-                item.sizeId === product.sizeId
-            )
+                item.sizeId === product.sizeId,
+            ),
         );
 
         set(() => ({
@@ -525,11 +555,13 @@ export const useCartStore = create(
         // Direkt localStorage'dan okuma yapma, sadece state'i güncelle
         // Persist middleware otomatik olarak localStorage'a kaydedecek
         const subtotal = newCart.reduce(
-          (sum, item) => sum + (item.price * item.quantity),
-          0
+          (sum, item) => sum + item.price * item.quantity,
+          0,
         );
 
-        const discount = get().appliedCoupon ? get().appliedCoupon.discountAmount : 0;
+        const discount = get().appliedCoupon
+          ? get().appliedCoupon.discountAmount
+          : 0;
         const shippingFee = get().shippingFee;
         const totalPrice = Math.max(0, subtotal - discount + shippingFee);
 
@@ -592,13 +624,6 @@ export const useCartStore = create(
         totalPrice: state.totalPrice,
         appliedCoupon: state.appliedCoupon,
       }),
-    }
-  )
+    },
+  ),
 );
-
-
-
-
-
-
-

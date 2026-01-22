@@ -11,46 +11,60 @@ export async function POST(request: NextRequest) {
   const sig = request.headers.get("stripe-signature")!;
   const body = await request.text();
 
-  let event: Stripe.Event;
-
   try {
-    event = stripe.webhooks.constructEvent(
+    const event = stripe.webhooks.constructEvent(
       body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (err: any) {
-    console.error(`Webhook Error: ${err.message}`);
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
-  }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    
-    try {
-      // Order'ı güncelle
-      await db.order.update({
-        where: { id: session.metadata?.orderId },
-        data: {
-          paymentStatus: "Paid",
-          orderStatus: "Confirmed",
-        },
-      });
+    switch (event.type) {
+      case "checkout.session.completed":
+        const session = event.data.object as Stripe.Checkout.Session;
+        const orderId = session.metadata?.orderId;
 
-      // PaymentDetails'ı güncelle
-      await db.paymentDetails.update({
-        where: { paymentInetntId: session.id },
-        data: {
-          status: "Completed",
-        },
-      });
+        if (orderId) {
+          // Order'ı Paid olarak güncelle
+          await db.order.update({
+            where: { id: orderId },
+            data: {
+              paymentStatus: "Paid",
+              orderStatus: "Confirmed",
+            },
+          });
 
-      console.log(`Order ${session.metadata?.orderId} marked as Paid`);
-    } catch (error) {
-      console.error("Error updating order:", error);
-      return NextResponse.json({ error: "Database update failed" }, { status: 500 });
+          // PaymentDetails'ı güncelle
+          await db.paymentDetails.update({
+            where: { orderId: orderId },
+            data: {
+              status: "Completed",
+            },
+          });
+        }
+        break;
+
+      case "checkout.session.async_payment_failed":
+        const failedSession = event.data.object as Stripe.Checkout.Session;
+        const failedOrderId = failedSession.metadata?.orderId;
+
+        if (failedOrderId) {
+          await db.order.update({
+            where: { id: failedOrderId },
+            data: {
+              paymentStatus: "Failed",
+              orderStatus: "Cancelled",
+            },
+          });
+        }
+        break;
     }
-  }
 
-  return NextResponse.json({ received: true });
+    return NextResponse.json({ received: true });
+  } catch (error: any) {
+    console.error("Webhook error:", error.message);
+    return NextResponse.json(
+      { error: `Webhook Error: ${error.message}` },
+      { status: 400 }
+    );
+  }
 }
