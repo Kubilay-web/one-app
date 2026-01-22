@@ -1548,8 +1548,7 @@ async function sendInvoiceEmail(user: any, order: any, currency: string) {
               </tfoot>
             </table>
             
-            <p>You can view your order and track its status at:</p>
-            <p><a href="${process.env.NEXT_PUBLIC_BASE_URL}/shop/order/${order.id}">View Order Details</a></p>
+
             
             <p>Thank you for shopping with us!</p>
           </div>
