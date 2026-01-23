@@ -98,146 +98,91 @@
 
 
 
+import { NextRequest, NextResponse } from "next/server";
+import  db  from "@/app/lib/db";
+import { CartProductType } from "@/app/lib/types";
+import { validateRequest } from "@/app/auth";
 
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/app/lib/prisma';
-
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { couponCode, cart, userId } = await request.json();
+    const {user} = await validateRequest();
+    const body = await req.json();
+    const { couponCode, cart, userId } = body;
 
-    if (!couponCode || !cart) {
+    if (!couponCode || !cart || !Array.isArray(cart)) {
       return NextResponse.json(
-        { success: false, message: 'Coupon code and cart are required' },
+        { success: false, message: "Invalid request data" },
         { status: 400 }
       );
     }
 
-    // Kuponu doğrula
-    const coupon = await prisma.coupon.findFirst({
+    // Kuponu tekrar doğrula
+    const coupon = await db.coupon.findUnique({
       where: {
-        code: couponCode.toUpperCase().trim(),
-      },
-      include: {
-        store: true,
+        code: couponCode.toUpperCase(),
       },
     });
 
     if (!coupon) {
       return NextResponse.json(
-        { success: false, message: 'Invalid coupon code' },
+        { success: false, message: "Coupon not found" },
         { status: 404 }
       );
     }
 
-    // Geçerlilik kontrolü
-    const currentDate = new Date();
-    const startDate = new Date(coupon.startDate);
-    const endDate = coupon.endDate ? new Date(coupon.endDate) : null;
-
-    if (startDate > currentDate) {
-      return NextResponse.json(
-        { success: false, message: 'Coupon is not yet active' },
-        { status: 400 }
-      );
-    }
-
-    if (endDate && endDate < currentDate) {
-      return NextResponse.json(
-        { success: false, message: 'Coupon has expired' },
-        { status: 400 }
-      );
-    }
-
-    // Sepetteki ilgili ürünleri bul
-    const cartItems = Array.isArray(cart) ? cart : [];
-    
-    // Kuponun minimum alışveriş tutarı kontrolü
-    const subTotal = cartItems.reduce((sum, item) => {
+    // Sepet toplamını hesapla
+    const cartTotal = cart.reduce((sum: number, item: CartProductType) => {
       return sum + (item.price * item.quantity);
     }, 0);
 
-    if (coupon.minOrderValue && subTotal < coupon.minOrderValue) {
-      return NextResponse.json({
-        success: false,
-        message: `Minimum order value of $${coupon.minOrderValue} required for this coupon`,
-      }, { status: 400 });
+    // Kupon için minimum harcama kontrolü
+    if (cartTotal < 0) { // Minimum harcama tutarını buraya ekleyebilirsiniz
+      return NextResponse.json(
+        { success: false, message: "Minimum purchase amount not reached" },
+        { status: 400 }
+      );
     }
 
-    // İndirim miktarını hesapla
-    let discountAmount = 0;
-    
-    // discountType kontrolü yap
-    if (coupon.discountType === 'PERCENTAGE' || !coupon.discountType) {
-      // Varsayılan olarak percentage kabul et
-      discountAmount = (subTotal * coupon.discount) / 100;
-      
-      // Maksimum indirim limiti kontrolü
-      if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
-        discountAmount = coupon.maxDiscount;
-      }
-    } else if (coupon.discountType === 'FIXED') {
-      discountAmount = coupon.discount;
-    }
+    // İndirim tutarını hesapla
+    const discountAmount = (cartTotal * coupon.discount) / 100;
 
-    // Kupon kullanım kaydı oluştur (mevcut Prisma schema'ya göre)
-    if (userId) {
-      try {
-        // Önce mevcut alanları kontrol et
-        const couponToUserData: any = {
+    // Kupon kullanım kaydı oluştur
+    const userToUse = userId || user?.id;
+    if (userToUse) {
+      await db.couponToUser.create({
+        data: {
+          userId: userToUse,
           couponId: coupon.id,
-          userId: userId,
-        };
-
-        // createdDate veya createdAt alanını kontrol et
-        const couponToUserModel = prisma.couponToUser as any;
-        const fields = Object.keys(couponToUserModel.fields || {});
-
-        if (fields.includes('createdAt')) {
-          couponToUserData.createdAt = new Date();
-        } else if (fields.includes('createdDate')) {
-          couponToUserData.createdDate = new Date();
-        } else if (fields.includes('usedAt')) {
-          couponToUserData.usedAt = new Date();
-        } else if (fields.includes('usedDate')) {
-          couponToUserData.usedDate = new Date();
-        }
-
-        // discountAmount alanını kontrol et
-        if (fields.includes('discountAmount')) {
-          couponToUserData.discountAmount = discountAmount;
-        }
-
-        await prisma.couponToUser.create({
-          data: couponToUserData
-        });
-      } catch (dbError) {
-        console.error('Coupon usage tracking error:', dbError);
-        // Kupon kullanım kaydı hatası kupon uygulamasını engellemesin
-      }
+        },
+      });
     }
 
-    // Response'u hazırla
-    const responseCoupon = {
+    // Yanıtı hazırla
+    const appliedCoupon = {
       couponId: coupon.id,
       couponCode: coupon.code,
-      discountPercentage: coupon.discountType === 'PERCENTAGE' || !coupon.discountType ? coupon.discount : 0,
-      discountAmount: parseFloat(discountAmount.toFixed(2)),
-      expiryDate: coupon.endDate || null,
-      minOrderValue: coupon.minOrderValue || 0,
-      maxDiscount: coupon.maxDiscount || null,
+      discountPercentage: coupon.discount,
+      discountAmount: discountAmount,
+      expiryDate: coupon.endDate || "",
+      minPurchaseAmount: 0,
+      maxDiscountAmount: null,
+      isActive: true,
+      appliedToCartTotal: true,
     };
 
     return NextResponse.json({
       success: true,
-      message: `Coupon applied successfully! You saved $${discountAmount.toFixed(2)}`,
-      coupon: responseCoupon
+      coupon: appliedCoupon,
+      message: "Coupon applied successfully",
+      discountAmount,
+      cartTotal,
+      finalTotal: cartTotal - discountAmount,
     });
 
   } catch (error) {
-    console.error('Coupon application error:', error);
+    console.error("Coupon apply error:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to apply coupon' },
+      { success: false, message: "Failed to apply coupon" },
       { status: 500 }
     );
   }

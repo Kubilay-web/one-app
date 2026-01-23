@@ -390,6 +390,17 @@ export interface CartProductType {
 
 
 
+export interface AppliedCouponType {
+  couponId: string;
+  couponCode: string;
+  discountPercentage: number;
+  discountAmount: number;
+  expiryDate: string;
+  minPurchaseAmount?: number;
+  maxDiscountAmount?: number;
+  isActive: boolean;
+  appliedToCartTotal: boolean;
+}
 
 
 

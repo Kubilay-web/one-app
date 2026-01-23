@@ -764,104 +764,94 @@ const CartPage = () => {
   };
 
   const handleApplyCoupon = async () => {
-    if (!couponCode.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a coupon code.",
-        variant: "destructive",
-      });
-      return;
+  if (!couponCode.trim()) {
+    toast({
+      title: "Error",
+      description: "Please enter a coupon code.",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  setIsApplyingCoupon(true);
+
+  try {
+    // Sepet toplamını hesapla
+    const cartTotal = getSubTotal();
+
+    // 1. Kuponu doğrula
+    const validateResponse = await fetch("/api/oneshop/coupon/validate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        couponCode: couponCode.trim().toUpperCase(),
+        userId: user?.id,
+        cartTotal: cartTotal,
+      }),
+    });
+
+    const validateData = await validateResponse.json();
+
+    if (!validateData.valid || !validateData.coupon) {
+      throw new Error(validateData.message || "Invalid coupon");
     }
 
-    setIsApplyingCoupon(true);
+    // 2. Kuponu store'a uygula
+    setAppliedCoupon(validateData.coupon);
+    setCouponCode("");
 
-    try {
-      // 1. Kuponu doğrula
-      const validateResponse = await fetch("/api/oneshop/coupon/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          couponCode: couponCode.trim().toUpperCase(),
-          userId: user?.id,
-        }),
-      });
+    // 3. Başarılı mesajı göster
+    toast({
+      title: "Success!",
+      description: validateData.message || "Coupon has been applied successfully.",
+    });
 
-      const validateData = await validateResponse.json();
+  } catch (error) {
+    toast({
+      title: "Error",
+      description:
+        error instanceof Error ? error.message : "Failed to apply coupon.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsApplyingCoupon(false);
+  }
+};
 
-      if (!validateData.valid || !validateData.coupon) {
-        throw new Error(validateData.message || "Invalid coupon");
-      }
+const handleRemoveCoupon = async () => {
+  if (!appliedCoupon) return;
 
-      // 2. Doğrulandıysa kuponu uygula
-      const applyResponse = await fetch("/api/oneshop/coupon/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          couponCode: couponCode.trim().toUpperCase(),
-          cart: cart,
-          userId: user?.id,
-        }),
-      });
+  try {
+    // Kuponu store'dan kaldır
+    removeCoupon();
 
-      const applyData = await applyResponse.json();
+    // API'ye kupon kaldırma isteği gönder (isteğe bağlı)
+    await fetch("/api/oneshop/coupon/remove", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        couponId: appliedCoupon.couponId,
+        userId: user?.id,
+      }),
+    });
 
-      if (!applyResponse.ok || !applyData.success) {
-        throw new Error(applyData.message || "Failed to apply coupon");
-      }
+    toast({
+      title: "Coupon removed",
+      description: "Coupon has been removed from your cart.",
+    });
+  } catch (error) {
+    console.error("Failed to remove coupon:", error);
+    // Store'dan kaldırma başarılı oldu, sadece toast göster
+    toast({
+      title: "Coupon removed",
+      description: "Coupon has been removed from your cart.",
+    });
+  }
+};
 
-      // 3. Store'u güncelle
-      setAppliedCoupon(applyData.coupon);
-      setCouponCode("");
 
-      // 4. Başarılı mesajı göster
-      toast({
-        title: "Success!",
-        description:
-          applyData.message || "Coupon has been applied successfully.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          error instanceof Error ? error.message : "Failed to apply coupon.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsApplyingCoupon(false);
-    }
-  };
-
-  const handleRemoveCoupon = async () => {
-    if (!appliedCoupon) return;
-
-    try {
-      // Gerçek uygulamada kupon kullanım kaydını silebilirsiniz
-      const response = await fetch("/api/oneshop/coupon/remove", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          couponId: appliedCoupon.couponId,
-          userId: user?.id,
-        }),
-      });
-
-      // Store'dan kuponu kaldır
-      removeCoupon();
-
-      toast({
-        title: "Coupon removed",
-        description: "Coupon has been removed from your cart.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to remove coupon.",
-        variant: "destructive",
-      });
-    }
-  };
 
   // Helper functions - store'dan gelen değerleri kullan
   const getSubTotal = () => {

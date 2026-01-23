@@ -143,29 +143,27 @@
 
 
 
+import { NextRequest, NextResponse } from "next/server";
+import  db  from "@/app/lib/prisma"
+import { validateRequest } from "@/app/auth";
 
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/app/lib/prisma';
-
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
+    const session = await validateRequest();
+    const body = await req.json();
     const { couponCode, userId } = body;
 
     if (!couponCode) {
       return NextResponse.json(
-        { valid: false, message: 'Coupon code is required' },
+        { valid: false, message: "Coupon code is required" },
         { status: 400 }
       );
     }
 
-    // Kupon kodunu uppercase'e çevir
-    const code = couponCode.toUpperCase().trim();
-
     // Kuponu veritabanında ara
-    const coupon = await prisma.coupon.findFirst({
+    const coupon = await db.coupon.findUnique({
       where: {
-        code: code,
+        code: couponCode.toUpperCase(),
       },
       include: {
         store: true,
@@ -174,87 +172,68 @@ export async function POST(request: NextRequest) {
 
     if (!coupon) {
       return NextResponse.json(
-        { valid: false, message: 'Invalid coupon code' },
+        { valid: false, message: "Invalid coupon code" },
         { status: 404 }
       );
     }
 
-    // Tarih kontrolleri
+    // Kupon süresi kontrolü
     const currentDate = new Date();
     const startDate = new Date(coupon.startDate);
-
-    // Başlangıç tarihi kontrolü
-    if (startDate > currentDate) {
+    
+    if (currentDate < startDate) {
       return NextResponse.json(
-        { valid: false, message: 'Coupon is not yet active' },
+        { valid: false, message: "Coupon is not active yet" },
         { status: 400 }
       );
     }
 
-    // Bitiş tarihi kontrolü (eğer varsa)
     if (coupon.endDate) {
       const endDate = new Date(coupon.endDate);
-      if (endDate < currentDate) {
+      if (currentDate > endDate) {
         return NextResponse.json(
-          { valid: false, message: 'Coupon has expired' },
+          { valid: false, message: "Coupon has expired" },
           { status: 400 }
         );
       }
     }
 
-    // Kupon kullanım limiti kontrolü
-    if (coupon.usageLimit) {
-      const usageCount = await prisma.couponToUser.count({
-        where: { couponId: coupon.id },
-      });
-      
-      if (usageCount >= coupon.usageLimit) {
-        return NextResponse.json(
-          { valid: false, message: 'Coupon usage limit reached' },
-          { status: 400 }
-        );
-      }
+    // Kullanım limiti kontrolü
+    const couponUsageCount = await db.couponToUser.count({
+      where: {
+        couponId: coupon.id,
+        userId: userId || session?.user?.id,
+      },
+    });
+
+    if (couponUsageCount >= 1) { // Her kullanıcı 1 kez kullanabilir
+      return NextResponse.json(
+        { valid: false, message: "You have already used this coupon" },
+        { status: 400 }
+      );
     }
 
-    // Kullanıcı daha önce bu kuponu kullandı mı?
-    if (userId) {
-      const alreadyUsed = await prisma.couponToUser.findFirst({
-        where: {
-          couponId: coupon.id,
-          userId: userId,
-        },
-      });
-
-      if (alreadyUsed) {
-        return NextResponse.json(
-          { valid: false, message: 'You have already used this coupon' },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Başarılı response
     return NextResponse.json({
       valid: true,
       coupon: {
-        id: coupon.id,
-        code: coupon.code,
-        discount: coupon.discount,
+        couponId: coupon.id,
+        couponCode: coupon.code,
+        discountPercentage: coupon.discount,
+        discountAmount: 0, // Bu değer apply endpoint'inde hesaplanacak
+        expiryDate: coupon.endDate || "",
+        minPurchaseAmount: 0,
+        maxDiscountAmount: null,
+        isActive: true,
+        appliedToCartTotal: true,
         storeId: coupon.storeId,
-        storeName: coupon.store?.name || 'Unknown Store',
       },
-      message: 'Coupon is valid'
+      message: "Coupon is valid",
     });
 
   } catch (error) {
-    console.error('Coupon validation error:', error);
-    
+    console.error("Coupon validation error:", error);
     return NextResponse.json(
-      { 
-        valid: false, 
-        message: 'Failed to validate coupon',
-        error: process.env.NODE_ENV === 'development' ? error.toString() : undefined
-      },
+      { valid: false, message: "Internal server error" },
       { status: 500 }
     );
   }

@@ -511,6 +511,8 @@
 // }
 
 
+
+
 //Final Part
 
 
@@ -814,7 +816,7 @@ export default function OrderPage() {
               Back to Shop
             </Link>
             <Link
-              href="/orders"
+              href="/shop/profile"
               className="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
             >
               View All Orders
@@ -1117,7 +1119,7 @@ export default function OrderPage() {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Order Number</span>
-                  <span className="font-medium font-mono">{orderNumber}</span>
+                  <span className="font-medium font-mono">{order.id}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Order Date</span>
@@ -1181,7 +1183,7 @@ export default function OrderPage() {
                 </Link>
                 
                 <Link
-                  href="/orders"
+                  href="/shop/profile"
                   className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
                 >
                   View All Orders

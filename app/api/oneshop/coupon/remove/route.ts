@@ -36,43 +36,43 @@
 
 
 
+import { NextRequest, NextResponse } from "next/server";
+import  db  from "@/app/lib/db";
+import { validateRequest } from "@/app/auth";
 
-
-
-
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/app/lib/prisma';
-
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { couponId, userId } = await request.json();
+    const {user} = await validateRequest();
+    const body = await req.json();
+    const { couponId, userId } = body;
 
     if (!couponId) {
       return NextResponse.json(
-        { success: false, message: 'Coupon ID is required' },
+        { success: false, message: "Coupon ID is required" },
         { status: 400 }
       );
     }
 
-    // Kullanıcıya ait kupon kullanım kaydını sil
-    if (userId) {
-      await prisma.couponToUser.deleteMany({
+    // Kupon kullanım kaydını sil (isteğe bağlı)
+    const userToUse = userId || user?.id;
+    if (userToUse) {
+      await db.couponToUser.deleteMany({
         where: {
           couponId: couponId,
-          userId: userId,
+          userId: userToUse,
         },
       });
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Coupon removed successfully',
+      message: "Coupon removed successfully",
     });
 
   } catch (error) {
-    console.error('Coupon removal error:', error);
+    console.error("Coupon remove error:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to remove coupon' },
+      { success: false, message: "Failed to remove coupon" },
       { status: 500 }
     );
   }
