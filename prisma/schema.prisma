@@ -27,13 +27,10 @@ enum RoleJob {
   COMPANY
 }
 
-
-enum RoleRealEstate{
+enum RoleRealEstate {
   USER
   ADMIN
 }
-
-
 
 model User {
   id           String  @id @map("_id") // MongoDB'de _id otomatik oluşturulur
@@ -54,12 +51,11 @@ model User {
 
   reputation Int? @default(0)
 
-  role                  Role              @default(USER)
-  rolejob               RoleJob           @default(CANDIDATE)
-  roleshop              RoleShop          @default(USER)
-  roleestate            RoleRealEstate    @default(USER)
+  role       Role           @default(USER)
+  rolejob    RoleJob        @default(CANDIDATE)
+  roleshop   RoleShop       @default(USER)
+  roleestate RoleRealEstate @default(USER)
 
-  
   sessions              Session[]      @relation("UserSessions")
   posts                 Post[]         @relation("UserPosts")
   following             Follow[]       @relation("Following")
@@ -140,13 +136,12 @@ model User {
 
   //Video
 
-
   //Real Estate
 
- Property     Property[]
+  Property     Property[]
   Query        Query[]
   Subscription SubscriptionEstate[]
-  isActive Boolean @default(true)
+  isActive     Boolean              @default(true)
 
   //
 
@@ -758,7 +753,7 @@ model Order {
   orderStatus   OrderStatus   @default(Pending)
   paymentStatus PaymentStatus @default(Pending)
 
-  currency        String   @default("USD")
+  currency String @default("USD")
 
   paymentMethod  PaymentMethod?
   paymentDetails PaymentDetails? @relation("PaymentDetailsToOrder")
@@ -908,8 +903,8 @@ model Wishlist {
 }
 
 model Coupon {
-  id        String @id @default(cuid()) @map("_id")
-  code      String @unique
+  id        String  @id @default(cuid()) @map("_id")
+  code      String  @unique
   startDate String
   endDate   String?
   discount  Int
@@ -935,7 +930,7 @@ model PaymentDetails {
   paymentMethod   String
   status          String
   amount          Float
- currency        String   @default("USD")  // YENİ: Currency alanı
+  currency        String @default("USD") // YENİ: Currency alanı
 
   orderId String @unique
   order   Order  @relation("PaymentDetailsToOrder", fields: [orderId], references: [id], onDelete: Cascade)
@@ -2150,60 +2145,53 @@ model FollowerInstagram {
 
 ////
 
-
-
 // prisma/schema.prisma
 model LandingPageSection {
-  id        String   @id @default(cuid()) @map("_id")
-  type      String   // banner, categories, deals, products, newsletter, stats, features, cta, download, limited, hero
-  title     String?
-  subtitle  String?
-  active    Boolean  @default(true)
-  order     Int      @default(0)
-  data      Json     @default("{}")
-  
+  id       String  @id @default(cuid()) @map("_id")
+  type     String // banner, categories, deals, products, newsletter, stats, features, cta, download, limited, hero
+  title    String?
+  subtitle String?
+  active   Boolean @default(true)
+  order    Int     @default(0)
+  data     Json    @default("{}")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  images    LandingPageImage[]
-  
-  @@map("landing_page_sections")
+
+  images LandingPageImage[]
+
   @@index([type])
   @@index([order])
+  @@map("landing_page_sections")
 }
-
-
 
 model LandingPageImage {
-  id          String   @id @default(cuid()) @map("_id")
-  sectionId   String
-  url         String
-  alt         String?
-  type        String   // main, gallery, thumbnail, background, icon, side
-  order       Int      @default(0)
-  
+  id        String  @id @default(cuid()) @map("_id")
+  sectionId String
+  url       String
+  alt       String?
+  type      String // main, gallery, thumbnail, background, icon, side
+  order     Int     @default(0)
+
   // Ürün link alanları
-  link        String?  // Tam link: /shop/productdetails/urun-slugu?variant=xxx
-  productSlug String?  // Sadece ürün slug'ı
-  variantId   String?  // Varyant ID
-  size        String?  // large, medium, small
-  
-  section     LandingPageSection @relation(fields: [sectionId], references: [id])
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@map("landing_page_images")
+  link        String? // Tam link: /shop/productdetails/urun-slugu?variant=xxx
+  productSlug String? // Sadece ürün slug'ı
+  variantId   String? // Varyant ID
+  size        String? // large, medium, small
+
+  section LandingPageSection @relation(fields: [sectionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([sectionId])
   @@index([type])
+  @@map("landing_page_images")
 }
-
 
 /////////////////////////////////////////////
 
 //Real Estate 
-
-
 
 // subscription model
 model SubscriptionEstate {
@@ -2266,3 +2254,64 @@ model Query {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+/// Finance App
+
+
+
+model Account {
+  id      String  @id @default(cuid()) @map("_id")
+  plaidId String?
+  name    String
+  userId  String
+
+  transactions Transaction[]
+
+  @@map("accounts")
+}
+
+model CategoryFinance {
+  id      String  @id @default(cuid()) @map("_id")
+  plaidId String?
+  name    String
+  userId  String
+
+  transactions Transaction[]
+
+  @@map("categoriesfinance")
+}
+
+model Transaction {
+  id     String   @id @default(cuid()) @map("_id")
+  amount Int
+  payee  String
+  notes  String?
+  date   DateTime
+
+  accountId  String 
+  categoryId String?
+
+  account  Account          @relation(fields: [accountId], references: [id])
+  category CategoryFinance? @relation(fields: [categoryId], references: [id])
+
+  @@map("transactions")
+}
+
+model ConnectedBank {
+  id          String @id @default(cuid()) @map("_id")
+  userId      String
+  accessToken String
+
+  @@map("connected_banks")
+}
+
+model SubscriptionFinance {
+  id             String @id @default(cuid()) @map("_id")
+  userId         String @unique
+  subscriptionId String @unique
+  status         String
+
+  @@map("subscriptions")
+}
+
+//
