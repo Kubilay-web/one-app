@@ -4,7 +4,7 @@ import { createId } from '@paralleldrive/cuid2'
 
 const prisma = new PrismaClient()
 
-const SEED_USER_ID = "r5zzt4xb3j4lgesi"
+const SEED_USER_ID = "bpsuajdcyjggs25b"
 
 const SEED_CATEGORIES = [
   { id: createId(), name: "Food", userId: SEED_USER_ID, plaidId: null },

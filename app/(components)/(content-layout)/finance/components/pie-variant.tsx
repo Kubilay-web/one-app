@@ -1,40 +1,59 @@
-import { 
-  Cell, 
-  Legend, 
-  Pie, 
-  PieChart, 
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
   ResponsiveContainer,
-  Tooltip
+  Tooltip,
 } from "recharts";
-
-
 
 import { formatPercentage } from "../utils";
 import { CategoryTooltip } from "./category-tooltip";
 
 const COLORS = ["#0062FF", "#12C6FF", "#FF647F", "#FF9354"];
 
+type DataItem = {
+  name: string;
+  value: number;
+};
+
 type Props = {
-  data: {
-    name: string;
-    value: number;
-  }[];
+  data: DataItem[];
 };
 
 export const PieVariant = ({ data }: Props) => {
+  /**
+   * 🧮 Toplamı güvenli hesapla
+   */
+  const total = data.reduce(
+    (sum, item) => sum + (Number(item.value) || 0),
+    0,
+  );
+
+  if (total === 0) {
+    return (
+      <div className="flex items-center justify-center h-[350px] text-sm text-muted-foreground">
+        No data to display
+      </div>
+    );
+  }
+
   return (
     <ResponsiveContainer width="100%" height={350}>
       <PieChart>
         <Legend
           layout="horizontal"
-          verticalAlign="bottom" 
+          verticalAlign="bottom"
           align="right"
           iconType="circle"
-          content={({ payload }: any) => {
-            return (
-              <ul className="flex flex-col space-y-2">
-                {payload.map((entry: any, index: number) => (
-                  <li 
+          content={({ payload }: any) => (
+            <ul className="flex flex-col space-y-2">
+              {payload.map((entry: any, index: number) => {
+                const value = Number(entry.payload.value) || 0;
+                const percent = value / total;
+
+                return (
+                  <li
                     key={`item-${index}`}
                     className="flex items-center space-x-2"
                   >
@@ -47,16 +66,18 @@ export const PieVariant = ({ data }: Props) => {
                         {entry.value}
                       </span>
                       <span className="text-sm">
-                        {formatPercentage(entry.payload.percent * 100)}
+                        {formatPercentage(percent * 100)}
                       </span>
                     </div>
                   </li>
-                ))}
-              </ul>
-            )
-          }}
+                );
+              })}
+            </ul>
+          )}
         />
+
         <Tooltip content={<CategoryTooltip />} />
+
         <Pie
           data={data}
           cx="50%"
@@ -64,9 +85,9 @@ export const PieVariant = ({ data }: Props) => {
           outerRadius={90}
           innerRadius={60}
           paddingAngle={2}
-          fill="#8884d8"
           dataKey="value"
           labelLine={false}
+          isAnimationActive={false}
         >
           {data.map((_entry, index) => (
             <Cell
