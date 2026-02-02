@@ -367,6 +367,55 @@ export const getMenuItems = (user) => [
         ],
       },
 
+
+
+            {
+        title: "Finance",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/finance/dashboard",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Overview",
+          },
+          {
+            path: "/finance/dashboard/transactions",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Transactions",
+          },
+
+          {
+            path: "/finance/dashboard/accounts",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Accounts",
+          },
+
+          {
+            path: "/finance/dashboard/categories",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Categories",
+          },
+
+          {
+            path: "/finance/dashboard/settings",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Settings",
+          },
+        ],
+      },
+
       // {
       //   title: "Social",
       //   icon: Dashboardicon,
@@ -978,98 +1027,98 @@ export const getMenuItems = (user) => [
         ],
       },
 
-      {
-        title: "Finance",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            title: "Crypto",
-            type: "sub",
-            active: false,
-            children: [
-              {
-                path: "/home/crypto/transactions",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Transactions",
-              },
-              {
-                path: "/home/crypto/currency-exchange",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Currency Exchange",
-              },
-              {
-                path: "/home/crypto/buy-sell",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Buy & Sell",
-              },
-              {
-                path: "/home/crypto/marketcap",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Marketcap",
-              },
-              {
-                path: "/home/crypto/wallet",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Wallet",
-              },
-            ],
-          },
+      // {
+      //   title: "Finance",
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       title: "Crypto",
+      //       type: "sub",
+      //       active: false,
+      //       children: [
+      //         {
+      //           path: "/home/crypto/transactions",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Transactions",
+      //         },
+      //         {
+      //           path: "/home/crypto/currency-exchange",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Currency Exchange",
+      //         },
+      //         {
+      //           path: "/home/crypto/buy-sell",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Buy & Sell",
+      //         },
+      //         {
+      //           path: "/home/crypto/marketcap",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Marketcap",
+      //         },
+      //         {
+      //           path: "/home/crypto/wallet",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Wallet",
+      //         },
+      //       ],
+      //     },
 
-          {
-            title: "NFT",
-            type: "sub",
-            active: false,
-            children: [
-              {
-                path: "/home/nft/market-place",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Market Place",
-              },
-              {
-                path: "/home/nft/nft-details",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "NFT Details",
-              },
-              {
-                path: "/home/nft/create-nft",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Create NFT",
-              },
-              {
-                path: "/home/nft/wallet-integration",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Wallet Integration",
-              },
-              {
-                path: "/home/nft/live-auction",
-                type: "link",
-                active: false,
-                selected: false,
-                title: "Live Auction",
-              },
-            ],
-          },
-        ],
-      },
+      //     {
+      //       title: "NFT",
+      //       type: "sub",
+      //       active: false,
+      //       children: [
+      //         {
+      //           path: "/home/nft/market-place",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Market Place",
+      //         },
+      //         {
+      //           path: "/home/nft/nft-details",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "NFT Details",
+      //         },
+      //         {
+      //           path: "/home/nft/create-nft",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Create NFT",
+      //         },
+      //         {
+      //           path: "/home/nft/wallet-integration",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Wallet Integration",
+      //         },
+      //         {
+      //           path: "/home/nft/live-auction",
+      //           type: "link",
+      //           active: false,
+      //           selected: false,
+      //           title: "Live Auction",
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
 
       {
         title: "Youtube",

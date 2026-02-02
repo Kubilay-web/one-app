@@ -41,7 +41,7 @@ export const DatePicker = ({ value, onChange, disabled }: Props) => {
           selected={value}
           onSelect={onChange}
           disabled={disabled}
-          className="bg-white text-black"
+          className=" text-black"
           initialFocus
         />
       </PopoverContent>
