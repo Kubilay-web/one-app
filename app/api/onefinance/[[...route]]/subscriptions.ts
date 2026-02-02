@@ -59,8 +59,8 @@ app.post("/checkout", async (c) => {
   }
 
   const checkout = await createCheckout(
-    process.env.LEMONSQUEEZY_STORE_ID!,      // store id
-    process.env.LEMONSQUEEZY_PRODUCT_ID!,    // ⚠️ VARIANT ID
+    process.env.LEMONSQUEEZY_STORE_ID!,
+    process.env.LEMONSQUEEZY_PRODUCT_ID!, // VARIANT ID
     {
       checkoutData: {
         custom: {
@@ -68,13 +68,13 @@ app.post("/checkout", async (c) => {
         },
       },
       productOptions: {
-        redirectUrl: process.env.NEXT_PUBLIC_APP_URL!,
+        redirectUrl: process.env.NEXT_PUBLIC_BASE_URL!,
       },
-    },
+    }
   );
 
   if (!checkout?.data?.data) {
-    console.error("LemonSqueezy checkout error:", checkout);
+    console.error("Checkout failed:", checkout);
     return c.json({ error: "Checkout failed" }, 500);
   }
 
@@ -89,54 +89,76 @@ app.post("/checkout", async (c) => {
 app.post("/webhook", async (c) => {
   const rawBody = await c.req.text();
 
+  // ✅ SIGNATURE VERIFICATION
   const hmac = crypto.createHmac(
     "sha256",
-    process.env.LEMONSQUEEZY_WEBHOOK_SECRET!,
+    process.env.LEMONSQUEEZY_WEBHOOK_SECRET!
   );
 
   const digest = Buffer.from(
     hmac.update(rawBody).digest("hex"),
-    "utf8",
+    "hex"
   );
 
   const signature = Buffer.from(
     c.req.header("x-signature") || "",
-    "utf8",
+    "hex"
   );
 
-  if (!crypto.timingSafeEqual(digest, signature)) {
+  if (
+    digest.length !== signature.length ||
+    !crypto.timingSafeEqual(digest, signature)
+  ) {
     return c.json({ error: "Unauthorized" }, 401);
   }
 
   const payload = JSON.parse(rawBody);
 
   const event = payload.meta.event_name;
-  const subscriptionId = payload.data.id;
-  const status = payload.data.attributes.status;
-  const userId = payload.meta.custom_data.user_id;
+  const userId = payload.meta.custom_data?.user_id;
+
+  if (!userId) {
+    console.error("Missing user_id in webhook");
+    return c.json({ ok: false });
+  }
+
+  let subscriptionId: string | null = null;
+  let status: string | null = null;
+
+  // 🔹 subscription object events
+  if (event === "subscription_created" || event === "subscription_updated") {
+    subscriptionId = payload.data.id;
+    status = payload.data.attributes.status;
+  }
+
+  // 🔹 invoice → subscription
+  if (event === "subscription_payment_success") {
+    subscriptionId =
+      payload.data.attributes.subscription_id?.toString();
+    status = "active";
+  }
+
+  if (!subscriptionId || !status) {
+    return c.json({ ok: true });
+  }
 
   const existing = await prisma.subscriptionFinance.findUnique({
     where: { subscriptionId },
   });
 
-  if (
-    event === "subscription_created" ||
-    event === "subscription_updated"
-  ) {
-    if (existing) {
-      await prisma.subscriptionFinance.update({
-        where: { subscriptionId },
-        data: { status },
-      });
-    } else {
-      await prisma.subscriptionFinance.create({
-        data: {
-          userId,
-          subscriptionId,
-          status,
-        },
-      });
-    }
+  if (existing) {
+    await prisma.subscriptionFinance.update({
+      where: { subscriptionId },
+      data: { status },
+    });
+  } else {
+    await prisma.subscriptionFinance.create({
+      data: {
+        userId,
+        subscriptionId,
+        status,
+      },
+    });
   }
 
   return c.json({ ok: true });
