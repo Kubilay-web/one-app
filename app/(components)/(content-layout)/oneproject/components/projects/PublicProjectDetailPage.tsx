@@ -11,7 +11,9 @@ import {
 import parse from "html-react-parser";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 
-import emptyFolder from "../../public/empty-folder.png";
+
+
+import emptyFolder from "../../../../../../public/oneproject/empty-folder.png"
 import { CalendarDays, Edit, Eye, Trash, TriangleAlert, X } from "lucide-react";
 import { ScrollArea } from "../../components/ui/scroll-area";
 
