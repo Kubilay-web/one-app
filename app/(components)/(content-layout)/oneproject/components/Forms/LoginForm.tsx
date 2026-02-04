@@ -12,6 +12,9 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 import TextInput from "../FormInputs/TextInput";
 import PasswordInput from "../FormInputs/PasswordInput";
 import SubmitButton from "../FormInputs/SubmitButton";
+
+
+
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const {
@@ -21,7 +24,7 @@ export default function LoginForm() {
     reset,
   } = useForm<LoginProps>();
   const params = useSearchParams();
-  const returnUrl = params.get("returnUrl") || "/dashboard";
+  const returnUrl = params.get("returnUrl") || "/oneproject/dashboard";
   const [passErr, setPassErr] = useState("");
   const router = useRouter();
   async function onSubmit(data: LoginProps) {

@@ -33,7 +33,7 @@ export async function getInvoiceById(id: string) {
     const client = await db.user.findUnique({
       where: {
         id: payment?.clientId,
-        role: "CLIENT",
+        roleproject: "CLIENT",
       },
       select: {
         name: true,
@@ -100,7 +100,7 @@ export async function deletePayment(id: string) {
         id,
       },
     });
-    revalidatePath("/dashboard/project");
+    revalidatePath("/oneproject/dashboard/project");
     return {
       ok: true,
       data: deletePayment,

@@ -35,7 +35,7 @@ export default function RecentClients({
           return (
             <div key={i} className="flex items-center gap-4">
               <Avatar className="hidden h-9 w-9 sm:flex">
-                <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                <AvatarImage src="/oneproject/avatars/01.png" alt="Avatar" />
                 <AvatarFallback>{getInitials(client.name)}</AvatarFallback>
               </Avatar>
               <div className="grid gap-1">

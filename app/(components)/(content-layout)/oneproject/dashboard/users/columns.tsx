@@ -139,7 +139,7 @@ export const columns: ColumnDef<User>[] = [
         <ActionColumn
           row={row}
           model="category"
-          editEndpoint={`categories/update/${category.id}`}
+          editEndpoint={`/oneproject/categories/update/${category.id}`}
           id={category.id}
         />
       );

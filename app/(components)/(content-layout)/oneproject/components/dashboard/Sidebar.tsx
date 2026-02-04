@@ -37,13 +37,13 @@ import Logo from "../global/Logo";
 
 type SafeUser = {
   id: string;
-  role: "ADMIN" | "USER";
+  roleproject: "ADMIN" | "USER" | "CLIENT" | "MEMBER";
   email: string | null;
   username: string | null;
 };
 
 export default function Sidebar({ user }: { user: SafeUser | null }) {
-  const role = user?.role;
+  const role = user?.roleproject;
   
   const sidebarLinks = [
     {
@@ -253,7 +253,7 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
               
               {/* Live Website Link */}
               <Link
-                href="/oneproject"
+                href="/oneproject/home"
                 className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 <ExternalLink className="h-5 w-5 flex-shrink-0" />
@@ -301,16 +301,8 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
               </div>
             ))}
             
-            {/* More Menu for Mobile */}
-            <div className="flex flex-col items-center space-y-1 min-w-[70px]">
-              <Link
-                href="/oneproject/dashboard/more"
-                className="flex flex-col items-center p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <Menu className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">More</span>
-              </Link>
-            </div>
+    
+  
           </div>
         </div>
       </div>

@@ -81,7 +81,7 @@ import { formatCurrency } from "../../lib/formatCurrency";
 
 type SafeUser = {
   id: string;
-  role: string | null;
+  roleproject: string | null;
   email: string;
   username: string;
   avatarUrl:string;
@@ -98,9 +98,9 @@ export default function ProjectDetailPage({
 }) {
   const { defaultCurrency, exchangeRate } = useCurrencySettings();
 
-     const safeUser = {
+  const safeUser = {
     id: user?.id,
-    role: user?.role,
+    roleproject: user?.roleproject,
     email: user?.email,
     username: user?.username,
     avatarUrl:user?.avatarUrl
@@ -116,7 +116,7 @@ export default function ProjectDetailPage({
   //   }).format(convertedAmount);
   // };
 
-  let role = user?.role;
+  let role = user?.roleproject;
 
   if (user?.id !== projectData.user.id) {
     role = "MEMBER";
@@ -192,7 +192,7 @@ export default function ProjectDetailPage({
       {/* Back to Projects Button */}
       <div className="flex items-center justify-between">
         <Button asChild variant="outline" className="mb-4">
-          <Link href="/dashboard/projects">
+          <Link href="/oneproject/dashboard/projects">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to All Projects
           </Link>
@@ -284,7 +284,7 @@ export default function ProjectDetailPage({
                                     editingId={module.id}
                                     initialContent={module.name}
                                     projectId={projectData.id}
-                                    userId={user.id}
+                                    userId={user?.id}
                                     userName={user?.username}
                                   />
                                   <AlertDialog>
@@ -324,7 +324,7 @@ export default function ProjectDetailPage({
                                   </AlertDialog>
                                   <Link
                                     className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                    href={`/project/modules/${module.id}?pId=${module.projectId}&&slug=${projectData.slug}`}
+                                    href={`/oneproject/project/modules/${module.id}?pId=${module.projectId}&&slug=${projectData.slug}`}
                                   >
                                     <Eye className="w-4 h-4 " />
                                   </Link>
@@ -345,8 +345,8 @@ export default function ProjectDetailPage({
                           />
                           <ModuleForm
                             projectId={projectData.id}
-                            userId={user.id}
-                            userName={user.username}
+                            userId={user?.id}
+                            userName={user?.username}
                           />
                         </div>
                       </div>
@@ -409,9 +409,9 @@ export default function ProjectDetailPage({
                       <h2>Comments</h2>
                       <CommentForm
                         projectId={projectData.id}
-                        userId={user.id}
-                        userName={user.username}
-                        userRole={user.role}
+                        userId={user?.id}
+                        userName={user?.username}
+                        userRole={user?.role}
                       />
                     </div>
                   </CardTitle>
@@ -433,9 +433,9 @@ export default function ProjectDetailPage({
                             <p className="font-semibold">{comment.userName}</p>
                             <CommentForm
                               projectId={projectData.id}
-                              userId={user.id}
-                              userName={user.username}
-                              userRole={user.role}
+                              userId={user?.id}
+                              userName={user?.username}
+                              userRole={user?.roleproject}
                               editingId={comment.id}
                               initialContent={comment.content}
                             />
@@ -451,9 +451,9 @@ export default function ProjectDetailPage({
                       <p>No Comments Yet</p>
                       <CommentForm
                         projectId={projectData.id}
-                        userId={user.id}
+                        userId={user?.id}
                         userName={user?.username}
-                        userRole={user.role}
+                        userRole={user?.roleproject}
                       />
                     </div>
                   </CardFooter>
@@ -519,7 +519,7 @@ export default function ProjectDetailPage({
                                   </Badge>
                                   <Button variant="outline" size="sm" asChild>
                                     <Link
-                                      href={`/project/invoice/${invoice.id}?project=${projectData.slug}`}
+                                      href={`/oneproject/project/invoice/${invoice.id}?project=${projectData.slug}`}
                                     >
                                       <Eye className="h-4 w-4 mr-2" />
                                       View
@@ -711,7 +711,7 @@ export default function ProjectDetailPage({
                         />
                       ) : (
                         <AvatarFallback>
-                          {projectData.user.name.substring(0, 2).toUpperCase()}
+                          {projectData.user.username.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       )}
                     </Avatar>

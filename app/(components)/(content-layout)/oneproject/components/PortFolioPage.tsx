@@ -40,7 +40,7 @@ export default function Portfolio({
           <div className="md:w-1/3">
             <div className="bg-yellow-300 rounded-full w-48 h-48 mx-auto mb-6 overflow-hidden">
               <Image
-                src={profile.profileImage ?? "/placeholder.svg"}
+                src={profile.profileImage ?? "/oneproject/placeholder.svg"}
                 alt={profile.name}
                 width={640}
                 height={512}

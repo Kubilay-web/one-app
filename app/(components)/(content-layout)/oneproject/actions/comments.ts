@@ -10,7 +10,7 @@ export async function createComment(data: CommentProps) {
       data,
     });
     // console.log(newCategory);
-    revalidatePath("/dashboard/projects");
+    revalidatePath("/oneproject/dashboard/projects");
     return newComment;
   } catch (error) {
     console.log(error);
@@ -39,7 +39,7 @@ export async function updateCommentById(id: string, data: CommentProps) {
       },
       data,
     });
-    revalidatePath("/dashboard/projects");
+    revalidatePath("/oneproject/dashboard/projects");
     return updatedComment;
   } catch (error) {
     console.log(error);

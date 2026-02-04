@@ -21,7 +21,7 @@ export default async function page({
     return notFound();
   }
   const {user} = await validateRequest();
-  const role = user?.role;
+  const role = user?.roleproject;
 
   const invoiceDetails = await getInvoiceById(id);
 

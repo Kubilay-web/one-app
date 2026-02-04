@@ -222,7 +222,7 @@ export default function FileManager({
             }, 0);
             return (
               <Link
-                href={`/dashboard/file-manager?fId=${folder.id}`}
+                href={`/oneproject/dashboard/file-manager?fId=${folder.id}`}
                 key={folder.name}
                 className={cn(
                   "flex items-center border-b p-4 hover:bg-blue-50 ",

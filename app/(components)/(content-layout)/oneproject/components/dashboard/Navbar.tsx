@@ -27,23 +27,37 @@ import { cn } from "@/app/lib/utils";
 
 type SafeUser = {
   id: string;
-  role: "ADMIN" | "USER";
+  roleproject: "ADMIN" | "USER" | "CLIENT" | "MEMBER";
   email: string | null;
   username: string | null;
+  avatarUrl: string | null;
 };
 
 export default function Navbar({ user }: { user: SafeUser }) {
-  const role = user.role;
+  const role = user.roleproject;
   const pathname = usePathname();
 
   const navLinks = [
-    { title: "Overview", href: "/dashboard", icon: Home },
-    { title: "Clients", href: "/dashboard/clients", icon: Users },
-    { title: "Projects", href: "/dashboard/projects", icon: LayoutGrid },
-    { title: "Payments", href: "/dashboard/payments", icon: Handshake },
-    { title: "Currency", href: "/dashboard/currency", icon: DollarSign, badge: "New" },
-    { title: "Team", href: "/dashboard/members", icon: User2 },
-    { title: "Emails", href: "/dashboard/emails", icon: Mail },
+    { title: "Overview", href: "/oneproject/dashboard", icon: Home },
+    { title: "Clients", href: "/oneproject/dashboard/clients", icon: Users },
+    {
+      title: "Projects",
+      href: "/oneproject/dashboard/projects",
+      icon: LayoutGrid,
+    },
+    {
+      title: "Payments",
+      href: "/oneproject/dashboard/payments",
+      icon: Handshake,
+    },
+    {
+      title: "Currency",
+      href: "/oneproject/dashboard/currency",
+      icon: DollarSign,
+      badge: "New",
+    },
+    { title: "Team", href: "/oneproject/dashboard/members", icon: User2 },
+    { title: "Emails", href: "/oneproject/dashboard/emails", icon: Mail },
   ];
 
   return (
@@ -59,7 +73,7 @@ export default function Navbar({ user }: { user: SafeUser }) {
                 variant="ghost"
                 className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
               >
-                <Link href="/dashboard">
+                <Link href="/oneproject/dashboard">
                   <Home className="h-5 w-5" />
                   <span className="font-medium">Dashboard</span>
                 </Link>
@@ -78,7 +92,7 @@ export default function Navbar({ user }: { user: SafeUser }) {
                         "flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                         isActive
                           ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white",
                       )}
                     >
                       <Icon className="h-4 w-4" />
@@ -116,9 +130,9 @@ export default function Navbar({ user }: { user: SafeUser }) {
               >
                 <Bell className="h-5 w-5" />
               </Button>
-              
+
               <ModeToggle />
-              
+
               <AvatarMenuButton user={user} />
             </div>
           </div>
@@ -139,7 +153,7 @@ export default function Navbar({ user }: { user: SafeUser }) {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              
+
               <div className="flex items-center space-x-2">
                 <Home className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 <span className="font-medium text-gray-900 dark:text-white">
@@ -157,9 +171,9 @@ export default function Navbar({ user }: { user: SafeUser }) {
               >
                 <Bell className="h-5 w-5" />
               </Button>
-              
+
               <ModeToggle />
-              
+
               <AvatarMenuButton user={user} />
             </div>
           </div>
@@ -190,7 +204,7 @@ export default function Navbar({ user }: { user: SafeUser }) {
                       "flex items-center space-x-2 px-3 py-2 rounded-lg whitespace-nowrap transition-colors",
                       isActive
                         ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
                     )}
                   >
                     <Icon className="h-4 w-4 flex-shrink-0" />
@@ -203,41 +217,8 @@ export default function Navbar({ user }: { user: SafeUser }) {
                   </Link>
                 );
               })}
-              
-      
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Mobile Bottom Navigation (Alternatif) */}
-      <div className="lg:hidden w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 fixed bottom-0 left-0 right-0">
-        <div className="grid grid-cols-5 gap-1 p-2">
-          {[
-            { title: "Home", href: "/dashboard", icon: Home },
-            { title: "Clients", href: "/dashboard/clients", icon: Users },
-            { title: "Projects", href: "/dashboard/projects", icon: LayoutGrid },
-            { title: "Payments", href: "/dashboard/payments", icon: Handshake },
-            { title: "More", href: "/dashboard/more", icon: Menu },
-          ].map((item, index) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={index}
-                href={item.href}
-                className={cn(
-                  "flex flex-col items-center p-2 rounded-lg transition-colors",
-                  isActive
-                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                )}
-              >
-                <Icon className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">{item.title}</span>
-              </Link>
-            );
-          })}
         </div>
       </div>
     </>

@@ -159,13 +159,13 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
               title="Brand Logo"
               imageUrl={imageUrl}
               setImageUrl={setImageUrl}
-              endpoint="clientProfileImage"
+              // endpoint="clientProfileImage"
             />
           </div>
         </div>
       </div>
       <FormFooter
-        href="/brand-settings"
+        href="/oneproject/dashsboard/brand-settings"
         editingId={editingId}
         loading={loading}
         title="Brand Settings"

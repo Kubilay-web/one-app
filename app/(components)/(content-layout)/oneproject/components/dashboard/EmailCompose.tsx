@@ -195,7 +195,7 @@ export default function ComposeMailForm({
             New Message
           </h1>
           <Button type="button" asChild variant={"outline"}>
-            <Link href="/dashboard">
+            <Link href="/oneproject/dashboard">
               <X className="w-4 h-4" />
             </Link>
           </Button>
@@ -209,7 +209,7 @@ export default function ComposeMailForm({
             option={selectedRecipient}
             setOption={setSelectedRecipient}
             toolTipText="Add New Client"
-            href="/dashboard/clients/new"
+            href="/oneproject/dashboard/clients/new"
           />
           <TextInput
             register={register}

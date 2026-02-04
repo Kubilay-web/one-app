@@ -207,7 +207,7 @@ export default function ProjectBanner({
                   title=""
                   imageUrl={imageUrl}
                   setImageUrl={setImageUrl}
-                  endpoint="bannerImage"
+                  // endpoint="bannerImage"
                 />
                 <Button disabled={loading} onClick={handleBannerUpdate}>
                   {loading ? "Updating..." : " Update Banner Image"}

@@ -216,7 +216,7 @@ export default function ProjectForm({
               title="Project Thumbnail"
               imageUrl={imageUrl}
               setImageUrl={setImageUrl}
-              endpoint="projectThumbnail"
+              // endpoint="projectThumbnail"
             />
           </div>
         </div>

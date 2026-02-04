@@ -415,7 +415,7 @@ export const getMenuItems = (user) => [
       },
 
       {
-        title: "Project Management",
+        title: "Project",
         icon: Dashboardicon,
         type: "sub",
         active: false,

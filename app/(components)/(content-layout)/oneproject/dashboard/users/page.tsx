@@ -10,7 +10,7 @@ import { validateRequest } from "@/app/auth";
 
 export default async function ReviewPage() {
   const {user} = await validateRequest();
-  const role = user?.role;
+  const role = user?.roleproject;
   if (role !== "ADMIN") {
     return notFound();
   }

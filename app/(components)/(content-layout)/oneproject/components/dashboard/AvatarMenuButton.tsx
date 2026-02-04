@@ -30,7 +30,7 @@ import { useRouter } from "next/navigation";
 
 type SafeUser = {
   id: string;
-  role: "ADMIN" | "USER";
+  roleproject: "ADMIN" | "USER" | "CLIENT" | "MEMBER";
   email: string | null;
   username: string | null;
   avatarUrl: string | null;
@@ -41,31 +41,31 @@ export function AvatarMenuButton({ user }: { user: SafeUser }) {
   const router = useRouter();
 
   const menuLinks = [
-    { name: "Settings", icon: Settings, href: "/dashboard/settings" },
-    { name: "Profile", icon: UserRound, href: "/dashboard/profile" },
-    { name: "POS", icon: Presentation, href: "/dashboard/pos" },
+    { name: "Settings", icon: Settings, href: "/oneproject/dashboard/settings" },
+    { name: "Profile", icon: UserRound, href: "/oneproject/dashboard/profile" },
+    { name: "POS", icon: Presentation, href: "/oneproject/dashboard/pos" },
   ];
 
   const assistanceLinks = [
     {
       name: "Free 2 hour set-up assistance",
       icon: Headset,
-      href: "/dashboard/settings",
+      href: "/oneproject/dashboard/settings",
     },
     {
       name: "Chat with Our experts",
       icon: MessageSquareMore,
-      href: "/dashboard/profile",
+      href: "/oneproject/dashboard/profile",
     },
     {
       name: "Send an Email",
       icon: Mail,
-      href: "/dashboard/pos",
+      href: "/oneproject/dashboard/pos",
     },
     {
       name: "Talk to Us - 256 784 143 872",
       icon: PhoneCall,
-      href: "/dashboard/pos",
+      href: "/oneproject/dashboard/pos",
     },
   ];
 

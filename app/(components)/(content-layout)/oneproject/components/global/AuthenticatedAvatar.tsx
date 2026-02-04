@@ -15,7 +15,7 @@ import LogoutBtn from "../../components/global/LogoutBtn";
 
 type SafeUser = {
   id: string;
-  role: string | null;
+  roleproject: string | null;
   email: string;
   username: string;
   avatarUrl:string;
@@ -26,7 +26,7 @@ export default function AuthenticatedAvatar({
 }: {
   user: SafeUser | null;
 }) {
-  const role = user?.role;
+  const role = user?.roleproject;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer" asChild>

@@ -41,7 +41,7 @@ export default function Invoice({
   });
   const [loading, setLoading] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const invoiceLink = `${baseUrl}/project/invoice/${invoiceDetails?.invoice.id}?project=${project}`;
+  const invoiceLink = `${baseUrl}/oneproject/project/invoice/${invoiceDetails?.invoice.id}?project=${project}`;
   async function handleSendInvoice() {
     setLoading(true);
     try {

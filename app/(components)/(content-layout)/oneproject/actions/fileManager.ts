@@ -20,7 +20,7 @@ export async function createFolder(data: FolderProps) {
       data,
     });
     // console.log(newCategory);
-    revalidatePath("/dashboard/file-manager");
+    revalidatePath("/oneproject/dashboard/file-manager");
     return newFolder;
   } catch (error) {
     console.log(error);
@@ -35,7 +35,7 @@ export async function updateFolderById(id: string, data: FolderProps) {
       },
       data,
     });
-    revalidatePath("/dashboard/file-manager");
+    revalidatePath("/oneproject/dashboard/file-manager");
     return updatedFolder;
   } catch (error) {
     console.log(error);
@@ -49,7 +49,7 @@ export async function updateFileById(id: string, data: FileProps) {
       },
       data,
     });
-    revalidatePath("/dashboard/file-manager");
+    revalidatePath("/oneproject/dashboard/file-manager");
     return updatedFile;
   } catch (error) {
     console.log(error);
@@ -61,7 +61,7 @@ export async function createFile(data: FileProps) {
       data,
     });
     console.log(newFile);
-    revalidatePath("/dashboard/file-manager");
+    revalidatePath("/oneproject/dashboard/file-manager");
     return newFile;
   } catch (error) {
     console.log(error);

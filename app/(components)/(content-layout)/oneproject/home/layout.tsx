@@ -13,7 +13,7 @@ export default async function HomeLayout({
 
   const safeUser = {
     id: user?.id,
-    role: user?.role,
+    roleproject: user?.roleproject,
     email: user?.email,
     username: user?.username,
     avatarUrl: user?.avatarUrl

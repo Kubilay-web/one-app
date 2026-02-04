@@ -168,52 +168,54 @@ export async function getExistingUsers() {
   }
 }
 
-export async function updateUserById(id: string, data: UserProps) {
-  try {
-    const updatedUser = await db.user.update({
-      where: {
-        id,
-      },
-      data,
-    });
-       revalidatePath("/oneproject/dashboard/clients");
-    return updatedUser;
-  } catch (error) {
-    console.log(error);
-  }
-}
-export async function updateUserPassword(id: string, data: PasswordProps) {
-  const existingUser = await db.user.findUnique({
-    where: {
-      id,
-    },
-  });
-  // Check if the Old Passw = User Pass
-  let passwordMatch: boolean = false;
-  //Check if Password is correct
-  if (existingUser && existingUser.passwordHash) {
-    // if user exists and password exists
-    passwordMatch = await compare(data.oldPassword, existingUser.passwordHash);
-  }
-  if (!passwordMatch) {
-    return { error: "Old Password Incorrect", status: 403 };
-  }
-  const hashedPassword = await bcrypt.hash(data.newPassword, 10);
-  try {
-    const updatedUser = await db.user.update({
-      where: {
-        id,
-      },
-      data: {
-        password: hashedPassword,
-      },
-    });
-    revalidatePath("/dashboard/clients");
-    return { error: null, status: 200 };
-  } catch (error) {
-    console.log(error);
-  }
-}
+ export async function updateUserById(id: string, data: UserProps) {
+   try {
+     const updatedUser = await db.user.update({
+       where: {
+         id,
+       },
+       data,
+     });
+        revalidatePath("/oneproject/dashboard/clients");
+     return updatedUser;
+   } catch (error) {
+     console.log(error);
+   }
+ }
+
+
+// export async function updateUserPassword(id: string, data: PasswordProps) {
+//   const existingUser = await db.user.findUnique({
+//     where: {
+//       id,
+//     },
+//   });
+//   // Check if the Old Passw = User Pass
+//   let passwordMatch: boolean = false;
+//   //Check if Password is correct
+//   if (existingUser && existingUser.passwordHash) {
+//     // if user exists and password exists
+//     passwordMatch = await compare(data.oldPassword, existingUser.passwordHash);
+//   }
+//   if (!passwordMatch) {
+//     return { error: "Old Password Incorrect", status: 403 };
+//   }
+//   const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+//   try {
+//     const updatedUser = await db.user.update({
+//       where: {
+//         id,
+//       },
+//       data: {
+//         password: hashedPassword,
+//       },
+//     });
+//     revalidatePath("/dashboard/clients");
+//     return { error: null, status: 200 };
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 
 

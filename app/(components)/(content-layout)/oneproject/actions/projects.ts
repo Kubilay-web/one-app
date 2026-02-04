@@ -276,7 +276,7 @@ export async function getProjectDetailsBySlug(
     const client = await db.user.findFirst({
       where: {
         id: project.clientId,
-        role: "CLIENT",
+        roleproject: "CLIENT",
       },
       select: {
         id: true,
@@ -289,7 +289,6 @@ export async function getProjectDetailsBySlug(
         country: true,
         location: true,
         plain: true,
-        role: true,
         companyName: true,
         companyDescription: true,
       },
@@ -314,7 +313,7 @@ export async function deleteProject(id: string) {
         id,
       },
     });
-    revalidatePath("/dashboard/projects");
+    revalidatePath("/oneproject/dashboard/projects");
     return {
       ok: true,
       data: deletedProject,
@@ -334,7 +333,7 @@ export async function updateProjectPublicity(id: string, isPublic: boolean) {
         isPublic,
       },
     });
-    revalidatePath("/dashboard/projects");
+    revalidatePath("/oneproject/dashboard/projects");
     return {
       data: updatedProject,
       ok: true,

@@ -16,12 +16,6 @@ enum Role {
 }
 
 
-enum RoleProject {
-  USER
-  ADMIN
-  CLIENT
-  MEMBER
-}
 
 enum RoleShop {
   USER
@@ -40,11 +34,24 @@ enum RoleRealEstate {
   ADMIN
 }
 
+
+//Project and Medical Apps
+
+enum RoleProject {
+  USER
+  ADMIN
+  CLIENT
+  MEMBER
+}
+
+
 enum RoleMedical {
   USER
   ADMIN
   DOCTOR
 }
+
+//
 
 model User {
   id String @id @map("_id") // MongoDB'de _id otomatik oluşturulur

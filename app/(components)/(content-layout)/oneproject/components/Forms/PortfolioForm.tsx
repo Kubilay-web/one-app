@@ -242,7 +242,7 @@ export default function PortfolioForm({
               title="Profile Image"
               imageUrl={imageUrl}
               setImageUrl={setImageUrl}
-              endpoint="profileImage"
+              // endpoint="profileImage"
             />
           </div>
         </div>

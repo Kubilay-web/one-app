@@ -65,7 +65,7 @@ export default function RecentProjects({
                       alt="Project Image"
                       className="aspect-square rounded-md object-cover"
                       height="64"
-                      src={project.thumbnail ?? "/placeholder.svg"}
+                      src={project.thumbnail ?? "/oneproject/placeholder.svg"}
                       width="64"
                     />
                   </TableCell>

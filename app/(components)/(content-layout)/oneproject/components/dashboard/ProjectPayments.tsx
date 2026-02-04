@@ -49,7 +49,7 @@ export default function ProjectPayments({
             <ScrollArea className="h-[calc(100vh-250px)]">
               {userProjects.map((project) => (
                 <Link
-                  href={`/dashboard/payments?pId=${project.id}`}
+                  href={`/oneproject/dashboard/payments?pId=${project.id}`}
                   key={project.id}
                   className="block mb-4"
                 >
@@ -67,7 +67,7 @@ export default function ProjectPayments({
                     <CardContent className="p-4 flex items-center">
                       <div className="w-16 h-16 mr-4 relative overflow-hidden rounded-md">
                         <Image
-                          src={project.thumbnail ?? "/placeholder.svg"}
+                          src={project.thumbnail ?? "/oneproject/placeholder.svg"}
                           alt={project.name}
                           layout="fill"
                           objectFit="cover"
@@ -121,7 +121,7 @@ export default function ProjectPayments({
                         </p>
                         <Button size="sm" asChild>
                           <Link
-                            href={`/project/invoice/${payment.id}?project=${selectedProject.slug}`}
+                            href={`/oneproject/project/invoice/${payment.id}?project=${selectedProject.slug}`}
                           >
                             <FileText className="h-4 w-4 mr-2" />
                             <span className="hidden lg:inline-block lg:mr-2">

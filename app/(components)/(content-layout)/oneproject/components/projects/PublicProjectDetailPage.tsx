@@ -300,7 +300,7 @@ export default function PublicProjectDetailPage({
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-12 w-12">
                     <AvatarFallback>
-                      {projectData.user.name.substring(0, 2).toUpperCase()}
+                      {projectData.user.username.substring(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>

@@ -70,7 +70,7 @@ export default async function Page({
 
      const safeUser = {
     id: user?.id,
-    role: user?.role,
+    roleproject: user?.roleproject,
     email: user?.email,
     username: user?.username,
     avatarUrl:user?.avatarUrl
@@ -91,7 +91,7 @@ export default async function Page({
             <ScrollArea className="h-[calc(100vh-8rem)]">
               {modules.map((module) => (
                 <Link
-                  href={`/project/modules/${module.id}?pId=${module.projectId}`}
+                  href={`/oneproject/project/modules/${module.id}?pId=${module.projectId}`}
                   key={module.id}
                   className={`p-2 mb-2 cursor-pointer rounded-lg flex items-center ${
                     activeModule?.id === module.id

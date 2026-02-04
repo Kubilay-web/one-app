@@ -22,13 +22,15 @@ export default async function page({
   // const baseUrl =
   const returnUrl = `/oneproject/project/${slug}`;
   if (!user) {
-    redirect(`/login?returnUrl=${returnUrl}`);
+    // redirect(`/login?returnUrl=${returnUrl}`);
+
+    redirect(`/`);
   }
 
 
    const safeUser = {
     id: user?.id,
-    role: user?.role,
+    roleproject: user?.roleproject,
     email: user?.email,
     username: user?.username,
     avatarUrl:user?.avatarUrl
