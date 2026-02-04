@@ -27,7 +27,7 @@ import PasswordInput from "../FormInputs/PasswordInput";
 import {
   Headset,
   Mail,
-  User,
+  UserIcon,
   Lock,
   Flag,
   MapPin,
@@ -157,7 +157,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Full Name"
                     name="name"
-                    icon={User}
+                    icon={UserIcon}
                     placeholder="John Doe"
                   />
                   <TextInput
