@@ -117,7 +117,7 @@ export default function Home() {
             <div>
                 <Cover/>
                 <ToastContainer />
-                <PrelineScript/>
+       
             </div>
         </div>
     );

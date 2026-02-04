@@ -367,9 +367,7 @@ export const getMenuItems = (user) => [
         ],
       },
 
-
-
-            {
+      {
         title: "Finance",
         icon: Dashboardicon,
         type: "sub",
@@ -415,6 +413,151 @@ export const getMenuItems = (user) => [
           },
         ],
       },
+
+      {
+        title: "Project Management",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/oneproject/home",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+          {
+            path: "/oneproject/dashboard/brand-settings",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Brand Settings",
+          },
+
+          {
+            path: "/oneproject/dashboard/categories",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Categories",
+          },
+
+          {
+            path: "/oneproject/dashboard/change-password",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Change Password",
+          },
+
+          {
+            path: "/oneproject/dashboard/clients",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Settings",
+          },
+
+          {
+            path: "/oneproject/dashboard/currency",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Currency",
+          },
+
+          {
+            path: "/oneproject/dashboard/emails",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Emails",
+          },
+
+          {
+            path: "/oneproject/dashboard/file-manager",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "File Manager",
+          },
+
+          {
+            path: "/oneproject/dashboard/guest-projects",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Guest Projects",
+          },
+
+          {
+            path: "/oneproject/dashboard/members",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Members",
+          },
+
+          {
+            path: "/oneproject/dashboard/payments",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Payments",
+          },
+
+          {
+            path: "/oneproject/dashboard/portfolio",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Portfolio",
+          },
+
+          {
+            path: "/oneproject/dashboard/products",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Products",
+          },
+
+          {
+            path: "/oneproject/dashboard/projects",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Projects",
+          },
+
+          {
+            path: "/oneproject/dashboard/subscribers",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Subscribers",
+          },
+
+          {
+            path: "/oneproject/dashboard/users",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Users",
+          },
+
+          {
+            path: "/oneproject/dashboard",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard",
+          },
+        ],
+      },
+
+  
 
       // {
       //   title: "Social",
