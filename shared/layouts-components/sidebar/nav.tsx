@@ -444,20 +444,20 @@ export const getMenuItems = (user) => [
           },
 
           {
-            path: "/oneproject/dashboard/change-password",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Change Password",
-          },
-
-          {
             path: "/oneproject/dashboard/clients",
             type: "link",
             active: false,
             selected: false,
-            title: "Settings",
+            title: "Clients",
           },
+
+          // {
+          //   path: "/oneproject/dashboard/settings",
+          //   type: "link",
+          //   active: false,
+          //   selected: false,
+          //   title: "Settings",
+          // },
 
           {
             path: "/oneproject/dashboard/currency",
@@ -515,13 +515,7 @@ export const getMenuItems = (user) => [
             title: "Portfolio",
           },
 
-          {
-            path: "/oneproject/dashboard/products",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Products",
-          },
+ 
 
           {
             path: "/oneproject/dashboard/projects",

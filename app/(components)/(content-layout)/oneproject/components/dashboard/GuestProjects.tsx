@@ -51,7 +51,9 @@ export default function GuestProjects({
           </TableHeader>
           <TableBody>
             {projects.map((project) => {
-              const link = project.projectLink.split("=")[1];
+              const projectSlug = project.projectLink.split("/project/")[1];
+              const link = `/oneproject/project/${projectSlug}`;
+
               console.log(link);
               return (
                 <TableRow key={project.id}>

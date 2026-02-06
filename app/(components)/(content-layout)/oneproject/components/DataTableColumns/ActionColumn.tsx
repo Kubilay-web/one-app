@@ -32,69 +32,66 @@ type ActionColumnProps = {
   model: any;
   editEndpoint: string;
   id: string | undefined;
-  // revPath: string;
 };
+
 export default function ActionColumn({
   row,
   model,
   editEndpoint,
   id = "",
 }: ActionColumnProps) {
-  const isActive = row.isActive;
   const [loading, setLoading] = useState(false);
+
   async function handleDelete() {
     try {
       if (model === "category") {
-        // setLoading(true);
         const res = await deleteCategory(id);
-        if (res?.ok) {
-          // setLoading(false);
-          toast.success(`${model} Deleted Successfully`);
-        }
+        if (res?.ok) toast.success(`${model} Deleted Successfully`);
       } else if (model === "client") {
-        // setLoading(true);
         const res = await deleteUser(id);
-        if (res?.ok) {
-          // setLoading(false);
-          toast.success(`${model} Deleted Successfully`);
-        }
+        if (res?.ok) toast.success(`${model} Deleted Successfully`);
       } else if (model === "project") {
         const res = await deleteProject(id);
-        // setLoading(true);
-        if (res?.ok) {
-          // setLoading(false);
-          toast.success(`${model} Deleted Successfully`);
-        }
+        if (res?.ok) toast.success(`${model} Deleted Successfully`);
       }
     } catch (error) {
-      // setLoading(false);
       console.log(error);
-      toast.error("Category Couldn't be deleted");
+      toast.error(`${model} Couldn't be deleted`);
     }
   }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
+        <Button
+          variant="ghost"
+          className="h-8 w-8 p-0 bg-white text-black hover:bg-gray-100"
+        >
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+
+      <DropdownMenuContent
+        align="end"
+        className="bg-white text-black border border-gray-200"
+      >
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
-              variant={"ghost"}
-              size={"sm"}
-              className="text-red-600 hover:text-red-700 transition-all duration-500 cursor-pointer "
+              variant="ghost"
+              size="sm"
+              className="text-red-600 hover:text-red-700 transition-all duration-300 flex items-center gap-2"
             >
-              <Trash className="w-4 h-4  mr-2 flex-shrink-0" />
+              <Trash className="w-4 h-4" />
               <span>Delete</span>
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+
+          <AlertDialogContent className="bg-white text-black border border-gray-200">
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -102,24 +99,23 @@ export default function ActionColumn({
                 {model}.
               </AlertDialogDescription>
             </AlertDialogHeader>
+
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button variant={"destructive"} onClick={() => handleDelete()}>
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete()}
+                className="bg-red-600 text-white hover:bg-red-700"
+              >
                 Permanently Delete
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        {/* <DropdownMenuItem
-          className="text-red-600 hover:text-red-700 transition-all duration-500 cursor-pointer"
-          onClick={() => handleDelete()}
-        >
-          <Trash className="w-4 h-4  mr-2 flex-shrink-0" />
-          <span>Delete</span>
-        </DropdownMenuItem> */}
-        <DropdownMenuItem>
-          <Link href={editEndpoint} className="flex item gap-2">
-            <Pencil className="w-4 h-4 " />
+
+        <DropdownMenuItem className="flex items-center gap-2 text-black hover:bg-gray-100">
+          <Link href={editEndpoint} className="flex items-center gap-2">
+            <Pencil className="w-4 h-4" />
             <span>Edit</span>
           </Link>
         </DropdownMenuItem>

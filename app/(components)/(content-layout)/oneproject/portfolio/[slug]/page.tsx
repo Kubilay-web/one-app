@@ -19,6 +19,8 @@ export default async function page({
   }
   const featured = (await getUserPublicFeaturedProjects(id as string)) || [];
   const otherProjects = (await getUserPublicOtherProjects(id as string)) || [];
+
+  console.log("other",otherProjects)
   const profile = await getPortfolioByUserId(id as string);
   return (
     <div>

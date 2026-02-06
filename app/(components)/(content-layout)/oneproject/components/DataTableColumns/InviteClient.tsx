@@ -18,7 +18,7 @@ export default function InviteClient({ row }: { row: any }) {
         "We're excited to have you on board! Please use the login details below to access the project workspace.",
       loginEmail: projectData.client.email,
       loginPassword: projectData.client?.plain ?? "",
-      loginLink: `${baseUrl}/login?returnUrl=/project/${projectData.slug}`,
+      loginLink: `${baseUrl}/?returnUrl=/project/${projectData.slug}`,
     };
     setLoading(true);
     try {

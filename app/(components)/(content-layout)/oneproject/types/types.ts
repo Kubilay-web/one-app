@@ -22,6 +22,7 @@ export type UserProps = {
   firstName: string;
   lastName: string;
   phone: string;
+  username:string;
   image: string;
   email: string;
   password: string;

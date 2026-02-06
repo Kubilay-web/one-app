@@ -139,7 +139,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Email Address"
                     name="email"
-                    icon={Mail}
+                    // icon={Mail}
                     placeholder=""
                   />
                   <TextInput
@@ -147,7 +147,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Location"
                     name="location"
-                    icon={Flag}
+                    // icon={Flag}
                     placeholder="eg Kampala Uganda"
                   />
                 </div>
@@ -157,7 +157,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Full Name"
                     name="name"
-                    icon={UserIcon}
+                    // icon={UserIcon}
                     placeholder="John Doe"
                   />
                   <TextInput
@@ -175,7 +175,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Google Calendar Booking Link"
                     name="bookingLink"
-                    icon={Link}
+                    // icon={Link}
                     placeholder=""
                   />
                   <TextInput
@@ -183,7 +183,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Twitter"
                     name="twitterUrl"
-                    icon={Twitter}
+                    // icon={Twitter}
                     placeholder=""
                   />
                 </div>
@@ -193,7 +193,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Linkedin Link"
                     name="linkedinUrl"
-                    icon={Linkedin}
+                    // icon={Linkedin}
                     placeholder=""
                   />
                   <TextInput
@@ -201,7 +201,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Instagram"
                     name="instagramUrl"
-                    icon={LayoutGrid}
+                    // icon={LayoutGrid}
                     placeholder=""
                   />
                 </div>
@@ -211,7 +211,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Youtube Link"
                     name="youtubeUrl"
-                    icon={Youtube}
+                    // icon={Youtube}
                     placeholder=""
                   />
                   <TextInput
@@ -219,7 +219,7 @@ export default function PortfolioForm({
                     errors={errors}
                     label="Github"
                     name="githubUrl"
-                    icon={Github}
+                    // icon={Github}
                     placeholder=""
                   />
                 </div>

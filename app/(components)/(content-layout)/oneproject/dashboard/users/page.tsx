@@ -1,19 +1,19 @@
 import { columns } from "./columns";
 import DataTable from "../../components/DataTableComponents/DataTable";
 
-
-
 import TableHeader from "../../components/dashboard/Tables/TableHeader";
 import { getAllUsers } from "../../actions/users";
 import { notFound, redirect } from "next/navigation";
 import { validateRequest } from "@/app/auth";
 
 export default async function ReviewPage() {
-  const {user} = await validateRequest();
+  const { user } = await validateRequest();
   const role = user?.roleproject;
+
   if (role !== "ADMIN") {
-    return notFound();
+    return <div>No authorized page.</div>;
   }
+
   const users = (await getAllUsers()) || [];
   const actualUsers = users;
   return (

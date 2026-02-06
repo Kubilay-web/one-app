@@ -40,7 +40,7 @@ const QuillEditor = dynamic(
   () => import("../../components/FormInputs/QuilEditor"),
   {
     ssr: false,
-  }
+  },
 );
 export type MailProps = {
   to: string;
@@ -106,8 +106,8 @@ export default function ComposeMailForm({
     selectedRecipient.value === "all-subs"
       ? "subs"
       : selectedRecipient.value === "all-clients"
-      ? "clients"
-      : "single";
+        ? "clients"
+        : "single";
   async function onSubmit(data: MailProps) {
     const actualRecipient = [
       ...subscribers.map((sub) => {
@@ -188,20 +188,23 @@ export default function ComposeMailForm({
   }
 
   return (
-    <div className="w-full max-w-2xl shadow-sm rounded-md m-3 border border-gray-200 mx-auto">
-      <div className="text-center border-b border-gray-200 py-4 dark:border-slate-600">
+    <div className="w-full max-w-2xl shadow-sm rounded-md m-3 border border-gray-200 mx-auto bg-white text-black">
+      <div className="text-center border-b border-gray-200 py-4">
         <div className="flex items-center justify-between px-6">
-          <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight  ">
+          <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight text-black">
             New Message
           </h1>
           <Button type="button" asChild variant={"outline"}>
             <Link href="/oneproject/dashboard">
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 text-black" />
             </Link>
           </Button>
         </div>
       </div>
-      <form className=" py-4 px-4  mx-auto " onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="py-4 px-4 mx-auto bg-white text-black"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="pt-2 space-y-2">
           <FormSelectInput
             label="Recipients"
@@ -217,30 +220,33 @@ export default function ComposeMailForm({
             label="Subject"
             name="subject"
             placeholder="New Course Launch"
+            className="bg-white text-black"
           />
           <QuillEditor
-            className="w-full"
+            className="w-full bg-white text-black border border-gray-300"
             label="Compose Mail"
             value={content}
             onChange={setContent}
           />
-          {files.length > 0 && <h2 className="pb-2 ">Attachments</h2>}
+          {files.length > 0 && <h2 className="pb-2 text-black">Attachments</h2>}
           {files && files.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2  gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {files.map((file, i) => {
                 const extension = file.title.split(".")[1];
                 return (
-                  <div key={i} className="relative mb-6">
+                  <div
+                    key={i}
+                    className="relative mb-6 bg-white text-black border border-gray-300 rounded-md p-2"
+                  >
                     <button
                       type="button"
                       onClick={() => handleImageRemove(i)}
-                      className="absolute -top-4 -right-2 bg-slate-100 text-red-600 rounded-full "
+                      className="absolute -top-4 -right-2 bg-white text-red-600 rounded-full"
                     >
                       <XCircle className="" />
                     </button>
-                    <div className="py-2 rounded-md px-6 bg-white dark:bg-slate-800 text-slate-800 flex items-center dark:text-slate-200 border border-slate-200">
+                    <div className="flex items-center space-x-2">
                       {getFileIcon(extension)}
-
                       <div className="flex flex-col">
                         <span className="line-clamp-1">{file.title}</span>
                         {file.size > 0 && (
@@ -256,17 +262,20 @@ export default function ComposeMailForm({
             </div>
           )}
         </div>
-        <div className="mt-8 flex justify-between gap-4 items-center">
+
+        <div className="mt-8 flex justify-between gap-4 items-center h-full">
           {type == "single" && (
             <Dialog>
               <DialogTrigger asChild>
                 <Button type="button" variant={"outline"}>
-                  <Paperclip className="w-5 h-5" />
+                  <Paperclip className="w-5 h-5 text-black" />
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="bg-white text-black">
                 <DialogHeader>
-                  <DialogTitle>Upload your Files</DialogTitle>
+                  <DialogTitle className="text-black">
+                    Upload your Files
+                  </DialogTitle>
                 </DialogHeader>
                 <MultipleFileUpload
                   label="Add attachments"

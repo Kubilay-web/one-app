@@ -33,6 +33,8 @@ type ClientFormProps = {
   initialData?: PrismaUser | null;
 };
 
+
+
 export default function ClientForm({
   editingId,
   initialData,
@@ -48,6 +50,7 @@ export default function ClientForm({
 
   const [imageUrl, setImageUrl] = useState(initialImage);
 
+
   const {
     register,
     handleSubmit,
@@ -55,6 +58,7 @@ export default function ClientForm({
     formState: { errors },
   } = useForm<UserProps>({
     defaultValues: {
+      username: initialData?.username,
       firstName: initialData?.firstName || "",
       lastName: initialData?.lastName || "",
       phone: initialData?.phone || "",
@@ -123,7 +127,6 @@ export default function ClientForm({
                   errors={errors}
                   label="First Name"
                   name="firstName"
-                  icon={User}
                   placeholder="First name"
                 />
                 <TextInput
@@ -131,7 +134,6 @@ export default function ClientForm({
                   errors={errors}
                   label="Last Name"
                   name="lastName"
-                  icon={User}
                   placeholder="Last name"
                 />
               </div>
@@ -140,56 +142,58 @@ export default function ClientForm({
                 <TextInput
                   register={register}
                   errors={errors}
-                  label="Phone"
-                  name="phone"
-                  icon={Headset}
-                  placeholder="+1 555 123 4567"
+                  label="Username"
+                  name="username"
+                  placeholder="Enter a username"
                 />
-                <div>
-                  <TextInput
-                    register={register}
-                    errors={errors}
-                    label="Email Address"
-                    name="email"
-                    icon={Mail}
-                    type="email"
-                    placeholder="email@example.com"
-                  />
-                  {emailErr && (
-                    <p className="text-xs text-red-500 mt-1">{emailErr}</p>
-                  )}
-                </div>
+                <TextInput
+                  register={register}
+                  errors={errors}
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  placeholder="email@example.com"
+                />
+                {emailErr && (
+                  <p className="text-xs text-red-500 mt-1">{emailErr}</p>
+                )}
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <TextInput
                   register={register}
                   errors={errors}
+                  label="Phone"
+                  name="phone"
+                  placeholder="+1 555 123 4567"
+                />
+                <TextInput
+                  register={register}
+                  errors={errors}
                   label="Country"
                   name="country"
-                  icon={Flag}
                   placeholder="USA"
                 />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
                 <TextInput
                   register={register}
                   errors={errors}
                   label="Location"
                   name="location"
-                  icon={MapPin}
                   placeholder="New York"
                 />
+                {!editingId && (
+                  <PasswordInput
+                    register={register}
+                    errors={errors}
+                    label="Password"
+                    name="password"
+                    placeholder="••••••••"
+                  />
+                )}
               </div>
-
-              {!editingId && (
-                <PasswordInput
-                  register={register}
-                  errors={errors}
-                  label="Password"
-                  name="password"
-                  icon={Lock}
-                  placeholder="••••••••"
-                />
-              )}
 
               <div className="space-y-4">
                 <TextInput
@@ -197,7 +201,6 @@ export default function ClientForm({
                   errors={errors}
                   label="Company Name"
                   name="companyName"
-                  icon={Building}
                   placeholder="Space Corp"
                 />
                 <TextInput
@@ -205,7 +208,6 @@ export default function ClientForm({
                   errors={errors}
                   label="Company Description"
                   name="companyDescription"
-                  icon={Pencil}
                   placeholder="Leading space exploration company"
                 />
               </div>

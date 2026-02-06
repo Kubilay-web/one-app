@@ -113,7 +113,7 @@ model User {
 
 
 
-  displayName  String
+  displayName  String?
   email        String? @unique
   passwordHash String?
   googleId     String? @unique
@@ -2543,7 +2543,7 @@ model Member {
   id        String   @id @default(cuid()) @map("_id")
   name      String
   email     String
-  role      String
+  roleproject      String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
   createdAt DateTime @default(now())

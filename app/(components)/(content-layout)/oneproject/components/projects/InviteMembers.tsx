@@ -21,7 +21,6 @@ import { InvitationDetailsProps, sendMemberInvitation } from "../../actions/emai
 import { ProjectData } from "../../types/types";
 import toast from "react-hot-toast";
 
-// Mock data for members
 export default function InviteMembers({
   allMembers,
   projectData,
@@ -32,6 +31,7 @@ export default function InviteMembers({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMembers, setSelectedMembers] = useState<ExistingUser[]>([]);
+  const [sending, setSending] = useState(false);
 
   const filteredMembers = allMembers.filter(
     (member) =>
@@ -41,64 +41,65 @@ export default function InviteMembers({
 
   const handleSelectMember = (memberId: string) => {
     const member = allMembers.find((user) => user.id === memberId);
-    if (!member) {
-      return;
+    if (!member) return;
+    if (!selectedMembers.some((m) => m.id === member.id)) {
+      setSelectedMembers([...selectedMembers, member]);
     }
-    setSelectedMembers([...selectedMembers, member]);
     setSearchQuery("");
   };
 
   const handleRemoveSelected = (memberId: string) => {
-    const updatedMembers = selectedMembers.filter(
-      (member) => member.id !== memberId
-    );
-    setSelectedMembers(updatedMembers);
+    setSelectedMembers(selectedMembers.filter((member) => member.id !== memberId));
   };
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const projectDetails: InvitationDetailsProps = {
-    loginLink: `${baseUrl}/login?returnUrl=/project/${projectData.slug}`,
+    loginLink: `${baseUrl}/?returnUrl=/project/${projectData.slug}`,
     projectName: projectData.name,
     projectOwner: projectData.user.name,
     projectOwnerId: projectData.userId,
   };
-  const [sending, setSending] = useState(false);
+
   const handleInvite = async () => {
-    console.log("Inviting members:", selectedMembers);
     setSending(true);
     try {
-      const res = await sendMemberInvitation(selectedMembers, projectDetails);
+      await sendMemberInvitation(selectedMembers, projectDetails);
       setIsOpen(false);
       setSelectedMembers([]);
       setSearchQuery("");
-      setSending(false);
       toast.success("Invite Sent Successfully");
     } catch (error) {
+      console.error(error);
+      toast.error("Failed to send invites");
+    } finally {
       setSending(false);
-      console.log(error);
     }
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant={"outline"} size={"sm"}>
+        <Button variant="outline" size="sm">
           <Plus className="w-4 h-4 mr-2" />
           Invite
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px]">
+      <SheetContent className="w-[400px] sm:w-[540px] bg-white text-black">
         <SheetHeader>
           <SheetTitle>Invite Members</SheetTitle>
           <SheetDescription>
             Search and select members to invite to your project.
           </SheetDescription>
         </SheetHeader>
+
         <div className="py-4 space-y-4">
           <Input
             placeholder="Search members..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-gray-100 text-black"
           />
+
           {selectedMembers.length > 0 && (
             <div>
               <h3 className="text-sm font-medium mb-2">Selected Members:</h3>
@@ -107,12 +108,16 @@ export default function InviteMembers({
                   {selectedMembers.map((user) => {
                     const member = allMembers.find((m) => m.id === user.id);
                     return (
-                      <Badge key={user.id} variant="secondary" className="py-1">
+                      <Badge
+                        key={user.id}
+                        variant="secondary"
+                        className="py-1 flex items-center gap-1"
+                      >
                         {member?.name}
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-4 w-4 ml-1 hover:bg-transparent"
+                          className="h-4 w-4 hover:bg-transparent"
                           onClick={() => handleRemoveSelected(user.id)}
                         >
                           <X className="h-3 w-3" />
@@ -125,50 +130,42 @@ export default function InviteMembers({
               </ScrollArea>
             </div>
           )}
+
           {searchQuery && (
-            <ScrollArea className="h-[300px] rounded-md border p-4">
+            <ScrollArea className="h-[300px] rounded-md border border-gray-200 p-4 bg-white text-black">
               {filteredMembers.length > 0 ? (
                 filteredMembers.map((member) => (
-                  <div
-                    key={member.id}
-                    className="flex items-center space-x-2 mb-2"
-                  >
+                  <div key={member.id} className="flex items-center space-x-2 mb-2">
                     <Checkbox
                       id={`member-${member.id}`}
-                      checked={selectedMembers.some(
-                        (user) => user.id === member.id
-                      )}
+                      checked={selectedMembers.some((user) => user.id === member.id)}
                       onCheckedChange={() => handleSelectMember(member.id)}
                     />
                     <label
                       htmlFor={`member-${member.id}`}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-sm font-medium leading-none cursor-pointer"
                     >
                       <div>{member.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {member.email}
-                      </div>
+                      <div className="text-sm text-gray-500">{member.email}</div>
                     </label>
                   </div>
                 ))
               ) : (
-                <p className="text-center text-muted-foreground">
-                  No members found
-                </p>
+                <p className="text-center text-gray-500">No members found</p>
               )}
             </ScrollArea>
           )}
+
           {!searchQuery && (
-            <p className="text-center text-muted-foreground">
-              Type to search for members
-            </p>
+            <p className="text-center text-gray-500">Type to search for members</p>
           )}
         </div>
+
         <SheetFooter>
           {sending ? (
-            <Button disabled>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Sending Invite Please wait
+            <Button disabled className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Sending Invite Please Wait
             </Button>
           ) : (
             <Button

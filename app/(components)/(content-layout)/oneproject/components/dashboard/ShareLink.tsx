@@ -12,9 +12,6 @@ import {
 import { Input } from "../../components/ui/input";
 import { Share2, Copy, Check, Twitter, Linkedin } from "lucide-react";
 import toast from "react-hot-toast";
-// import { toast } from "sonner";
-// import { toast } from "../../hooks/use-toast";
-// import { toast } from "../../components/ui/use-toast";
 
 interface ShareLinkProps {
   link: string;
@@ -53,24 +50,29 @@ export default function ShareLink({ link }: ShareLinkProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="bg-white text-black border border-gray-300 hover:bg-gray-100">
           <Share2 className="mr-2 h-4 w-4" />
           Share
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-white text-black">
         <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
+          <DialogTitle className="text-black">Share link</DialogTitle>
         </DialogHeader>
         <div className="flex items-center space-x-2">
-          <Input id="link" value={link} readOnly className="flex-1" />
-          <Button size="sm" className="px-3" onClick={handleCopy}>
+          <Input
+            id="link"
+            value={link}
+            readOnly
+            className="flex-1 bg-white text-black border border-gray-300 focus:ring-2 focus:ring-blue-500"
+          />
+          <Button
+            size="sm"
+            className="px-3 bg-white text-black border border-gray-300 hover:bg-gray-100"
+            onClick={handleCopy}
+          >
             <span className="sr-only">Copy</span>
-            {copied ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </Button>
         </div>
         <div className="flex justify-around mt-4">
@@ -78,7 +80,7 @@ export default function ShareLink({ link }: ShareLinkProps) {
             onClick={shareOnTwitter}
             variant="outline"
             size="sm"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 bg-white text-black border border-gray-300 hover:bg-gray-100"
           >
             <Twitter className="h-4 w-4" />
             <span>Twitter</span>
@@ -87,7 +89,7 @@ export default function ShareLink({ link }: ShareLinkProps) {
             onClick={shareOnLinkedIn}
             variant="outline"
             size="sm"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 bg-white text-black border border-gray-300 hover:bg-gray-100"
           >
             <Linkedin className="h-4 w-4" />
             <span>LinkedIn</span>
@@ -96,7 +98,7 @@ export default function ShareLink({ link }: ShareLinkProps) {
             onClick={shareOnWhatsApp}
             variant="outline"
             size="sm"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 bg-white text-black border border-gray-300 hover:bg-gray-100"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

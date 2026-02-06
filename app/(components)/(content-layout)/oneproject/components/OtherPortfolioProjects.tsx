@@ -15,7 +15,7 @@ const Card = ({
 }) => {
   return (
     <Link
-      href={`/public/project/${slug}`}
+      href={`/oneproject/public/project/${slug}`}
       className={cn(
         "relative w-64 cursor-pointer overflow-hidden rounded-xl border p-4",
         // light styles

@@ -86,103 +86,122 @@ export default function DataTable<TData, TValue>({
   });
   // console.log(searchResults);
   return (
-    <div className="space-y-4">
-      {model === "project" && (
-        <ProjectSummary data={isSearch ? searchResults : filteredData} />
-      )}
-      <div className="flex justify-between items-center gap-8">
-        <div className="flex-1 w-full">
-          <SearchBar
-            data={data}
-            onSearch={setSearchResults}
-            setIsSearch={setIsSearch}
-          />
-        </div>
-        <div className="flex items-center gap-2 ">
-          <DateRangeFilter
-            data={data}
-            onFilter={setFilteredData}
-            setIsSearch={setIsSearch}
-          />
-          <DateFilters
-            data={data}
-            onFilter={setFilteredData}
-            setIsSearch={setIsSearch}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1">
-                <ListFilter className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Filter
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem checked>
-                Active
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DataTableViewOptions table={table} />
-        </div>
+    
+     <div className="space-y-4 bg-white text-black">
+    {model === "project" && (
+      <ProjectSummary data={isSearch ? searchResults : filteredData} />
+    )}
+
+    {/* Filters */}
+    <div className="flex flex-wrap justify-between items-center gap-4">
+      <div className="flex-1 w-full">
+        <SearchBar
+          data={data}
+          onSearch={setSearchResults}
+          setIsSearch={setIsSearch}
+        />
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+      <div className="flex flex-wrap items-center gap-2">
+        <DateRangeFilter
+          data={data}
+          onFilter={setFilteredData}
+          setIsSearch={setIsSearch}
+        />
+        <DateFilters
+          data={data}
+          onFilter={setFilteredData}
+          setIsSearch={setIsSearch}
+        />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1 bg-white text-black border-gray-300"
+            >
+              <ListFilter className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Filter
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="bg-white text-black border-gray-200"
+          >
+            <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem checked>
+              Active
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DataTableViewOptions table={table} />
       </div>
-      <DataTablePagination table={table} />
     </div>
+
+    {/* Table */}
+    <div className="rounded-md border border-gray-200 bg-white">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="bg-gray-50">
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  className="text-black font-medium"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+                className="hover:bg-gray-100 data-[state=selected]:bg-gray-200"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className="text-black">
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center text-gray-500"
+              >
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+
+    <DataTablePagination table={table} />
+  </div>
   );
 }

@@ -34,7 +34,7 @@ export default function Portfolio({
   profile: PortfolioProfile;
 }) {
   return (
-    <div className="min-h-screen bg-gray-100 py-12   ">
+    <div className="min-h-screen bg-gray-100 py-12">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-1/3">
@@ -110,18 +110,38 @@ export default function Portfolio({
           </div>
 
           <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {projects.map((project, index) => (
+            {projects && projects.length > 0 ? (
+              projects.map((project, index) => (
+                <PortfolioCard key={project.id ?? index} project={project} />
+              ))
+            ) : (
+              <div className="col-span-full text-center text-gray-500 py-10">
+                No projects found
+              </div>
+            )}
+            {/* {projects.map((project, index) => (
               // <ProjectCard key={index} project={project} />
               <PortfolioCard key={index} project={project} />
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
-      {otherProjects.length > 0 && (
+
+      {otherProjects.length > 0 ? (
         <div className="py-16">
           <OtherPortfolioProjects otherProjects={otherProjects} />
         </div>
+      ) : (
+        <div className="py-16 text-center text-gray-500">
+          No other projects found
+        </div>
       )}
+
+      {/* {otherProjects.length > 0 && (
+        <div className="py-16">
+          <OtherPortfolioProjects otherProjects={otherProjects} />
+        </div>
+      )} */}
     </div>
   );
 }

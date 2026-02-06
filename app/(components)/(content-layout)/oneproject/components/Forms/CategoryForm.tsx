@@ -107,7 +107,7 @@ export default function CategoryForm({
             </CardHeader>
             <CardContent>
               <div className="grid gap-6">
-                <div className="grid gap-3">
+                <div className="grid gap-3 ">
                   <TextInput
                     register={register}
                     errors={errors}

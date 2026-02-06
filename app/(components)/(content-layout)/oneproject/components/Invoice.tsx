@@ -13,17 +13,22 @@ import toast from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { formatCurrency } from "../lib/formatCurrency";
 import useCurrencySettings from "../hooks/useCurrencySettings";
+import { useSession } from "@/app/SessionProvider";
 
 export default function Invoice({
   invoiceDetails,
   project,
-  role,
 }: {
   invoiceDetails: InvoiceDetails | null;
   project: string;
-  role: string | undefined;
 }) {
   const { defaultCurrency, exchangeRate } = useCurrencySettings();
+
+  const session=useSession();
+  const user =session.user;
+  const role=user.roleproject;
+
+  
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",

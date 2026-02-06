@@ -78,10 +78,10 @@ import DomainCard from "./DomainCard";
 import PaymentDeleteButton from "./PaymentDeleteButton";
 import useCurrencySettings from "../../hooks/useCurrencySettings";
 import { formatCurrency } from "../../lib/formatCurrency";
+import { useSession } from "@/app/SessionProvider";
 
 type SafeUser = {
   id: string;
-  roleproject: string | null;
   email: string;
   username: string;
   avatarUrl:string;
@@ -89,22 +89,14 @@ type SafeUser = {
 
 export default function ProjectDetailPage({
   projectData,
-  user,
   existingUsers,
 }: {
   projectData: ProjectData;
-  user: SafeUser | null;
   existingUsers: ExistingUser[];
 }) {
   const { defaultCurrency, exchangeRate } = useCurrencySettings();
 
-  const safeUser = {
-    id: user?.id,
-    roleproject: user?.roleproject,
-    email: user?.email,
-    username: user?.username,
-    avatarUrl:user?.avatarUrl
-  };
+
 
   // const formatCurrency = (amount: number) => {
   //   const convertedAmount = amount * exchangeRate;
@@ -116,7 +108,12 @@ export default function ProjectDetailPage({
   //   }).format(convertedAmount);
   // };
 
-  let role = user?.roleproject;
+  const session= useSession();
+  const user=session.user;
+
+
+  const role=user?.roleproject
+
 
   if (user?.id !== projectData.user.id) {
     role = "MEMBER";
@@ -411,7 +408,7 @@ export default function ProjectDetailPage({
                         projectId={projectData.id}
                         userId={user?.id}
                         userName={user?.username}
-                        userRole={user?.role}
+                        userRole={user?.roleproject}
                       />
                     </div>
                   </CardTitle>

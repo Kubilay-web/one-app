@@ -14,7 +14,7 @@ export default async function page() {
           <GuestProjects projects={projects} />
         </div>
       ) : (
-        <div className="min-h-screen flex items-center justify-center text-xl">
+        <div className="min-h-screen flex items-center justify-center text-lg">
           <h2>You dont Have any Guest Projects Yet</h2>
         </div>
       )}

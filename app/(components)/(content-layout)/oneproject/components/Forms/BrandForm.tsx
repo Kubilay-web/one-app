@@ -100,7 +100,7 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
                     errors={errors}
                     label="Email Address"
                     name="email"
-                    icon={Mail}
+                    // icon={Mail}
                     placeholder=""
                   />
                   <TextInput
@@ -108,7 +108,7 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
                     errors={errors}
                     label="Phone"
                     name="phone"
-                    icon={Headphones}
+                    // icon={Headphones}
                     placeholder=""
                   />
                 </div>
@@ -118,7 +118,7 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
                     errors={errors}
                     label="Country"
                     name="country"
-                    icon={Flag}
+                    // icon={Flag}
                     placeholder="eg USA"
                   />
                   <TextInput
@@ -126,7 +126,7 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
                     errors={errors}
                     label="Location"
                     name="location"
-                    icon={MapPin}
+                    // icon={MapPin}
                     placeholder="Canada"
                   />
                 </div>
@@ -137,7 +137,7 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
                     errors={errors}
                     label="Company Name"
                     name="companyName"
-                    icon={Building}
+                    // icon={Building}
                     placeholder="Space Corp"
                   />
                   <TextInput
@@ -145,7 +145,7 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
                     errors={errors}
                     label="One Company Description"
                     name="companyDescription"
-                    icon={Pencil}
+                    // icon={Pencil}
                     placeholder="Leading space exploration company"
                   />
                 </div>

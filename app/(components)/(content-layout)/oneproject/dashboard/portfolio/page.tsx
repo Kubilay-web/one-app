@@ -17,7 +17,7 @@ export default async function page() {
   const count = (await getUserProjectsCount(user?.id)) ?? 0;
   const initialData = await getPortfolioByUserId(user?.id ?? "");
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const link = `${baseUrl}/oneproject/dashboard/portfolio/${slug}?id=${user?.id}`;
+  const link = `${baseUrl}/oneproject/portfolio/${slug}?id=${user?.id}`;
 
   const safeUser = user
     ? {
@@ -37,7 +37,7 @@ export default async function page() {
           <Button asChild>
             <Link
               target="_blank"
-              href={`/oneproject/dashboard/portfolio/${slug}?id=${user?.id}`}
+              href={`/oneproject/portfolio/${slug}?id=${user?.id}`}
             >
               <Eye className="mr-2 w-4 h-4" />
               Preview

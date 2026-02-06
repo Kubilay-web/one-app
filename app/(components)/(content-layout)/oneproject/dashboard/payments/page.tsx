@@ -14,7 +14,7 @@ export default async function page() {
       {userProjects.length > 0 ? (
         <ProjectPayments userProjects={userProjects} />
       ) : (
-        <div className="">
+        <div className="min-h-screen flex items-center justify-center text-lg">
           <h2>No Projects Yet</h2>
         </div>
       )}

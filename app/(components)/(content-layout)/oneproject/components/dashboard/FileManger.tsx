@@ -2,16 +2,9 @@
 import { useState } from "react";
 import {
   Folder,
-  File,
-  Upload,
-  Plus,
-  MoreVertical,
   ArrowLeft,
   X,
-  FolderPlus,
-  Pencil,
   Trash2,
-  Share2,
   Download,
 } from "lucide-react";
 import { ScrollArea } from "../../components/ui/scroll-area";
@@ -23,7 +16,6 @@ import {
   SheetTitle,
   SheetClose,
 } from "../../components/ui/sheet";
-
 
 import Link from "next/link";
 import FolderForm from "../Forms/FolderForm";
@@ -45,28 +37,18 @@ import {
   FaImage,
 } from "react-icons/fa";
 import { MdTextSnippet } from "react-icons/md";
-import { deleteFile,deleteFolder } from "../../actions/fileManager";
+import { deleteFile, deleteFolder } from "../../actions/fileManager";
 import toast from "react-hot-toast";
 
-interface FileType {
-  name: string;
-  type: "pdf" | "xls";
-}
-
 const VibrantProgress = ({ value }: { value: number }) => {
-  const getColorClass = (percentage: number) => {
-    return percentage > 50 ? "bg-red-500" : "bg-green-500";
-  };
+  const getColorClass = (percentage: number) =>
+    percentage > 50 ? "bg-red-500" : "bg-green-500";
 
   return (
-    <div className="w-48 h-2 bg-lime-50 rounded-full overflow-hidden">
+    <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
       <div
-        className={`h-full rounded-full ${getColorClass(value)}`}
+        className={`h-full ${getColorClass(value)}`}
         style={{ width: `${value}%` }}
-        role="progressbar"
-        aria-valuenow={value}
-        aria-valuemin={0}
-        aria-valuemax={100}
       />
     </div>
   );
@@ -80,217 +62,133 @@ export default function FileManager({
   userFolders: UserFolder[];
 }) {
   const [selectedFile, setSelectedFile] = useState<PrismaFile | null>(null);
-  const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [extension, setExtension] = useState("");
 
   const params = useSearchParams();
   const selectedFolderId = params.get("fId") ?? "";
+
   const selectedFolder =
-    userFolders.find((folder) => folder.id === selectedFolderId) ||
-    userFolders[0];
-  const [extension, setExtension] = useState("");
+    userFolders.find((f) => f.id === selectedFolderId) ||
+    userFolders[0] || { files: [], name: "", id: "" };
 
-  const handleFileClick = (file: PrismaFile): void => {
-    setSelectedFile(file);
-    const fiLeExt = file.name.split(".").pop() as string;
-    setExtension(fiLeExt);
-    console.log(extension);
-    setIsSheetOpen(true);
-  };
+  const usedSpace = selectedFolder.files.reduce(
+    (acc, item) => acc + item.size,
+    0
+  );
 
-  // Example usage percentage
-  const usagePercentage = 65; // 65% used
-  const totalSpace = Number(((2 * 1073741824) / userFolders.length).toFixed(2));
-  const usedSpace = selectedFolder.files.reduce((acc, item) => {
-    return acc + item.size;
-  }, 0);
-  function getFileIcon(extension: string | undefined) {
+  function getFileIcon(extension?: string) {
+    const base =
+      "w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg";
     switch (extension) {
       case "pdf":
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-red-100">
-            <FaFilePdf className="w-6 h-6 flex-shrink-0 text-red-500" />
-          </div>
-        );
+        return <div className={`${base} bg-red-200`}><FaFilePdf className="text-red-600" /></div>;
       case "jpg":
       case "jpeg":
       case "png":
-      case "gif":
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-blue-100">
-            <FaImage className="w-6 h-6 flex-shrink-0 text-blue-500" />
-          </div>
-        );
+        return <div className={`${base} bg-blue-200`}><FaImage className="text-blue-600" /></div>;
       case "doc":
       case "docx":
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-blue-100">
-            <FaFileWord className="w-6 h-6 flex-shrink-0 text-blue-500" />
-          </div>
-        );
+        return <div className={`${base} bg-blue-200`}><FaFileWord className="text-blue-600" /></div>;
       case "xls":
       case "xlsx":
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-green-100">
-            <FaFileExcel className="w-6 h-6 flex-shrink-0 text-green-500" />
-          </div>
-        );
+        return <div className={`${base} bg-green-200`}><FaFileExcel className="text-green-600" /></div>;
       case "ppt":
       case "pptx":
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-orange-100">
-            <FaFilePowerpoint className="w-6 h-6 flex-shrink-0 text-orange-500" />
-          </div>
-        );
+        return <div className={`${base} bg-orange-200`}><FaFilePowerpoint className="text-orange-600" /></div>;
       case "zip":
-      case "gzip":
-      case "tar":
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-yellow-100">
-            <FaFileArchive className="w-6 h-6 flex-shrink-0 text-yellow-600" />
-          </div>
-        );
+        return <div className={`${base} bg-yellow-200`}><FaFileArchive className="text-yellow-700" /></div>;
       case "txt":
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-gray-100">
-            <MdTextSnippet className="w-6 h-6 flex-shrink-0 text-gray-500" />
-          </div>
-        );
+        return <div className={`${base} bg-gray-200`}><MdTextSnippet className="text-gray-700" /></div>;
       default:
-        return (
-          <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center rounded-lg bg-gray-100">
-            <FaFileAlt className="w-6 h-6 flex-shrink-0 text-gray-500" />
-          </div>
-        ); // Default icon for other file types
+        return <div className={`${base} bg-gray-200`}><FaFileAlt className="text-gray-700" /></div>;
     }
   }
-  async function handleFolderDelete(id: string) {
-    try {
-      await deleteFolder(id);
-      toast.success("Folder Deleted successfully!");
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  const [isDownloading, setIsDownloading] = useState(false);
-  const handleDownload = async (url: string, fileName: string = "Download") => {
-    setIsDownloading(true);
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Download failed");
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(blobUrl);
-      toast.success("Download Successful");
-    } catch (error) {
-      console.error("Download error:", error);
-      toast.error("Download Failed");
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
-  const handleFileDelete = async (id: string) => {
-    try {
-      await deleteFile(id);
-      toast.success("File Deleted successfully!");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleShare = () => {
-    // Implement share logic here
-    console.log("Share clicked");
-  };
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="w-64 bg-white border-r">
-        <div className="p-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Folders</h2>
+    <div className="flex h-screen bg-white text-black">
+      {/* SIDEBAR */}
+      <div className="w-64 bg-white border-r border-gray-200">
+        <div className="p-4 flex justify-between">
+          <h2 className="font-semibold">Folders</h2>
           <FolderForm userId={userId} />
         </div>
+
         <ScrollArea className="h-[calc(100vh-60px)]">
-          {userFolders.map((folder) => {
-            const usedSpace = folder.files.reduce((acc, item) => {
-              return acc + item.size;
-            }, 0);
-            return (
-              <Link
-                href={`/oneproject/dashboard/file-manager?fId=${folder.id}`}
-                key={folder.name}
-                className={cn(
-                  "flex items-center border-b p-4 hover:bg-blue-50 ",
-                  selectedFolder.id === folder.id && "bg-blue-50"
-                )}
-              >
-                <Folder className="mr-2 text-blue-500" />
-                <div>
-                  <div>{folder.name}</div>
-                  <div className="text-sm text-gray-500">
-                    {folder.files.length} items · {formatBytes(usedSpace)}
-                  </div>
+          {userFolders.map((folder) => (
+            <Link
+              key={folder.id}
+              href={`/oneproject/dashboard/file-manager?fId=${folder.id}`}
+              className={cn(
+                "flex items-center p-4 border-b border-gray-200 hover:bg-gray-100",
+                selectedFolder.id === folder.id && "bg-gray-100"
+              )}
+            >
+              <Folder className="mr-2 text-blue-600" />
+              <div>
+                <div className="font-medium">{folder.name}</div>
+                <div className="text-sm text-gray-700">
+                  {folder.files.length} items ·{" "}
+                  {formatBytes(
+                    folder.files.reduce((a, b) => a + b.size, 0)
+                  )}
                 </div>
-              </Link>
-            );
-          })}
+              </div>
+            </Link>
+          ))}
         </ScrollArea>
       </div>
-      <div className="flex-1 overflow-auto">
-        <div className="p-4 flex justify-between items-center border-b">
-          <div className="flex items-center">
+
+      {/* MAIN */}
+      <div className="flex-1 overflow-auto bg-white">
+        <div className="p-4 flex justify-between items-center border-b border-gray-200">
+          <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon">
               <ArrowLeft />
             </Button>
-            <span className="ml-2 text-lg font-semibold">
-              {selectedFolder.name}
-            </span>
-            <div className="ml-6 flex items-center space-x-2">
-              {/* <EditFolderName /> */}
-              <FolderForm
-                initialContent={selectedFolder?.name}
-                editingId={selectedFolder.id}
-                userId={userId}
-              />
-              <button
-                onClick={() => handleFolderDelete(selectedFolder.id)}
-                className="text-red-500"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
+            <span className="text-lg font-semibold">{selectedFolder.name}</span>
+            <FolderForm
+              initialContent={selectedFolder.name}
+              editingId={selectedFolder.id}
+              userId={userId}
+            />
+            <button
+              onClick={() => deleteFolder(selectedFolder.id)}
+              className="text-red-600"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
           </div>
-          <div className="flex space-x-2">
-            <FileUploadForm folderId={selectedFolder.id} />
-          </div>
+          <FileUploadForm folderId={selectedFolder.id} />
         </div>
+
         <div className="p-4">
           <div className="mb-4">
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-700">
               Folders / {selectedFolder.name}
             </div>
-            <div className="flex items-center mt-1">
-              <VibrantProgress value={usagePercentage} />
-              <span className="ml-2 text-sm font-medium text-gray-700">
-                {formatBytes(usedSpace)} of {formatBytes(totalSpace)} used
+            <div className="flex items-center gap-2 mt-1">
+              <VibrantProgress value={65} />
+              <span className="text-sm text-gray-800">
+                {formatBytes(usedSpace)} used
               </span>
             </div>
           </div>
+
           <div className="grid grid-cols-4 gap-4">
-            {selectedFolder.files.map((file, index) => {
-              const fiLeExt = file.name.split(".").pop() as string;
+            {selectedFolder.files.map((file) => {
+              const ext = file.name.split(".").pop();
               return (
                 <button
-                  key={index}
-                  className="p-4 border rounded-lg text-center hover:bg-gray-50"
-                  onClick={() => handleFileClick(file)}
+                  key={file.id}
+                  onClick={() => {
+                    setSelectedFile(file);
+                    setExtension(ext || "");
+                    setIsSheetOpen(true);
+                  }}
+                  className="p-4 border border-gray-200 rounded-lg hover:bg-gray-100 text-black"
                 >
-                  {getFileIcon(fiLeExt)}
+                  {getFileIcon(ext)}
                   <div className="text-sm truncate">{file.name}</div>
                 </button>
               );
@@ -298,8 +196,10 @@ export default function FileManager({
           </div>
         </div>
       </div>
+
+      {/* SHEET */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent>
+        <SheetContent className="bg-white text-black">
           <SheetHeader>
             <SheetTitle>File Information</SheetTitle>
             <SheetClose asChild>
@@ -308,60 +208,45 @@ export default function FileManager({
               </Button>
             </SheetClose>
           </SheetHeader>
-          {/* const extension = file.title.split(".").pop();  */}
+
           {selectedFile && (
-            <div className="mt-4">
-              <div className="mb-4">
-                {getFileIcon(extension)}
-                <div className="text-center font-semibold">
-                  {selectedFile.name}
-                </div>
+            <div className="mt-4 space-y-2">
+              {getFileIcon(extension)}
+              <div className="font-semibold text-center">
+                {selectedFile.name}
               </div>
-              <div className="space-y-2 text-sm">
+
+              <div className="text-sm space-y-1">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Created</span>
+                  <span className="text-gray-700">Created</span>
                   <span>{getNormalDate(selectedFile.createdAt)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Size</span>
+                  <span className="text-gray-700">Size</span>
                   <span>{formatBytes(selectedFile.size)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Format</span>
-                  <span>{selectedFile.type}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Last Modified</span>
+                  <span className="text-gray-700">Last Modified</span>
                   <span>{getModifiedDate(selectedFile.updatedAt)}</span>
                 </div>
               </div>
-              <div className="border-t pt-3 mt-3 flex flex-col sm:flex-row gap-4 items-center justify-center p-4 bg-background ">
+
+              <div className="flex gap-2 pt-4">
                 <Button
                   onClick={() =>
-                    handleDownload(selectedFile.url, selectedFile.name)
+                    window.open(selectedFile.url, "_blank")
                   }
-                  disabled={isDownloading}
-                  className="w-full sm:w-auto"
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  {isDownloading ? "Downloading..." : "Download"}
+                  Download
                 </Button>
                 <Button
-                  onClick={() => handleFileDelete(selectedFile.id)}
                   variant="destructive"
-                  className="w-full sm:w-auto"
+                  onClick={() => deleteFile(selectedFile.id)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
                 </Button>
-                {/* <Button
-                  onClick={handleShare}
-                  variant="outline"
-                  className="w-full sm:w-auto"
-                >
-                  <Share2 className="mr-2 h-4 w-4" />
-                  Share
-                </Button> */}
               </div>
             </div>
           )}

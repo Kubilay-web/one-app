@@ -46,7 +46,7 @@ export async function getInvoiceById(id: string) {
     const user = await db.user.findFirst({
       where: {
         id: payment?.userId,
-        OR: [{ role: "USER" }, { role: "ADMIN" }],
+        OR: [{ roleproject: "USER" }, { roleproject: "ADMIN" }],
       },
       select: {
         name: true,

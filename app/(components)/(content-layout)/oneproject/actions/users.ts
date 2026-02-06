@@ -11,84 +11,96 @@ import db from "@/app/lib/db";
 import { UserProps } from "../types/types";
 import bcrypt, { compare } from "bcrypt";
 import { revalidatePath } from "next/cache";
+import { randomUUID } from "crypto";
+import { hash } from "@node-rs/argon2"; // <-- node-rs argon2
 
 
- export async function createUser(data: UserProps) {
-   const {
-     email,
-     password,
-     firstName,
-     lastName,
-     name,
-     phone,
-     image,
-     roleproject,
-     country,
-     location,
-     userId,
-     companyDescription,
-     companyName,
-   } = data;
-   try {
 
+export async function createUser(data: UserProps) {
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    name,
+    phone,
+    image,
+    roleproject,
+    country,
+    location,
+    userId,
+    companyDescription,
+    companyName,
+    username, // <-- artık username zorunlu
+  } = data;
 
-    //2.22.56
-     // Hash the PAASWORD
-     if (isEmailBlacklisted(email)) {
-       return {
-         error: `Please use a valid, non-temporary email address.`,
-         status: 409,
-         data: null,
-       };
-     }
-     const hashedPassword = await bcrypt.hash(password, 10);
-     const existingUser = await db.user.findUnique({
-       where: {
-         email,
-       },
-     });
-     if (existingUser) {
-       return {
-         error: `Email already exists`,
-         status: 409,
-         data: null,
-       };
-     }
-     const newUser = await db.user.create({
-       data: {
-         email,
-         password: hashedPassword,
-         plain: roleproject === "CLIENT" ? password : "",
-         firstName,
-         lastName,
-         name,
-         phone,
-         image,
-         roleproject,
-         country,
-         location,
-         userId,
-         companyDescription,
-         companyName,
-       },
-     });
-     revalidatePath("/oneproject/dashboard/clients");
-     revalidatePath("/oneproject/dashboard/users");
-     console.log(newUser);
-     return {
-       error: null,
-       status: 200,
-       data: newUser,
-     };
-   } catch (error) {
-     console.log(error);
-     return {
-       error: `Something Went wrong, Please try again`,
-       status: 500,
-       data: null,
-     };
-   }
- }
+  try {
+    // Email blacklist kontrolü
+    if (isEmailBlacklisted(email)) {
+      return {
+        error: `Please use a valid, non-temporary email address.`,
+        status: 409,
+        data: null,
+      };
+    }
+
+    // Şifreyi Argon2 ile hashle
+    const hashedPassword = await hash(password);
+
+    // Email zaten varsa hata döndür
+    const existingUser = await db.user.findUnique({
+      where: { email },
+    });
+    if (existingUser) {
+      return {
+        error: `Email already exists`,
+        status: 409,
+        data: null,
+      };
+    }
+
+    // Yeni kullanıcı oluştur
+    const newUser = await db.user.create({
+      data: {
+        id: randomUUID(),
+        email,
+        passwordHash: hashedPassword, // passwordHash alanına kaydediyoruz
+        plain: roleproject === "CLIENT" ? password : "",
+        firstName,
+        lastName,
+        name,
+        phone,
+        image,
+        roleproject,
+        country,
+        location,
+        userId,
+        companyDescription,
+        companyName,
+        username, // username ekledik
+      },
+    });
+
+    // Cache'i revalidate et
+    revalidatePath("/oneproject/dashboard/clients");
+    revalidatePath("/oneproject/dashboard/users");
+
+    console.log(newUser);
+
+    return {
+      error: null,
+      status: 200,
+      data: newUser,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error: `Something went wrong, please try again`,
+      status: 500,
+      data: null,
+    };
+  }
+}
 
 
 
@@ -146,6 +158,7 @@ export type ExistingUser = {
   id: string;
   name: string;
   email: string;
+  username:string;
 };
 
 
@@ -154,12 +167,13 @@ export async function getExistingUsers() {
   try {
     const users = await db.user.findMany({
       where: {
-        roleproject: "USER",
+        roleproject: "CLIENT",
       },
       select: {
         id: true,
         name: true,
         email: true,
+        username:true
       },
     });
     return users;

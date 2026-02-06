@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import ReactQuill from "react-quill";
+import ReactQuill from "react-quill-new";
 import "react-quill/dist/quill.snow.css";
 export default function QuillEditor({
   label,

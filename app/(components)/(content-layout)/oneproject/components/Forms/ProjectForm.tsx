@@ -60,7 +60,7 @@ export default function ProjectForm({
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const initialImage = initialData?.thumbnail || "/thumbnail.png";
+  const initialImage = initialData?.thumbnail || "/oneproject/thumbnail.png";
   const [imageUrl, setImageUrl] = useState(initialImage);
   const initialClientId = initialData?.clientId;
   const initialClient = clients.find((user) => user.value === initialClientId);
@@ -91,7 +91,7 @@ export default function ProjectForm({
 
         reset();
 
-        router.push("/dashboard/projects");
+        router.push("/oneproject/dashboard/projects");
         setImageUrl("/placeholder.svg");
       } else {
         const res = await createProject(data);
@@ -103,7 +103,7 @@ export default function ProjectForm({
           toast.success("Successfully Created!");
 
           reset();
-          setImageUrl("/thumbnail.png");
+          setImageUrl("/oneproject/thumbnail.png");
 
           router.push("/dashboard/projects");
         } else {
@@ -195,7 +195,7 @@ export default function ProjectForm({
                     option={selectedClient}
                     setOption={setSelectedClient}
                     toolTipText="Add New Client"
-                    href="/dashboard/clients/new"
+                    href="/oneproject/dashboard/clients/new"
                   />
                 </div>
                 <div className="grid gap-3">

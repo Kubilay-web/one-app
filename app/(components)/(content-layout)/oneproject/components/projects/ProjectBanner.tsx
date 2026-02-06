@@ -45,7 +45,7 @@ export default function ProjectBanner({
   ];
   // bg-gradient-to-r from-blue-500 to-purple-600
   const initialGradient = bg || gradients[0];
-  const initialImage = bannerImage || "/bg.jpg?height=256&width=1024";
+  const initialImage = bannerImage || "/oneproject/bg.jpg?height=256&width=1024";
   const [gradient, setGradient] = useState(initialGradient);
   const [imageUrl, setImageUrl] = useState(initialImage);
   const [loading, setLoading] = useState(false);
@@ -132,7 +132,6 @@ export default function ProjectBanner({
     >
       <img
         src={imageUrl}
-        alt="Project Banner"
         className="w-full h-full object-cover mix-blend-overlay"
       />
       <div className="absolute inset-0 flex items-center justify-center ">

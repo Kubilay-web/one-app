@@ -18,7 +18,7 @@ export async function createPortfolioProfile(data: PortfolioProps) {
       data,
     });
     // console.log(newCategory);
-    revalidatePath("/oneproject/portfolio");
+    // revalidatePath("/oneproject/portfolio");
     return newPortfolio;
   } catch (error) {
     console.log(error);
@@ -34,7 +34,7 @@ export async function updatePortfolioById(id: string, data: PortfolioProps) {
       },
       data,
     });
-    revalidatePath("/oneproject/portfolio");
+    // revalidatePath("/oneproject/portfolio");
     return updatedPo;
   } catch (error) {
     console.log(error);
@@ -47,7 +47,7 @@ export async function getPortfolioByUserId(userId: string) {
         userId,
       },
     });
-    revalidatePath("/oneproject/portfolio");
+    // revalidatePath("/oneproject/portfolio");
     return data;
   } catch (error) {
     console.log(error);

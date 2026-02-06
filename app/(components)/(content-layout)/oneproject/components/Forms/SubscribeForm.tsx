@@ -62,7 +62,7 @@ export default function SubscribeForm({
           errors={errors}
           label=""
           name="email"
-          icon={Mail}
+          // icon={Mail}
           placeholder="johndoe../..gmail.com"
         />
         <SubmitButton
