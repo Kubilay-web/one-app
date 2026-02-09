@@ -515,8 +515,6 @@ export const getMenuItems = (user) => [
             title: "Portfolio",
           },
 
- 
-
           {
             path: "/oneproject/dashboard/projects",
             type: "link",
@@ -550,8 +548,6 @@ export const getMenuItems = (user) => [
           },
         ],
       },
-
-  
 
       // {
       //   title: "Social",
@@ -1161,6 +1157,289 @@ export const getMenuItems = (user) => [
               },
             ],
           },
+        ],
+      },
+
+      {
+        title: "Medical",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            title: "Dashboard",
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/medical/dashboard/doctor/appointments",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Doctor Appoinments",
+              },
+              {
+                path: "/medical/dashboard/doctor/inbox",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Inbox",
+              },
+              {
+                path: "/medical/dashboard/doctor/patients",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Patients",
+              },
+              {
+                path: "/medical/dashboard/doctor/settings",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Settings",
+              },
+              {
+                path: "/medical/dashboard/doctor/tasks",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Tasks",
+              },
+
+              {
+                path: "/medical/dashboard/doctors",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Doctors",
+              },
+
+              {
+                path: "/medical/dashboard/orders",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Orders",
+              },
+
+              {
+                path: "/medical/dashboard/patients",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Patients",
+              },
+
+              {
+                path: "/medical/dashboard/products",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Products",
+              },
+
+              {
+                path: "/medical/dashboard/services",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Services",
+              },
+
+              {
+                path: "/medical/dashboard/settings",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Settings",
+              },
+
+              {
+                path: "/medical/dashboard/specialties",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Specialties",
+              },
+
+              {
+                path: "/medical/dashboard/symptoms",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Symptoms",
+              },
+
+              {
+                path: "/medical/dashboard/user/appointments",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "User-Appointments",
+              },
+
+              {
+                path: "/medical/dashboard/user/doctors",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "User-Doctors",
+              },
+
+              {
+                path: "/medical/dashboard/user/inbox",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "User-Inbox",
+              },
+
+              {
+                path: "/medical/dashboard",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Medical Dashboard",
+              },
+            ],
+          },
+
+          {
+            title: "Front",
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/medical/category",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Category",
+              },
+              {
+                path: "/medical/join/doctors",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Join Doctors",
+              },
+              {
+                path: "/medical/onboarding/resume",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Onboarding Resume",
+              },
+
+              {
+                path: "/medical/onboarding",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Onboarding",
+              },
+
+              {
+                path: "/medical/search",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Search",
+              },
+
+              {
+                path: "/medical",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Home",
+              },
+            ],
+          },
+
+          // {
+          //   path: "/pages/todolist",
+          //   type: "link",
+          //   active: false,
+          //   selected: false,
+          //   title: "To Do List",
+          // },
+
+          // {
+          //   path: "/home/full-calendar",
+          //   type: "link",
+          //   active: false,
+          //   selected: false,
+          //   title: "Calendar",
+          // },
+
+          // {
+          //   title: "Invoice",
+          //   type: "sub",
+          //   menusub: true,
+          //   active: false,
+          //   selected: false,
+          //   children: [
+          //     {
+          //       path: "/pages/invoice/create-invoice",
+          //       type: "link",
+          //       active: false,
+          //       selected: false,
+          //       title: "Create Invoice",
+          //     },
+          //     {
+          //       path: "/pages/invoice/invoice-details",
+          //       type: "link",
+          //       active: false,
+          //       selected: false,
+          //       title: "Invoice Details",
+          //     },
+          //     {
+          //       path: "/pages/invoice/invoice-list",
+          //       type: "link",
+          //       active: false,
+          //       selected: false,
+          //       title: "Invoice List",
+          //     },
+          //   ],
+          // },
+
+          // {
+          //   path: "/pages/file-manager",
+          //   type: "link",
+          //   active: false,
+          //   selected: false,
+          //   title: "File Manager",
+          // },
+
+          // {
+          //   title: "Task",
+          //   type: "sub",
+          //   active: false,
+          //   children: [
+          //     {
+          //       path: "/home/task/kanban-board",
+          //       type: "link",
+          //       active: false,
+          //       selected: false,
+          //       title: "Kanban Board",
+          //     },
+          //     {
+          //       path: "/home/task/list-view",
+          //       type: "link",
+          //       active: false,
+          //       selected: false,
+          //       title: "List View",
+          //     },
+          //     {
+          //       path: "/home/task/task-details",
+          //       type: "link",
+          //       active: false,
+          //       selected: false,
+          //       title: "Task Details",
+          //     },
+          //   ],
+          // },
         ],
       },
 
