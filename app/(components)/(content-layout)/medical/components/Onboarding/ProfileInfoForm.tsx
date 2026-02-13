@@ -139,7 +139,7 @@ export default function ProfileInfoForm({
             label="Professional Profile Image"
             imageUrl={profileImage}
             setImageUrl={setProfileImage}
-            endpoint="doctorProfileImage"
+            // endpoint="doctorProfileImage"
           />
         </div>
         <div className="mt-8 flex justify-center items-center">

@@ -11,7 +11,7 @@ import {
   History,
   X,
 } from "lucide-react";
-import { Appointment, UserRole } from "@prisma/client";
+import { Appointment, RoleMedical } from "@prisma/client";
 
 
 import { timeAgo } from "../../../utils/timeAgo";
@@ -25,7 +25,7 @@ export default function ListPanel({
   role,
 }: {
   appointments: Appointment[];
-  role: UserRole;
+  role: RoleMedical;
 }) {
   console.log(role);
   const pathname = usePathname();

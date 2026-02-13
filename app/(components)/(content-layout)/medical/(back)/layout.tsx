@@ -6,6 +6,7 @@ import Sidebar from "../components/Dashboard/Sidebar";
 
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
+import { Toaster } from "react-hot-toast";
 
 export default async function Layout({ children }: { children: ReactNode }) {
 
@@ -22,6 +23,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
         <NavBar session={user} />
         <div className="flex min-h-screen w-full flex-col">{children}</div>
       </div>
+        <Toaster position="top center"/>
     </div>
   );
 }

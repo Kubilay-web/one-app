@@ -1,19 +1,15 @@
-
-
-
 import DoctorDetails from "../../../components/DoctorDetails";
-import { getDoctorById,getDoctorProfile } from "../../../actions/users";
+import { getDoctorById, getDoctorProfile } from "../../../actions/users";
 import { getAppointmentByPatientId } from "../../../actions/appointments";
-
 
 import { cn } from "@/app/lib/utils";
 import { Appointment } from "@prisma/client";
 import { Check, Plus, RefreshCcw, X } from "lucide-react";
 
-
 import Image from "next/image";
 import React from "react";
 import { validateRequest } from "@/app/auth";
+import FixedBookButton from "../../../components/FixedBookButton";
 
 export default async function page({
   params: { slug },
@@ -25,7 +21,7 @@ export default async function page({
   const { id } = searchParams;
   // Fetch Doctor
 
-  const {user}=await validateRequest();
+  const { user } = await validateRequest();
 
   // const doctor = (await getDoctorBySlug(slug)) || null;
   const doctor = (await getDoctorById(id as string)) || null;
@@ -53,7 +49,7 @@ export default async function page({
                             "py-2 px-3 rounded-md text-xs flex items-center space-x-2",
                             status === "APPROVED"
                               ? "bg-green-500 text-white"
-                              : "bg-orange-400 text-white"
+                              : "bg-orange-400 text-white",
                           )}
                         >
                           {status === "APPROVED" ? (
@@ -80,9 +76,11 @@ export default async function page({
                   </div>
                 </div>
                 <Image
-                  src={
-                    doctor.doctorProfile?.profilePicture ?? "/onemedical/doc-profile.jpeg"
-                  }
+                  // src={
+                  //   doctor.doctorProfile?.profilePicture ?? "/onemedical/doc-profile.jpeg"
+                  // }
+
+                  src={"/onemedical/doc-profile.jpeg"}
                   width={243}
                   height={207}
                   alt="Doctor"
@@ -99,7 +97,7 @@ export default async function page({
             </div>
           </div>
 
-          {/* <FixedBookButton price={doctor.doctorProfile?.hourlyWage} /> */}
+           {/* <FixedBookButton price={doctor.doctorProfile?.hourlyWage} />  */}
         </div>
       ) : (
         <div className="min-h-screen flex items-center justify-center">

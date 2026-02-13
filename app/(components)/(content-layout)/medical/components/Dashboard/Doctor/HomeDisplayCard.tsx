@@ -18,7 +18,7 @@ export default function HomeDisplayCard({
         <div className="py-3">
 
           <p>
-            You have {count} {title}s today.
+            You have {count} {title} today.
           </p>
         </div>
         <NewButton title={`New ${title}`} href={newAppointmentLink} />

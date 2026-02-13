@@ -27,7 +27,6 @@ export default function DoctorCard({
   const today: keyof DoctorProfileAvailability = getDayName();
   const times = doctor.doctorProfile?.availability?.[today] ?? null;
   const formattedDate = getFormattedDate();
-  // console.log(times);
 
   return (
     <>
@@ -45,9 +44,10 @@ export default function DoctorCard({
             <div className="flex items-center gap-4 py-4">
               <div className="relative">
                 <Image
-                  src={
-                    doctor.doctorProfile?.profilePicture ?? "/medical/doc-profile.jpeg"
-                  }
+                  // src={
+                  //   doctor.doctorProfile?.profilePicture ?? "/onemedical/doc-profile.jpeg"
+                  // }
+                  src={"/onemedical/doc-profile.jpeg"}
                   width={243}
                   height={207}
                   alt={doctor.name}
@@ -80,7 +80,7 @@ export default function DoctorCard({
               </span>
             </h3>
             <div className="py-3 grid grid-cols-3 gap-2">
-              {times.slice(0, 5).map((item: string[], i: number) => {
+              {times.slice(0,5).map((item: string[], i: number) => {
                 return (
                   <Link
                     className="bg-blue-600 text-sm text-white p-2  text-center"

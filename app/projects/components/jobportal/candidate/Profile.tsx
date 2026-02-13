@@ -184,7 +184,7 @@ export default function Profile() {
             ))}
           </Select>
 
-          {/* Availability */}
+          {/* Availability 
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}

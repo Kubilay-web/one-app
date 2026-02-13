@@ -1,203 +1,168 @@
 "use client";
 
-
-import { BioDataFormProps } from "../../types/types";
-import { useForm } from "react-hook-form";
-import TextInput from "../FormInputs/TextInput";
-import SubmitButton from "../FormInputs/SubmitButton";
 import { useState } from "react";
+import { Button } from "../ui/button";
+import { Plus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { DatePickerInput } from "../FormInputs/DatePickerInput";
 
-import RadioInput from "../FormInputs/RadioInput";
-import { Checkbox } from "../ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
-import { StepFormProps } from "./BioDataForm";
+type TimeWindow = { start: string; end: string };
+type DayAvailability = TimeWindow[];
+type AvailabilityState = Record<
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday",
+  DayAvailability
+>;
 
-export default function Availability({
-  page,
-  title,
-  description,
-}: StepFormProps) {
+const initialAvailability: AvailabilityState = {
+  monday: [],
+  tuesday: [],
+  wednesday: [],
+  thursday: [],
+  friday: [],
+  saturday: [],
+  sunday: [],
+};
+
+export default function AvailabilityForm({
+  doctorProfile
+}: {
+  doctorProfile: string;
+}) {
+  const [availability, setAvailability] =
+    useState<AvailabilityState>(initialAvailability);
   const [isLoading, setIsLoading] = useState(false);
-
-  // console.log(date);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<BioDataFormProps>();
-  const availabilityOptions = [
-    {
-      label:
-        "Weekly (You’re available one or more times during the week, every week.)",
-      value: "weekly",
-    },
-    {
-      label: "Specific Dates (You’re only available on specific dates.)",
-      value: "specific",
-    },
-  ];
   const router = useRouter();
-  async function onSubmit(data: BioDataFormProps) {
-    data.page = page;
-    console.log(data);
-  }
-  return (
-    <div className="w-full">
-      <div className="text-center border-b border-gray-200 pb-4">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">
-          {title}
-        </h1>
-        <p className="text-balance text-muted-foreground">{description}</p>
-      </div>
-      <form className=" py-4 px-4  mx-auto " onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-4 grid-cols-2">
-          <TextInput
-            label="What is the Duration of your Meetings"
-            register={register}
-            name="meetingDuration"
-            errors={errors}
-            placeholder="eg John "
-            className="col-span-full sm:col-span-1"
-          />
 
-          <RadioInput
-            radioOptions={availabilityOptions}
-            errors={errors}
-            title="When are you available for this meeting ?"
-            name="availabilityType"
-            register={register}
-          />
-          <div className="col-span-full ">
-            <h2>Define your weekly availability below:</h2>
-            <div className="border py-6 px-4 border-gray- flex items-center justify-between">
-              {/* Check box */}
-              <div className="mr-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="day" />
-                  <label
-                    htmlFor="day"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Monday
-                  </label>
-                </div>
-              </div>
-              {/* Time */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid grid-cols-3 gap-2">
-                  <Select>
-                    <SelectTrigger id="month">
-                      <SelectValue placeholder="Month" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <SelectItem
-                          key={i}
-                          value={`${(i + 1).toString().padStart(2, "0")}`}
-                        >
-                          {(i + 1).toString().padStart(2, "0")}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger id="year">
-                      <SelectValue placeholder="Year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from({ length: 59 }, (_, i) => (
-                        <SelectItem
-                          key={i}
-                          value={`${(i + 1).toString().padStart(2, "0")}`}
-                        >
-                          {(i + 1).toString().padStart(2, "0")}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger id="year">
-                      <SelectValue placeholder="Year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="AM">AM</SelectItem>
-                      <SelectItem value="PM">PM</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  <Select>
-                    <SelectTrigger id="month">
-                      <SelectValue placeholder="Month" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <SelectItem
-                          key={i}
-                          value={`${(i + 1).toString().padStart(2, "0")}`}
-                        >
-                          {(i + 1).toString().padStart(2, "0")}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger id="year">
-                      <SelectValue placeholder="Year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from({ length: 59 }, (_, i) => (
-                        <SelectItem
-                          key={i}
-                          value={`${(i + 1).toString().padStart(2, "0")}`}
-                        >
-                          {(i + 1).toString().padStart(2, "0")}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger id="year">
-                      <SelectValue placeholder="Year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="AM">AM</SelectItem>
-                      <SelectItem value="PM">PM</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              {/* Add window */}
-              <div className="">
-                <Button variant="ghost">
-                  <Plus className="w-5 h-5 flex-shrink-0" />
-                  Add Window
-                </Button>
-              </div>
+  console.log("doctorProfile",doctorProfile)
+
+  const doctorProfileId=doctorProfile?.id;
+
+  const handleAddWindow = (day: keyof AvailabilityState) => {
+    setAvailability((prev) => ({
+      ...prev,
+      [day]: [...prev[day], { start: "", end: "" }],
+    }));
+  };
+
+  const handleRemoveWindow = (day: keyof AvailabilityState, index: number) => {
+    setAvailability((prev) => ({
+      ...prev,
+      [day]: prev[day].filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleChangeWindow = (
+    day: keyof AvailabilityState,
+    index: number,
+    field: "start" | "end",
+    value: string,
+  ) => {
+    setAvailability((prev) => {
+      const dayWindows = [...prev[day]];
+      dayWindows[index][field] = value;
+      return { ...prev, [day]: dayWindows };
+    });
+  };
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      // Prisma uyumlu string[] formatı
+      const formattedAvailability = Object.fromEntries(
+        Object.entries(availability).map(([day, windows]) => [
+          day,
+          windows.map((w) => `${w.start}-${w.end}`), // start-end string
+        ]),
+      );
+
+      const res = await fetch("/api/onemedical/availability", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          doctorProfileId,
+          availability: formattedAvailability,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Uygunluk başarıyla kaydedildi!");
+        router.refresh();
+      } else {
+        toast.error(data.error || "Hata oluştu");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Sunucu hatası");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const days: (keyof AvailabilityState)[] = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+
+  return (
+    <div className="space-y-6">
+      {days.map((day) => (
+        <div key={day} className="border p-4 rounded-lg">
+          <h2 className="font-bold capitalize mb-2">{day}</h2>
+          {availability[day].map((window, idx) => (
+            <div key={idx} className="flex gap-2 mb-2">
+              <input
+                type="time"
+                value={window.start}
+                onChange={(e) =>
+                  handleChangeWindow(day, idx, "start", e.target.value)
+                }
+                className="border p-1 rounded w-24"
+              />
+              <span className="self-center">–</span>
+              <input
+                type="time"
+                value={window.end}
+                onChange={(e) =>
+                  handleChangeWindow(day, idx, "end", e.target.value)
+                }
+                className="border p-1 rounded w-24"
+              />
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => handleRemoveWindow(day, idx)}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
             </div>
-          </div>
+          ))}
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleAddWindow(day)}
+          >
+            <Plus className="w-4 h-4 mr-1" /> Add Window
+          </Button>
         </div>
-        <div className="mt-8 flex justify-center items-center">
-          <SubmitButton
-            title="Save and Continue"
-            isLoading={isLoading}
-            loadingTitle="Saving please wait..."
-          />
-        </div>
-      </form>
+      ))}
+
+      <div className="flex justify-center mt-4">
+        <Button onClick={handleSubmit} disabled={isLoading}>
+          {isLoading ? "Kaydediliyor..." : "Kaydet ve Devam Et"}
+        </Button>
+      </div>
     </div>
   );
 }

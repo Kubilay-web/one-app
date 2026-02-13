@@ -45,11 +45,7 @@ enum RoleProject {
 }
 
 
-enum RoleMedical {
-  USER
-  ADMIN
-  DOCTOR
-}
+
 
 //
 
@@ -2649,12 +2645,11 @@ model AccountMedical {
 
 
 
-enum UserRole {
+enum RoleMedical {
   USER
   ADMIN
   DOCTOR
 }
-
 
 
 
@@ -2740,6 +2735,8 @@ enum DoctorStatus {
   APPROVED
   REJECTED
 }
+
+
 model Availability {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   doctorProfileId String        @unique @db.ObjectId
@@ -2758,7 +2755,7 @@ model Availability {
 }
 model DoctorProfile {
   id                   String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId               String        @unique @db.ObjectId
+  userId               String        @unique 
   user                 User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   status DoctorStatus @default(PENDING)
   trackingNumber       String        @unique

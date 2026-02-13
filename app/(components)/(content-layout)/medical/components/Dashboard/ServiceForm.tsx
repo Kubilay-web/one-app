@@ -103,7 +103,7 @@ export default function ServiceForm({
             label="Professional Profile Image"
             imageUrl={imageUrl}
             setImageUrl={setImageUrl}
-            endpoint="serviceImage"
+            // endpoint="serviceImage"
           />
         </div>
         <div className="mt-8 flex justify-between gap-4 items-center">

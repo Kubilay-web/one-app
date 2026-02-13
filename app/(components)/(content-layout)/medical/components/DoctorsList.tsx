@@ -22,6 +22,9 @@ export default function DoctorsList({
   className?: string;
   doctors: Doctor[];
 }) {
+
+console.log("doctorssss",doctors)
+
   return (
     <div className={className}>
       <div className="max-w-6xl mx-auto">

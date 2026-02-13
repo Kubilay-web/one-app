@@ -1,178 +1,107 @@
-import { PrismaClient } from '@prisma/client'
-import { subDays, eachDayOfInterval } from 'date-fns'
-import { createId } from '@paralleldrive/cuid2'
+import { PrismaClient, RoleMedical, DoctorStatus } from "@prisma/client";
+import { ObjectId } from "bson";
 
-const prisma = new PrismaClient()
-
-const SEED_USER_ID = "bpsuajdcyjggs25b"
-
-const SEED_CATEGORIES = [
-  { id: createId(), name: "Food", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Rent", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Utilities", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Clothing", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Transportation", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Entertainment", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Health", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Miscellaneous", userId: SEED_USER_ID, plaidId: null },
-]
-
-const SEED_ACCOUNTS = [
-  { id: createId(), name: "Checking", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Savings", userId: SEED_USER_ID, plaidId: null },
-  { id: createId(), name: "Credit Card", userId: SEED_USER_ID, plaidId: null },
-]
-
-const generateRandomAmount = (categoryName: string): number => {
-  switch (categoryName) {
-    case "Rent":
-      return Math.random() * 400 + 90
-    case "Utilities":
-      return Math.random() * 200 + 50
-    case "Food":
-      return Math.random() * 30 + 10
-    case "Transportation":
-    case "Health":
-      return Math.random() * 50 + 15
-    case "Entertainment":
-    case "Clothing":
-    case "Miscellaneous":
-      return Math.random() * 100 + 20
-    default:
-      return Math.random() * 50 + 10
-  }
-}
-
-interface TransactionData {
-  id: string
-  accountId: string
-  categoryId: string
-  date: Date
-  amount: number
-  payee: string
-  notes: string
-}
-
-const generateTransactions = (): TransactionData[] => {
-  const transactions: TransactionData[] = []
-  const defaultTo = new Date()
-  const defaultFrom = subDays(defaultTo, 90)
-  const days = eachDayOfInterval({ start: defaultFrom, end: defaultTo })
-  
-  const payees = ["Amazon", "Walmart", "Target", "Starbucks", "Netflix", "Spotify", "Apple", "Google", "Uber", "DoorDash"]
-  const notes = ["Monthly subscription", "Grocery shopping", "Online purchase", "Restaurant bill", "Transportation", "Entertainment", "Healthcare", "Shopping"]
-
-  days.forEach(day => {
-    const numTransactions = Math.floor(Math.random() * 4) + 1
-    
-    for (let i = 0; i < numTransactions; i++) {
-      const category = SEED_CATEGORIES[Math.floor(Math.random() * SEED_CATEGORIES.length)]
-      const account = SEED_ACCOUNTS[Math.floor(Math.random() * SEED_ACCOUNTS.length)]
-      const isExpense = Math.random() > 0.6
-      const amount = generateRandomAmount(category.name)
-      const formattedAmount = Math.round((isExpense ? -amount : amount) * 100)
-
-      const payee = payees[Math.floor(Math.random() * payees.length)]
-      const note = notes[Math.floor(Math.random() * notes.length)]
-
-      transactions.push({
-        id: createId(),
-        accountId: account.id,
-        categoryId: category.id,
-        date: day,
-        amount: formattedAmount,
-        payee,
-        notes: note,
-      })
-    }
-  })
-
-  return transactions
-}
+const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting seed...')
+  const service = await prisma.service.findFirst();
+  const speciality = await prisma.speciality.findFirst();
 
-  // Clean up existing data
-  console.log('🧹 Cleaning up existing data...')
-  await prisma.transaction.deleteMany({})
-  await prisma.account.deleteMany({})
-  await prisma.categoryFinance.deleteMany({})
-  await prisma.connectedBank.deleteMany({})
-  await prisma.subscriptionFinance.deleteMany({})
+  for (let i = 1; i <= 10; i++) {
+    const userId = new ObjectId().toHexString();
 
-  // Seed categories
-  console.log('📂 Seeding categories...')
-  for (const category of SEED_CATEGORIES) {
-    await prisma.categoryFinance.create({
-      data: category,
-    })
-  }
+    // User oluştur
+    const user = await prisma.user.create({
+      data: {
+        id: new ObjectId().toHexString(),
+        username: `doctor${i}`,
+        email: `doctor${i}@example.com`,
+        password: "hashedpassword",
+        rolemedical: RoleMedical.DOCTOR,
+        isVerfied: true,
+        status: true,
+        googleId: `google-doctor${i}`, // unique olmalı
+        name: `Doctor ${i} Name`,
+        localCurrency: "UGX",
+        defaultCurrency: "UGX",
+        slug: `doctor-${i}`,
+        phone: `+2567000000${i}`,
+        reputation: 0,
+        isActive: true,
+      },
+    });
 
-  // Seed accounts
-  console.log('💰 Seeding accounts...')
-  for (const account of SEED_ACCOUNTS) {
-    await prisma.account.create({
-      data: account,
-    })
-  }
+    // DoctorProfile oluştur
 
-  // Generate and seed transactions
-  console.log('💳 Generating transactions...')
-  const SEED_TRANSACTIONS = generateTransactions()
-  
-  // Insert transactions in batches for better performance
-  const batchSize = 1000
-  for (let i = 0; i < SEED_TRANSACTIONS.length; i += batchSize) {
-    const batch = SEED_TRANSACTIONS.slice(i, i + batchSize)
-    console.log(`📊 Seeding transactions ${i + 1} to ${Math.min(i + batchSize, SEED_TRANSACTIONS.length)}...`)
-    
-    await prisma.transaction.createMany({
-      data: batch,
-    })
-  }
-
-  // Optional: Seed connected bank
-  console.log('🏦 Seeding connected bank...')
-  await prisma.connectedBank.create({
-    data: {
-      id: createId(),
-      userId: SEED_USER_ID,
-      accessToken: `test_access_token_${Date.now()}`,
+    await prisma.doctorProfile.create({
+  data: {
+    id: new ObjectId().toHexString(),
+    userId: user.id,
+    trackingNumber: `DOC-${1000 + i}`,
+    status: DoctorStatus.APPROVED,
+    firstName: `Doctor${i}`,
+    lastName: `Lastname${i}`,
+    middleName: `Middle${i}`,
+    dob: new Date(1980 + i, i % 12, i),
+    gender: i % 2 === 0 ? "Female" : "Male",
+    page: `doctor${i}-page`,
+    profilePicture: `https://placekitten.com/200/200?image=${i}`,
+    bio: "Experienced medical doctor with years of practice.",
+    medicalLicense: `ML-${1000 + i}`,
+    medicalLicenseExpiry: new Date(2030, 0, i),
+    yearsOfExperience: 3 + i,
+    email: user.email,
+    phone: user.phone,
+    country: "Uganda",
+    city: "Kampala",
+    state: "Central",
+    medicalSchool: `Medical School ${i}`,
+    graduationYear: `${2000 + i}`,
+    primarySpecialization: speciality?.title || "General",
+    otherSpecialties: ["Cardiology", "Neurology"],
+    boardCertificates: ["Board1", "Board2"],
+    hospitalName: `Hospital ${i}`,
+    hospitalAddress: `Street ${i}, Kampala`,
+    hospitalContactNumber: `+256700000${i}`,
+    hospitalEmailAddress: `hospital${i}@example.com`,
+    hospitalWebsite: `https://hospital${i}.com`,
+    hospitalHoursOfOperation: 8,
+    servicesOffered: service ? [service.title] : [],
+    insuranceAccepted: "All",
+    educationHistory: `Graduated from Medical School ${i}`,
+    research: `Research focus ${i}`,
+    accomplishments: `Accomplishment ${i}`,
+    additionalDocs: [],
+    operationMode: "Telehealth visit",
+    hourlyWage: 100 + i * 10,
+    serviceId: service?.id,
+    specialtyId: speciality?.id,
+    symptomIds: [],
+    availability: {
+      create: {       // <-- Burada nested create!
+        monday: ["09:00", "10:00", "11:00"],
+        tuesday: ["10:00", "12:00"],
+        wednesday: ["14:00", "16:00"],
+        thursday: ["09:00", "11:00"],
+        friday: ["13:00", "15:00"],
+        saturday: [],
+        sunday: [],
+      },
     },
-  })
+  }, // <-- data objesi burada kapanıyor
+}); // <-- create fonksiyonu burada kapanıyor
 
-  // Optional: Seed subscription
-  console.log('🔔 Seeding subscription...')
-  await prisma.subscriptionFinance.create({
-    data: {
-      id: createId(),
-      userId: SEED_USER_ID,
-      subscriptionId: `sub_test_${Date.now()}`,
-      status: 'active',
-    },
-  })
+ 
+  }
 
-  console.log('✅ Seed completed successfully!')
-
-  // Print summary
-  const categoryCount = await prisma.categoryFinance.count()
-  const accountCount = await prisma.account.count()
-  const transactionCount = await prisma.transaction.count()
-  
-  console.log('\n📊 Seed Summary:')
-  console.log(`   Categories: ${categoryCount}`)
-  console.log(`   Accounts: ${accountCount}`)
-  console.log(`   Transactions: ${transactionCount}`)
-  console.log(`   User ID: ${SEED_USER_ID}`)
+  console.log("✅ 10 doctors seeded successfully");
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
   })
-  .catch(async (e) => {
-    console.error('❌ Error during seed:', e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

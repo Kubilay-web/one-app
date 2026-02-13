@@ -1,24 +1,18 @@
-
-
-
 import { validateRequest } from "@/app/auth";
 import { getDoctorAppointments } from "../../../../actions/appointments";
 import HomeDisplayCard from "../../../../components/Dashboard/Doctor/HomeDisplayCard";
 import NewButton from "../../../../components/Dashboard/Doctor/NewButton";
 import NotAuthorized from "../../../../components/NotAuthorized";
 
-
-
 import React from "react";
 
 export default async function page() {
+  const { user } = await validateRequest();
 
+ if (user?.rolemedical !== "DOCTOR") {
+   return <NotAuthorized />;
+ }
 
-   const {user}=await validateRequest();
-
-  // if (user?.rolemedical !== "DOCTOR") {
-  //   return <NotAuthorized />;
-  // }
   const appointments = (await getDoctorAppointments(user?.id)).data || [];
   return (
     <div>

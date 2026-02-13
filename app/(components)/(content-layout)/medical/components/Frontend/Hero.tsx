@@ -30,12 +30,12 @@ const Hero = async () => {
                   Health shouldn't be a puzzle, we are cuttting through the B.S
                   to bring you simple, affordable, and transparent healthcare.
                 </p>
-                {/* SEARCH BAR HERE */}
-                {/* <SearchBar /> */}
+             
+             
                 <div className="w-full flex-1  md:flex-none">
                   <SearchBar />
                 </div>
-                {/* CTA BTNS */}
+           
                 <ul className="flex flex-wrap items-center mt-6">
                   <li>
                     <a

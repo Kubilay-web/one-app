@@ -1189,14 +1189,14 @@ export const getMenuItems = (user) => [
                 type: "link",
                 active: false,
                 selected: false,
-                title: "Patients",
+                title: "Patients Mecdical",
               },
               {
                 path: "/medical/dashboard/doctor/settings",
                 type: "link",
                 active: false,
                 selected: false,
-                title: "Settings",
+                title: "Settings Medical",
               },
               {
                 path: "/medical/dashboard/doctor/tasks",

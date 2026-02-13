@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Tabs } from "flowbite-react";
+import { Tabs, TabItem } from "flowbite-react";
 import Monday from "./AvailabilityDays/Monday";
 import { DoctorProfile } from "@prisma/client";
 import Tuesday from "./AvailabilityDays/Tuesday";
@@ -9,6 +9,7 @@ import Thursday from "./AvailabilityDays/Thursday";
 import Friday from "./AvailabilityDays/Friday";
 import Saturday from "./AvailabilityDays/Saturday";
 import Sunday from "./AvailabilityDays/Sunday";
+
 export default function AvailabilitySettings({
   profile,
 }: {
@@ -21,7 +22,7 @@ export default function AvailabilitySettings({
     },
     {
       title: "Tuesday",
-      component: <Tuesday day="tuesday" profile={profile} />,
+      component: <Tuesday profile={profile} day="tuesday" />,
     },
     {
       title: "Wednesday",
@@ -44,17 +45,19 @@ export default function AvailabilitySettings({
       component: <Sunday profile={profile} day="sunday" />,
     },
   ];
+
   return (
     <div>
-      <p className="py-3">Please Add the Availability for the Whole Week</p>
-      <Tabs aria-label="Tabs with underline" style="underline">
-        {tabs.map((tab, i) => {
-          return (
-            <Tabs.Item key={i} active title={tab.title}>
-              {tab.component}
-            </Tabs.Item>
-          );
-        })}
+      <p className="py-3">
+        Please Add the Availability for the Whole Week
+      </p>
+
+      <Tabs aria-label="Availability Tabs" variant="underline">
+        {tabs.map((tab, i) => (
+          <TabItem key={i} title={tab.title}>
+            {tab.component}
+          </TabItem>
+        ))}
       </Tabs>
     </div>
   );

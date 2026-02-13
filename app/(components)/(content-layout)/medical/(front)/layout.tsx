@@ -1,7 +1,4 @@
 
-
-
-
 import { validateRequest } from "@/app/auth";
 import { SiteHeader } from "../components/site-header";
 import Footer from "../components/Frontend/Footer";

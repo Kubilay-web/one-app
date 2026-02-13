@@ -19,9 +19,9 @@ export default async function AppointmentLayout({
   
   const {user} = await validateRequest();
 
-  // if (user?.rolemedical !== "DOCTOR") {
-  //   return <NotAuthorized />;
-  // }
+   if (user?.rolemedical !== "DOCTOR") {
+     return <NotAuthorized />;
+   }
 
 
   

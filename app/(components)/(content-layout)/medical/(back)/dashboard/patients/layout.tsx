@@ -35,9 +35,9 @@ export default async function PatientLayout({
   const {user}=await validateRequest();
 
 
-  if (user?.rolemedical !== "ADMIN") {
-    return <NotAuthorized />;
-  }
+  // if (user?.rolemedical !== "ADMIN") {
+  //   return <NotAuthorized />;
+  // }
   const appointments = (await getAppointments()).data || [];
 
   const uniquePatientsMap = new Map();

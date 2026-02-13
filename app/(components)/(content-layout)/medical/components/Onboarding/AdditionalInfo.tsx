@@ -54,6 +54,7 @@ export default function AdditionalInfo({
     useState<FileProps[]>(initialDocs);
   console.log(formId);
   // console.log(date);
+
   const {
     register,
     handleSubmit,
@@ -90,7 +91,7 @@ export default function AdditionalInfo({
 
           //ROUTE THEM TO THE LOGIN
           if (isOnboarding) {
-            router.push("/");
+            router.push("/medical/dashboard");
           }
         } else {
           setIsLoading(false);

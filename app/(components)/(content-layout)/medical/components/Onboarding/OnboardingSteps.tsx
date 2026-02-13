@@ -126,19 +126,20 @@ export default function OnboardingSteps({
         />
       ),
     },
-    // {
-    //   title: "Availability",
-    //   page: "availability",
-    //   component: (
-    //     <Availability
-    //       page={page}
-    //       title="Availability Information"
-    //       description="Please fill in your availability Info"
-    //       formId={doctorProfileId}
-    //       userId={id}
-    //     />
-    //   ),
-    // },
+     {
+       title: "Availability",
+       page: "availability",
+       component: (
+         <Availability
+           page={page}
+           title="Availability Information"
+           description="Please fill in your availability Info"
+           formId={doctorProfile.id ? doctorProfileId : savedDBData.id}
+           userId={id}
+           doctorProfile={doctorProfile}
+         />
+       ),
+     },
   ];
   const currentStep = steps.find((step) => step.page === page);
   console.log(currentStep);
@@ -161,15 +162,15 @@ export default function OnboardingSteps({
         })}
       </div>
       <div className="col-span-full sm:col-span-9  p-4">
-        {/* {truckingNumber && (
+         {doctorProfile.trackingNumber && (
           <p className="border-b border-gray-200 dark:border-slate-600 text-teal-600 dark:text-teal-400 pb-2">
-            Your Trucking Number is{" "}
-            <span className="font-bold">{truckingNumber}</span>{" "}
+            Your Trucking Number is 
+            <span className="font-bold"> {doctorProfile.trackingNumber} </span>{" "}
             <span className="text-xs">
               (Use this to check the status or resume application)
             </span>
           </p>
-        )} */}
+        )} 
         {savedDBData.id && (
           <p className="border-b border-gray-200 dark:border-slate-600 text-teal-600 dark:text-teal-400 pb-2">
             Your Trucking Number is{" "}

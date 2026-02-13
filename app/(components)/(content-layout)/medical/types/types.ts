@@ -16,6 +16,20 @@ export type LoginInputProps = {
   password: string;
 };
 
+export type AvailabilityFormProps = {
+  meetingDuration: string;
+  availabilityType: "weekly" | "specific";
+  page: string;
+  // opsiyonel olarak: saat aralıkları ve günler
+  monday?: string[];
+  tuesday?: string[];
+  wednesday?: string[];
+  thursday?: string[];
+  friday?: string[];
+  saturday?: string[];
+  sunday?: string[];
+};
+
 export type BioDataFormProps = {
   firstName: string;
   lastName: string;

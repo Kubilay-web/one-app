@@ -22,6 +22,8 @@ export default async function page() {
   if (user?.rolemedical !== "ADMIN") {
     return <NotAuthorized />;
   }
+
+  
   const doctors = (await getDoctors()) || [];
   // console.log(patients);
   //doctors/doctor-asuman-jb
