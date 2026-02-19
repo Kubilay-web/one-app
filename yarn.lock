@@ -2,6 +2,30 @@
 # yarn lockfile v1
 
 
+"@100mslive/hms-video-store@0.13.2":
+  version "0.13.2"
+  resolved "https://registry.npmjs.org/@100mslive/hms-video-store/-/hms-video-store-0.13.2.tgz"
+  integrity sha512-yfNY3KXRaqD/mgnQaEHo+RTs4ZT3e6Fwdzc7m0oHT4YNUTJEerJdekSjKj1kLJLi9RvoOzkP10q8TpUbHQThpw==
+  dependencies:
+    eventemitter2 "^6.4.9"
+    immer "^9.0.6"
+    lodash.isequal "^4.5.0"
+    reselect "4.0.0"
+    sdp-transform "^2.14.1"
+    ua-parser-js "^2.0.6"
+    uuid "^8.3.2"
+    webrtc-adapter "^8.0.0"
+    zustand "3.5.7"
+
+"@100mslive/react-sdk@^0.11.2":
+  version "0.11.2"
+  resolved "https://registry.npmjs.org/@100mslive/react-sdk/-/react-sdk-0.11.2.tgz"
+  integrity sha512-ihqy+tKzOB4HZpt+r17HyTgtgPFuj0j0b2JuGr0OwXA7vLb34YW5d95S856LDLuX4EUfpuksriBWVBtnpP64zQ==
+  dependencies:
+    "@100mslive/hms-video-store" "0.13.2"
+    react-resize-detector "^7.0.0"
+    zustand "^3.6.2"
+
 "@alloc/quick-lru@^5.2.0":
   version "5.2.0"
   resolved "https://registry.npmjs.org/@alloc/quick-lru/-/quick-lru-5.2.0.tgz"
@@ -9911,6 +9935,11 @@ detect-element-overflow@^2.0.0:
   resolved "https://registry.npmjs.org/detect-element-overflow/-/detect-element-overflow-2.0.0.tgz"
   integrity sha512-DETEHRGdIdQowMR1Fb5hG4WXUJhlLId/IRQgAi5GVqCnHwnb0SKf9V/teyEVDX0+iClPeOPiNvlE6fSiECz65w==
 
+detect-europe-js@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/detect-europe-js/-/detect-europe-js-0.1.2.tgz"
+  integrity sha512-lgdERlL3u0aUdHocoouzT10d9I89VVhk0qNRmll7mXdGfJT1/wqZ2ZLA4oJAjeACPY5fT1wsbq2AT+GkuInsow==
+
 detect-file@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/detect-file/-/detect-file-1.0.0.tgz"
@@ -10884,6 +10913,11 @@ event-target-shim@^6.0.2:
   version "6.0.2"
   resolved "https://registry.npmjs.org/event-target-shim/-/event-target-shim-6.0.2.tgz"
   integrity sha512-8q3LsZjRezbFZ2PN+uP+Q7pnHUMmAOziU2vA2OwoFaKIXxlxl38IylhSSgUorWu/rf4er67w0ikBqjBFk/pomA==
+
+eventemitter2@^6.4.9:
+  version "6.4.9"
+  resolved "https://registry.npmjs.org/eventemitter2/-/eventemitter2-6.4.9.tgz"
+  integrity sha512-JEPTiaOt9f04oa6NOkc4aH+nVp5I3wEjpHbIPqfgCdD5v5bUzy7xQqwcVO2aDQgOWhI28da57HksMrzK9HlRxg==
 
 eventemitter2@5.0.1:
   version "5.0.1"
@@ -12401,6 +12435,11 @@ immer@^10.0.3, immer@^10.1.1:
   resolved "https://registry.npmjs.org/immer/-/immer-10.1.1.tgz"
   integrity sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==
 
+immer@^9.0.6:
+  version "9.0.21"
+  resolved "https://registry.npmjs.org/immer/-/immer-9.0.21.tgz"
+  integrity sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==
+
 immutable@^5.0.2:
   version "5.1.1"
   resolved "https://registry.npmjs.org/immutable/-/immutable-5.1.1.tgz"
@@ -12876,6 +12915,11 @@ is-shared-array-buffer@^1.0.4:
   integrity sha512-ISWac8drv4ZGfwKl5slpHG9OwPNty4jOWPRIhBpxOoD+hqITiwuipOQ2bNthAzwA3B4fIjO4Nln74N0S9byq8A==
   dependencies:
     call-bound "^1.0.3"
+
+is-standalone-pwa@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/is-standalone-pwa/-/is-standalone-pwa-0.1.1.tgz"
+  integrity sha512-9Cbovsa52vNQCjdXOzeQq5CnCbAcRk05aU62K20WO372NrTv0NxibLFCK6lQ4/iZEFdEA3p3t2VNOn8AJ53F5g==
 
 is-stream@^3.0.0:
   version "3.0.0"
@@ -18017,6 +18061,13 @@ react-resizable-panels@^3.0.4:
   resolved "https://registry.npmjs.org/react-resizable-panels/-/react-resizable-panels-3.0.6.tgz"
   integrity sha512-b3qKHQ3MLqOgSS+FRYKapNkJZf5EQzuf6+RLiq1/IlTHw99YrZ2NJZLk4hQIzTnnIkRg2LUqyVinu6YWWpUYew==
 
+react-resize-detector@^7.0.0:
+  version "7.1.2"
+  resolved "https://registry.npmjs.org/react-resize-detector/-/react-resize-detector-7.1.2.tgz"
+  integrity sha512-zXnPJ2m8+6oq9Nn8zsep/orts9vQv3elrpA+R8XTcW7DVVUJ9vwDwMXaBtykAYjMnkCIaOoK9vObyR7ZgFNlOw==
+  dependencies:
+    lodash "^4.17.21"
+
 react-responsive@^10.0.1:
   version "10.0.1"
   resolved "https://registry.npmjs.org/react-responsive/-/react-responsive-10.0.1.tgz"
@@ -18665,6 +18716,11 @@ reselect@^5.1.0, reselect@5.1.1:
   resolved "https://registry.npmjs.org/reselect/-/reselect-5.1.1.tgz"
   integrity sha512-K/BG6eIky/SBpzfHZv/dd+9JBFiS4SWV7FIujVyJRux6e45+73RaUHXLmIR1f7WOMaQ0U1km6qwklRQxpJJY0w==
 
+reselect@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/reselect/-/reselect-4.0.0.tgz"
+  integrity sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==
+
 resend@^6.8.0:
   version "6.8.0"
   resolved "https://registry.npmjs.org/resend/-/resend-6.8.0.tgz"
@@ -18922,6 +18978,16 @@ scroll-into-view-if-needed@^3.1.0:
   integrity sha512-49oNpRjWRvnU8NyGVmUaYG4jtTkNonFZI86MmGRDqBphEK2EXT9gdEUoQPZhuBM8yWHxCWbobltqYO5M4XrUvQ==
   dependencies:
     compute-scroll-into-view "^3.0.2"
+
+sdp-transform@^2.14.1:
+  version "2.15.0"
+  resolved "https://registry.npmjs.org/sdp-transform/-/sdp-transform-2.15.0.tgz"
+  integrity sha512-KrOH82c/W+GYQ0LHqtr3caRpM3ITglq3ljGUIb8LTki7ByacJZ9z+piSGiwZDsRyhQbYBOBJgr2k6X4BZXi3Kw==
+
+sdp@^3.2.0:
+  version "3.2.1"
+  resolved "https://registry.npmjs.org/sdp/-/sdp-3.2.1.tgz"
+  integrity sha512-lwsAIzOPlH8/7IIjjz3K0zYBk7aBVVcvjMwt3M4fLxpjMYyy7i3I97SLHebgn4YBjirkzfp3RvRDWSKsh/+WFw==
 
 secure-json-parse@^4.0.0:
   version "4.1.0"
@@ -20648,10 +20714,24 @@ typical@^7.1.1, typical@^7.2.0:
   resolved "https://registry.npmjs.org/typical/-/typical-7.3.0.tgz"
   integrity sha512-ya4mg/30vm+DOWfBg4YK3j2WD6TWtRkCbasOJr40CseYENzCUby/7rIvXA99JGsQHeNxLbnXdyLLxKSv3tauFw==
 
+ua-is-frozen@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/ua-is-frozen/-/ua-is-frozen-0.1.2.tgz"
+  integrity sha512-RwKDW2p3iyWn4UbaxpP2+VxwqXh0jpvdxsYpZ5j/MLLiQOfbsV5shpgQiw93+KMYQPcteeMQ289MaAFzs3G9pw==
+
 ua-parser-js@^0.7.18:
   version "0.7.41"
   resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.41.tgz"
   integrity sha512-O3oYyCMPYgNNHuO7Jjk3uacJWZF8loBgwrfd/5LE/HyZ3lUIOdniQ7DNXJcIgZbwioZxk0fLfI4EVnetdiX5jg==
+
+ua-parser-js@^2.0.6:
+  version "2.0.9"
+  resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-2.0.9.tgz"
+  integrity sha512-OsqGhxyo/wGdLSXMSJxuMGN6H4gDnKz6Fb3IBm4bxZFMnyy0sdf6MN96Ie8tC6z/btdO+Bsy8guxlvLdwT076w==
+  dependencies:
+    detect-europe-js "^0.1.2"
+    is-standalone-pwa "^0.1.1"
+    ua-is-frozen "^0.1.2"
 
 uc.micro@^1.0.1:
   version "1.0.6"
@@ -20993,6 +21073,11 @@ uuid@^11.1.0:
   resolved "https://registry.npmjs.org/uuid/-/uuid-11.1.0.tgz"
   integrity sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==
 
+uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
 uuid@3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz"
@@ -21202,6 +21287,13 @@ webidl-conversions@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-7.0.0.tgz"
   integrity sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==
+
+webrtc-adapter@^8.0.0:
+  version "8.2.4"
+  resolved "https://registry.npmjs.org/webrtc-adapter/-/webrtc-adapter-8.2.4.tgz"
+  integrity sha512-VwtwbYNKnVQW8koB9qb8YcxNwpSVHTvvKEZLzY6uQ3gFrA9E87VPbB5xE+m1AGwUjL1UgN35jRR9hQgteZI5bg==
+  dependencies:
+    sdp "^3.2.0"
 
 websocket-driver@>=0.5.1:
   version "0.7.4"
@@ -21616,6 +21708,11 @@ zuck.js@^2.1.1:
   resolved "https://registry.npmjs.org/zuck.js/-/zuck.js-2.1.1.tgz"
   integrity sha512-YYKvMjwOIZScBiZPrDfvCRlyF4EetA1+ENY9RPwMup5bwBK4C1U43KWjzkb0k1kqWCnXpDMHixJx8/X0oafWAg==
 
+zustand@^3.6.2:
+  version "3.7.2"
+  resolved "https://registry.npmjs.org/zustand/-/zustand-3.7.2.tgz"
+  integrity sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==
+
 zustand@^4.3.2:
   version "4.5.7"
   resolved "https://registry.npmjs.org/zustand/-/zustand-4.5.7.tgz"
@@ -21627,6 +21724,11 @@ zustand@^5.0.7:
   version "5.0.8"
   resolved "https://registry.npmjs.org/zustand/-/zustand-5.0.8.tgz"
   integrity sha512-gyPKpIaxY9XcO2vSMrLbiER7QMAMGOQZVRdJ6Zi782jkbzZygq5GI9nG8g+sMgitRtndwaBSl7uiqC49o1SSiw==
+
+zustand@3.5.7:
+  version "3.5.7"
+  resolved "https://registry.npmjs.org/zustand/-/zustand-3.5.7.tgz"
+  integrity sha512-DlVFXJavIHyXTOGz6dB+8QHZsPyJcGJSEBtlp2Ivmd5SwtlCnhPo3L8LB6YRfAOJC2PbqzgoD8NMjk+y+vIF0g==
 
 zwitch@^2.0.0:
   version "2.0.4"

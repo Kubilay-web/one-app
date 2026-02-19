@@ -11,12 +11,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { X } from "lucide-react";
 
-
-
 import generateSlug from "../../utils/generateSlug";
-
-
-
 
 
 import { createSpecialty,createManySpecialties,updateSpecialty } from "../../actions/specialities";
@@ -110,3 +105,4 @@ export default function PriceUpdateForm({
     </div>
   );
 }
+

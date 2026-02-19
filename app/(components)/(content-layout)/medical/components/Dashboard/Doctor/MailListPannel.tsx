@@ -12,7 +12,7 @@ import {
   History,
   X,
 } from "lucide-react";
-import { Appointment, Inbox, UserRole } from "@prisma/client";
+import { Appointment, Inbox, RoleMedical } from "@prisma/client";
 
 import { usePathname } from "next/navigation";
 import { cn } from "@/app/lib/utils";
@@ -23,7 +23,7 @@ export default function MailListPanel({
   role,
 }: {
   messages: Inbox[];
-  role: UserRole;
+  role: RoleMedical;
 }) {
   console.log(role);
   const pathname = usePathname();
@@ -32,14 +32,14 @@ export default function MailListPanel({
       <div className="flex flex-col gap-2 p-4 pt-0">
         {messages.map((item) => (
           <Link
-            href={`/dashboard/${
+            href={`/medical/dashboard/${
               role === "DOCTOR" ? "doctor" : "user"
             }/inbox/view/${item.id}`}
             key={item.id}
             className={cn(
               "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
               pathname ===
-                `/dashboard/${
+                `/medical/dashboard/${
                   role == "DOCTOR" ? "doctor" : "user"
                 }/inbox/view/${item.id}` &&
                 "border-green-700 border-2 bg-green-50"

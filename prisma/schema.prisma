@@ -15,8 +15,6 @@ enum Role {
   WRITER
 }
 
-
-
 enum RoleShop {
   USER
   ADMIN
@@ -34,7 +32,6 @@ enum RoleRealEstate {
   ADMIN
 }
 
-
 //Project and Medical Apps
 
 enum RoleProject {
@@ -43,9 +40,6 @@ enum RoleProject {
   CLIENT
   MEMBER
 }
-
-
-
 
 //
 
@@ -88,17 +82,16 @@ model User {
 
   //
 
-
   // Medical App
 
-  slug          String   @default("slug")
-  rolemedical          RoleMedical     @default(USER)
-  plan          String?
-  password      String?
-  accountMedical      AccountMedical[]
-  symptomIds    String[]
-  doctorProfile DoctorProfile?
-  
+  slug           String           @default("slug")
+  rolemedical    RoleMedical      @default(USER)
+  plan           String?
+  password       String?
+  accountMedical AccountMedical[]
+  symptomIds     String[]
+  doctorProfile  DoctorProfile?
+
   serviceId String?  @db.ObjectId
   service   Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -106,8 +99,6 @@ model User {
   speciality   Speciality? @relation(fields: [specialityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   //
-
-
 
   displayName  String?
   email        String? @unique
@@ -125,11 +116,11 @@ model User {
 
   reputation Int? @default(0)
 
-  role       Role           @default(USER)
-  rolejob    RoleJob        @default(CANDIDATE)
-  roleshop   RoleShop       @default(USER)
-  roleestate RoleRealEstate @default(USER)
-  roleproject RoleProject @default(USER)
+  role        Role           @default(USER)
+  rolejob     RoleJob        @default(CANDIDATE)
+  roleshop    RoleShop       @default(USER)
+  roleestate  RoleRealEstate @default(USER)
+  roleproject RoleProject    @default(USER)
 
   sessions              Session[]      @relation("UserSessions")
   posts                 Post[]         @relation("UserPosts")
@@ -2497,16 +2488,16 @@ model Project {
 }
 
 model ProjectComment {
-  id        String   @id @default(cuid()) @map("_id")
+  id        String      @id @default(cuid()) @map("_id")
   content   String
   projectId String
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userName  String
   userRole  RoleProject
-  user      User     @relation(fields: [userId], references: [id])
+  user      User        @relation(fields: [userId], references: [id])
   userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 model GuestProject {
@@ -2536,14 +2527,14 @@ model Module {
 }
 
 model Member {
-  id        String   @id @default(cuid()) @map("_id")
-  name      String
-  email     String
-  roleproject      String
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid()) @map("_id")
+  name        String
+  email       String
+  roleproject String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Invoice {
@@ -2619,22 +2610,20 @@ model CategoryProject {
 
 ////
 
-
 //Medical App
 
-
 model AccountMedical {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? 
-  access_token      String? 
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? 
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -2642,56 +2631,51 @@ model AccountMedical {
   @@unique([provider, providerAccountId])
 }
 
-
-
-
 enum RoleMedical {
   USER
   ADMIN
   DOCTOR
 }
 
-
-
-
 model Service {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  doctors  User[]
-  title    String
-  slug     String @unique
-  imageUrl String
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  doctors        User[]
+  title          String
+  slug           String          @unique
+  imageUrl       String
   doctorProfiles DoctorProfile[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
 
 model Speciality {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  doctors       User[]
-  title         String
-  slug          String         @unique
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  doctors        User[]
+  title          String
+  slug           String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   doctorProfiles DoctorProfile[]
 }
 
 model Symptom {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  title String
-  slug  String @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  slug      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 model Inbox {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  recieverId String
-  senderId String
-  senderName String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  recieverId  String
+  senderId    String
+  senderName  String
   senderEmail String
-  subject  String 
-  body String 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  subject     String
+  body        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum AppointmentStatus {
@@ -2700,42 +2684,46 @@ enum AppointmentStatus {
   approved
 }
 
-
 model Appointment {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  appointmentDate DateTime?
+  id                       String            @id @default(auto()) @map("_id") @db.ObjectId
+  appointmentDate          DateTime?
   appointmentFormattedDate String
-  doctorId String
-  doctorName String?
-  patientId String
-  charge Int
-  appointmentTime String?
+  doctorId                 String
+  doctorName               String?
+  patientId                String
+  charge                   Int
+  appointmentTime          String?
   // Patient details
-  firstName String?
-  lastName String?
-  gender String?
-  phone String?
-  email String?
-  dob DateTime?
-  location String?
-  appointmentReason String?
-  medicalDocuments String[]
-  occupation String?
-  status AppointmentStatus @default(pending)
-  meetingLink String @default("")
-  meetingProvider String @default("zoom")
+  firstName                String?
+  lastName                 String?
+  gender                   String?
+  phone                    String?
+  email                    String?
+  dob                      DateTime?
+  location                 String?
+  appointmentReason        String?
+  medicalDocuments         String[]
+  occupation               String?
+  status                   AppointmentStatus @default(pending)
+  meetingLink              String            @default("")
+  meetingProvider          String            @default("zoom")
+
+  // Stripe ödeme alanları
+  paymentIntentId String?   
+  paymentStatus   String?   @default("unpaid") // unpaid, paid, refunded
+  paymentAmount   Int? // stripe amount in cents
+  paymentMethod   String?
+  paymentDate     DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 enum DoctorStatus {
   PENDING
   APPROVED
   REJECTED
 }
-
 
 model Availability {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
@@ -2749,15 +2737,15 @@ model Availability {
   saturday        String[]
   sunday          String[]
 
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 model DoctorProfile {
   id                   String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId               String        @unique 
+  userId               String        @unique
   user                 User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  status DoctorStatus @default(PENDING)
+  status               DoctorStatus  @default(PENDING)
   trackingNumber       String        @unique
   firstName            String
   lastName             String
@@ -2794,18 +2782,23 @@ model DoctorProfile {
   research                 String?
   accomplishments          String?
   additionalDocs           String[]
-  operationMode             String? @default("Telehealth visit")
-  hourlyWage              Int @default(100)
+  operationMode            String?     @default("Telehealth visit")
+  hourlyWage               Int         @default(100)
   //SERVICES
-  serviceId            String?        @db.ObjectId
-  service              Service?       @relation(fields: [serviceId], references: [id])
-  specialtyId          String?        @db.ObjectId
-  specialty            Speciality?    @relation(fields: [specialtyId], references: [id])
-  symptomIds           String[]      @db.ObjectId
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  serviceId                String?     @db.ObjectId
+  service                  Service?    @relation(fields: [serviceId], references: [id])
+  specialtyId              String?     @db.ObjectId
+  specialty                Speciality? @relation(fields: [specialtyId], references: [id])
+  symptomIds               String[]    @db.ObjectId
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime?   @updatedAt
 }
 
-
+enum AppointmentStatusMedical {
+  pending
+  rejected
+  approved
+  paid
+}
 
 ////
