@@ -36,7 +36,7 @@ export default function ListPanel({
           key={item.id}
           href={`/medical/dashboard/${
             role === "USER" ? "user" : "doctor"
-          }/medical/appointments/view/${item.id}`}
+          }/appointments/view/${item.id}`}
           className={cn(
             "border mb-2 border-gray-300 shadow-sm text-xs bg-white py-3 px-2 inline-block w-full rounded-md dark:text-slate-900",
             pathname === `/medical/dashboard/doctor/appointments/view/${item.id}` &&
