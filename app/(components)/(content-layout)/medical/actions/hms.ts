@@ -159,6 +159,40 @@ interface TokenResult {
 import jwt from "jsonwebtoken";
 
 
+// export async function generateAuthToken(
+//   roomId: string,
+//   role: "host" | "guest"
+// ): Promise<TokenResult> {
+//   try {
+//     const accessKey = process.env.HMS_API_KEY!;
+//     const secret = process.env.HMS_SECRET!;
+
+//     const payload = {
+//       access_key: accessKey,
+//       room_id: roomId,
+//       user_id: `${role}-${Date.now()}`,
+//       role: role,
+//       type: "app",
+//       version: 2,
+//       iat: Math.floor(Date.now() / 1000),
+//       nbf: Math.floor(Date.now() / 1000),
+//     };
+
+//     const token = jwt.sign(payload, secret, {
+//       algorithm: "HS256",
+//       expiresIn: "24h",
+//       jwtid: Math.random().toString(36).substring(2),
+//     });
+
+//     return { token, error: null };
+//   } catch (error: any) {
+//     return { token: null, error: error.message };
+//   }
+// }
+
+
+
+
 export async function generateAuthToken(
   roomId: string,
   role: "host" | "guest"
@@ -167,6 +201,8 @@ export async function generateAuthToken(
     const accessKey = process.env.HMS_API_KEY!;
     const secret = process.env.HMS_SECRET!;
 
+    const now = Math.floor(Date.now() / 1000);
+
     const payload = {
       access_key: accessKey,
       room_id: roomId,
@@ -174,14 +210,13 @@ export async function generateAuthToken(
       role: role,
       type: "app",
       version: 2,
-      iat: Math.floor(Date.now() / 1000),
-      nbf: Math.floor(Date.now() / 1000),
+      iat: now - 5,        // 5 saniye geriden başlat
+      exp: now + 60 * 60,  // 1 saat
     };
 
     const token = jwt.sign(payload, secret, {
       algorithm: "HS256",
-      expiresIn: "24h",
-      jwtid: Math.random().toString(36).substring(2),
+      jwtid: crypto.randomUUID(),
     });
 
     return { token, error: null };
@@ -189,6 +224,5 @@ export async function generateAuthToken(
     return { token: null, error: error.message };
   }
 }
-
 
 
