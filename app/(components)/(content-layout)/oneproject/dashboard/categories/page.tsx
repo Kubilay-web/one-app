@@ -32,21 +32,25 @@
 
 
 
- import React from "react";
- import { columns } from "./columns";
- import { CategoryProject } from "@prisma/client";
- import DataTable from "../../components/DataTableComponents/DataTable";
- import TableHeader from "../../components/dashboard/Tables/TableHeader";
- import { getAllCategories } from "../../actions/categories";
 
+
+
+
+import React from "react";
+import { columns } from "./columns";
+import { CategoryProject } from "@prisma/client";
+import DataTable from "../../components/DataTableComponents/DataTable";
+import TableHeader from "../../components/dashboard/Tables/TableHeader";
+import { getAllCategories } from "../../actions/categories";
 
 export default async function page() {
   const categories: CategoryProject[] = (await getAllCategories()) || [];
 
   return (
-    <div className="w-full max-w-full px-3 sm:px-4 md:px-6 lg:px-8 py-4">
+    <div className="flex flex-col w-full px-4 sm:px-6 lg:px-8 py-4 gap-6">
+      
       {/* Header */}
-      <div className="w-full mb-4 sm:mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <TableHeader
           title="Categories"
           linkTitle="Add Category"
@@ -56,15 +60,15 @@ export default async function page() {
         />
       </div>
 
-      {/* Table wrapper */}
-      <div className="w-full">
-        {/* Mobilde yatay scroll, desktop’ta normal */}
-        <div className="relative w-full overflow-x-auto sm:overflow-x-auto lg:overflow-visible">
-          <div className="min-w-[640px] sm:min-w-full lg:min-w-0">
+      {/* Table Section */}
+      <div className="flex w-full">
+        <div className="w-full overflow-x-auto">
+          <div className="w-full">
             <DataTable data={categories} columns={columns} />
           </div>
         </div>
       </div>
+
     </div>
   );
 }

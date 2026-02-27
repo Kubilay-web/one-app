@@ -31,9 +31,9 @@ export default async function AppointmentLayout({
       {/* Header */}
 
       {/* 2 PANNELS */}
-      <div className="grid grid-cols-12">
+      <div className="flex flex-row justify-between flex-wrap">
         {/* LIST PANNEL */}
-        <div className="col-span-4  py-3 border-r border-gray-100">
+        <div className="py-3 border-r border-gray-100">
           <PanelHeader
             title="Appointments"
             count={appointments.length ?? 0}
@@ -44,7 +44,7 @@ export default async function AppointmentLayout({
           </div>
         </div>
 
-        <div className="col-span-8">{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );

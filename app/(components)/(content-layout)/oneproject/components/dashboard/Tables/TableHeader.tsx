@@ -145,11 +145,11 @@ export default function TableHeader({
 
   return (
     <div className="mb-3">
-      <div className="flex justify-between items-center border-b border-gray-200 py-3 bg-white text-black">
-        <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0">
+      <div className="flex justify-between items-center border-b border-gray-200 p-4 bg-white text-black">
+        <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0 mr-2">
           {title} ({data.length})
         </h2>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-4">
           <Button
             onClick={handleExportData}
             size="sm"

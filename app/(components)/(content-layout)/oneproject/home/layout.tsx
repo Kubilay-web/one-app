@@ -22,10 +22,10 @@ export default async function HomeLayout({
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       {/* Header - Her zaman üstte */}
-      <header className="w-full shrink-0">
-        {/* <SiteBanner /> */}
+      {/* <header className="w-full shrink-0">
+      
         <SiteHeader user={safeUser} />
-      </header>
+      </header> */}
 
       {/* Main Content - Esnek alan */}
       <main className="flex-1 w-full overflow-hidden">

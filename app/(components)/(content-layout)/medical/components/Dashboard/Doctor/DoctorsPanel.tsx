@@ -33,7 +33,7 @@ export default function DoctorsPanel({
 }) {
   const pathname = usePathname();
   return (
-    <ScrollArea className="h-96 w-full ">
+    <ScrollArea className="h-40 w-full ">
       {doctors.map((item, i) => {
         const slug = generateSlug(item.doctorName);
         return (

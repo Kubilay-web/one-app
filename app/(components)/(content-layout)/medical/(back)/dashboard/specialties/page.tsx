@@ -36,7 +36,7 @@ export default async function page() {
             </div>
           </div>
           <div className="px-3">
-            <ScrollArea className="h-96 w-full ">
+            <ScrollArea className="h-30 w-full ">
               {specialties.map((specialty) => (
                 <SpecialtyCard key={specialty.title} specialty={specialty} />
               ))}

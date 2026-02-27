@@ -11,7 +11,7 @@ export default async function Brand() {
   const localCurrencyCode = userDetails?.localCurrency ?? "UGX";
   const exchangeRate = await getCurrentExchangeRate(localCurrencyCode);
   return (
-    <div className="p-8">
+    <div className="p-8 flex-col w-full">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         Currency Exchange Rate
       </h1>

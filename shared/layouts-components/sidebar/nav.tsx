@@ -427,6 +427,15 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Home",
           },
+
+          {
+            path: "/oneproject/dashboard",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard",
+          },
+          
           {
             path: "/oneproject/dashboard/brand-settings",
             type: "link",
@@ -537,14 +546,6 @@ export const getMenuItems = (user) => [
             active: false,
             selected: false,
             title: "Users",
-          },
-
-          {
-            path: "/oneproject/dashboard",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard",
           },
         ],
       },

@@ -1,17 +1,9 @@
-
-
-
-
-
 import { getAppointmentById } from "@/app/(components)/(content-layout)/medical/actions/appointments";
 import UpdateAppointmentForm from "@/app/(components)/(content-layout)/medical/components/Dashboard/Doctor/UpdateAppointmentForm";
 import { Button } from "../../../../../../components/ui/button";
-
-
 import { Calendar } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-
 export default async function page({
   params: { id },
 }: {

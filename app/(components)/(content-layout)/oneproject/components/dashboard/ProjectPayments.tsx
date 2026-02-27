@@ -46,7 +46,7 @@ export default function ProjectPayments({
             <CardDescription>Select a project to view payments</CardDescription>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[calc(100vh-250px)]">
+            <ScrollArea >
               {userProjects.map((project) => (
                 <Link
                   href={`/oneproject/dashboard/payments?pId=${project.id}`}
@@ -99,7 +99,7 @@ export default function ProjectPayments({
           </CardHeader>
           <CardContent>
             {selectedProject ? (
-              <ScrollArea className="h-[calc(100vh-250px)]">
+              <ScrollArea>
                 {selectedProject.payments.map((payment) => (
                   <div key={payment.id} className="mb-4">
                     <div className="flex justify-between items-center">

@@ -17,11 +17,11 @@ export default async function Layout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div className="grid w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar session={user} />
       <div className="flex flex-col">
         <NavBar session={user} />
-        <div className="flex min-h-screen w-full flex-col">{children}</div>
+        <div className="flex w-full flex-col">{children}</div>
       </div>
         <Toaster position="top center"/>
     </div>

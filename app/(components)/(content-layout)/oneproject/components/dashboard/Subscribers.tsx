@@ -81,7 +81,10 @@ export default function Subscribers({
                   </TableCell>
 
                   <TableCell className="text-right flex items- justify-end space-x-3">
-                    <Button size={"sm"}>Send Mail</Button>
+                    <Link href="/oneproject/dashboard/emails">
+                      <Button size={"sm"}>Send Mail</Button>
+                    </Link>
+
                     <button onClick={() => handleDelete(item.id)}>
                       <Trash2 className="w-4 h-4 text-red-500" />
                     </button>

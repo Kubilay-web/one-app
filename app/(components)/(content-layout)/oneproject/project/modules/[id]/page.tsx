@@ -1,9 +1,13 @@
-
-import { getProjectModules,getModuleById } from "../../../actions/modules";
+import { getProjectModules, getModuleById } from "../../../actions/modules";
 import { Button } from "../../../components/ui/button";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { notFound } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent } from "../../../components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../../../components/ui/card";
 import { Progress } from "../../../components/ui/progress";
 import {
   Plus,
@@ -39,8 +43,7 @@ export default async function Page({
 }) {
   const { pId, slug = "Project" } = searchParams;
   const modules = (await getProjectModules(pId as string)) || [];
-  const {user} = await validateRequest();
-
+  const { user } = await validateRequest();
 
   const activeModule = modules.find((module, i) => module.id === id);
   if (!activeModule || modules?.length < 0) {
@@ -67,28 +70,27 @@ export default async function Page({
   // console.log(allTasks);
   const title = getTitle(slug as string);
 
-
-     const safeUser = {
+  const safeUser = {
     id: user?.id,
     roleproject: user?.roleproject,
     email: user?.email,
     username: user?.username,
-    avatarUrl:user?.avatarUrl
+    avatarUrl: user?.avatarUrl,
   };
   return (
     <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-8">
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow min-h-96">
         <div className="flex items-center p-4 justify-between">
           <BackBtn title={`Back to ${title}`} />
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
+          {/* <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
             <ModeToggle />
             <AuthenticatedAvatar user={safeUser} />
-          </div>
+          </div> */}
         </div>
         <div className="grid grid-cols-12 ">
           <div className="col-span-full lg:col-span-3 px-8 py-4">
             <h2 className="py-2 text-xl font-bold ">Project Modules</h2>
-            <ScrollArea className="h-[calc(100vh-8rem)]">
+            <ScrollArea>
               {modules.map((module) => (
                 <Link
                   href={`/oneproject/project/modules/${module.id}?pId=${module.projectId}`}
@@ -116,7 +118,7 @@ export default async function Page({
             />
           </div>
           <div className="col-span-full lg:col-span-9 bg-slate-50 py-4 px-8">
-            <div className="flex-1 p-8">
+            <div className="flex-1 p-3">
               {activeModule && <TaskBoard activeModule={activeModule} />}
             </div>
           </div>

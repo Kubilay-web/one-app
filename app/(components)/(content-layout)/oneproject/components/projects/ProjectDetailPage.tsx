@@ -112,12 +112,14 @@ export default function ProjectDetailPage({
   const user=session.user;
 
 
-  const role=user?.roleproject
+  let role=user?.roleproject
 
 
   if (user?.id !== projectData.user.id) {
     role = "MEMBER";
   }
+
+  
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const paidAmount = projectData.payments.reduce((acc, item) => {

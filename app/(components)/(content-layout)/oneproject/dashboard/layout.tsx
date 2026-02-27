@@ -86,15 +86,16 @@ export default async function DashboardLayout({
     avatarUrl: user?.avatarUrl,
   };
   return (
-    <div className="min-h-screen w-full md:grid md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      {/* Sidebar */}
-      <div className="md:block">
+    <div className="min-h-screen w-full flex-col">
+    
+
+      {/* <div className="md:block">
         <Sidebar user={safeUser} />
-      </div>
+      </div> */}
 
       {/* Main content */}
       <div className="flex flex-col">
-        <Navbar user={safeUser} />
+        {/* <Navbar user={safeUser} /> */}
 
         <DismissableBanner
           message="Please update your local currency if you haven't already"

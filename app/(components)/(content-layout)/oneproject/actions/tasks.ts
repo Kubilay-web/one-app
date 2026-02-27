@@ -109,3 +109,13 @@ export async function deleteTask(id: string) {
     };
   }
 }
+
+
+
+
+export async function updateTaskStatusJob(taskId: string, status: "TODO" | "INPROGRESS" | "COMPLETE") {
+  return await db.task.update({
+    where: { id: taskId },
+    data: { status },
+  });
+}

@@ -16,7 +16,7 @@ export default async function page() {
   const appointments = (await getDoctorAppointments(user?.id)).data || [];
   return (
     <div>
-      <div className="py-2  border-b border-gray-200 flex items-center justify-end px-4">
+      <div className="py-2 border-b border-gray-200 flex items-center justify-end px-4">
         <div className="flex items-center gap-4">
           <NewButton
             title="New Appointment"

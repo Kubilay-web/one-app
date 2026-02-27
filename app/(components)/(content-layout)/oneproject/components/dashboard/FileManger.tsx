@@ -106,7 +106,7 @@ export default function FileManager({
   }
 
   return (
-    <div className="flex h-screen bg-white text-black">
+    <div className="flex h-screen bg-white text-black mt-4">
       {/* SIDEBAR */}
       <div className="w-64 bg-white border-r border-gray-200">
         <div className="p-4 flex justify-between">

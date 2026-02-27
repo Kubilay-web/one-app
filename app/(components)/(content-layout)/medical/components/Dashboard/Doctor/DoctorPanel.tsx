@@ -39,7 +39,7 @@ export default function DoctorPanel({
   console.log(role);
   const pathname = usePathname();
   return (
-    <ScrollArea className="h-96 w-full ">
+    <ScrollArea className="h-30 w-full ">
       {doctors &&
         doctors.map((doctor: any) => {
           const status = doctor?.doctorProfile?.status ?? "PENDING";

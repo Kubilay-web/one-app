@@ -93,7 +93,7 @@ export default function DataTable<TData, TValue>({
     )}
 
     {/* Filters */}
-    <div className="flex flex-wrap justify-between items-center gap-4">
+    <div className="flex flex-wrap justify-between items-center gap-4 p-1">
       <div className="flex-1 w-full">
         <SearchBar
           data={data}

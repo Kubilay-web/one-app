@@ -56,7 +56,6 @@ export async function getUserSubscribers(userId: string) {
         userId,
       },
     });
-    revalidatePath("/oneproject/dashboard/subscribers");
     return data;
   } catch (error) {
     console.log(error);
@@ -70,7 +69,7 @@ export async function deleteSubscriber(id: string) {
         id,
       },
     });
-    revalidatePath("/oneproject/dashboard/subscribers");
+
     return {
       ok: true,
       data: deletedSub,

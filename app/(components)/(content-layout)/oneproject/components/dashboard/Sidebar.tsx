@@ -44,7 +44,7 @@ type SafeUser = {
 
 export default function Sidebar({ user }: { user: SafeUser | null }) {
   const role = user?.roleproject;
-  
+
   const sidebarLinks = [
     {
       title: "Dashboard",
@@ -156,7 +156,7 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
       ],
     },
   ];
-  
+
   const pathname = usePathname();
 
   return (
@@ -204,9 +204,9 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
                           href={link.href}
                           className={cn(
                             "flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors",
-                            isActive 
-                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800" 
-                              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                            isActive
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800"
+                              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white",
                           )}
                         >
                           <Icon className="h-5 w-5 flex-shrink-0" />
@@ -214,12 +214,14 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
                             {link.title}
                           </span>
                           {link.badge && (
-                            <span className={cn(
-                              "px-2 py-0.5 text-xs font-medium rounded-full",
-                              link.badge.variant === "info"
-                                ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300"
-                                : "bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-300"
-                            )}>
+                            <span
+                              className={cn(
+                                "px-2 py-0.5 text-xs font-medium rounded-full",
+                                link.badge.variant === "info"
+                                  ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300"
+                                  : "bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-300",
+                              )}
+                            >
                               {link.badge.title}
                             </span>
                           )}
@@ -229,7 +231,7 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
                   </div>
                 </div>
               ))}
-              
+
               {/* Admin Link */}
               {role === "ADMIN" && (
                 <div className="space-y-2">
@@ -242,7 +244,7 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
                       "flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors",
                       pathname === "/oneproject/dashboard/users"
                         ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white",
                     )}
                   >
                     <Users className="h-5 w-5 flex-shrink-0" />
@@ -250,7 +252,7 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
                   </Link>
                 </div>
               )}
-              
+
               {/* Live Website Link */}
               <Link
                 href="/oneproject/home"
@@ -276,7 +278,10 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
         <div className="overflow-x-auto">
           <div className="flex space-x-1 p-4 border-b border-gray-200 dark:border-gray-800">
             {sidebarLinks.slice(0, 4).map((section, sectionIndex) => (
-              <div key={sectionIndex} className="flex flex-col items-center space-y-1 min-w-[70px]">
+              <div
+                key={sectionIndex}
+                className="flex flex-col items-center space-y-1 min-w-[70px]"
+              >
                 {section.links.slice(0, 1).map((link, linkIndex) => {
                   const Icon = link.icon;
                   const isActive = pathname === link.href;
@@ -288,21 +293,18 @@ export default function Sidebar({ user }: { user: SafeUser | null }) {
                         "flex flex-col items-center p-2 rounded-lg transition-colors",
                         isActive
                           ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
                       )}
                     >
                       <Icon className="h-5 w-5 mb-1" />
                       <span className="text-xs font-medium truncate max-w-[60px]">
-                        {link.title.split(' ')[0]}
+                        {link.title.split(" ")[0]}
                       </span>
                     </Link>
                   );
                 })}
               </div>
             ))}
-            
-    
-  
           </div>
         </div>
       </div>

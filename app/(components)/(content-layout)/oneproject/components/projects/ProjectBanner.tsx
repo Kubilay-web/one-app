@@ -134,7 +134,7 @@ export default function ProjectBanner({
         src={imageUrl}
         className="w-full h-full object-cover mix-blend-overlay"
       />
-      <div className="absolute inset-0 flex items-center justify-center ">
+      <div className="absolute inset-0 flex items-center justify-center">
         {editing && isPrivate ? (
           <form
             className="max-w-[600px]"
@@ -179,13 +179,13 @@ export default function ProjectBanner({
             </Button>
           )}
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="bg-white text-black">
           <Tabs defaultValue="gradient" className="w-full">
             <TabsList>
               <TabsTrigger value="gradient">Gradients</TabsTrigger>
               <TabsTrigger value="upload">Upload</TabsTrigger>
               <TabsTrigger value="link">Link</TabsTrigger>
-              <TabsTrigger value="unsplash">Unsplash</TabsTrigger>
+              {/* <TabsTrigger value="unsplash">Unsplash</TabsTrigger> */}
             </TabsList>
             <TabsContent value="gradient">
               <div className="grid grid-cols-3 gap-4 py-3 px-6">
@@ -234,9 +234,9 @@ export default function ProjectBanner({
                 </form>
               </div>
             </TabsContent>
-            <TabsContent value="unsplash">
+            {/* <TabsContent value="unsplash">
               <h2 className="py-6">Waiting for Access to API</h2>
-              {/* <div className="grid grid-cols-2 gap-4 py-3 px-6">
+              <div className="grid grid-cols-2 gap-4 py-3 px-6">
                 {gradients.map((item: string, i) => {
                   return (
                     <button
@@ -246,8 +246,8 @@ export default function ProjectBanner({
                     ></button>
                   );
                 })}
-              </div> */}
-            </TabsContent>
+              </div>
+            </TabsContent> */}
           </Tabs>
         </SheetContent>
       </Sheet>

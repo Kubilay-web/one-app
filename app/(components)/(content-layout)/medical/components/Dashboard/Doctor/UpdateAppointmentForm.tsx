@@ -86,7 +86,7 @@ export default function UpdateAppointmentForm({
     >
       <div className="sm:col-span-4">
         <div className="flex items-center justify-between border-b">
-          <h2 className="scroll-m-20 text-xl font-semibold tracking-tight py-2 mb-3">
+          <h2 className="scroll-m-20 text-md font-semibold tracking-tight py-2 pr-3 mb-3">
             Update Appointment
           </h2>
           <Button disabled={loading}>
@@ -119,9 +119,9 @@ export default function UpdateAppointmentForm({
             />
           </div>
           <div className="py-2">
-            <div className="grid grid-cols-2 gap-6">
+            <div className="flex flex-col w-full">
               <SelectInput
-                className="col-span-1"
+        
                 label="Meeting Provider"
                 name="meetingProvider"
                 register={register}
@@ -133,7 +133,7 @@ export default function UpdateAppointmentForm({
                 errors={errors}
                 register={register}
                 radioOptions={statusOptions}
-                className="col-span-1"
+        
               />
             </div>
           </div>

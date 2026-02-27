@@ -60,9 +60,9 @@ export default async function PatientLayout({
   // console.log(patients);
   return (
     <div>
-      <div className="grid grid-cols-12">
+      <div className="flex flex-row flex-wrap justify-around w-full">
         {/* LIST PANNEL */}
-        <div className="col-span-4  py-3 border-r border-gray-100">
+        <div className="py-3 border-r border-gray-100">
           <PanelHeader
             title="Patients"
             count={patients.length ?? 0}
@@ -73,7 +73,7 @@ export default async function PatientLayout({
           </div>
         </div>
 
-        <div className="col-span-8">{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );

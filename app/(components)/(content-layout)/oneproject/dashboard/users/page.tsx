@@ -11,7 +11,7 @@ export default async function ReviewPage() {
   const role = user?.roleproject;
 
   if (role !== "ADMIN") {
-    return <div>No authorized page.</div>;
+    return <div className="flex justify-center text-2xl w-full h-full pt-5">No authorized page access admin only.</div>;
   }
 
   const users = (await getAllUsers()) || [];

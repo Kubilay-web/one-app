@@ -30,7 +30,7 @@ export default function PatientPanel({
   console.log(role);
   const pathname = usePathname();
   return (
-    <ScrollArea className="h-96 w-full ">
+    <ScrollArea className="h-30 w-full ">
       {patients.map((item) => {
         const path =
           role === "DOCTOR"
