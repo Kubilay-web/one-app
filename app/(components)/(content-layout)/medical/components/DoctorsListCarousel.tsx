@@ -1,13 +1,78 @@
+// "use client";
+// import { BaggageClaim } from "lucide-react";
+// import Image from "next/image";
+// import Link from "next/link";
+// import React from "react";
+// import Carousel from "react-multi-carousel";
+// import "react-multi-carousel/lib/styles.css";
+// import DoctorCard from "./DoctorCard";
+
+
+// import { Doctor } from "../types/types";
+
+// export default function DoctorsListCarousel({
+//   doctors,
+//   isInPerson,
+// }: {
+//   doctors: Doctor[];
+//   isInPerson?: boolean;
+// }) {
+//   const responsive = {
+//     desktop: {
+//       breakpoint: { max: 3000, min: 1024 },
+//       items: 3,
+//       slidesToSlide: 3, // optional, default to 1.
+//     },
+//     tablet: {
+//       breakpoint: { max: 1024, min: 464 },
+//       items: 3,
+//       slidesToSlide: 2, // optional, default to 1.
+//     },
+//     mobile: {
+//       breakpoint: { max: 464, min: 0 },
+//       items: 2,
+//       slidesToSlide: 1, // optional, default to 1.
+//     },
+//   };
+//   console.log(doctors);
+//   return (
+//     <Carousel
+//       swipeable={false}
+//       draggable={false}
+//       showDots={true}
+//       responsive={responsive}
+//       ssr={true} // means to render carousel on server-side.
+//       infinite={true}
+//       autoPlay={true}
+//       autoPlaySpeed={5000}
+//       keyBoardControl={true}
+//       customTransition="all .5"
+//       transitionDuration={1000}
+//       containerClass="carousel-container"
+//       removeArrowOnDeviceType={["tablet", "mobile"]}
+//       // deviceType={}
+//       dotListClass="custom-dot-list-style"
+//       itemClass="px-4"
+//     >
+//       {doctors.map((doctor: Doctor, i: number) => {
+//         return <DoctorCard doctor={doctor} key={i} isInPerson={isInPerson} />;
+//       })}
+//     </Carousel>
+
+
+//   );
+// }
+
+
+
+
+
+
 "use client";
-import { BaggageClaim } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import DoctorCard from "./DoctorCard";
-
-
 import { Doctor } from "../types/types";
 
 export default function DoctorsListCarousel({
@@ -21,44 +86,44 @@ export default function DoctorsListCarousel({
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
       items: 3,
-      slidesToSlide: 3, // optional, default to 1.
+      slidesToSlide: 1,
     },
     tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 3,
-      slidesToSlide: 2, // optional, default to 1.
+      breakpoint: { max: 1024, min: 640 },
+      items: 2,
+      slidesToSlide: 1,
     },
     mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 2,
-      slidesToSlide: 1, // optional, default to 1.
+      breakpoint: { max: 640, min: 0 },
+      items: 1, // ✅ MOBİLDE TEK TEK
+      slidesToSlide: 1,
     },
   };
-  console.log(doctors);
-  return (
-    <Carousel
-      swipeable={false}
-      draggable={false}
-      showDots={true}
-      responsive={responsive}
-      ssr={true} // means to render carousel on server-side.
-      infinite={true}
-      autoPlay={true}
-      autoPlaySpeed={5000}
-      keyBoardControl={true}
-      customTransition="all .5"
-      transitionDuration={1000}
-      containerClass="carousel-container"
-      removeArrowOnDeviceType={["tablet", "mobile"]}
-      // deviceType={}
-      dotListClass="custom-dot-list-style"
-      itemClass="px-4"
-    >
-      {doctors.map((doctor: Doctor, i: number) => {
-        return <DoctorCard doctor={doctor} key={i} isInPerson={isInPerson} />;
-      })}
-    </Carousel>
 
-    //5.video 30.39
+  return (
+    <div className="w-full">
+      <Carousel
+        responsive={responsive}
+        ssr
+        infinite={doctors.length > 3}
+        autoPlay={doctors.length > 3}
+        autoPlaySpeed={5000}
+        keyBoardControl
+        swipeable
+        draggable
+        showDots
+        transitionDuration={500}
+        containerClass="carousel-container"
+        removeArrowOnDeviceType={["tablet", "mobile"]}
+        dotListClass="custom-dot-list-style"
+        itemClass="px-2 sm:px-3 lg:px-4"
+      >
+        {doctors.map((doctor: Doctor) => (
+          <div key={doctor.id} className="h-full">
+            <DoctorCard doctor={doctor} isInPerson={isInPerson} />
+          </div>
+        ))}
+      </Carousel>
+    </div>
   );
 }

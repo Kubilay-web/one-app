@@ -19,9 +19,9 @@ export default async function page() {
   const {user}=await validateRequest();
 
 
-  if (user?.rolemedical !== "ADMIN") {
-    return <NotAuthorized />;
-  }
+  // if (user?.rolemedical !== "ADMIN") {
+  //   return <NotAuthorized />;
+  // }
 
   
   const doctors = (await getDoctors()) || [];
@@ -29,7 +29,7 @@ export default async function page() {
   //doctors/doctor-asuman-jb
   return (
     <div>
-      <div className="py-2  border-b border-gray-200 flex items-center justify-end px-4">
+      <div className="py-2  border-b border-gray-200 flex items-center px-4">
         <div className="flex items-center gap-4">
           <NewButton title="New Doctor" href={`#`} />
         </div>

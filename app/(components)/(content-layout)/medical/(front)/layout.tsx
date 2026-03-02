@@ -8,8 +8,8 @@ import React, { ReactNode } from "react";
 export default async function Layout({ children }: { children: ReactNode }) {
   const {user} = await validateRequest();
   return (
-    <div className="">
-      <SiteHeader session={user} />
+    <div>
+      {/* <SiteHeader session={user} /> */}
       {children}
       <Footer />
     </div>

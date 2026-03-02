@@ -19,9 +19,15 @@ export default async function AppointmentLayout({
   
   const {user} = await validateRequest();
 
-   if (user?.rolemedical !== "DOCTOR") {
-     return <NotAuthorized />;
+  //  if (user?.rolemedical !== "DOCTOR") {
+  //    return <NotAuthorized />;
+  //  }
+
+
+    if (user?.rolemedical !== "DOCTOR") {
+     return <div>Rolemedical doctor only for this page.</div>;
    }
+
 
 
   
@@ -31,7 +37,7 @@ export default async function AppointmentLayout({
       {/* Header */}
 
       {/* 2 PANNELS */}
-      <div className="flex flex-row justify-between flex-wrap">
+      <div className="flex flex-row flex-wrap w-full justify-around">
         {/* LIST PANNEL */}
         <div className="py-3 border-r border-gray-100">
           <PanelHeader

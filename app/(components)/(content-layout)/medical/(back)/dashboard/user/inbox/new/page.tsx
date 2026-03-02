@@ -14,9 +14,14 @@ export default async function page() {
 
 
   const {user}=await validateRequest();
-  if (user?.rolemedical !== "USER") {
-    return <NotAuthorized />;
-  }
+
+
+  // if (user?.rolemedical !== "USER") {
+  //   return <NotAuthorized />;
+  // }
+
+
+
   const appointments = (await getPatientAppointments(user?.id)).data || [];
 
   const uniquePatientsMap = new Map();

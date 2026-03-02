@@ -20,7 +20,7 @@ export default function PanelHeader({
 }) {
   const Icon = icon;
   return (
-    <div className="py-2 px-6 border-b border-gray-200 flex items-center justify-between mb-4">
+    <div className="py-2 px-6 border-b border-gray-200 flex items-center mb-4">
       <div className="flex items-center gap-1 text-sm">
         <Icon className="w-4 h-4 flex-shrink-0" />
         <span>{title}</span>

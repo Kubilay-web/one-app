@@ -15,9 +15,11 @@ export default async function page() {
 
   const {user}=await validateRequest();
 
-  if (user?.rolemedical !== "USER") {
-    return <NotAuthorized />;
-  }
+  // if (user?.rolemedical !== "USER") {
+  //   return <NotAuthorized />;
+  // }
+
+
   const messages = (await getInboxMessages(user?.id)).data || [];
   return (
     <div>

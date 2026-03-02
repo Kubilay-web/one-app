@@ -123,7 +123,7 @@ export default async function page({
                     )}
                   >
                     <div className="flex justify-between items-center pb-2">
-                      <h2>
+                      <h2 className="text-lg">
                         {item.firstName} {item.lastName}
                       </h2>
                       <div className="flex items-center ">
