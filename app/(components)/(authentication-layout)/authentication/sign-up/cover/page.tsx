@@ -181,7 +181,7 @@ const onSubmit = async (values: SignUpValues) => {
                     <div className="text-center">
                       <p className="text-textmuted dark:text-textmuted/50 mt-4 mb-0">
                         Already have an account?{' '}
-                        <Link href="/" className="text-primary">
+                        <Link href="/login" className="text-primary">
                           Sign In
                         </Link>
                       </p>

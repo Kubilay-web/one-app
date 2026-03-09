@@ -82,6 +82,40 @@ model User {
 
   //
 
+
+
+  // Invoice Generator Start
+
+
+
+
+
+  jobTitle      String?
+
+
+  account      AccountInvoice[]
+
+  isVerified    Boolean   @default(false)
+
+
+  // Subscription related fields
+  stripeCustomerId String?
+  subscription     SubscriptionInvoice?
+  payment         PaymentInvoice[]
+  invoiceCount     Int           @default(0)
+
+  // Invoice tracking fields (modified)
+  dailyInvoicesCreated Int       @default(0) // Count for current day
+  lastInvoiceDate      DateTime? // Last invoice creation date (for daily reset)
+  totalInvoicesCreated Int       @default(0) // Lifetime count
+  // Invoice SaaS relationships
+  brand                Brand?
+  clients              Client[]
+  invoice            InvoiceModel[]
+
+  // Invoice Generator Finish
+
+
   // Medical App
 
   slug           String           @default("slug")
@@ -2802,3 +2836,297 @@ enum AppointmentStatusMedical {
 }
 
 ////
+
+
+
+
+
+
+//Invoice Generator Start
+
+
+
+model AccountInvoice {
+  id          String   @id @default(cuid()) @map("_id")
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+
+
+enum UserRoleInvoice {
+  USER
+  ADMIN
+  SERVICE_PROVIDER
+}
+
+enum SubscriptionPlan {
+  FREE
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+  PAST_DUE
+  TRIALING
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+}
+
+enum PaymentStatusInvoice {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+model SubscriptionInvoice {
+   id          String   @id @default(cuid()) @map("_id")
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Stripe related fields
+  stripeSubscriptionId String? @unique
+  stripePriceId        String?
+  stripeCustomerId     String?
+
+  // Subscription details
+  plan               SubscriptionPlan   @default(FREE)
+  status             SubscriptionStatus @default(INACTIVE)
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean            @default(false)
+  cancelAt           DateTime?
+  canceledAt         DateTime?
+  trialStart         DateTime?
+  trialEnd           DateTime?
+
+  // Pricing
+  priceAmount   Int? // Amount in cents
+  priceCurrency String? @default("usd")
+  interval      String? // month, year
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscriptionsinvoice")
+}
+
+model PaymentInvoice {
+  id          String   @id @default(cuid()) @map("_id")
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Stripe related fields
+  stripePaymentId  String  @unique
+  stripeCustomerId String?
+  stripeInvoiceId  String?
+
+  // Payment details
+  amount      Int // Amount in cents
+  currency    String        @default("usd")
+  status      PaymentStatusInvoice @default(PENDING)
+  description String?
+
+  // Plan information
+  plan     SubscriptionPlan
+  interval String? // month, year for subscription payments
+
+  // Receipt and invoice
+  receiptUrl String?
+  invoiceUrl String?
+
+  // Timestamps
+  paidAt     DateTime?
+  failedAt   DateTime?
+  refundedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
+}
+
+// Optional: Track plan limits and usage
+
+model PlanLimit {
+   id          String   @id @default(cuid()) @map("_id")
+  plan              SubscriptionPlan @unique
+  maxDailyInvoices  Int?             @default(2)
+  maxClients        Int? // null means unlimited
+  customBranding    Boolean          @default(false)
+  prioritySupport   Boolean          @default(false)
+  teamAccess        Boolean          @default(false)
+  exportFormats     String[]         @default(["PDF"])
+  canRemoveBranding Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("plan_limits")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  VIEWED
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum InvoiceTemplate {
+  PROFESSIONAL
+  MODERN
+  CLASSIC
+  MINIMAL
+}
+
+// User Brand Model (One-to-One with User)
+model Brand {
+   id          String   @id @default(cuid()) @map("_id")
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Brand Information
+  name       String
+  logo       String? // URL to logo image
+  currency   String? @default("$") // URL to logo image
+  slogan     String?
+  phone      String?
+  address    String?
+  email      String?
+  brandColor String? @default("#000000")
+
+  // Template Selection
+  template InvoiceTemplate @default(PROFESSIONAL)
+
+  // Payment Information
+  paymentInfo String? // Bank details, payment methods, etc.
+
+  // Messages
+  thankYouMsg String? // Thank you message for invoices
+  contactInfo String? // Thank you message for invoices
+
+  // Tax Information
+  taxRate      Float? // Tax rate as percentage (e.g., 8.25%)
+  salesTax     Float? // Fixed sales tax amount
+  otherCharges Float? // Other fixed charges
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("brands")
+}
+
+// User Clients Model
+model Client {
+  id          String   @id @default(cuid()) @map("_id")
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Client Information
+  contactPerson String
+  companyName   String
+  location      String? // Address/Location
+  phone         String?
+  email         String?
+  customerID    String?
+
+  // Additional client details
+  notes    String? // Optional notes about the client
+  isActive Boolean @default(true)
+
+  // Relationships
+  invoices InvoiceModel[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("clients")
+}
+
+// Invoice Model
+model InvoiceModel {
+  id          String   @id @default(cuid()) @map("_id")
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  // Invoice Details
+  invoiceNumber String
+  invoiceDate   DateTime @default(now())
+  dueDate       DateTime
+  preparedBy    String? // Who prepared the invoice
+
+  // Status and tracking
+  status InvoiceStatus @default(DRAFT)
+
+  // Financial totals (calculated from items)
+  subtotal    Float @default(0)
+  taxAmount   Float @default(0)
+  totalAmount Float @default(0)
+
+  // Additional fields
+  notes String? // Invoice notes
+  terms String? // Payment terms
+
+  // Tracking
+  sentAt   DateTime? // When invoice was sent
+  viewedAt DateTime? // When client viewed invoice
+  paidAt   DateTime? // When invoice was paid
+
+  // Relationships
+  items InvoiceItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoices")
+}
+
+// Invoice Item Model
+model InvoiceItem {
+  id          String   @id @default(cuid()) @map("_id")
+  invoiceId String
+  invoice   InvoiceModel @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  // Item Details
+  description String
+  quantity    Float
+  unitPrice   Float
+  totalPrice  Float
+
+  // Optional fields
+  itemOrder Int? // Order of items in the invoice
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoice_items")
+}
+
+
+
+
+
+//Invoice Generator Finish

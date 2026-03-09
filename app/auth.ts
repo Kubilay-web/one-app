@@ -27,7 +27,8 @@ export const lucia = new Lucia(adapter, {
       roleshop:databaseUserAttributes.roleshop,
       roleestate:databaseUserAttributes.roleestate,
       rolemedical:databaseUserAttributes.rolemedical,
-      roleproject:databaseUserAttributes.roleproject
+      roleproject:databaseUserAttributes.roleproject,
+      roleinvoice:databaseUserAttributes.roleinvoice
     };
   },
 });
@@ -52,6 +53,7 @@ interface DatabaseUserAttributes {
   rolemedical:string|null;
   email: string;
   roleproject:string;
+  roleinvoice:string;
 }
 
 export const google = new Google(

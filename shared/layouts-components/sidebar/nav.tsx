@@ -414,7 +414,8 @@ export const getMenuItems = (user) => [
         ],
       },
 
-      {
+  
+    {
         title: "Project",
         icon: Dashboardicon,
         type: "sub",
@@ -550,6 +551,113 @@ export const getMenuItems = (user) => [
         ],
       },
 
+
+
+          {
+        title: "Invoice",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/invoice",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
+
+          {
+            path: "/invoice/dashboard",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Home",
+          },
+          
+          {
+            path: "/invoice/dashboard/billing",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Billing",
+          },
+
+          {
+            path: "/invoice/dashboard/category-listing",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Category Listing",
+          },
+
+
+             {
+            path: "/invoice/dashboard/clients",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Clients",
+          },
+
+
+                   {
+            path: "/invoice/dashboard/invoices",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Invoices",
+          },
+
+
+                          {
+            path: "/invoice/dashboard/pro-users",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Pro Users",
+          },
+
+                                    {
+            path: "/invoice/dashboard/settings/brand",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Brand Settings",
+          },
+
+
+                                            {
+            path: "/invoice/dashboard/settings/invoice-templates",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Invoice Templates",
+          },
+
+
+                                                     {
+            path: "/invoice/dashboard/settings/profile",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Settings Profile",
+          },
+
+                                                              {
+            path: "/invoice/dashboard/users",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard Users",
+          },
+
+
+        ],
+      },
+
+
+      
       // {
       //   title: "Social",
       //   icon: Dashboardicon,
@@ -4296,6 +4404,10 @@ export const getMenuItems = (user) => [
       },
     ],
   },
+
+
+
+
 
   // {
   //   menutitle: "Utilities",
