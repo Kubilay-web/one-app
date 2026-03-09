@@ -1,4 +1,4 @@
-/* eslint-disable ../../..typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/ui/date-filter.tsx
 "use client";
 
@@ -31,7 +31,6 @@ import { Calendar } from "../../../components/ui/calendar";
 import { cn } from "@/app/lib/utils";
 import { DateRange as CalendarDateRange } from "react-day-picker";
 
-// Define our own DateRange type for the component API
 export type DateRange = {
   from: Date | undefined;
   to: Date | undefined;
@@ -93,7 +92,7 @@ export default function DateFilter({ onFilterChange }: DateFilterProps) {
         break;
       case "custom":
         setIsCalendarOpen(true);
-        return; // Don't update filter yet, wait for user to select dates
+        return;
     }
 
     onFilterChange(newRange, option);
@@ -125,32 +124,63 @@ export default function DateFilter({ onFilterChange }: DateFilterProps) {
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 bg-white text-black">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="min-w-[180px] justify-between">
+          <Button
+            variant="outline"
+            className="min-w-[180px] justify-between bg-white text-black border-gray-300"
+          >
             <span>{getFilterLabel()}</span>
             <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[200px]">
-          <DropdownMenuItem onSelect={() => handleOptionSelect("lifetime")}>
+
+        <DropdownMenuContent
+          align="end"
+          className="w-[200px] bg-white text-black border border-gray-200"
+        >
+          <DropdownMenuItem
+            className="hover:bg-gray-100"
+            onSelect={() => handleOptionSelect("lifetime")}
+          >
             All Time
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleOptionSelect("today")}>
+
+          <DropdownMenuItem
+            className="hover:bg-gray-100"
+            onSelect={() => handleOptionSelect("today")}
+          >
             Today
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleOptionSelect("last7days")}>
+
+          <DropdownMenuItem
+            className="hover:bg-gray-100"
+            onSelect={() => handleOptionSelect("last7days")}
+          >
             Last 7 Days
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleOptionSelect("thisMonth")}>
+
+          <DropdownMenuItem
+            className="hover:bg-gray-100"
+            onSelect={() => handleOptionSelect("thisMonth")}
+          >
             This Month
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleOptionSelect("thisYear")}>
+
+          <DropdownMenuItem
+            className="hover:bg-gray-100"
+            onSelect={() => handleOptionSelect("thisYear")}
+          >
             This Year
           </DropdownMenuItem>
+
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => handleOptionSelect("custom")}>
+
+          <DropdownMenuItem
+            className="hover:bg-gray-100"
+            onSelect={() => handleOptionSelect("custom")}
+          >
             Custom Range
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -162,11 +192,12 @@ export default function DateFilter({ onFilterChange }: DateFilterProps) {
             <Button
               variant="outline"
               className={cn(
-                "justify-start text-left font-normal",
-                !dateRange?.from && !dateRange?.to && "text-muted-foreground"
+                "justify-start text-left font-normal bg-white text-black border-gray-300",
+                !dateRange?.from && !dateRange?.to && "text-gray-500"
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
+
               {dateRange?.from && dateRange?.to ? (
                 <>
                   {format(dateRange.from, "MMM dd, yyyy")} -{" "}
@@ -177,7 +208,11 @@ export default function DateFilter({ onFilterChange }: DateFilterProps) {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="end">
+
+          <PopoverContent
+            className="w-auto p-0 bg-white text-black border border-gray-200"
+            align="end"
+          >
             <Calendar
               initialFocus
               mode="range"
@@ -185,9 +220,8 @@ export default function DateFilter({ onFilterChange }: DateFilterProps) {
               selected={dateRange}
               onSelect={(range) => {
                 setDateRange(range);
-                // Only trigger the filter change when both dates are selected
+
                 if (range?.from && range?.to) {
-                  // Use setTimeout to break the render cycle
                   setTimeout(() => {
                     onFilterChange(
                       {

@@ -1,5 +1,13 @@
-// app/api/billing/customer-portal/route.ts
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+
+
+
 import { NextRequest, NextResponse } from "next/server";
+
+
+
 import { stripe } from "../../../config/stripe";
 import db from "@/app/lib/db";
 import { validateRequest } from "@/app/auth";

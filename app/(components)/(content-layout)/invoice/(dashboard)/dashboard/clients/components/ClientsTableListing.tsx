@@ -32,7 +32,9 @@ import {
 
 
 
-import { ClientData,deleteClient } from "../../../../actions/client";
+import { deleteClient } from "../../../../actions/client";
+import { ClientData } from "../../../../types/client";
+
 
 export default function ClientsTableListing({
   clients,

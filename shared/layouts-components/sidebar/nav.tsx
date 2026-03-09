@@ -627,13 +627,13 @@ export const getMenuItems = (user) => [
           },
 
 
-                                            {
-            path: "/invoice/dashboard/settings/invoice-templates",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard Invoice Templates",
-          },
+          //                                   {
+          //   path: "/invoice/dashboard/settings/invoice-templates",
+          //   type: "link",
+          //   active: false,
+          //   selected: false,
+          //   title: "Dashboard Invoice Templates",
+          // },
 
 
                                                      {

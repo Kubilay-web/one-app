@@ -28,7 +28,7 @@ export default async function DashboardLayout({
 
       {/* Main Content */}
       <main className="flex-1 md:ml-[20px] lg:ml-[50px] transition-all duration-300">
-        <Navbar session={user} />
+        {/* <Navbar session={user} /> */}
         <div className="p-4 lg:p-6 bg-white/50 backdrop-blur-sm min-h-[calc(100vh-60px)]">
           <div className="max-w-7xl mx-auto">{children}</div>
         </div>

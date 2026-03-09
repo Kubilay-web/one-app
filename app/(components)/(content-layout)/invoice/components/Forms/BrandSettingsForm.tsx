@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 
 
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import CloudinaryLogoUploader from "../FormInputs/CloudinaryLogoUploader";
 import * as z from "zod";
 import {
   Card,
@@ -664,10 +666,10 @@ export default function BrandSettingsForm({
                     </div>
 
                     <div className="">
-                      <LogoUploader
+                      <CloudinaryLogoUploader
                         imageUrl={imageUrl}
                         setImageUrl={setImageUrl}
-                        endpoint="logoImage"
+                        // endpoint="logoImage"
                       />
                     </div>
 

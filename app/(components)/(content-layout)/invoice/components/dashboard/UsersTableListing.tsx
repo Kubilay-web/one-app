@@ -106,7 +106,7 @@ export default function UsersTableListing({
             <Button
               variant="ghost"
               size="sm"
-              href={`/dashboard/users/${user.id}`}
+              href={`/invoice/dashboard/users/${user.id}`}
             >
               <Eye className="mr-2 h-4 w-4" />
               <span>View Details</span>
