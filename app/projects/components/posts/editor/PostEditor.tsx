@@ -41,6 +41,7 @@ const editor = useEditor({
     StarterKit.configure({
       bold: false,
       italic: false,
+      horizontalRule:false
     }),
     Placeholder.configure({
       placeholder: "What's crack-a-lackin'?",
