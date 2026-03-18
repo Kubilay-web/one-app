@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import db from "@/app/lib/db";
 
 export default async function SellerDashboardPage() {
+
+  
   const { user } = await validateRequest();
 
   if (!user) {

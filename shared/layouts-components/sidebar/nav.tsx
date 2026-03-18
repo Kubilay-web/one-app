@@ -414,8 +414,7 @@ export const getMenuItems = (user) => [
         ],
       },
 
-  
-    {
+      {
         title: "Project",
         icon: Dashboardicon,
         type: "sub",
@@ -436,7 +435,7 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Dashboard",
           },
-          
+
           {
             path: "/oneproject/dashboard/brand-settings",
             type: "link",
@@ -551,9 +550,7 @@ export const getMenuItems = (user) => [
         ],
       },
 
-
-
-          {
+      {
         title: "Invoice",
         icon: Dashboardicon,
         type: "sub",
@@ -574,7 +571,7 @@ export const getMenuItems = (user) => [
             selected: false,
             title: "Dashboard Home",
           },
-          
+
           {
             path: "/invoice/dashboard/billing",
             type: "link",
@@ -591,8 +588,7 @@ export const getMenuItems = (user) => [
             title: "Dashboard Category Listing",
           },
 
-
-             {
+          {
             path: "/invoice/dashboard/clients",
             type: "link",
             active: false,
@@ -600,8 +596,7 @@ export const getMenuItems = (user) => [
             title: "Dashboard Clients",
           },
 
-
-                   {
+          {
             path: "/invoice/dashboard/invoices",
             type: "link",
             active: false,
@@ -609,8 +604,7 @@ export const getMenuItems = (user) => [
             title: "Dashboard Invoices",
           },
 
-
-                          {
+          {
             path: "/invoice/dashboard/pro-users",
             type: "link",
             active: false,
@@ -618,14 +612,13 @@ export const getMenuItems = (user) => [
             title: "Dashboard Pro Users",
           },
 
-                                    {
+          {
             path: "/invoice/dashboard/settings/brand",
             type: "link",
             active: false,
             selected: false,
             title: "Dashboard Brand Settings",
           },
-
 
           //                                   {
           //   path: "/invoice/dashboard/settings/invoice-templates",
@@ -635,8 +628,7 @@ export const getMenuItems = (user) => [
           //   title: "Dashboard Invoice Templates",
           // },
 
-
-                                                     {
+          {
             path: "/invoice/dashboard/settings/profile",
             type: "link",
             active: false,
@@ -644,20 +636,209 @@ export const getMenuItems = (user) => [
             title: "Dashboard Settings Profile",
           },
 
-                                                              {
+          {
             path: "/invoice/dashboard/users",
             type: "link",
             active: false,
             selected: false,
             title: "Dashboard Users",
           },
-
-
         ],
       },
 
+      {
+        title: "Management",
+        icon: Dashboardicon,
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: "/management",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Home",
+          },
 
-      
+          {
+            path: "/management/contact-us",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Contact Us",
+          },
+
+              {
+            path: "/management/schools/new",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "School-New",
+          },
+
+
+          {
+            path: "/management/dashboard/academics/classes",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Academics Classes",
+          },
+
+          {
+            path: "/management/dashboard/academics/departments",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Academics Departments",
+          },
+
+          {
+            path: "/management/dashboard/academics/exams",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Academics Exams",
+          },
+
+          {
+            path: "/management/dashboard/academics/reports",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Academics Reports",
+          },
+
+          {
+            path: "/management/dashboard/academics/subjects",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Academics Subjects",
+          },
+
+          {
+            path: "/management/dashboard/academics/terms",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Academics Terms",
+          },
+
+          {
+            path: "/management/dashboard/admin/contacts",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Academics Contacts",
+          },
+
+          {
+            path: "/management/dashboard/attendance/by-class",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Attendance By Class",
+          },
+
+          {
+            path: "/management/dashboard/attendance/student",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Attendance Student",
+          },
+
+          {
+            path: "/management/dashboard/attendance",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Attendance",
+          },
+
+          {
+            path: "/management/dashboard/communication/reminders",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Communication Reminders",
+          },
+
+          {
+            path: "/management/dashboard/communication/website-messages",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Communication Website Messages",
+          },
+
+          {
+            path: "/management/dashboard/finance/fees",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Finance Fees",
+          },
+
+          {
+            path: "/management/dashboard/finance/payments",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Finance Payments",
+          },
+
+          {
+            path: "/management/dashboard/logs",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Logs",
+          },
+
+          {
+            path: "/management/dashboard/students",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Students",
+          },
+
+          {
+            path: "/management/dashboard/users/parents",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Users Parents",
+          },
+
+          {
+            path: "/management/dashboard/users/teachers",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Users Teachers",
+          },
+
+          {
+            path: "/management/dashboard/users",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard-Users",
+          },
+
+          {
+            path: "/management/dashboard",
+            type: "link",
+            active: false,
+            selected: false,
+            title: "Dashboard",
+          },
+        ],
+      },
+
       // {
       //   title: "Social",
       //   icon: Dashboardicon,
@@ -4404,10 +4585,6 @@ export const getMenuItems = (user) => [
       },
     ],
   },
-
-
-
-
 
   // {
   //   menutitle: "Utilities",

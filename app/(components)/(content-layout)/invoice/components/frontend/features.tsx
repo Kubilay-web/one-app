@@ -10,7 +10,7 @@ export default function PlainFeatures() {
         title="Launch with"
         titleHighlight="Confidence"
         description="JetShip laravel starter kit equips you with a powerful toolkit, empowering you to bring your vision to life quickly and professionally."
-        imageSrc="/images/auth.webp"
+        imageSrc="/management/images/auth.webp"
         imageAlt="Dashboard Preview"
         imagePosition="left"
         features={[
