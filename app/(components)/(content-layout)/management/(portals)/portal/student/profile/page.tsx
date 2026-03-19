@@ -20,7 +20,8 @@ export default async function page() {
   // }
 
 
-  const student = await getStudentByUserId(user?.id);
+  // const student = await getStudentByUserId(user?.id);
+
 
 
    const school = await SchoolUser(user?.id);
@@ -39,12 +40,20 @@ export default async function page() {
 
 
 
+  const student = (await getStudentByUserId(user?.id))?.[0];
+
+  
+  console.log("student",student)
+
+
+
 
   return (
     <div>
       <StudentDetailPage
         terms={terms.filter((item) => item.year === currentYear)}
         student={student}
+        schoolId={school.id}
       />
     </div>
   );

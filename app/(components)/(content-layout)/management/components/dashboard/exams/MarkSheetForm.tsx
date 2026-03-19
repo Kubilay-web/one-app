@@ -64,6 +64,7 @@ export type MarkSheetCreateProps = {
   classId: string;
   subjectId: string;
   title: string;
+  schoolId:string;
 };
 const generateComment = (marks: number): string => {
   if (marks >= 90) {
@@ -85,11 +86,13 @@ export default function MarkSheetForm({
   classes,
   subjects,
   exams,
+  schoolId,
 }: {
   terms: Period[];
   classes: ClassBrief[];
   subjects: SubjectBrief[];
   exams: Exam[];
+  schoolId: string;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -117,7 +120,7 @@ export default function MarkSheetForm({
     };
   });
   const [students, setStudents] = useState<MarkSheetStudent[] | null>(
-    initialStudents
+    initialStudents,
   );
 
   const [selectedClass, setSelectedClass] = useState<any>(classOptions[0]);
@@ -128,7 +131,7 @@ export default function MarkSheetForm({
     };
   });
   const [selectedSubject, setSelectedSubject] = useState<any>(
-    subjectOptions[0]
+    subjectOptions[0],
   );
   const [isAbsent, setIsAbsent] = useState(false);
   const [studentMarks, setStudentMarks] = useState<StudentMarks>({});
@@ -170,12 +173,16 @@ export default function MarkSheetForm({
         classId: selectedClass.value,
         subjectId: selectedSubject.value,
         title: `${selectedClass.label} Term-${selectedTerm.label} ${selectedSubject.label} ${selectedExam.label} Mark Sheet`,
+        schoolId: schoolId
       };
       const resData = await getBriefStudentsByClassId(data);
       const params = new URLSearchParams(searchParams.toString());
+
       console.log(resData);
       params.set("mid", resData?.markSheetId ?? "");
+
       router.push(`${pathname}?${params.toString()}`);
+
       setStudents(resData?.students ?? []);
       setLoading(false);
     } catch (error) {
@@ -197,7 +204,7 @@ export default function MarkSheetForm({
         marks: null,
         isAbsent: isAbsent,
         comments: "NA",
-      })
+      }),
     );
     const data: UpdateMarkSheetProps = {
       examId: selectedExam.value,
@@ -217,7 +224,7 @@ export default function MarkSheetForm({
       toast.success(
         nextBatchStudents.length > 0
           ? "Next Batch Fetched"
-          : `You have Completed all students for ${selectedSubject.label}`
+          : `You have Completed all students for ${selectedSubject.label}`,
       );
       setFetching(false);
     } catch (error) {
@@ -303,7 +310,7 @@ export default function MarkSheetForm({
                               onCheckedChange={(checked) =>
                                 handleAbsentChange(
                                   student.id,
-                                  checked as boolean
+                                  checked as boolean,
                                 )
                               }
                             />

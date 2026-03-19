@@ -5,6 +5,7 @@ import { getExamsByAcademicYear } from "../../../../actions/exams";
 import { getAllPeriods } from "../../../../actions/periods";
 import { getBriefSubjects } from "../../../../actions/subjects";
 import ExamManager from "../../../../components/dashboard/exams/ExamManager";
+
 import React from "react";
 
 export default async function Page() {
@@ -28,10 +29,6 @@ export default async function Page() {
   const allTerms = allTermsData?.data || allTermsData || [];
   const exams = examsData?.data || examsData || [];
 
-  console.log("Normalized classes:", classes);
-  console.log("Normalized subjects:", subjects);
-  console.log("Normalized allTerms:", allTerms);
-  console.log("Normalized exams:", exams);
 
   const currentYear = new Date().getFullYear();
   const terms = allTerms.filter((item) => item?.year === currentYear);

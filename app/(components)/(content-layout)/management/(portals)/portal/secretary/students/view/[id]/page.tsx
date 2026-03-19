@@ -1,4 +1,5 @@
-import { getServerSchool } from "../../../../../../actions/auth";
+import { validateRequest } from "@/app/auth";
+import { getServerSchool, SchoolUser } from "../../../../../../actions/auth";
 import { getAllPeriods } from "../../../../../../actions/periods";
 import { getStudentById } from "../../../../../../actions/students";
 import StudentDetailPage from "../../../../../../components/dashboard/StudentDetailPage";
@@ -18,7 +19,17 @@ export default async function page({
   if (!student) {
     return notFound();
   }
-  const school = await getServerSchool();
+  
+  const { user } = await validateRequest();
+
+  if (!user) return null;
+
+  const school = await SchoolUser(user.id);
+
+
+  // const school = await getServerSchool();
+
+  
   const terms = (await getAllPeriods(school?.id ?? "")) || [];
   const currentYear = new Date().getFullYear();
   return (

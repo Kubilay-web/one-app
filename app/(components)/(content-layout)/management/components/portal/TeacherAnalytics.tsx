@@ -121,7 +121,7 @@ export default function TeacherAnalytics({
               <div className="flex items-center justify-between">
                 <h2>Recent Students</h2>
                 <Link
-                  href="/dashboard/students"
+                  href="/management/dashboard/students"
                   className="text-sm font-medium text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-1"
                 >
                   View all students
@@ -183,7 +183,7 @@ export default function TeacherAnalytics({
               <div className="flex items-center justify-between">
                 <h2>Upcoming Events</h2>
                 <Link
-                  href={`/sch/${school?.slug}/customize/events`}
+                  href={`/management/sch/${school?.slug}/customize/events`}
                   className="text-sm font-medium text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-1"
                 >
                   View all events

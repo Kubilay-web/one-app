@@ -66,7 +66,7 @@ export function StudentCard({ student }: { student: BriefStudent }) {
       </CardContent>
       <CardFooter>
         <Button asChild variant="outline" className="w-full">
-          <Link href={`/portal/parent/student/${student.id}`}>
+          <Link href={`/management/portal/parent/student/${student.id}`}>
             View Details
           </Link>
         </Button>

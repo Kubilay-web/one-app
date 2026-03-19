@@ -26,6 +26,7 @@ export default async function page({
       <StudentDetailPage
         terms={terms.filter((item) => item.year === currentYear)}
         student={student}
+        schoolId={school.id}
       />
     </div>
   );

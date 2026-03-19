@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
-import { getServerUser } from "../../../actions/auth";
-import { getStudentsByParentId } from "../../../actions/parents";
+import { getServerUser, SchoolUser } from "../../../actions/auth";
+import { getParentIdFromUserId, getStudentsByParentId } from "../../../actions/parents";
 import { getProfileId } from "../../../actions/users";
 import { StudentList } from "../../../components/portal/parents/StudentList";
 import React from "react";
@@ -8,7 +8,6 @@ import React from "react";
 export default async function page() {
 
   
-  const {user} = await validateRequest();
 
   
   // if (!user) {
@@ -17,9 +16,23 @@ export default async function page() {
 
 
   // get parent profile
+
+
+    const { user } = await validateRequest();
   
-  const profileId = await getProfileId(user?.id, user?.roleschool);
-  const students = (await getStudentsByParentId(profileId ?? "")) || [];
+    if (!user) return null;
+  
+    const school = await SchoolUser(user.id);
+  
+    console.log("========== PARENT PAYMENTS ==========");
+    console.log("👤 User ID:", user.id);
+    console.log("👤 User email:", user.email);
+    console.log("👤 User role:", user.roleschool);
+  
+    const parentId = await getParentIdFromUserId(user.id);
+  
+
+    const students = await getStudentsByParentId(parentId);
 
   
   return (
@@ -27,7 +40,7 @@ export default async function page() {
       {students.length > 0 ? (
         <StudentList students={students} />
       ) : (
-        <div className="">
+        <div>
           <h2>You dont have any Children-{user?.id}</h2>
         </div>
       )}

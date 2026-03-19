@@ -131,32 +131,131 @@ export async function getAllParents(schoolId: string): Promise<Parent[]> {
   }
 }
 
+// export async function getStudentsByParentId(
+//   parentId: string
+// ): Promise<BriefStudent[]> {
+//   const url = process.env.NEXT_PUBLIC_BASE_URL;
+
+//   try {
+//     const response = await fetch(
+//       `${url}/api/schoolmanage/parents?id=${parentId}&type=detail`,
+//       {
+//         cache: "no-store",
+//       }
+//     );
+
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch students");
+//     }
+
+//     const json: ApiResponse<BriefStudent[]> = await response.json();
+
+//     return Array.isArray(json.data) ? json.data : [];
+//   } catch (error) {
+//     console.log(error);
+//     return [];
+//   }
+// }
+
+
 export async function getStudentsByParentId(
   parentId: string
 ): Promise<BriefStudent[]> {
-  const url = process.env.NEXT_PUBLIC_BASE_URL;
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
   try {
+    if (!parentId) {
+      console.error("Parent ID is required");
+      return [];
+    }
+
+    console.log("Fetching students for parent:", parentId);
+
+    // Parent detaylarını getir (students ilişkisiyle birlikte)
     const response = await fetch(
-      `${url}/api/schoolmanage/parents/${parentId}`,
+      `${BASE_URL}/api/schoolmanage/parents?id=${parentId}&type=detail`,
       {
         cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch students");
+      console.error("Failed to fetch parent details:", response.status);
+      return [];
     }
 
-    const json: ApiResponse<BriefStudent[]> = await response.json();
+    const result = await response.json();
+    console.log("API Response:", result);
 
-    return Array.isArray(json.data) ? json.data : [];
+    // API'den gelen response formatı: { data: parent, error: null }
+    if (result.error) {
+      console.error("API Error:", result.error);
+      return [];
+    }
+
+    const parent = result.data;
+    
+    // Parent'ın students array'ini kontrol et
+    if (parent?.students && Array.isArray(parent.students) && parent.students.length > 0) {
+      const students = parent.students.map((student: any) => ({
+        id: student.id,
+        name: student.name,
+        regNo: student.regNo,
+        classTitle: student.class?.title || "Class not assigned",
+        imageUrl: student.imageUrl || "/placeholder-avatar.png",
+      }));
+      
+      console.log(`Found ${students.length} students for parent ${parentId}`);
+      return students;
+    }
+
+    console.log(`No students found for parent ${parentId}`);
+    return [];
   } catch (error) {
-    console.log(error);
+    console.error("Get students by parent error:", error);
     return [];
   }
 }
 
 
 
+// GET PARENT ID FROM USER ID - EN BASİT HALİ
+export async function getParentIdFromUserId(userId: string): Promise<string | null> {
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
+  try {
+    if (!userId) {
+      console.error("User ID is required");
+      return null;
+    }
+
+    console.log("🔍 Getting parent ID for user:", userId);
+
+    const response = await fetch(
+      `${BASE_URL}/api/schoolmanage/parents/${userId}/students`,
+      {
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Failed to get parent ID:", response.status);
+      return null;
+    }
+
+    const result = await response.json();
+    console.log("✅ API Response:", result);
+
+    // Direkt parentId'yi döndür
+    return result.data?.parentId || null;
+  } catch (error) {
+    console.error("Error getting parent ID:", error);
+    return null;
+  }
+}

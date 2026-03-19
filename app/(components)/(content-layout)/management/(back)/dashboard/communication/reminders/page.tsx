@@ -20,8 +20,8 @@ export default async function AdminMessagePage() {
   return (
     <div className="container mx-auto p-10">
       <SendMailForm groupsData={groups} />
-      {/* <h1 className="text-3xl font-bold mb-6">Admin Messaging Center</h1>
-      <MessageComposer parents={parents} /> */}
+     <h1 className="text-3xl font-bold mb-6">Admin Messaging Center</h1>
+      {/* <MessageComposer parents={parents} />  */}
     </div>
   );
 }

@@ -652,190 +652,381 @@ export const getMenuItems = (user) => [
         type: "sub",
         active: false,
         children: [
-          {
-            path: "/management",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Home",
-          },
+          //Front Pages
 
           {
-            path: "/management/contact-us",
-            type: "link",
+            title: "Front Pages",
+            icon: Dashboardicon,
+            type: "sub",
             active: false,
-            selected: false,
-            title: "Contact Us",
-          },
+            children: [
+              {
+                path: "/management",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Home",
+              },
 
               {
-            path: "/management/schools/new",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "School-New",
+                path: "/management/contact-us",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Contact Us",
+              },
+
+              {
+                path: "/management/schools/new",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School-New",
+              },
+            ],
           },
 
+          //Front Pages
+
+          //Dashboard
 
           {
-            path: "/management/dashboard/academics/classes",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Academics Classes",
-          },
-
-          {
-            path: "/management/dashboard/academics/departments",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Academics Departments",
-          },
-
-          {
-            path: "/management/dashboard/academics/exams",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Academics Exams",
-          },
-
-          {
-            path: "/management/dashboard/academics/reports",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Academics Reports",
-          },
-
-          {
-            path: "/management/dashboard/academics/subjects",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Academics Subjects",
-          },
-
-          {
-            path: "/management/dashboard/academics/terms",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Academics Terms",
-          },
-
-          {
-            path: "/management/dashboard/admin/contacts",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Academics Contacts",
-          },
-
-          {
-            path: "/management/dashboard/attendance/by-class",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Attendance By Class",
-          },
-
-          {
-            path: "/management/dashboard/attendance/student",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Attendance Student",
-          },
-
-          {
-            path: "/management/dashboard/attendance",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Attendance",
-          },
-
-          {
-            path: "/management/dashboard/communication/reminders",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Communication Reminders",
-          },
-
-          {
-            path: "/management/dashboard/communication/website-messages",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Communication Website Messages",
-          },
-
-          {
-            path: "/management/dashboard/finance/fees",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Finance Fees",
-          },
-
-          {
-            path: "/management/dashboard/finance/payments",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Finance Payments",
-          },
-
-          {
-            path: "/management/dashboard/logs",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Logs",
-          },
-
-          {
-            path: "/management/dashboard/students",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Students",
-          },
-
-          {
-            path: "/management/dashboard/users/parents",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Users Parents",
-          },
-
-          {
-            path: "/management/dashboard/users/teachers",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Users Teachers",
-          },
-
-          {
-            path: "/management/dashboard/users",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard-Users",
-          },
-
-          {
-            path: "/management/dashboard",
-            type: "link",
-            active: false,
-            selected: false,
             title: "Dashboard",
+            icon: Dashboardicon,
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/management/dashboard/academics/classes",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Academics Classes",
+              },
+
+              {
+                path: "/management/dashboard/academics/departments",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Academics Departments",
+              },
+
+              {
+                path: "/management/dashboard/academics/exams",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Academics Exams",
+              },
+
+              {
+                path: "/management/dashboard/academics/reports",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Academics Reports",
+              },
+
+              {
+                path: "/management/dashboard/academics/subjects",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Academics Subjects",
+              },
+
+              {
+                path: "/management/dashboard/academics/terms",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Academics Terms",
+              },
+
+              {
+                path: "/management/dashboard/admin/contacts",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Academics Contacts",
+              },
+
+              {
+                path: "/management/dashboard/attendance/by-class",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Attendance By Class",
+              },
+
+              {
+                path: "/management/dashboard/attendance/student",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Attendance Student",
+              },
+
+              {
+                path: "/management/dashboard/attendance",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Attendance",
+              },
+
+              {
+                path: "/management/dashboard/communication/reminders",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Communication Reminders",
+              },
+
+              {
+                path: "/management/dashboard/communication/website-messages",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Communication Website Messages",
+              },
+
+              {
+                path: "/management/dashboard/finance/fees",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Finance Fees",
+              },
+
+              {
+                path: "/management/dashboard/finance/payments",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Finance Payments",
+              },
+
+              {
+                path: "/management/dashboard/logs",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Logs",
+              },
+
+              {
+                path: "/management/dashboard/students",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Students",
+              },
+
+              {
+                path: "/management/dashboard/users/parents",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Users Parents",
+              },
+
+              {
+                path: "/management/dashboard/users/teachers",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Users Teachers",
+              },
+
+              {
+                path: "/management/dashboard/users",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard-Users",
+              },
+
+              {
+                path: "/management/dashboard",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Dashboard Main",
+              },
+            ],
           },
+
+          //Dashboard
+
+          //Portals
+
+          {
+            title: "Portals",
+            icon: Dashboardicon,
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: "/management/portal/parent/messages",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Parent Messages",
+              },
+
+              {
+                path: "/management/portal/parent/payments",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Parent Payments",
+              },
+
+              {
+                path: "/management/portal/parent",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Parent",
+              },
+
+                    {
+                path: "/management/portal/secretary/parents",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Secretary Parent",
+              },
+
+                       {
+                path: "/management/portal/secretary/students",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Secretary Students",
+              },
+
+                            {
+                path: "/management/portal/secretary/teachers",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Secretary Teachers",
+              },
+
+
+                              {
+                path: "/management/portal/student/attendance/student",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Student Attendance",
+              },
+
+                                     {
+                path: "/management/portal/student/profile",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Student Profile",
+              },
+
+                                          {
+                path: "/management/portal/student",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Student",
+              },
+
+    
+
+                                               {
+                path: "/management/portal/teacher/attendance/by-class",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Teacher Attendance By-Class",
+              },
+
+
+                                                        {
+                path: "/management/portal/teacher/attendance/student",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Teacher Attendance Student",
+              },
+
+                                                              {
+                path: "/management/portal/teacher/attendance",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Teacher Attendance",
+              },
+
+
+                                                              {
+                path: "/management/portal/teacher/exams",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Teacher Exams",
+              },
+
+
+                                                                  {
+                path: "/management/portal/teacher/inbox",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Teacher Inbox",
+              },
+
+
+                                                                       {
+                path: "/management/portal/teacher/reports",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Teacher Reports",
+              },
+
+
+                                                                           {
+                path: "/management/portal/teacher/students",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Teacher Students",
+              },
+
+                                                                    {
+                path: "/management/portal",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Portal-Main",
+              },
+
+
+
+
+
+
+
+
+
+
+
+        
+            ],
+          },
+
+          //Portals
         ],
       },
 

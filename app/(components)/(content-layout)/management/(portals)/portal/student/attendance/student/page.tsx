@@ -1,9 +1,20 @@
-import { getServerSchool } from "../../../../../actions/auth";
+import { getServerSchool, SchoolUser } from "../../../../../actions/auth";
 import StudentView from "./components/student-view";
-import { getAllBriefStudents, getAllStudents } from "../../../../../actions/students";
+import {
+  getAllBriefStudents,
+  getAllStudents,
+} from "../../../../../actions/students";
+import { validateRequest } from "@/app/auth";
 
 export default async function StudentViewPage() {
-  const school = await getServerSchool();
+  
+  
+  const { user } = await validateRequest();
+
+  if (!user) return null;
+
+  const school = await SchoolUser(user.id);
+
   const students = (await getAllBriefStudents(school?.id ?? "")) || [];
   return (
     <div className="p-8">

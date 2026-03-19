@@ -518,7 +518,7 @@ export async function getStudentByUserId(studentUserId: string) {
 export async function getBriefStudentsByClassId(data: MarkSheetCreateProps) {
   try {
     const result = await fetcher<MarkSheetResponse>(
-      `${BASE_URL}/api/schoolmanage/students/marksheet?classId=${data.classId}&subjectId=${data.subjectId}&examId=${data.examId}&termId=${data.termId}&schoolId=${data.schoolId}`
+      `${BASE_URL}/api/schoolmanage/students/marksheets?classId=${data.classId}&subjectId=${data.subjectId}&examId=${data.examId}&termId=${data.termId}&schoolId=${data.schoolId}`
     );
 
     if (result.error) {

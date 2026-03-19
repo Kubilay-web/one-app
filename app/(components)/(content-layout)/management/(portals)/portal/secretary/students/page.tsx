@@ -1,16 +1,33 @@
 import React from "react";
 
-import { getServerSchool, getServerUser } from "../../../../actions/auth";
-import { getClassesBySchoolId } from "../../../../actions/classes";
+import { getServerSchool, getServerUser, SchoolUser } from "../../../../actions/auth";
+import { getAllClasses } from "../../../../actions/classes";
+
+
+
 import StudentListingByClass from "../../../../components/dashboard/StudentListingByClass";
 import { Button } from "../../../../components/ui/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { validateRequest } from "@/app/auth";
 export default async function page() {
-  const school = await getServerSchool();
-  const classes = (await getClassesBySchoolId(school?.id ?? "")) || [];
-  const user = await getServerUser();
-  const role = user?.role ?? "STUDENT";
+  // const school = await getServerSchool();
+
+    // const user = await getServerUser();
+
+
+    const { user } = await validateRequest();
+  
+    if (!user) return null;
+  
+    const school = await SchoolUser(user.id);
+  
+
+  const classes = (await getAllClasses(school?.id ?? "")) || [];
+
+  const role = user?.roleschool ?? "STUDENT";
+
+
   return (
     <>
       <div className="flex items-center justify-between pt-8 px-8 ">
@@ -22,7 +39,7 @@ export default async function page() {
           </Link>
         </Button>
       </div>
-      <StudentListingByClass role={role} classes={classes} />
+      <StudentListingByClass role={role} classes={classes} schoolId={school?.id} />
     </>
   );
 }

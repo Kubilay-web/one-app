@@ -1,4 +1,5 @@
-import { getServerSchool } from "../../../../actions/auth";
+import { validateRequest } from "@/app/auth";
+import { getServerSchool, SchoolUser } from "../../../../actions/auth";
 import { getBriefClasses } from "../../../../actions/classes";
 import { getExamsByAcademicYear } from "../../../../actions/exams";
 import { getAllPeriods } from "../../../../actions/periods";
@@ -7,7 +8,14 @@ import ExamManager from "../../../../components/dashboard/exams/ExamManager";
 import React from "react";
 
 export default async function page() {
-  const school = await getServerSchool();
+ 
+  const { user } = await validateRequest();
+
+  if (!user) return null;
+
+  const school = await SchoolUser(user.id);
+
+
   const classes = (await getBriefClasses(school?.id ?? "")) || [];
   const subjects = (await getBriefSubjects(school?.id ?? "")) || [];
 
@@ -25,6 +33,7 @@ export default async function page() {
         terms={terms}
         subjects={subjects}
         classes={classes}
+        schoolId={school.id}
       />
     </div>
   );

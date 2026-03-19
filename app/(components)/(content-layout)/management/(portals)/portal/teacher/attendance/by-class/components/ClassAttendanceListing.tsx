@@ -26,7 +26,7 @@ import {
 } from "../../../../../../components/ui/popover";
 import { Calendar as CalendarComponent } from "../../../../../../components/ui/calendar";
 import { Input } from "../../../../../../components/ui/input";
-import { getAttendanceByStreamId } from "../../../../../../actions/attendance";
+import { getAttendanceList } from "../../../../../../actions/attendance";
 import AttendanceTable from "./AttendanceTable";
 import { AttendanceData } from "../../../../../../types/attendance";
 
@@ -105,7 +105,7 @@ export default function ClassAttendanceListing({
       const date =
         weekDays.find((day) => day.value === selectedDay)?.date || new Date();
 
-      const attendanceList = await getAttendanceByStreamId(streamId, date);
+      const attendanceList = await getAttendanceList(streamId, date);
       setAttendanceData(attendanceList);
       console.log(attendanceList);
       setLoading(false);

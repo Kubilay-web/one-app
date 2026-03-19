@@ -43,12 +43,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
 import { Input } from "../../components/ui/input";
 import { User } from "../../types/types";
 import UserAvatar from "./UserAvatar";
-import { renderLoggedInUserLinks } from "./PortalSidebar";
+// import { renderLoggedInUserLinks } from "./PortalSidebar";
 import { usePathname } from "next/navigation";
 import { cn } from "../../lib/utils";
 
 export default function PortalHeader({ user }: { user: User }) {
-  const links = renderLoggedInUserLinks(user.role);
+  // const links = renderLoggedInUserLinks(user.role);
   const pathname = usePathname();
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -60,7 +60,7 @@ export default function PortalHeader({ user }: { user: User }) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <nav className="grid gap-2 text-lg font-medium">
+          {/* <nav className="grid gap-2 text-lg font-medium">
             {links.map((item, i) => {
               const Icon = item.icon;
               const isActive = item.href === pathname;
@@ -83,7 +83,7 @@ export default function PortalHeader({ user }: { user: User }) {
                 </Link>
               );
             })}
-          </nav>
+          </nav> */}
           <div className="mt-auto">
             <Button size="sm" className="w-full">
               Logout

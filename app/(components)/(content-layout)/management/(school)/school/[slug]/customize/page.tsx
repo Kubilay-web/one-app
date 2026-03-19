@@ -14,9 +14,11 @@ export default async function page({
   const school = await getSchoolById(slug, "slug");
 
   
-  if (!school) {
-    return <div>School not found.</div>;
-  }
+  // if (!school) {
+  //   return <div>School not found.</div>;
+  // }
+
+
   const activities = (await getSiteRecentActivities(school?.id ?? "")) || [];
   const allSections = (await getAllSchoolSections(school?.id ?? "")) || [];
   const incompleteSections =

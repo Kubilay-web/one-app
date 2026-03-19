@@ -62,6 +62,8 @@ export default function StudentListingByClass({
       : role === "SECRETARY"
         ? secStudentColumns
         : columns;
+
+        
   async function getStudentList() {
     setStudents([]);
     setLoading(true);

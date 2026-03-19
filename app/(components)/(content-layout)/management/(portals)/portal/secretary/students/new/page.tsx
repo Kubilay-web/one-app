@@ -4,16 +4,30 @@ import { UserPlus, Users } from "lucide-react";
 import SingleStudentForm from "../../../../../components/dashboard/forms/students/student-form";
 import BulkStudentForm from "../../../../../components/dashboard/forms/students/bulk-student-form";
 import InfoBanner from "../../../../../components/info-banner";
-import { getClassesBySchoolId } from "../../../../../actions/classes";
+import { getAllClasses } from "../../../../../actions/classes";
 import { getAllParents } from "../../../../../actions/parents";
 import { getStudentNextSequence } from "../../../../../actions/students";
-import { getServerSchool } from "../../../../../actions/auth";
+import { getServerSchool, SchoolUser } from "../../../../../actions/auth";
+import { validateRequest } from "@/app/auth";
 
 export default async function AdmissionTabs() {
-  const school = await getServerSchool();
-  const classes = (await getClassesBySchoolId(school?.id ?? "")) || [];
+  // const school = await getServerSchool();
+
+
+
+  const { user } = await validateRequest();
+
+  if (!user) return null;
+
+  const school = await SchoolUser(user.id);
+
+
+
+  const classes = (await getAllClasses(school?.id ?? "")) || [];
   const parents = (await getAllParents(school?.id ?? "")) || [];
   const nextSequence = (await getStudentNextSequence(school?.id ?? "")) || 0;
+
+  
   return (
     <div className="w-full max-w-5xl mx-auto p-6">
       <Tabs defaultValue="single" className="w-full">

@@ -15,6 +15,9 @@ export default async function PortalLayout({
   children: ReactNode;
 }) {
   // const user = await getServerUser();
+
+
+  
   const {user} = await validateRequest();
 
   // if (!user) {
@@ -23,8 +26,8 @@ export default async function PortalLayout({
 
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <PortalSidebar userRole={user?.roleschool as UserRole} />
+    <div className="flex w-full">
+      {/* <PortalSidebar userRole={user?.roleschool as UserRole} /> */}
       <div className="flex flex-col">
         <PortalHeader user={user} />
         <div className="flex min-h-screen w-full flex-col">{children}</div>

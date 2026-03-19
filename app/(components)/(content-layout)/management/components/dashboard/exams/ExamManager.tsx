@@ -15,7 +15,7 @@ export default function ExamManager({
   classes,
   subjects,
   exams,
-  schoolId
+  schoolId 
 }: {
   terms: Period[];
   classes: ClassBrief[];
@@ -80,6 +80,7 @@ export default function ExamManager({
             classes={classes}
             terms={terms}
             exams={exams}
+            schoolId={schoolId}
           />
         ) : (
           <EmptyState

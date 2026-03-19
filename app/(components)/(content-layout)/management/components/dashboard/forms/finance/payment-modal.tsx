@@ -287,11 +287,17 @@ export function PaymentModal({
   fees,
   selectedTerm,
   details,
+  schoolId,
+  schoolName
 }: PaymentModalProps) {
   const [selectedFees, setSelectedFees] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
-  const { school } = useSchoolStore();
+
+
+  // const { school } = useSchoolStore();
+
+
   const [success, setSuccess] = useState(false);
   const [generatedPRN, setGeneratedPRN] = useState("");
 
@@ -321,15 +327,15 @@ export function PaymentModal({
     );
 
     const data = {
-      schoolName: school?.name ?? "",
-      schoolId: school?.id ?? "",
+      schoolName: schoolName ?? "",
+      schoolId:   schoolId ?? "",
       schoolFeeId: selectedFeeDetails[0].schoolFeeId,
       paidFeeAmount: total,
       paidFees: selectedFeeDetails.map(
         (item) => `${item.title}*${item.amount}*${item.id}`
       ),
       PRN: generatePRN({
-        schoolId: school?.id ?? "",
+        schoolId: schoolId ?? "",
         studentId: details.studentProfileId,
         feeId: selectedFeeDetails[0].schoolFeeId,
         year: details.year,
