@@ -8,7 +8,7 @@ export default function FrontLayout({ children }: { children: ReactNode }) {
 		<div className="">
 			<SiteHeader />
 			{children}
-			{/* <SiteFooter /> */}
+			 <SiteFooter />
 			<Footer />
 		</div>
 	);

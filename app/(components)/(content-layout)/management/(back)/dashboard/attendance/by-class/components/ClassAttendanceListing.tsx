@@ -65,7 +65,10 @@ export default function ClassAttendanceListing({
   classes: Class[];
   role?: UserRole;
 }) {
-  const { school } = useSchoolStore();
+
+
+
+  
   const [attendanceData, setAttendanceData] = useState<AttendanceData | null>(
     null
   );

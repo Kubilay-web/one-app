@@ -535,7 +535,7 @@ export default function PaymentListing({
               >
                 <div className="flex items-center gap-3">
                   <Image
-                    src={student.imageUrl || "/placeholder-avatar.png"}
+                    src={student.imageUrl || "/management/placeholder-avatar.png"}
                     alt={student.name}
                     width={40}
                     height={40}
@@ -575,7 +575,7 @@ export default function PaymentListing({
                   }}
                 >
                   <Image
-                    src={student.imageUrl || "/placeholder-avatar.png"}
+                    src={student.imageUrl || "/management/placeholder-avatar.png"}
                     alt={student.name}
                     width={40}
                     height={40}

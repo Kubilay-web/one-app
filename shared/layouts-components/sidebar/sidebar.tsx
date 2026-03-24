@@ -11,13 +11,28 @@ import SpkOverlay from "@/shared/@spk-reusable-components/uielements/spk-overlay
 import Image from "next/image";
 import nextConfig from "@/next.config";
 import { useSession } from "@/app/SessionProvider";
-import SidebarNew from "@/shared/layouts-components/sidebarnew/layouts/sidebar/page"
-
+import SidebarNew from "@/shared/layouts-components/sidebarnew/layouts/sidebar/page";
+import { SchoolUser } from "@/app/(components)/(content-layout)/management/actions/auth";
 
 const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
   let { basePath } = nextConfig;
   const { user } = useSession();
-  const [menuitems, setMenuitems] = useState(getMenuItems(user));
+
+  // const [menuitems, setMenuitems] = useState(getMenuItems(user));
+
+  const [menuitems, setMenuitems] = useState([]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchData = async () => {
+      const school = await SchoolUser(user.id);
+      const items = getMenuItems(user, school);
+      setMenuitems(items);
+    };
+
+    fetchData();
+  }, [user]);
 
   function closeMenuFn() {
     const closeMenuRecursively = (items: any) => {
@@ -165,10 +180,10 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
     if (menuNav && mainContainer1) {
       const computedStyle = window.getComputedStyle(menuNav);
       const marginLeftValue = Math.ceil(
-        Number(computedStyle.marginLeft.split("px")[0])
+        Number(computedStyle.marginLeft.split("px")[0]),
       );
       const marginRightValue = Math.ceil(
-        Number(computedStyle.marginRight.split("px")[0])
+        Number(computedStyle.marginRight.split("px")[0]),
       );
       const check = menuNav.scrollWidth - mainContainer1.offsetWidth;
 
@@ -230,11 +245,11 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
     if (menuNav && mainContainer1) {
       const marginLeftValue = Math.ceil(
         Number(
-          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0]
-        )
+          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0],
+        ),
       );
       const marginRightValue = Math.ceil(
-        Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0])
+        Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0]),
       );
       const check = menuNav.scrollWidth - mainContainer1.offsetWidth;
       let mainContainer1Width = mainContainer1.offsetWidth;
@@ -315,11 +330,11 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
     if (menuNav && mainContainer1) {
       const marginLeftValue = Math.ceil(
         Number(
-          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0]
-        )
+          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0],
+        ),
       );
       const marginRightValue = Math.ceil(
-        Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0])
+        Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0]),
       );
       const check: any = menuNav.scrollWidth - mainContainer1.offsetWidth;
       let mainContainer1Width = mainContainer1.offsetWidth;
@@ -482,7 +497,7 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
   function toggleSidemenu(
     event: any,
     targetObject: any,
-    MENUITEMS = menuitems
+    MENUITEMS = menuitems,
   ) {
     const theme = store.getState().reducer;
     let element = event.target;
@@ -623,7 +638,7 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
       if (item.children && item.children.length > 0) {
         const parent: any = findParent(
           (MENUITEMS = item.children),
-          targetObject
+          targetObject,
         );
         if (parent) {
           return parent;
@@ -784,7 +799,7 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
             </div>
 
             {/* <SidebarNew/>  */}
-             <ul
+            <ul
               className="main-menu"
               ref={menuNavRef}
               onClick={() => Sideclick()}
@@ -886,7 +901,7 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
                   </li>
                 </Fragment>
               ))}
-            </ul> 
+            </ul>
             <div
               className="slide-right"
               id="slide-right"
@@ -903,8 +918,6 @@ const Sidebar = ({ local_varaiable, ThemeChanger }: any) => {
               </svg>
             </div>
           </nav>
-
-
         </SimpleBar>
       </aside>
     </Fragment>

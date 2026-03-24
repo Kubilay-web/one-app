@@ -38,11 +38,19 @@ export default function HeadmasterQuote({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="relative">
             <div className="relative w-full max-w-md mx-auto aspect-square">
-              <Image
+              {/* <Image
                 src={mainImage}
                 alt="Headmaster"
                 fill
                 className="rounded-full object-cover "
+              /> */}
+
+              <Image
+                src={mainImage} // Resim kaynağı
+                alt="Headmaster" // Alternatif metin
+                width={600} // Genişlik (px cinsinden)
+                height={400} // Yükseklik (px cinsinden)
+                className="rounded-full object-cover" // Stil sınıfı
               />
             </div>
           </div>

@@ -28,10 +28,9 @@ import TextInput from "../FormInputs/TextInput";
 import { toast } from "sonner";
 // import { ContactGroupWithCount } from "@/types/types";
 
-
 import { EmailEditor } from "./email-editor";
 import { MessageGroups, sendGroupMessages } from "../../actions/communications";
-import useSchoolStore from "../../store/school";
+// import useSchoolStore from "../../store/school";
 
 type EmailType = "single" | "multiple" | "group";
 
@@ -42,7 +41,13 @@ interface FormData {
   emailType: EmailType;
 }
 
-const SendMailForm = ({ groupsData }: { groupsData: MessageGroups }) => {
+const SendMailForm = ({
+  groupsData,
+  schoolId,
+}: {
+  groupsData: MessageGroups;
+  schoolId: string;
+}) => {
   console.log(groupsData);
   const all = groupsData.parents + groupsData.students + groupsData.teachers;
   const groups = [
@@ -107,7 +112,7 @@ const SendMailForm = ({ groupsData }: { groupsData: MessageGroups }) => {
   // Handle removal of an email address pill
   const removeEmailAddress = (emailToRemove: string) => {
     const updatedEmails = emailAddressesArray.filter(
-      (email) => email !== emailToRemove
+      (email) => email !== emailToRemove,
     );
     setEmailAddressesArray(updatedEmails);
 
@@ -116,7 +121,7 @@ const SendMailForm = ({ groupsData }: { groupsData: MessageGroups }) => {
 
     // Update error list
     setEmailsWithError((prev) =>
-      prev.filter((email) => email !== emailToRemove)
+      prev.filter((email) => email !== emailToRemove),
     );
   };
 
@@ -144,7 +149,8 @@ const SendMailForm = ({ groupsData }: { groupsData: MessageGroups }) => {
       }
     }
   };
-  const { school } = useSchoolStore();
+  // const { school } = useSchoolStore();
+
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     data.message = html;
@@ -228,7 +234,9 @@ const SendMailForm = ({ groupsData }: { groupsData: MessageGroups }) => {
         key: data.email_addresses,
         subject: data.subject,
         message: data.message,
-        schoolId: school?.id ?? "",
+        // schoolId: school?.id ?? "",
+
+        schoolId: schoolId ?? "",
       };
       await sendGroupMessages(payload);
       setLoading(false);
@@ -466,7 +474,7 @@ const SendMailForm = ({ groupsData }: { groupsData: MessageGroups }) => {
 
                       // Add unique pasted email addresses
                       const uniqueNewEmails = pastedEmails.filter(
-                        (email) => !emailAddressesArray.includes(email.trim())
+                        (email) => !emailAddressesArray.includes(email.trim()),
                       );
                       const updatedEmails = [
                         ...emailAddressesArray,
@@ -478,7 +486,7 @@ const SendMailForm = ({ groupsData }: { groupsData: MessageGroups }) => {
 
                       // Update errors
                       const newErrors = uniqueNewEmails.filter(
-                        (email) => !isValidEmail(email.trim())
+                        (email) => !isValidEmail(email.trim()),
                       );
                       if (newErrors.length > 0) {
                         setEmailsWithError((prev) => [

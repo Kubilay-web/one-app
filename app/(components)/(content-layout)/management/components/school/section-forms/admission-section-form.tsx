@@ -18,8 +18,17 @@ import {
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Textarea } from "../../../components/ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from "../../../components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../../components/ui/alert";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import {
   Popover,
   PopoverContent,
@@ -50,12 +59,12 @@ export default function AdmissionSectionForm({
   const [subtitle, setSubtitle] = useState(section.settings.subtitle);
   const [description, setDescription] = useState(section.settings.description);
   const [backgroundColor, setBackgroundColor] = useState(
-    section.settings.backgroundColor
+    section.settings.backgroundColor,
   ); // Green color from the image
   const [buttonText, setButtonText] = useState(section.settings.buttonText);
   const [buttonLink, setButtonLink] = useState(section.settings.buttonLink);
   const [studentImage, setStudentImage] = useState(
-    section.settings.studentImage
+    section.settings.studentImage,
   );
   const [linkType, setLinkType] = useState(section.settings.linkType); // internal or external
 
@@ -80,6 +89,11 @@ export default function AdmissionSectionForm({
   ];
 
   const [loading, setLoading] = useState(false);
+
+  const [uploading, setUploading] = useState(false);
+
+  const [AdmissionImage, setAdmissionImage] = useState("");
+
   // Save changes
   const saveChanges = async () => {
     setLoading(true);
@@ -136,6 +150,33 @@ export default function AdmissionSectionForm({
     setPreviewButtonLink(buttonLink);
     setPreviewStudentImage(studentImage);
     setPreviewLinkType(linkType);
+  };
+
+  const handleFileUpload = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/schoolmanage/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        setAdmissionImage(data.url);
+        setPreviewStudentImage(data.url); // Preview için de güncelliyoruz
+        toast.success("Image uploaded");
+      } else {
+        toast.error("Upload failed");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Upload error");
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -252,16 +293,33 @@ export default function AdmissionSectionForm({
                 <div className="space-y-2">
                   <Label htmlFor="student-image">Student Image</Label>
                   <div className="flex flex-col gap-4">
+                    {/* <div className="border rounded-md p-2 w-full h-64 flex items-center justify-center bg-muted">
+                      <Image
+                        src={
+                          previewStudentImage ||
+                          "/management/images/placeholder.jpg"
+                        }
+                        alt="Student"
+                        width={300}
+                        height={200}
+                        className="object-contain"
+                      />
+                    </div> */}
+
                     <div className="border rounded-md p-2 w-full h-64 flex items-center justify-center bg-muted">
                       <Image
-                        src={previewStudentImage || "/placeholder.svg"}
+                        src={
+                          previewStudentImage ||
+                          AdmissionImage ||
+                          "/management/images/placeholder.jpg"
+                        }
                         alt="Student"
                         width={300}
                         height={200}
                         className="object-contain"
                       />
                     </div>
-                    <div className="flex-1">
+                    {/* <div className="flex-1">
                       <UploadButton
                         className="col-span-full"
                         endpoint="logoImage"
@@ -278,6 +336,25 @@ export default function AdmissionSectionForm({
                           alert(`ERROR! ${error.message}`);
                         }}
                       />
+                    </div> */}
+
+                    <div className="flex-1">
+                      {/* <Image
+                       src={""}
+                       alt="logo"
+                       width={80}
+                       height={80}
+                       className="object-contain border rounded"
+                     /> */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          e.target.files?.[0] &&
+                          handleFileUpload(e.target.files[0])
+                        }
+                      />
+                      {uploading && <Loader2 className="animate-spin" />}
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
@@ -395,12 +472,12 @@ export default function AdmissionSectionForm({
           <div className="border rounded-md overflow-hidden">
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/2 h-64 md:h-auto relative bg-slate-200">
-                <Image
+                {/* <Image
                   src={previewStudentImage || "/placeholder.svg"}
                   alt="Student"
                   fill
                   className="object-cover"
-                />
+                /> */}
               </div>
               <div
                 className="p-8 md:w-1/2 flex flex-col justify-center space-y-6"

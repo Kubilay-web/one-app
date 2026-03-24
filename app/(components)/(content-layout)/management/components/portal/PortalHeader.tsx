@@ -103,7 +103,7 @@ export default function PortalHeader({ user }: { user: User }) {
           </div>
         </form>
       </div>
-      <UserAvatar user={user} />
+      {/* <UserAvatar user={user} /> */}
     </header>
   );
 }

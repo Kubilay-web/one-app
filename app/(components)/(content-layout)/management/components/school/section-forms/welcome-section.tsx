@@ -52,7 +52,7 @@ export default function WelcomeSection({
           </h1>
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link target="_blank" href={`/sch/${school?.slug}`}>
+              <Link target="_blank" href={`/management/school/${school?.slug}`}>
                 {" "}
                 <Eye className="mr-2 h-4 w-4" />
                 Preview Site
@@ -163,25 +163,25 @@ export default function WelcomeSection({
             <CardContent>
               <div className="grid gap-2">
                 <Button asChild variant="outline" className="justify-start">
-                  <Link href={`/sch/${school?.slug}/customize/news`}>
+                  <Link href={`/management/school/${school?.slug}/customize/news`}>
                     <FileText className="mr-2 h-4 w-4" />
                     Add News Article
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="justify-start">
-                  <Link href={`/sch/${school?.slug}/customize/events`}>
+                  <Link href={`/management/school/${school?.slug}/customize/events`}>
                     <Calendar className="mr-2 h-4 w-4" />
                     Schedule New Event
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="justify-start">
-                  <Link href={`/sch/${school?.slug}/customize/gallery-section`}>
+                  <Link href={`/management/school/${school?.slug}/customize/gallery-section`}>
                     <ImageIcon className="mr-2 h-4 w-4" />
                     Upload to Gallery
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="justify-start">
-                  <Link href={`/sch/${school?.slug}/customize/contact-section`}>
+                  <Link href={`/management/school/${school?.slug}/customize/contact-section`}>
                     <MessageSquare className="mr-2 h-4 w-4" />
                     Update Contact Info
                   </Link>
@@ -230,7 +230,7 @@ export default function WelcomeSection({
                       <CardFooter>
                         <Button asChild className="w-full">
                           <Link
-                            href={`/sch/${school?.slug}/customize${sectionInfo.href}`}
+                            href={`/management/school/${school?.slug}/customize${sectionInfo.href}`}
                           >
                             <Icon className="mr-2 h-4 w-4" />
                             Set Up {sectionInfo.title}
@@ -275,7 +275,7 @@ export default function WelcomeSection({
                       <CardFooter className="pt-2">
                         <Button asChild className="w-full">
                           <Link
-                            href={`/sch/${school?.slug}/customize${sectionInfo.href}`}
+                            href={`/management/school/${school?.slug}/customize${sectionInfo.href}`}
                           >
                             <Icon className="mr-2 h-4 w-4" />
                             Set Up {sectionInfo.title}

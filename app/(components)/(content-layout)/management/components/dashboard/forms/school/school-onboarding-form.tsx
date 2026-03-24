@@ -50,7 +50,7 @@ export default function SchoolOnboardingForm() {
 			toast.success("Successfully Created!");
 			reset();
 			router.push(
-				`/super-dashboard/schools-page/school-admin/${res.id}?name=${res.name}`
+				`/management/super-dashboard/schools-page/school-admin/${res.id}?name=${res.name}`
 			);
 		} catch (error) {
 			setLoading(false);

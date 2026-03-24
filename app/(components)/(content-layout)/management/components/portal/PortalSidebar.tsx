@@ -69,7 +69,7 @@ export function renderLoggedInUserLinks(role: UserRole): NavLink[] {
   const commonLinks = [
     {
       title: "Dashboard",
-      href: "/portal",
+      href: "/management/portal",
       icon: Home,
     },
   ];
@@ -77,97 +77,97 @@ export function renderLoggedInUserLinks(role: UserRole): NavLink[] {
     SUPER_ADMIN: [
       {
         title: "Dashboard",
-        href: "/dashboard",
+        href: "/management/dashboard",
         icon: Home,
       },
     ],
     ADMIN: [
       {
         title: "Orders",
-        href: "/dashboard/orders",
+        href: "/management/dashboard/orders",
         icon: ShoppingCart,
         count: 6,
       },
       {
         title: "Products",
-        href: "/dashboard/products",
+        href: "/management/dashboard/products",
         icon: Package,
       },
       {
         title: "Customers",
-        href: "/dashboard/customers",
+        href: "/management/dashboard/customers",
         icon: Users,
       },
       {
         title: "Categories",
-        href: "/dashboard/categories",
+        href: "/management/dashboard/categories",
         icon: LayoutGrid,
       },
       {
         title: "Analytics",
-        href: "/dashboard/analytics",
+        href: "/management/dashboard/analytics",
         icon: LineChart,
       },
     ],
     TEACHER: [
       {
         title: "Students",
-        href: "/portal/teacher/students",
+        href: "/management/portal/teacher/students",
         icon: GraduationCap,
       },
       {
         title: "Mark Attendance",
-        href: "/portal/teacher/attendance",
+        href: "/management/portal/teacher/attendance",
         icon: Pencil,
       },
       {
         title: "View Class Attendance",
-        href: "/portal/teacher/attendance/by-class",
+        href: "/management/portal/teacher/attendance/by-class",
         icon: BookOpen,
       },
       {
         title: "View Student Attendance",
-        href: "/portal/teacher/attendance/student",
+        href: "/management/portal/teacher/attendance/student",
         icon: Eye,
       },
       {
         title: "Exams",
-        href: "/portal/teacher/exams",
+        href: "/management/portal/teacher/exams",
         icon: SquareLibrary,
       },
       {
         title: "Inbox ",
-        href: "/portal/teacher/inbox",
+        href: "/management/portal/teacher/inbox",
         icon: MessagesSquare,
       },
 
       {
         title: "Reports",
-        href: "/portal/teacher/reports",
+        href: "/management/portal/teacher/reports",
         icon: Banknote,
       },
     ],
     PARENT: [
       {
         title: "My Children",
-        href: "/portal/parent",
+        href: "/management/portal/parent",
         icon: Users,
       },
       {
         title: "Messages",
-        href: "/portal/parent/messages",
+        href: "/management/portal/parent/messages",
         icon: Mail,
       },
       {
         title: "Payments",
-        href: "/portal/parent/payments",
+        href: "/management/portal/parent/payments",
         icon: DollarSign,
       },
     ],
     SECRETARY: [
       {
         title: "Students",
-        href: "/portal/secretary/students",
+        href: "/management/portal/secretary/students",
         icon: Users,
       },
       {

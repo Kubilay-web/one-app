@@ -226,7 +226,7 @@ const badge3 = (
   <span className="badge bg-secondary ms-2 shadow-secondary">3</span>
 );
 
-export const getMenuItems = (user) => [
+export const getMenuItems = (user,school) => [
   {
     menutitle: "MAIN",
   },
@@ -1027,6 +1027,223 @@ export const getMenuItems = (user) => [
           },
 
           //Portals
+
+
+         // School Page
+
+
+             {
+            title: "School",
+            icon: Dashboardicon,
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: `/management/school/${school.slug}/customize/about-section`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize About Section",
+              },
+
+                 {
+                path: `/management/school/${school.slug}/customize/admission-section`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Admission Section",
+              },
+
+              
+                 {
+                path: `/management/school/${school.slug}/customize/contact-section`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Contact Section",
+              },
+
+                   {
+                path: `/management/school/${school.slug}/customize/events`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Events",
+              },
+
+                   {
+                path: `/management/school/${school.slug}/customize/footer`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Footer",
+              },
+
+                    {
+                path: `/management/school/${school.slug}/customize/gallery-section`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Gallery-Section",
+              },
+
+                        {
+                path: `/management/school/${school.slug}/customize/headteacher-quote`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Headteacher-Quote",
+              },
+
+
+                           {
+                path: `/management/school/${school.slug}/customize/hero-section`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Hero-Section",
+              },
+
+
+                              {
+                path: `/management/school/${school.slug}/customize/logo`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize Logo",
+              },
+
+
+                                {
+                path: `/management/school/${school.slug}/customize/news`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize News",
+              },
+
+
+                                      {
+                path: `/management/school/${school.slug}/customize`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Customize",
+              },
+
+
+                                        {
+                path: `/management/school/${school.slug}`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Live Website",
+              },
+
+
+                                         {
+                path: `/management/school-admin/${school.id}`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Admin",
+              },
+
+                                          {
+                path: `/management/school-onboarding`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "School Onboarding",
+              },
+
+
+
+              
+
+
+      
+        
+            ],
+          },
+
+
+
+         //School Page
+
+
+
+
+////////////////////////////////
+
+
+
+   // Super Dashboard
+
+
+             {
+            title: "Super Dashboard",
+            icon: Dashboardicon,
+            type: "sub",
+            active: false,
+            children: [
+              {
+                path: `/management/super-dashboard/contacts`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Super Dashboard Contacts",
+              },
+
+
+                     {
+                path: `/management/super-dashboard/schools-page/new`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Super Dashboard Schools Page New",
+              },
+
+                       {
+                path: `/management/super-dashboard/schools-page/school-admin/${school.id}`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Super Dashboard Schools Page School Admin",
+              },
+
+                           {
+                path: `/management/super-dashboard/schools-page`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Super Dashboard Schools Page",
+              },
+
+
+                                  {
+                path: `/management/super-dashboard`,
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Super Dashboard Main",
+              },
+
+
+
+            
+            ],
+          },
+
+
+
+         //Super Dashboard
+
+
+
+
+
+
         ],
       },
 

@@ -74,20 +74,20 @@ export const schoolCustomSidebarLinks = [
     icon: ImageIcon,
   },
 ];
-export default function SchoolCustomSidebar() {
+export default function SchoolCustomSidebar({school,schoolSlug}) {
   const pathname = usePathname();
-  const { school } = useSchoolStore();
+  // const { school } = useSchoolStore();
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Logo href={`/sch/${school?.slug}/customize`} size="sm" />
+          <Logo href={`/management/school/${school?.slug}/customize`} size="sm" />
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <Link
-              href={"/dashboard"}
+              href={"/management/dashboard"}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               )}
@@ -98,13 +98,13 @@ export default function SchoolCustomSidebar() {
             {schoolCustomSidebarLinks.map((item, i) => {
               const Icon = item.icon;
               const isActive =
-                `/sch/${school?.slug}/customize${item.href}` == pathname;
+                `/management/school/${school?.slug}/customize${item.href}` == pathname;
               // console.log(isActive);
 
               return (
                 <Link
                   key={i}
-                  href={`/sch/${school?.slug}/customize${item.href}`}
+                  href={`/management/school/${school?.slug}/customize${item.href}`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                     isActive && "bg-muted text-primary"
@@ -116,7 +116,7 @@ export default function SchoolCustomSidebar() {
               );
             })}
             <Link
-              href="/"
+              href={`/management/school/${schoolSlug}`}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               )}

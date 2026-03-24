@@ -1,4 +1,4 @@
-import { getServerUser } from "../../../actions/auth";
+import { getServerUser, SchoolUser } from "../../../actions/auth";
 import { getSchoolById } from "../../../actions/schools";
 
 import EnableSite from "../../../components/dashboard/EnableSite";
@@ -25,6 +25,7 @@ import {
   getSiteRecentNews,
 } from "../../../actions/site";
 import { SectionType } from "../../../lib/sectionTypes";
+import { validateRequest } from "@/app/auth";
 
 export default async function page({
   params,
@@ -33,6 +34,9 @@ export default async function page({
 }) {
   const { slug } = await params;
   const school = await getSchoolById(slug, "slug");
+
+
+  console.log("school",school)
 
   // if (
   //   !slug ||
@@ -48,11 +52,21 @@ export default async function page({
     return <div>School not found.</div>;
   }
 
+
+
+    const { user } = await validateRequest();
   
-  const user = await getServerUser();
-  // console.log(school);
+    if (!user) return null;
+
+
+  
+  // const user = await getServerUser();
+
+
+
+
   if (!school.siteEnabled && user) {
-    return <EnableSite schoolSlug={slug} schoolId={school.id} />;
+    return <EnableSite schoolSlug={school.slug} schoolId={school.id} />;
   }
   const headerSection = await getSectionByType(
     school?.id,

@@ -611,7 +611,7 @@ export default function ClassListing({
 
                 {[
                   { id: "streams", label: "Streams", icon: Building },
-                  { id: "subjects", label: "Subjects", icon: BookCheck },
+                  // { id: "subjects", label: "Subjects", icon: BookCheck },
                 ].map((tab) => (
 
                   <TabsTrigger

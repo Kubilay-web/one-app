@@ -18,7 +18,6 @@
 
 //   const payments = (await getAllPayments(school?.id ?? "")) || [];
 
-
 //   return (
 //     <div className="p-8">
 //       <TableHeader
@@ -34,9 +33,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 import { validateRequest } from "@/app/auth";
 import { SchoolUser } from "../../../../actions/auth";
@@ -71,7 +67,7 @@ export default async function PaymentsPage() {
       <TableHeader
         title="Fee Payments"
         linkTitle="Record New Payment"
-        href="/management/dashboard/finance/payments/new"
+        href="/management/dashboard/finance/fees/new"
         data={payments}
         model="payment"
       />

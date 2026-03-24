@@ -37,302 +37,313 @@ import {
 import Logo from "../../../components/logo";
 
 import UserMenu from "./user-menu";
-import { getServerSchool } from "../../../actions/auth";
+import { getServerSchool, SchoolUser } from "../../../actions/auth";
+import { validateRequest } from "@/app/auth";
 
 export default async function AppSidebar() {
-  const school = await getServerSchool();
+  // const school = await getServerSchool();
+
+
+
+  const { user } = await validateRequest();
+
+  if (!user) return null;
+
+  const school = await SchoolUser(user.id);
+
+
   const sidebarLinks = [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "management/dashboard",
       icon: LayoutDashboard,
       isActive: true,
       items: [
         {
           title: "Overview",
-          url: "/dashboard",
+          url: "management/dashboard",
         },
         {
           title: "Logs",
-          url: "/dashboard/logs",
+          url: "management/dashboard/logs",
         },
       ],
     },
     {
       title: "Student Management",
-      url: "/students",
+      url: "management/students",
       icon: Users,
       items: [
         {
           title: "All Students",
-          url: "/dashboard/students",
+          url: "management/dashboard/students",
         },
         {
           title: "Fees",
-          url: "/dashboard/students/fees",
+          url: "management/dashboard/students/fees",
         },
         {
           title: "Student Ids",
-          url: "/dashboard/students/ids",
+          url: "management/dashboard/students/ids",
         },
       ],
     },
     {
       title: "Attendance",
-      url: "/dashboard/attendance",
+      url: "management/dashboard/attendance",
       icon: Users,
       items: [
         {
           title: "Attendance",
-          url: "/dashboard/attendance",
+          url: "management/dashboard/attendance",
         },
         {
           title: "View Class Attendances",
-          url: "/dashboard/attendance/by-class",
+          url: "management/dashboard/attendance/by-class",
         },
         {
           title: "View Student Attendances",
-          url: "/dashboard/attendance/student",
+          url: "management/dashboard/attendance/student",
         },
       ],
     },
     {
       title: "Users",
-      url: "/dashboard/users",
+      url: "management/dashboard/users",
       icon: Users,
       items: [
         {
           title: "Parents",
-          url: "/dashboard/users/parents",
+          url: "management/dashboard/users/parents",
         },
         {
           title: "Teachers",
-          url: "/dashboard/users/teachers",
+          url: "management/dashboard/users/teachers",
         },
         {
           title: "Staff Members",
-          url: "/dashboard/users",
+          url: "management/dashboard/users",
         },
       ],
     },
     {
       title: "Academics",
-      url: "/dashboard/academics",
+      url: "management/dashboard/academics",
       icon: GraduationCap,
       items: [
         {
           title: "Terms",
-          url: "/dashboard/academics/terms",
+          url: "management/dashboard/academics/terms",
         },
         {
           title: "Classes and streams",
-          url: "/dashboard/academics/classes",
+          url: "management/dashboard/academics/classes",
         },
         {
           title: "Subjects",
-          url: "/dashboard/academics/subjects",
+          url: "management/dashboard/academics/subjects",
         },
         {
           title: "Departments",
-          url: "/dashboard/academics/departments",
+          url: "management/dashboard/academics/departments",
         },
         {
           title: "Timetable",
-          url: "/academics/timetable",
+          url: "management/academics/timetable",
         },
         {
           title: "Examinations",
-          url: "/dashboard/academics/exams",
+          url: "management/dashboard/academics/exams",
         },
         {
           title: "Assignments",
-          url: "/academics/assignments",
+          url: "management/academics/assignments",
         },
         {
           title: "Report Cards",
-          url: "/dashboard/academics/reports",
+          url: "management/dashboard/academics/reports",
         },
       ],
     },
     {
       title: "Staff Management",
-      url: "/staff",
+      url: "management/staff",
       icon: UserCog,
       items: [
         {
           title: "Staff Directory",
-          url: "/staff/directory",
+          url: "management/staff/directory",
         },
         {
           title: "Attendance",
-          url: "/staff/attendance",
+          url: "management/staff/attendance",
         },
         {
           title: "Leave Management",
-          url: "/staff/leave",
+          url: "management/staff/leave",
         },
         {
           title: "Performance",
-          url: "/staff/performance",
+          url: "management/staff/performance",
         },
       ],
     },
     {
       title: "Communication",
-      url: "/communication",
+      url: "management/communication",
       icon: MessageSquare,
       items: [
         {
           title: "Reminders",
-          url: "/dashboard/communication/reminders",
+          url: "management/dashboard/communication/reminders",
         },
         {
           title: "Announcements",
-          url: "/communication/announcements",
+          url: "management/communication/announcements",
         },
         {
           title: "Notice Board",
-          url: "/communication/notices",
+          url: "management/communication/notices",
         },
         {
           title: "Emergency Alerts",
-          url: "/communication/alerts",
+          url: "management/communication/alerts",
         },
         {
           title: "Website Messages",
-          url: "/dashboard/communication/website-messages",
+          url: "management/dashboard/communication/website-messages",
         },
       ],
     },
     {
       title: "Finance",
-      url: "/finance",
+      url: "management/finance",
       icon: DollarSign,
       items: [
         {
           title: "Fee Management",
-          url: "/dashboard/finance/fees",
+          url: "management/dashboard/finance/fees",
         },
         {
           title: "Payments",
-          url: "/dashboard/finance/payments",
+          url: "management/dashboard/finance/payments",
         },
         {
           title: "Scholarships",
-          url: "/finance/scholarships",
+          url: "management/finance/scholarships",
         },
         {
           title: "Reports",
-          url: "/finance/reports",
+          url: "management/finance/reports",
         },
       ],
     },
     {
       title: "Transport",
-      url: "/transport",
+      url: "management/transport",
       icon: Bus,
       items: [
         {
           title: "Routes",
-          url: "/transport/routes",
+          url: "management/transport/routes",
         },
         {
           title: "Tracking",
-          url: "/transport/tracking",
+          url: "management/transport/tracking",
         },
         {
           title: "Drivers",
-          url: "/transport/drivers",
+          url: "management/transport/drivers",
         },
         {
           title: "Maintenance",
-          url: "/transport/maintenance",
+          url: "management/transport/maintenance",
         },
       ],
     },
     {
       title: "Resources",
-      url: "/resources",
+      url: "management/resources",
       icon: BookOpen,
       items: [
         {
           title: "Library",
-          url: "/resources/library",
+          url: "management/resources/library",
         },
         {
           title: "Inventory",
-          url: "/resources/inventory",
+          url: "management/resources/inventory",
         },
         {
           title: "Facilities",
-          url: "/resources/facilities",
+          url: "management/resources/facilities",
         },
         {
           title: "Assets",
-          url: "/resources/assets",
+          url: "management/resources/assets",
         },
       ],
     },
     {
       title: "Reports & Analytics",
-      url: "/reports",
+      url: "management/reports",
       icon: BarChart2,
       items: [
         {
           title: "Academic Reports",
-          url: "/reports/academic",
+          url: "management/reports/academic",
         },
         {
           title: "Financial Reports",
-          url: "/reports/financial",
+          url: "management/reports/financial",
         },
         {
           title: "Custom Reports",
-          url: "/reports/custom",
+          url: "management/reports/custom",
         },
         {
           title: "Analytics Dashboard",
-          url: "/reports/analytics",
+          url: "management/reports/analytics",
         },
       ],
     },
     {
       title: "Settings",
-      url: "/settings",
+      url: "management/settings",
       icon: Settings2,
       items: [
         {
           title: "School Profile",
-          url: "/settings/profile",
+          url: "management/settings/profile",
         },
         {
           title: "User Management",
-          url: "/settings/users",
+          url: "management/settings/users",
         },
         {
           title: "System Settings",
-          url: "/settings/system",
+          url: "management/settings/system",
         },
         {
           title: "Backup & Security",
-          url: "/settings/security",
+          url: "management/settings/security",
         },
       ],
     },
     {
       title: "Admin Only",
-      url: "/dashboard/admin",
+      url: "management/dashboard/admin",
       icon: Key,
       items: [
         {
           title: "Contacts",
-          url: "/dashboard/admin/contacts",
+          url: "management/dashboard/admin/contacts",
         },
       ],
     },
     {
       title: "Website",
-      url: "/sch/school-site",
+      url: "management/sch/school-site",
       icon: Building,
       items: [
         {
@@ -347,11 +358,11 @@ export default async function AppSidebar() {
     },
   ];
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar className="!bg-gray-200 !text-black [&_*]:!text-black" collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Logo href="/dashboard" />
+            <Logo href="management/dashboard" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

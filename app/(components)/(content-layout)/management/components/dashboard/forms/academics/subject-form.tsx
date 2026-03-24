@@ -30,12 +30,12 @@ export default function SubjectForm({
   initialContent,
   editingId,
   departments,
-   schoolId, 
+  schoolId,
 }: {
   initialContent?: string;
   editingId?: string;
   departments: DepartmentOption[];
-  schoolId:string
+  schoolId: string;
 }) {
   const {
     register,
@@ -95,7 +95,7 @@ export default function SubjectForm({
   const [selectedType, setSelectedType] = useState<any>(types[0]);
 
   async function saveSubject(data: SubjectCreateProps) {
-    data.schoolId=schoolId
+    data.schoolId = schoolId;
     data.departmentId = selectedDepartment.value;
     data.departmentName = selectedDepartment.label;
     data.category = selectedCategory.value;
@@ -136,7 +136,7 @@ export default function SubjectForm({
             )}
           </DialogTrigger>
 
-          <DialogContent>
+          <DialogContent className="bg-white text-black">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? "Edit Subject" : "Add New Subject"}

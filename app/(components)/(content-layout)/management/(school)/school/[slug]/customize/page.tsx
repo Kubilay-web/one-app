@@ -13,6 +13,7 @@ export default async function page({
   const { slug } = await params;
   const school = await getSchoolById(slug, "slug");
 
+
   
   // if (!school) {
   //   return <div>School not found.</div>;
@@ -24,6 +25,7 @@ export default async function page({
   const incompleteSections =
     allSections.filter((section) => section.isComplete === false).slice(0, 2) ||
     [];
+    
   return (
     <div>
       <WelcomeSection

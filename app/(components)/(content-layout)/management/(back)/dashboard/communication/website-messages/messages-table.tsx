@@ -68,8 +68,10 @@ export type SchoolContactMessage = {
 
 export default function SchoolContactMessagesTable({
   data,
+  schoolId
 }: {
   data: SchoolContactMessage[];
+  schoolId:string;
 }) {
   const [messages, setMessages] = useState<SchoolContactMessage[]>(data);
   const [filteredMessages, setFilteredMessages] = useState<

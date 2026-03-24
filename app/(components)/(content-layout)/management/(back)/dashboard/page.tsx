@@ -33,7 +33,7 @@ export default async function Dashboard() {
         userRole={user.roleschool}
         userSchool={school?.name ?? ""}
       />
-      <DashboardDetails analytics={analytics} />
+      <DashboardDetails analytics={analytics} schoolslug={school.slug} />
     </div>
   );
 }

@@ -50,28 +50,28 @@ export default function TeacherAnalytics({
       count: data.students,
       icon: GraduationCap,
       unit: "",
-      detailLink: "/portal/teachers/students",
+      detailLink: "/management/portal/teachers/students",
     },
     {
       title: "Exams",
       count: data.exams,
       icon: LibrarySquare,
       unit: "",
-      detailLink: "/portal/teachers/exams",
+      detailLink: "/management/portal/teachers/exams",
     },
     {
       title: "Reminders",
       count: data.reminders,
       icon: MessageCircle,
       unit: "",
-      detailLink: "/portal/teachers/inbox",
+      detailLink: "/management/portal/teachers/inbox",
     },
     {
       title: "Rating",
       count: 4.8,
       icon: Star,
       unit: "",
-      detailLink: "/analytics/ratings",
+      detailLink: "/management/analytics/ratings",
     },
   ];
   const recentStudents = data.recentStudents || [];
@@ -183,7 +183,7 @@ export default function TeacherAnalytics({
               <div className="flex items-center justify-between">
                 <h2>Upcoming Events</h2>
                 <Link
-                  href={`/management/sch/${school?.slug}/customize/events`}
+                  href={`/management/school/${school?.slug}/customize/events`}
                   className="text-sm font-medium text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-1"
                 >
                   View all events

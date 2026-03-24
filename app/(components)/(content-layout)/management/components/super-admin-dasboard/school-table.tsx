@@ -91,7 +91,7 @@ export default function SchoolTable({
         setIsDeleting(null);
         toast.success('School Deleted successfully...✅');
         console.log(response);
-        router.push('/super-dashboard/schools-page');
+        router.push('/management/super-dashboard/schools-page');
       } else {
         setIsDeleting(null);
         toast.error('Failed To Delete School...!!!🥺');
@@ -194,7 +194,7 @@ const currentPageSchools = filteredSchools.slice(startIndex, endIndex);
             onClick={handleAddNewClick}
           >
             {/* <Plus className={clsx('mr-2 h-4 w-4')} /> */}
-            <Link href="/super-dashboard/schools-page/new">Add School</Link>
+            <Link href="/management/super-dashboard/schools-page/new">Add School</Link>
           </Button>
         </CardHeader>
 
@@ -273,7 +273,7 @@ const currentPageSchools = filteredSchools.slice(startIndex, endIndex);
                     <TableCell>{formatDate(school.createdAt)}</TableCell>
                     <TableCell className={clsx('text-right')}>
                       <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/education-form/${school.id}`}>
+                        <Link href={`/management/school/dashboard/education-form/${school.id}`}>
                           <Button
                             variant="outline"
                             size="icon"

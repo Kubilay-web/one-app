@@ -241,6 +241,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 							<Image
 								src={image.image || "/placeholder.svg"}
 								alt={image.title}
+								fill
 								className="w-full h-full object-cover cursor-pointer"
 								onClick={() => openModal(index)}
 							/>

@@ -45,7 +45,9 @@ export default function SchoolAdmissionSection({
             <Image
               src={studentImage || "/placeholder.svg"}
               alt="Student writing"
-              fill
+              // fill
+              width={200}
+              height={200}
               className="object-cover"
             />
           </div>

@@ -62,7 +62,7 @@ export default function Sidebar() {
       >
         <div className="h-full flex flex-col">
           <Link
-            href="/super-admin-dashboard"
+            href="/management/super-admin-dashboard"
             target="_blank"
             rel="noopener noreferrer"
             className="h-16 px-6 flex items-center border-b border-gray-200 dark:border-[#1F1F23]"
@@ -116,13 +116,13 @@ export default function Sidebar() {
                       <Zap className="w-4 h-4 text-blue-600" />
                     </Button>
                   </Link>
-                  <NavItem href="/super-dashboard" icon={Home}>
+                  <NavItem href="/management/super-dashboard" icon={Home}>
                     Dashboard
                   </NavItem>
-                  <NavItem href="/super-dashboard/schools-page" icon={School}>
+                  <NavItem href="/management/super-dashboard/schools-page" icon={School}>
                     Schools
                   </NavItem>
-                  <NavItem href="/super-dashboard/contacts" icon={Contact}>
+                  <NavItem href="/management/super-dashboard/contacts" icon={Contact}>
                     Contacts
                   </NavItem>
                 </div>

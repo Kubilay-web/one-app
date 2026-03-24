@@ -47,10 +47,10 @@ export default function EventCard({ event }: EventCardProps) {
     <>
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="aspect-[3/2] w-full relative">
-          <Image
+          <img
             src={event.image || "/placeholder.svg"}
             alt={event.title}
-            fill
+            
             className="object-cover"
           />
           <div className="absolute top-4 left-4 bg-white rounded-lg p-2 text-center w-14 h-14 flex flex-col justify-center">
@@ -92,10 +92,10 @@ export default function EventCard({ event }: EventCardProps) {
           </DialogHeader>
 
           <div className="relative h-64 my-4">
-            <Image
+            <img
               src={event.image || "/placeholder.svg"}
               alt={event.title}
-              fill
+              
               className="object-cover rounded-md"
             />
           </div>

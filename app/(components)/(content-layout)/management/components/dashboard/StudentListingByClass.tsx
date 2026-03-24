@@ -23,13 +23,12 @@ export type StudentByClassProps = {
 export default function StudentListingByClass({
   classes,
   role = "ADMIN",
-  schoolId
+  schoolId,
 }: {
   classes: Class[];
   role?: UserRoleSchool;
-  schoolId:string;
+  schoolId: string;
 }) {
-
   const [students, setStudents] = useState<Student[]>([]);
   // Class
   const classOptions = classes.map((item) => {
@@ -63,7 +62,6 @@ export default function StudentListingByClass({
         ? secStudentColumns
         : columns;
 
-        
   async function getStudentList() {
     setStudents([]);
     setLoading(true);
@@ -112,27 +110,32 @@ export default function StudentListingByClass({
             <Button onClick={getStudentList}>Get Student List</Button>
           )}
         </CardContent>
-      </Card> 
-      {students && students.length > 0 && (
-        <>
-          <TableHeader
-            title={`Student List (${selectedClass.label}) - ${selectedStream.label}`}
-            linkTitle="Add student"
-            href={
-              role === "SECRETARY"
-                ? "/management/portal/secretary/students/new"
-                : "/management/dashboard/students/new"
-            }
-            data={students}
-            model="student"
-          />
-          <div className="py-8">
-            <DataTable data={students} columns={displayColumns} />
+      </Card>
+
+      {students ? (
+        students.length > 0 ? (
+          <>
+            <TableHeader
+              title={`Student List (${selectedClass.label}) - ${selectedStream?.label || "All Streams"})`}
+              linkTitle="Add student"
+              href={
+                role === "SECRETARY"
+                  ? "/management/portal/secretary/students/new"
+                  : "/management/dashboard/students/new"
+              }
+              data={students}
+              model="student"
+            />
+            <div className="py-8">
+              <DataTable data={students} columns={displayColumns} />
+            </div>
+          </>
+        ) : (
+          <div className="p-6 text-center text-gray-500 border rounded">
+            No students found for the selected class/stream.
           </div>
-        </>
-      )
-      
-      }
+        )
+      ) : null}
     </div>
   );
 }

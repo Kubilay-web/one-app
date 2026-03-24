@@ -32,20 +32,49 @@ export async function createSchool(data: SchoolProps) {
 }
 
 // ==================== GET SCHOOL BY ID ====================
-export async function getSchoolById(id?: string) {
-  if (!id) return null;
+// export async function getSchoolById(id?: string) {
+//   if (!id) return null;
+
+//   try {
+//     const res = await fetch(`${BASE_API_URL}/api/schoolmanage/schools?id=${id}`);
+//     const result = await res.json();
+
+//     if (!res.ok) {
+//       throw new Error(result.error || "Failed to fetch school");
+//     }
+
+//     return result as School;
+//   } catch (error) {
+//     console.log("getSchoolById error:", error);
+//     return null;
+//   }
+// }
+
+
+
+export async function getSchoolById(slug: string) {
+  if (!slug) return null;
 
   try {
-    const res = await fetch(`${BASE_API_URL}/api/schoolmanage/schools?id=${id}`);
+    const encodedSlug = encodeURIComponent(slug);
+    const url = `http://localhost:3000/api/schoolmanage/schools?slug=${encodedSlug}`;
+
+    const res = await fetch(url, { cache: "no-store" });
     const result = await res.json();
 
     if (!res.ok) {
-      throw new Error(result.error || "Failed to fetch school");
+      console.error("getSchoolById API error:", result.error || result);
+      return null;
     }
 
-    return result as School;
+    // Eğer result bir array ise ilk öğeyi al
+    if (Array.isArray(result)) {
+      return result[0] || null;
+    }
+
+    return result || null;
   } catch (error) {
-    console.log("getSchoolById error:", error);
+    console.error("getSchoolById fetch error:", error);
     return null;
   }
 }
@@ -58,7 +87,9 @@ export interface BriefSchool {
 
 export async function getSchoolNames() {
   try {
-    const res = await fetch(`${BASE_API_URL}/api/schoolmanage/schools?type=titles`);
+    const res = await fetch(
+      `${BASE_API_URL}/api/schoolmanage/schools?type=titles`,
+    );
     const result = await res.json();
 
     if (!res.ok) {
@@ -94,9 +125,12 @@ export async function deleteSchoolById(id?: string) {
   if (!id) return null;
 
   try {
-    const res = await fetch(`${BASE_API_URL}/api/schoolmanage/schools?id=${id}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `${BASE_API_URL}/api/schoolmanage/schools?id=${id}`,
+      {
+        method: "DELETE",
+      },
+    );
 
     const result = await res.json();
 

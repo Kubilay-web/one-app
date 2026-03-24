@@ -33,49 +33,110 @@ export async function createAttendance(data: AttendanceData) {
   }
 }
 
+// export async function getAttendanceList(streamId: string, date: Date) {
+//   try {
+//     const res = await fetch(
+//       `${process.env.NEXT_PUBLIC_BASE_URL}/api/schoolmanage/attendance/${streamId}?date=${date.toISOString()}`,
+//       {
+//         method: "GET",
+//         cache: "no-store",
+//       }
+//     );
+
+//     if (!res.ok) {
+//       throw new Error("Failed to fetch attendance");
+//     }
+
+//     const data = await res.json();
+//     return data as Attendance;
+//   } catch (error) {
+//     console.log(error);
+//     return null;
+//   }
+// }
+
+// export async function getStudentAttendanceList(
+//   studentId: string,
+//   date: Date
+// ) {
+//   try {
+//     const res = await fetch(
+//       `${process.env.NEXT_PUBLIC_BASE_URL}/api/schoolmanage/attendance/student/${studentId}?date=${date.toISOString()}`,
+//       {
+//         method: "GET",
+//         cache: "no-store",
+//       }
+//     );
+
+//     if (!res.ok) {
+//       throw new Error("Failed to fetch student attendance");
+//     }
+
+//     const data = await res.json();
+//     return data as StudentAttendanceData;
+//   } catch (error) {
+//     console.log(error);
+//     return null;
+//   }
+// }
+
+
+
+
 export async function getAttendanceList(streamId: string, date: Date) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/schoolproject/attendance/${streamId}?date=${date.toISOString()}`,
-      {
-        method: "GET",
-        cache: "no-store",
-      }
-    );
+  const safeDate = new Date(date).toISOString();
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch attendance");
-    }
+  const params = new URLSearchParams();
 
-    const data = await res.json();
-    return data as Attendance;
-  } catch (error) {
-    console.log(error);
-    return null;
+  // ❌ ASLA "all" gönderme
+  if (streamId && streamId !== "all") {
+    params.append("streamId", streamId);
   }
+
+  params.append("date", safeDate);
+
+  const url = `http://localhost:3000/api/schoolmanage/attendance?${params.toString()}`;
+
+  console.log("FETCH URL:", url);
+
+  const res = await fetch(url, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error("API ERROR:", err);
+    throw new Error("Failed to fetch attendance");
+  }
+
+  return await res.json();
 }
+
+
+
 
 export async function getStudentAttendanceList(
   studentId: string,
   date: Date
 ) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/schoolproject/attendance/student/${studentId}?date=${date.toISOString()}`,
-      {
-        method: "GET",
-        cache: "no-store",
-      }
-    );
+  const params = new URLSearchParams();
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch student attendance");
-    }
+  params.append("studentId", studentId);
+  params.append("date", date.toISOString());
 
-    const data = await res.json();
-    return data as StudentAttendanceData;
-  } catch (error) {
-    console.log(error);
-    return null;
+  const url = `http://localhost:3000/api/schoolmanage/attendance?${params.toString()}`;
+
+  console.log("FETCH URL:", url);
+
+  const res = await fetch(url, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error("API ERROR:", err);
+    throw new Error("Failed to fetch student attendance");
   }
+
+  return await res.json();
 }

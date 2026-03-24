@@ -441,11 +441,36 @@ export async function getAllBriefStudents(schoolId: string) {
 }
 
 // GET STUDENTS BY CLASS
+// export async function getStudentsByClass(data: StudentByClassProps) {
+//   try {
+//     console.log("Fetching students with data:", data);
+    
+//     const result = await fetcher<Student[]>(`${BASE_URL}/api/schoolmanage/students?schoolId=${data.schoolId}&classId=${data.classId}&streamId=${data.streamId}`);
+
+//     console.log("getStudentsByClass result:", result);
+
+//     if (result.error) {
+//       console.error("Get students by class error:", result.error);
+//       return [];
+//     }
+
+//     return result.data || [];
+//   } catch (error) {
+//     console.error("Error in getStudentsByClass:", error);
+//     return [];
+//   }
+// }
+
+
 export async function getStudentsByClass(data: StudentByClassProps) {
   try {
     console.log("Fetching students with data:", data);
-    
-    const result = await fetcher<Student[]>(`${BASE_URL}/api/schoolmanage/students?schoolId=${data.schoolId}&classId=${data.classId}&streamId=${data.streamId}`);
+
+    const streamIdParam = data.streamId || "all";
+
+    const result = await fetcher<Student[]>(
+      `${BASE_URL}/api/schoolmanage/students?type=by-class&schoolId=${data.schoolId}&classId=${data.classId}&streamId=${streamIdParam}`
+    );
 
     console.log("getStudentsByClass result:", result);
 
@@ -462,18 +487,32 @@ export async function getStudentsByClass(data: StudentByClassProps) {
 }
 
 // GET NEXT STUDENT SEQUENCE
+// export async function getStudentNextSequence(schoolId: string) {
+//   try {
+//     const result = await fetcher<{ sequence: number }>(
+//       `${BASE_URL}/api/schoolmanage/students/sequence?schoolId=${schoolId}`
+//     );
+
+//     if (result.error) {
+//       console.error("Get student sequence error:", result.error);
+//       return 1;
+//     }
+
+//     return result.data?.sequence || 1;
+//   } catch (error) {
+//     console.error("Get student sequence error:", error);
+//     return 1;
+//   }
+// }
+
+
 export async function getStudentNextSequence(schoolId: string) {
   try {
-    const result = await fetcher<{ sequence: number }>(
-      `${BASE_URL}/api/schoolmanage/students/sequence?schoolId=${schoolId}`
+    const result = await fetcher<{ data: number }>(
+      `${BASE_URL}/api/schoolmanage/students?type=next-seq&schoolId=${schoolId}`
     );
 
-    if (result.error) {
-      console.error("Get student sequence error:", result.error);
-      return 1;
-    }
-
-    return result.data?.sequence || 1;
+    return result.data || 1;
   } catch (error) {
     console.error("Get student sequence error:", error);
     return 1;

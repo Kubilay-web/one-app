@@ -1,6 +1,6 @@
 import { validateRequest } from "@/app/auth";
 import { getServerSchool, SchoolUser } from "../../../../actions/auth";
-import { getBriefClasses } from "../../../../actions/classes";
+import { getAllClasses, getBriefClasses } from "../../../../actions/classes";
 import { getAllPeriods } from "../../../../actions/communications";
 import { getExamsByAcademicYear } from "../../../../actions/exams";
 import ReportCardsListing from "../../../../components/dashboard/academics/report-card-listing";
@@ -12,7 +12,10 @@ export default async function page() {
 
   const school = await SchoolUser(user?.id);
 
-  const classes = (await getBriefClasses(school?.id ?? "")) || [];
+  // const classes = (await getBriefClasses(school?.id ?? "")) || [];
+
+
+  const classes = (await getAllClasses(school?.id ?? "")) || [];
 
   const allTerms = (await getAllPeriods(school?.id ?? "")) || [];
   const currentYear = new Date().getFullYear();

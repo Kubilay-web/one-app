@@ -18,7 +18,12 @@ import {
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Textarea } from "../../../components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -32,10 +37,14 @@ import { ScrollArea } from "../../../components/ui/scroll-area";
 import { Switch } from "../../../components/ui/switch";
 import { News, Section } from "../../../types/types";
 import { toast } from "sonner";
-import { addNewsItem, createActivity, updateSection } from "../../../actions/site";
+import {
+  addNewsItem,
+  createActivity,
+  updateSection,
+} from "../../../actions/site";
 import { getFormattedDate } from "../../../lib/getFormatedDate";
 import { UploadButton } from "../../../lib/uploadthing";
-import useSchoolStore from "../../../store/school";
+// import useSchoolStore from "../../../store/school";
 
 // Define the NewsItem interface
 export interface NewsItem {
@@ -48,19 +57,26 @@ export interface NewsItem {
 export default function NewsSectionForm({
   section,
   recentNews,
+  schoolId,
 }: {
   section: Section;
   recentNews: News[];
+  schoolId: string;
 }) {
   // Section header
-  const { school } = useSchoolStore();
+  // const { school } = useSchoolStore();
   const [sectionTitle, setSectionTitle] = useState(section.title);
   const [viewDescriptionText, setViewDescriptionText] = useState(
-    section.subtitle
+    section.subtitle,
   );
+
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // News items
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+
+  const [NewsImage, setNewsImage] = useState("");
 
   // New/Edit news form
   const [isEditMode, setIsEditMode] = useState(false);
@@ -71,9 +87,9 @@ export default function NewsSectionForm({
     schoolId: "",
   });
   const [tempImageSrc, setTempImageSrc] = useState<string | null>(
-    "/school/news-1.jpg"
+    "/management/school/news-1.jpg",
   );
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   // Preview state
   const [previewSectionTitle, setPreviewSectionTitle] = useState(sectionTitle);
   const [previewDescriptionText, setPreviewDescriptionText] =
@@ -91,7 +107,7 @@ export default function NewsSectionForm({
         const newItem: NewsItem = {
           ...currentNews,
           image: tempImageSrc,
-          schoolId: school?.id ?? "",
+          schoolId: schoolId ?? "",
         };
 
         console.log(newItem);
@@ -103,7 +119,7 @@ export default function NewsSectionForm({
           title: "",
           content: "",
           image: "",
-          schoolId: school?.id ?? "",
+          schoolId: schoolId ?? "",
         });
         setTempImageSrc(null);
         setIsEditMode(false);
@@ -111,6 +127,32 @@ export default function NewsSectionForm({
         setLoading(false);
         console.log(error);
       }
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/schoolmanage/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        setNewsImage(data.url);
+        toast.success("Image uploaded");
+      } else {
+        toast.error("Upload failed");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Upload error");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -241,7 +283,7 @@ export default function NewsSectionForm({
                 Manage the news items in your section
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 bg-white text-black">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button>
@@ -249,7 +291,7 @@ export default function NewsSectionForm({
                     Add News Item
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[725px]">
+                <DialogContent className="sm:max-w-[725px] bg-white text-black">
                   <DialogHeader>
                     <DialogTitle>
                       {isEditMode ? "Edit News Item" : "Add News Item"}
@@ -278,7 +320,26 @@ export default function NewsSectionForm({
                         <Label className="text-center" htmlFor="news-image">
                           Featured Image
                         </Label>
+
                         <div className="flex items-start gap-4 mt-3 justify-center">
+                          {/* <Image
+                            src={""}
+                            alt="logo"
+                            width={80}
+                            height={80}
+                            className="object-contain border rounded"
+                          /> */}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              e.target.files?.[0] &&
+                              handleFileUpload(e.target.files[0])
+                            }
+                          />
+                          {uploading && <Loader2 className="animate-spin" />}
+                        </div>
+                        {/* <div className="flex items-start gap-4 mt-3 justify-center">
                           <UploadButton
                             className=""
                             endpoint="logoImage"
@@ -297,12 +358,12 @@ export default function NewsSectionForm({
                           />
                           <Image
                             alt="news image"
-                            src={tempImageSrc ?? "/school/news-1.jpg"}
+                            src={tempImageSrc ?? "/management/school/news-1.jpg"}
                             width={300}
                             height={300}
                             className="w-20 rounded-xl"
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 
@@ -358,7 +419,7 @@ export default function NewsSectionForm({
                             className="flex gap-4 p-4 border rounded-md"
                           >
                             <div className="w-24 h-24 relative flex-shrink-0">
-                              <Image
+                              <img
                                 src={item.image || "/placeholder.svg"}
                                 alt={item.title}
                                 fill

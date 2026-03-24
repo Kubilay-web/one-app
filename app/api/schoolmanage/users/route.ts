@@ -51,11 +51,9 @@
 //     role: "USER" as UserRoleSchool,
 //   };
 
-
 //   const newUser = await db.user.create({
 //     data: userData,
 //   });
-
 
 //   console.log(`User created successfully: ${newUser.name} (${newUser.id})`);
 //   return newUser;
@@ -73,7 +71,7 @@
 //     // Get user profile ID by role
 //     if (type === 'profile' && userId && role) {
 //       let profileId = null;
-      
+
 //       if (role === "PARENT") {
 //         const parent = await db.parent.findUnique({
 //           where: { userId },
@@ -153,12 +151,11 @@
 
 // // ==================== POST İŞLEMLERİ ====================
 
-
 // // ==================== POST İŞLEMLERİ ====================
 // export async function POST(request: NextRequest) {
 //   try {
 //     const data = await request.json();
-    
+
 //     console.log("API - Received data:", data);
 
 //     // Check if the user already exists
@@ -205,7 +202,7 @@
 //     });
 
 //     console.log(`User created successfully: ${newUser.name} (${newUser.id})`);
-    
+
 //     return NextResponse.json(
 //       { data: newUser, error: null },
 //       { status: 201 }
@@ -351,22 +348,22 @@
 //   }
 // }
 
+import { NextRequest, NextResponse } from "next/server";
+// import bcrypt from 'bcrypt';
 
 
 
 
 
-
-import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
+import { hash } from "@node-rs/argon2";
 import db from "@/app/lib/db";
-import { UserCreateProps, UserLoginProps } from '../types/types';
-import { UserRoleSchool } from '@prisma/client';
-import jwt from 'jsonwebtoken';
+import { UserCreateProps, UserLoginProps } from "../types/types";
+import { UserRoleSchool } from "@prisma/client";
+import jwt from "jsonwebtoken";
 
 // ==================== YARDIMCI FONKSİYONLAR ====================
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const REFRESH_SECRET = process.env.REFRESH_SECRET || 'your-refresh-secret';
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+const REFRESH_SECRET = process.env.REFRESH_SECRET || "your-refresh-secret";
 
 interface TokenPayload {
   userId: string;
@@ -375,11 +372,11 @@ interface TokenPayload {
 }
 
 function generateAccessToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "15m" });
 }
 
 function generateRefreshToken(payload: TokenPayload): string {
-  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '7d' });
+  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: "7d" });
 }
 
 async function createUserService(data: UserCreateProps) {
@@ -391,13 +388,16 @@ async function createUserService(data: UserCreateProps) {
     throw new Error("Email already exists");
   }
 
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  // const hashedPassword = await bcrypt.hash(data.password, 10);
+
+  const hashedPassword = await hash(data.password);
 
   const userData = {
     name: data.name,
+    username:data.username,
     email: data.email,
     phone: data.phone,
-    password: hashedPassword,
+    passwordHash: hashedPassword,
     image: data.image,
     schoolId: data.schoolId,
     schoolName: data.schoolName,
@@ -416,15 +416,15 @@ async function createUserService(data: UserCreateProps) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('id');
-    const schoolId = searchParams.get('schoolId');
-    const role = searchParams.get('role');
-    const type = searchParams.get('type');
+    const userId = searchParams.get("id");
+    const schoolId = searchParams.get("schoolId");
+    const role = searchParams.get("role");
+    const type = searchParams.get("type");
 
     // ===== 1. PROFIL SORGUSU - BURADA RETURN ŞART! =====
-    if (type === 'profile' && userId && role) {
+    if (type === "profile" && userId && role) {
       let profileId = null;
-      
+
       if (role === "PARENT") {
         const parent = await db.parent.findUnique({
           where: { userId: userId }, // userId'yi kullan!
@@ -450,7 +450,7 @@ export async function GET(request: NextRequest) {
     }
 
     // ===== 2. STAFF SORGUSU =====
-    if (type === 'staff' && schoolId) {
+    if (type === "staff" && schoolId) {
       const users = await db.user.findMany({
         orderBy: { createdAt: "desc" },
         where: {
@@ -469,7 +469,7 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      const transformedUsers = users.map(user => ({
+      const transformedUsers = users.map((user) => ({
         ...user,
         role: user.roleschool,
       }));
@@ -478,7 +478,7 @@ export async function GET(request: NextRequest) {
     }
 
     // ===== 3. TÜM KULLANICILAR =====
-    if (type === 'all' || (!type && !userId && !schoolId && !role)) {
+    if (type === "all" || (!type && !userId && !schoolId && !role)) {
       const users = await db.user.findMany({
         orderBy: { createdAt: "desc" },
         select: {
@@ -493,7 +493,7 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      const transformedUsers = users.map(user => ({
+      const transformedUsers = users.map((user) => ({
         ...user,
         role: user.roleschool,
       }));
@@ -503,12 +503,11 @@ export async function GET(request: NextRequest) {
 
     // ===== 4. HİÇBİR KOŞUL SAĞLANMADIYSA =====
     return NextResponse.json([]);
-    
   } catch (error) {
-    console.error('GET users error:', error);
+    console.error("GET users error:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch users' },
-      { status: 500 }
+      { error: "Failed to fetch users" },
+      { status: 500 },
     );
   }
 }
@@ -517,7 +516,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    
+
     const existingEmail = await db.user.findUnique({
       where: { email: data.email },
     });
@@ -525,7 +524,7 @@ export async function POST(request: NextRequest) {
     if (existingEmail) {
       return NextResponse.json(
         { data: null, error: "Email already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -560,16 +559,19 @@ export async function POST(request: NextRequest) {
       ...newUser,
       role: newUser.roleschool,
     };
-    
+
     return NextResponse.json(
       { data: responseUser, error: null },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
-    console.error('POST user error:', error);
+    console.error("POST user error:", error);
     return NextResponse.json(
-      { data: null, error: error instanceof Error ? error.message : 'Something went wrong' },
-      { status: 500 }
+      {
+        data: null,
+        error: error instanceof Error ? error.message : "Something went wrong",
+      },
+      { status: 500 },
     );
   }
 }
@@ -578,13 +580,16 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('id');
+    const userId = searchParams.get("id");
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 },
+      );
     }
 
-    const data = await request.json() as Partial<UserCreateProps>;
+    const data = (await request.json()) as Partial<UserCreateProps>;
 
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
@@ -593,22 +598,39 @@ export async function PUT(request: NextRequest) {
     const updatedUser = await db.user.update({
       where: { id: userId },
       data,
-      select: { id: true, email: true, name: true, phone: true, roleschool: true, image: true, schoolId: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        roleschool: true,
+        image: true,
+        schoolId: true,
+      },
     });
 
-    return NextResponse.json({ data: { ...updatedUser, role: updatedUser.roleschool }, error: null });
+    return NextResponse.json({
+      data: { ...updatedUser, role: updatedUser.roleschool },
+      error: null,
+    });
   } catch (error) {
-    return NextResponse.json({ data: null, error: 'Failed to update user' }, { status: 500 });
+    return NextResponse.json(
+      { data: null, error: "Failed to update user" },
+      { status: 500 },
+    );
   }
 }
 
 export async function PATCH(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('id');
+    const userId = searchParams.get("id");
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 },
+      );
     }
 
     const data = await request.json();
@@ -622,22 +644,38 @@ export async function PATCH(request: NextRequest) {
     const updatedUser = await db.user.update({
       where: { id: userId },
       data: updateData,
-      select: { id: true, email: true, name: true, phone: true, roleschool: true, image: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        roleschool: true,
+        image: true,
+      },
     });
 
-    return NextResponse.json({ data: { ...updatedUser, role: updatedUser.roleschool }, error: null });
+    return NextResponse.json({
+      data: { ...updatedUser, role: updatedUser.roleschool },
+      error: null,
+    });
   } catch (error) {
-    return NextResponse.json({ data: null, error: 'Failed to update user' }, { status: 500 });
+    return NextResponse.json(
+      { data: null, error: "Failed to update user" },
+      { status: 500 },
+    );
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('id');
+    const userId = searchParams.get("id");
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 },
+      );
     }
 
     await db.$transaction([
@@ -645,20 +683,14 @@ export async function DELETE(request: NextRequest) {
       db.user.delete({ where: { id: userId } }),
     ]);
 
-    return NextResponse.json({ data: { message: 'User deleted successfully' }, error: null }, { status: 200 });
+    return NextResponse.json(
+      { data: { message: "User deleted successfully" }, error: null },
+      { status: 200 },
+    );
   } catch (error) {
-    return NextResponse.json({ data: null, error: 'Failed to delete user' }, { status: 500 });
+    return NextResponse.json(
+      { data: null, error: "Failed to delete user" },
+      { status: 500 },
+    );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

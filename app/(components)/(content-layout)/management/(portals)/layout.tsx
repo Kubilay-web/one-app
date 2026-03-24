@@ -25,9 +25,11 @@ export default async function PortalLayout({
   // }
 
 
+
+
   return (
     <div className="flex w-full">
-      {/* <PortalSidebar userRole={user?.roleschool as UserRole} /> */}
+       <PortalSidebar userRole={user?.roleschool as UserRole} /> 
       <div className="flex flex-col">
         <PortalHeader user={user} />
         <div className="flex min-h-screen w-full flex-col">{children}</div>

@@ -23,7 +23,7 @@ Would you be available for a brief meeting next week to discuss strategies to fu
     timestamp: new Date("2024-01-02T14:30:00"),
     read: false,
     labels: ["academic", "important"],
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "/management/placeholder.svg?height=40&width=40",
   },
   {
     id: "2",
@@ -40,7 +40,7 @@ Please confirm your attendance by responding to this message. If the scheduled t
     timestamp: new Date("2024-01-02T11:00:00"),
     read: true,
     labels: ["administrative"],
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "/management/placeholder.svg?height=40&width=40",
   },
   {
     id: "3",
@@ -57,7 +57,7 @@ Please ensure your child brings appropriate sports attire and a water bottle. We
     timestamp: new Date("2024-01-01T15:45:00"),
     read: true,
     labels: ["sports", "schedule"],
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "/management/placeholder.svg?height=40&width=40",
   },
 ];
 

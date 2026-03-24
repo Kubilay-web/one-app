@@ -26,8 +26,10 @@ import useSchoolStore from "../../store/school";
 
 export default function DashboardDetails({
   analytics,
+  schoolslug
 }: {
   analytics: AdminStats;
+  schoolslug:string;
 }) {
   const stats = [
     {
@@ -208,7 +210,7 @@ export default function DashboardDetails({
               <div className="flex items-center justify-between">
                 <h2>Upcoming Events</h2>
                 <Link
-                  href={`/sch/${school?.slug}/customize/events`}
+                  href={`/management/school/${schoolslug}/customize/events`}
                   className="text-sm font-medium text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-1"
                 >
                   View all events

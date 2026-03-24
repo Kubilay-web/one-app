@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import DateColumn from "../../../../components/DataTableColumns/DateColumn";
 
-
 import { ColumnDef } from "@tanstack/react-table";
 import ActionColumn from "../../../../components/DataTableColumns/ActionColumn";
 import { Parent } from "../../../../types/types";
@@ -26,7 +25,7 @@ export const columns: ColumnDef<Parent>[] = [
             className="w-10 h-10 rounded-full object-cover"
           />
           <div className="">
-            <h2 className="font-medium capitalize">
+            <h2 className="text-base font-medium capitalize">
               {parent.firstName.toLowerCase()} {parent.lastName.toLowerCase()}
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -44,7 +43,7 @@ export const columns: ColumnDef<Parent>[] = [
       const parent = row.original;
       return (
         <div className="">
-          <h2 className="font-medium">{parent.email.toLowerCase()}</h2>
+          <h2 className="text-base font-medium">{parent.email.toLowerCase()}</h2>
           <p className="text-xs text-muted-foreground">{parent.phone}</p>
         </div>
       );

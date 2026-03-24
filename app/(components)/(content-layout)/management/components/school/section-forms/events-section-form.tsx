@@ -26,7 +26,12 @@ import {
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Textarea } from "../../../components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -40,7 +45,11 @@ import { ScrollArea } from "../../../components/ui/scroll-area";
 import { Switch } from "../../../components/ui/switch";
 import { EventData, Section } from "../../../types/types";
 import { toast } from "sonner";
-import { addEventItem, createActivity, updateSection } from "../../../actions/site";
+import {
+  addEventItem,
+  createActivity,
+  updateSection,
+} from "../../../actions/site";
 import { getFormattedDate } from "../../../lib/getFormatedDate";
 import { UploadButton } from "../../../lib/uploadthing";
 import useSchoolStore from "../../../store/school";
@@ -60,14 +69,16 @@ export interface Event {
 export default function EventsSectionForm({
   section,
   recentEvents,
+  schoolId
 }: {
   section: Section;
   recentEvents: EventData[];
+  schoolId:string;
 }) {
   // Section header
   const [sectionTitle, setSectionTitle] = useState(section.title);
   const [viewDescriptionText, setViewDescriptionText] = useState(
-    section.subtitle
+    section.subtitle,
   );
 
   // Events
@@ -99,6 +110,10 @@ export default function EventsSectionForm({
   ]);
   const [loading, setLoading] = useState(false);
 
+  const [uploading, setUploading] = useState(false);
+
+  const [EventImage, setEventImage] = useState("");
+
   // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -124,7 +139,7 @@ export default function EventsSectionForm({
         setLoading(true);
         const newEvent: Event = {
           ...currentEvent,
-          schoolId: school?.id ?? "",
+          schoolId: schoolId ?? "",
           image: tempImageSrc,
         };
         await addEventItem(newEvent);
@@ -139,7 +154,7 @@ export default function EventsSectionForm({
           startTime: "09:00",
           endTime: "10:00",
           location: "",
-          schoolId: school?.id ?? "",
+          schoolId: schoolId ?? "",
         });
         setTempImageSrc(null);
         setIsEditMode(false);
@@ -204,8 +219,35 @@ export default function EventsSectionForm({
 
   // Sort events by date
   const sortedEvents = [...previewEvents].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
   );
+
+  const handleFileUpload = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/schoolmanage/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        setEventImage(data.url);
+        setTempImageSrc(data.url); 
+        toast.success("Image uploaded");
+      } else {
+        toast.error("Upload failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Upload error");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -275,7 +317,7 @@ export default function EventsSectionForm({
                 Manage the events in your section
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 bg-white text-black">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button>
@@ -283,7 +325,7 @@ export default function EventsSectionForm({
                     Add Event
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[725px]">
+                <DialogContent className="sm:max-w-[725px] bg-white text-black">
                   <DialogHeader>
                     <DialogTitle>
                       {isEditMode ? "Edit Event" : "Add Event"}
@@ -312,7 +354,7 @@ export default function EventsSectionForm({
                         <Label className="text-center" htmlFor="news-image">
                           Event Image
                         </Label>
-                        <div className="flex items-start gap-4 mt-3 justify-center">
+                        {/* <div className="flex items-start gap-4 mt-3 justify-center">
                           <UploadButton
                             className=""
                             endpoint="logoImage"
@@ -336,6 +378,18 @@ export default function EventsSectionForm({
                             height={300}
                             className="w-20 rounded-xl"
                           />
+                        </div> */}
+
+                        <div className="flex items-start gap-4 mt-3 justify-center">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              e.target.files?.[0] &&
+                              handleFileUpload(e.target.files[0])
+                            }
+                          />
+                          {uploading && <Loader2 className="animate-spin" />}
                         </div>
                       </div>
                     </div>
@@ -462,10 +516,9 @@ export default function EventsSectionForm({
                             className="flex gap-4 p-4 border rounded-md"
                           >
                             <div className="w-24 h-24 relative flex-shrink-0">
-                              <Image
+                              <img
                                 src={event.image || "/placeholder.svg"}
                                 alt={event.title}
-                                fill
                                 className="object-cover rounded-md"
                               />
                             </div>
@@ -557,10 +610,10 @@ export default function EventsSectionForm({
                       className="bg-white rounded-lg shadow-sm overflow-hidden"
                     >
                       <div className="aspect-[3/2] w-full relative">
-                        <Image
+                        <img
                           src={event.image || "/placeholder.svg"}
                           alt={event.title}
-                          fill
+                          
                           className="object-cover"
                         />
                         <div className="absolute top-4 left-4 bg-white rounded-lg p-2 text-center w-14 h-14 flex flex-col justify-center">

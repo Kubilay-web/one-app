@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import db from "@/app/lib/db";
 import { ParentCreateProps } from '../types/types';
 import { convertDateToIso } from '../exams/convertDateToIso';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
+import { hash } from "@node-rs/argon2";
+
 import { UserRoleSchool } from '@prisma/client';
 
 // ==================== YARDIMCI FONKSİYONLAR ====================
@@ -17,6 +19,7 @@ async function createUserService(data: {
   image?: string;
   schoolId: string;
   schoolName: string;
+  username:string;
 }) {
   // Check if user already exists
   const existingUser = await db.user.findUnique({
@@ -28,14 +31,18 @@ async function createUserService(data: {
   }
 
   // Hash password
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  // const hashedPassword = await bcrypt.hash(data.password, 10);
+
+
+  const hashedPassword = await hash(data.password);
 
   // User data - role alanını ve roleschool alanını doğru şekilde ayır
   const userData = {
     name: data.name,
+    username:data.name,
     email: data.email,
     phone: data.phone,
-    password: hashedPassword,
+    passwordHash: hashedPassword,
     image: data.image,
     schoolId: data.schoolId,
     schoolName: data.schoolName,

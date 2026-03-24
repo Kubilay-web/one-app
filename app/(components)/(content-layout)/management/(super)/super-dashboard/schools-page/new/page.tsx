@@ -6,13 +6,22 @@ import { Card, CardContent } from '../../../../components/ui/card';
 import { redirect } from 'next/navigation';
 import React from 'react';
 import { motion } from 'framer-motion';
+import { validateRequest } from '@/app/auth';
 
 export default async function page() {
-  const user = await getServerUser();
-  const role = user?.role;
-  if (!user || role !== 'SUPER_ADMIN') {
-    redirect('/login');
-  }
+  // const user = await getServerUser();
+  // const role = user?.role;
+
+
+  const {user}=await validateRequest();
+  const role=user?.roleschool;
+
+
+  // if (!user || role !== 'SUPER_ADMIN') {
+  //   redirect('/login');
+  // }
+
+
   return (
     <>
       <Card className="border-t-4 border-blue-600 shadow">

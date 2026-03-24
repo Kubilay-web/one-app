@@ -22,8 +22,6 @@ import { Label } from "../../../../../components/ui/label";
 //   getStudentAttendanceByDate,
 // } from "../../../../../actions/attendance";
 
-
-
 import { getStudentAttendanceList } from "../../../../../actions/attendance";
 
 // import AttendanceTable from "./AttendanceTable";
@@ -71,7 +69,7 @@ export default function StudentView({
 }) {
   const { school } = useSchoolStore();
   const [studentData, setStudentData] = useState<StudentAttendanceData | null>(
-    null
+    null,
   );
   // Class
   const [selectedDay, setSelectedDay] = useState<string>(weekDays[0].value); // Default to Monday
@@ -85,7 +83,7 @@ export default function StudentView({
   });
 
   const [selectedStudent, setSelectedStudent] = useState<any>(
-    studentOptions[0]
+    studentOptions[0],
   );
 
   const [loading, setLoading] = useState(false);
@@ -146,7 +144,7 @@ export default function StudentView({
           )}
         </CardContent>
       </Card>
-      {studentData && studentData.subjects.length > 0 ? (
+      {/* {studentData && studentData.subjects.length > 0 ? (
         <>
           <Card className="p-6">
             <div className="flex flex-col space-y-4">
@@ -160,6 +158,21 @@ export default function StudentView({
         </>
       ) : (
         <div className="">
+          <h2>No data Found</h2>
+        </div>
+      )} */}
+
+      {studentData ? (
+        <Card className="p-6">
+          <div className="flex flex-col space-y-4">
+            <h3 className="text-2xl text-center font-semibold mb-2">
+              Attendance for {selectedStudent?.label} - {selectedDayName}
+            </h3>
+            <StudentAttendanceTable data={studentData} />
+          </div>
+        </Card>
+      ) : (
+        <div>
           <h2>No data Found</h2>
         </div>
       )}

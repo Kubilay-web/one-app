@@ -20,6 +20,9 @@ export default async function page() {
 
   
   const section = await getSectionByType(school?.id, SectionType.ABOUT);
+
+
+  
   return (
     <main className="min-h-screen bg-background ">
       <CustomizePageHeader

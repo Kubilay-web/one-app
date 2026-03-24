@@ -18,8 +18,8 @@ import FormSelectInput from "../../../../../../components/FormInputs/FormSelectI
 import { addDays, format, startOfWeek } from "date-fns";
 import { Label } from "../../../../../../components/ui/label";
 import {
-  getAttendanceByStreamId,
-  getStudentAttendanceByDate,
+  getAttendanceList,
+  getStudentAttendanceList,
 } from "../../../../../../actions/attendance";
 // import AttendanceTable from "./AttendanceTable";
 import { AttendanceData } from "../../../../../../types/attendance";
@@ -92,7 +92,7 @@ export default function StudentView({
       const date =
         weekDays.find((day) => day.value === selectedDay)?.date || new Date();
       console.log(studentId, date);
-      const data = await getStudentAttendanceByDate(studentId, date);
+      const data = await getStudentAttendanceList(studentId, date);
       setStudentData(data);
       // console.log(attendanceList);
       setLoading(false);

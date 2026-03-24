@@ -1,18 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/lib/db";
-import { 
-  StudentCreateProps, 
-  GuardianCreateProps, 
-  MarkSheetCreateProps 
-} from '../types/types';
+import {
+  StudentCreateProps,
+  GuardianCreateProps,
+  MarkSheetCreateProps,
+} from "../types/types";
 
-import { convertDateToIso } from '../exams/convertDateToIso';
-import { UserRoleSchool } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { convertDateToIso } from "../exams/convertDateToIso";
+import { UserRoleSchool } from "@prisma/client";
+// import bcrypt from 'bcrypt';
+
+
+import { hash } from "@node-rs/argon2";
 
 // ==================== YARDIMCI FONKSİYONLAR ====================
-
-
 
 async function createUserService(data: {
   email: string;
@@ -31,33 +32,33 @@ async function createUserService(data: {
     });
 
     if (existingUser) {
-      throw new Error('Email already exists');
+      throw new Error("Email already exists");
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+    // const hashedPassword = await bcrypt.hash(data.password, 10);
 
+    const hashedPassword = await hash(data.password);
 
-        // Manuel ID oluştur (CUID formatında)
-    const { v4: uuidv4 } = require('uuid');
+    // Manuel ID oluştur (CUID formatında)
+    const { v4: uuidv4 } = require("uuid");
     const customId = uuidv4(); // veya cuid() kullanabilirsiniz
 
     // User modeline uygun veri hazırla
     const userData = {
-    id: customId,                    // <-- MANUEL ID EKLE!
-      username: data.email,           // required field
+      id: customId, // <-- MANUEL ID EKLE!
+      username: data.name, // required field
       email: data.email,
       name: data.name,
-      firstName: data.name?.split(' ')[0] || '',
-      lastName: data.name?.split(' ').slice(1).join(' ') || '',
+      firstName: data.name?.split(" ")[0] || "",
+      lastName: data.name?.split(" ").slice(1).join(" ") || "",
       phone: data.phone || null,
       image: data.image || null,
-      password: hashedPassword,
-      roleschool: data.role,           // enum olarak
+      passwordHash: hashedPassword,
+      roleschool: data.role, // enum olarak
       schoolId: data.schoolId,
       schoolName: data.schoolName,
-      // Default değerler
-      role: "USER",                     // default role
+      role: "USER", // default role
       isActive: true,
     };
 
@@ -79,16 +80,16 @@ async function createUserService(data: {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const schoolId = searchParams.get('schoolId');
-    const studentId = searchParams.get('id');
-    const userId = searchParams.get('userId');
-    const parentId = searchParams.get('parentId');
-    const classId = searchParams.get('classId');
-    const streamId = searchParams.get('streamId');
-    const type = searchParams.get('type'); // 'brief', 'by-class', 'next-seq', 'by-user', 'by-parent'
+    const schoolId = searchParams.get("schoolId");
+    const studentId = searchParams.get("id");
+    const userId = searchParams.get("userId");
+    const parentId = searchParams.get("parentId");
+    const classId = searchParams.get("classId");
+    const streamId = searchParams.get("streamId");
+    const type = searchParams.get("type"); // 'brief', 'by-class', 'next-seq', 'by-user', 'by-parent'
 
     // Next sequence number
-    if (type === 'next-seq' && schoolId) {
+    if (type === "next-seq" && schoolId) {
       const lastStudent = await db.student.findFirst({
         orderBy: { createdAt: "desc" },
         where: { schoolId },
@@ -105,7 +106,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Student by user ID
-    if (userId && type === 'by-user') {
+    if (userId && type === "by-user") {
       const student = await db.student.findUnique({
         where: { userId },
         include: { guardian: true },
@@ -113,8 +114,8 @@ export async function GET(request: NextRequest) {
 
       if (!student) {
         return NextResponse.json(
-          { error: 'Student not found' },
-          { status: 404 }
+          { error: "Student not found" },
+          { status: 404 },
         );
       }
 
@@ -125,7 +126,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Students by parent ID
-    if (parentId && type === 'by-parent') {
+    if (parentId && type === "by-parent") {
       const students = await db.student.findMany({
         orderBy: { createdAt: "desc" },
         where: { parentId },
@@ -147,10 +148,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Students by class and stream
-    if (type === 'by-class' && schoolId && classId) {
+    if (type === "by-class" && schoolId && classId) {
       let students = [];
-      
-      if (streamId === 'all') {
+
+      if (streamId === "all") {
         students = await db.student.findMany({
           orderBy: { createdAt: "desc" },
           where: {
@@ -176,7 +177,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Brief students list
-    if (type === 'brief' && schoolId) {
+    if (type === "brief" && schoolId) {
       const students = await db.student.findMany({
         orderBy: { createdAt: "desc" },
         where: { schoolId },
@@ -202,8 +203,8 @@ export async function GET(request: NextRequest) {
 
       if (!student) {
         return NextResponse.json(
-          { error: 'Student not found' },
-          { status: 404 }
+          { error: "Student not found" },
+          { status: 404 },
         );
       }
 
@@ -241,46 +242,45 @@ export async function GET(request: NextRequest) {
       error: null,
     });
   } catch (error) {
-    console.error('GET students error:', error);
+    console.error("GET students error:", error);
     return NextResponse.json(
       {
         data: null,
-        error: 'Something went wrong',
+        error: "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 // ==================== POST İŞLEMLERİ ====================
 
-
 // ==================== POST İŞLEMLERİ ====================
 export async function POST(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const action = searchParams.get('action');
+    const action = searchParams.get("action");
     const body = await request.json();
 
     // ÖNCE: GET STUDENTS BY CLASS (body'den gelen type ile)
-    if (body.type === 'by-class' || action === 'get-students') {
+    if (body.type === "by-class" || action === "get-students") {
       console.log("Getting students by class with data:", body);
-      
+
       const { classId, streamId, schoolId } = body;
 
       if (!classId || !schoolId) {
         return NextResponse.json(
-          { 
-            data: null, 
-            error: "classId and schoolId are required" 
+          {
+            data: null,
+            error: "classId and schoolId are required",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
       let students = [];
-      
-      if (streamId === 'all' || !streamId) {
+
+      if (streamId === "all" || !streamId) {
         // Tüm stream'lerden öğrencileri getir
         students = await db.student.findMany({
           orderBy: { createdAt: "desc" },
@@ -320,12 +320,12 @@ export async function POST(request: NextRequest) {
     }
 
     // CREATE MARKSHEET AND FETCH STUDENTS
-    if (action === 'marksheet-prep') {
+    if (action === "marksheet-prep") {
       const marksheetData = body as MarkSheetCreateProps;
-      
+
       let markSheetId = "";
       const subjectId = marksheetData.subjectId;
-      
+
       const existingMarkSheet = await db.marksheet.findFirst({
         where: {
           subjectId: subjectId,
@@ -379,7 +379,7 @@ export async function POST(request: NextRequest) {
     }
 
     // CREATE GUARDIAN
-    if (action === 'create-guardian') {
+    if (action === "create-guardian") {
       const guardianData = body as GuardianCreateProps;
 
       const existingGuardian = await db.guardianInfo.findUnique({
@@ -392,7 +392,7 @@ export async function POST(request: NextRequest) {
             data: null,
             error: "Guardian already exists",
           },
-          { status: 409 }
+          { status: 409 },
         );
       }
 
@@ -405,13 +405,13 @@ export async function POST(request: NextRequest) {
           data: newGuardian,
           error: null,
         },
-        { status: 201 }
+        { status: 201 },
       );
     }
 
     // CREATE STUDENT (default)
     const studentData = body as StudentCreateProps;
-    
+
     // Format dates
     if (studentData.dob) {
       studentData.dob = convertDateToIso(studentData.dob);
@@ -421,40 +421,36 @@ export async function POST(request: NextRequest) {
     }
 
     // Check uniqueness
-    const [
-      existingEmail,
-      existingBCN,
-      existingRegNo,
-      existingRollNo
-    ] = await Promise.all([
-      db.student.findUnique({ where: { email: studentData.email } }),
-      db.student.findUnique({ where: { BCN: studentData.BCN } }),
-      db.student.findUnique({ where: { regNo: studentData.regNo } }),
-      db.student.findUnique({ where: { rollNo: studentData.rollNo } })
-    ]);
+    const [existingEmail, existingBCN, existingRegNo, existingRollNo] =
+      await Promise.all([
+        db.student.findUnique({ where: { email: studentData.email } }),
+        db.student.findUnique({ where: { BCN: studentData.BCN } }),
+        db.student.findUnique({ where: { regNo: studentData.regNo } }),
+        db.student.findUnique({ where: { rollNo: studentData.rollNo } }),
+      ]);
 
     if (existingBCN) {
       return NextResponse.json(
         { data: null, error: "Student with this BCN already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
     if (existingEmail) {
       return NextResponse.json(
         { data: null, error: "Student with this email already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
     if (existingRegNo) {
       return NextResponse.json(
         { data: null, error: "Student with this RegNo already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
     if (existingRollNo) {
       return NextResponse.json(
         { data: null, error: "Student with this RollNo already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -488,31 +484,30 @@ export async function POST(request: NextRequest) {
         data: newStudent,
         error: null,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
-    console.error('POST students error:', error);
+    console.error("POST students error:", error);
     return NextResponse.json(
       {
         data: null,
-        error: error instanceof Error ? error.message : 'Something went wrong',
+        error: error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 // ==================== PUT İŞLEMLERİ (Tam Güncelleme) ====================
 export async function PUT(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const studentId = searchParams.get('id');
-    const guardianId = searchParams.get('guardianId');
+    const studentId = searchParams.get("id");
+    const guardianId = searchParams.get("guardianId");
 
     // Update guardian
     if (guardianId) {
-      const data = await request.json() as GuardianCreateProps;
+      const data = (await request.json()) as GuardianCreateProps;
 
       const existingGuardian = await db.guardianInfo.findUnique({
         where: { id: guardianId },
@@ -521,7 +516,7 @@ export async function PUT(request: NextRequest) {
       if (!existingGuardian) {
         return NextResponse.json(
           { data: null, error: "Guardian does not exist" },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -540,11 +535,12 @@ export async function PUT(request: NextRequest) {
 
     // Update student
     if (studentId) {
-      const data = await request.json() as Partial<StudentCreateProps>;
+      const data = (await request.json()) as Partial<StudentCreateProps>;
 
       // Format dates if provided
       if (data.dob) data.dob = convertDateToIso(data.dob);
-      if (data.admissionDate) data.admissionDate = convertDateToIso(data.admissionDate);
+      if (data.admissionDate)
+        data.admissionDate = convertDateToIso(data.admissionDate);
 
       const updatedStudent = await db.student.update({
         where: { id: studentId },
@@ -570,17 +566,17 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Student ID or Guardian ID is required' },
-      { status: 400 }
+      { error: "Student ID or Guardian ID is required" },
+      { status: 400 },
     );
   } catch (error) {
-    console.error('PUT students error:', error);
+    console.error("PUT students error:", error);
     return NextResponse.json(
       {
         data: null,
-        error: 'Something went wrong',
+        error: "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -589,8 +585,8 @@ export async function PUT(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const studentId = searchParams.get('id');
-    const guardianId = searchParams.get('guardianId');
+    const studentId = searchParams.get("id");
+    const guardianId = searchParams.get("guardianId");
 
     if (guardianId) {
       const data = await request.json();
@@ -610,7 +606,8 @@ export async function PATCH(request: NextRequest) {
 
       // Format dates if provided
       if (data.dob) data.dob = convertDateToIso(data.dob);
-      if (data.admissionDate) data.admissionDate = convertDateToIso(data.admissionDate);
+      if (data.admissionDate)
+        data.admissionDate = convertDateToIso(data.admissionDate);
 
       const updatedStudent = await db.student.update({
         where: { id: studentId },
@@ -628,17 +625,17 @@ export async function PATCH(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Student ID or Guardian ID is required' },
-      { status: 400 }
+      { error: "Student ID or Guardian ID is required" },
+      { status: 400 },
     );
   } catch (error) {
-    console.error('PATCH students error:', error);
+    console.error("PATCH students error:", error);
     return NextResponse.json(
       {
         data: null,
-        error: 'Something went wrong',
+        error: "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -647,8 +644,8 @@ export async function PATCH(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const studentId = searchParams.get('id');
-    const guardianId = searchParams.get('guardianId');
+    const studentId = searchParams.get("id");
+    const guardianId = searchParams.get("guardianId");
 
     if (guardianId) {
       const deletedGuardian = await db.guardianInfo.delete({
@@ -670,8 +667,8 @@ export async function DELETE(request: NextRequest) {
 
       if (!student) {
         return NextResponse.json(
-          { error: 'Student not found' },
-          { status: 404 }
+          { error: "Student not found" },
+          { status: 404 },
         );
       }
 
@@ -688,23 +685,23 @@ export async function DELETE(request: NextRequest) {
       console.log(`Student deleted successfully: ${student.name}`);
 
       return NextResponse.json({
-        data: { message: 'Student deleted successfully' },
+        data: { message: "Student deleted successfully" },
         error: null,
       });
     }
 
     return NextResponse.json(
-      { error: 'Student ID or Guardian ID is required' },
-      { status: 400 }
+      { error: "Student ID or Guardian ID is required" },
+      { status: 400 },
     );
   } catch (error) {
-    console.error('DELETE students error:', error);
+    console.error("DELETE students error:", error);
     return NextResponse.json(
       {
         data: null,
-        error: 'Something went wrong',
+        error: "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

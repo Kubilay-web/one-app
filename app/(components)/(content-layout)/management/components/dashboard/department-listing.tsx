@@ -349,11 +349,6 @@
 //   );
 // }
 
-
-
-
-
-
 "use client";
 
 import { useState } from "react";
@@ -370,7 +365,12 @@ import {
 } from "lucide-react";
 
 import { Button } from "../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import {
   Sheet,
   SheetContent,
@@ -386,10 +386,10 @@ import DepartmentForm from "./forms/academics/department-form";
 
 export default function DepartmentListing({
   departments,
-  schoolId
+  schoolId,
 }: {
   departments: Department[];
-  schoolId:string;
+  schoolId: string;
 }) {
   const [selectedDept, setSelectedDept] = useState(departments[0]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -404,12 +404,10 @@ export default function DepartmentListing({
   }
 
   return (
-    <div className="flex h-screen w-full  bg-background flex-wrap">
-
+    <div className="flex  w-full  bg-background flex-wrap">
       {/* DESKTOP SIDEBAR */}
 
       <div className=" md:flex w-80 flex-col border-r">
-
         <div className="border-b">
           <div className="flex items-center justify-between gap-2 px-4 py-3">
             <div className="flex items-center gap-2">
@@ -424,7 +422,6 @@ export default function DepartmentListing({
 
         {departments.length > 0 ? (
           <ScrollArea className="flex-1">
-
             {departments.map((dept) => (
               <div
                 key={dept.id}
@@ -450,7 +447,6 @@ export default function DepartmentListing({
                 </div>
               </div>
             ))}
-
           </ScrollArea>
         ) : (
           <div className="p-4">
@@ -468,14 +464,12 @@ export default function DepartmentListing({
 
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetContent side="left" className="w-80">
-
           <SheetHeader>
             <SheetTitle>Departments</SheetTitle>
           </SheetHeader>
 
           {departments.length > 0 ? (
             <ScrollArea className="mt-4">
-
               {departments.map((dept) => (
                 <div
                   key={dept.id}
@@ -504,7 +498,6 @@ export default function DepartmentListing({
                   </div>
                 </div>
               ))}
-
             </ScrollArea>
           ) : (
             <div className="p-4">No Departments</div>
@@ -516,13 +509,10 @@ export default function DepartmentListing({
 
       {selectedDept && (
         <div className="flex-1 flex flex-col ">
-
           {/* HEADER */}
 
           <div className="flex flex-wrap items-center justify-between gap-3 p-4 border-b">
-
             <div className="flex items-center gap-3">
-
               <Button
                 variant="ghost"
                 size="icon"
@@ -535,19 +525,15 @@ export default function DepartmentListing({
               <h1 className="text-xl md:text-2xl font-bold">
                 {selectedDept.name}
               </h1>
-
             </div>
-
           </div>
 
           {/* CONTENT */}
 
           <ScrollArea className="flex-1 p-4">
-
             {/* STATS */}
 
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6">
-
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm">Teachers</CardTitle>
@@ -582,25 +568,20 @@ export default function DepartmentListing({
 
                 <CardContent>
                   <div className="text-2xl font-bold">$75,000</div>
-                  <p className="text-xs text-muted-foreground">
-                    FY 2023-2024
-                  </p>
+                  <p className="text-xs text-muted-foreground">FY 2023-2024</p>
                 </CardContent>
               </Card>
-
             </div>
 
             {/* DETAILS + TEACHERS */}
 
             <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-
               <Card>
                 <CardHeader>
                   <CardTitle>Department Details</CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
@@ -613,9 +594,7 @@ export default function DepartmentListing({
 
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      HOD:
-                    </span>
+                    <span className="text-sm text-muted-foreground">HOD:</span>
                     <span className="text-sm font-medium">
                       {selectedDept.hodName || "Not Assigned"}
                     </span>
@@ -632,7 +611,6 @@ export default function DepartmentListing({
                         : "Not assigned"}
                     </span>
                   </div>
-
                 </CardContent>
               </Card>
 
@@ -642,40 +620,51 @@ export default function DepartmentListing({
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-
+                  {/* 
                   {selectedDept.teachers?.map((teacher) => (
                     <div
                       key={teacher.id}
                       className="flex items-center justify-between"
                     >
                       <div>
-                        <p className="font-medium">{teacher.name}</p>
+                        <p className="font-medium">{teacher.classId}</p>
                         <p className="text-sm text-muted-foreground">
-                          {teacher.subject}
+                          {teacher.title}
+                        </p>
+                      </div>
+                    </div>
+                  ))} */}
+
+                  {selectedDept.teachers?.map((teacher) => (
+                    <div
+                      key={teacher.id}
+                      className="flex items-center justify-between p-2 rounded-md hover:bg-muted"
+                    >
+                      <div>
+                        <p className="font-medium">
+                          {teacher.firstName} {teacher.lastName}
+                        </p>
+
+                        <p className="text-xs text-muted-foreground">
+                          {teacher.designation} • {teacher.mainSubject}
                         </p>
                       </div>
                     </div>
                   ))}
-
                 </CardContent>
               </Card>
-
             </div>
 
             {/* SUBJECTS */}
 
             <div className="mt-6">
-
               <Card>
-
                 <CardHeader>
                   <CardTitle>Subjects</CardTitle>
                 </CardHeader>
 
                 <CardContent>
-
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-
                     {selectedDept.subjects?.map((subject) => (
                       <div
                         key={subject.id}
@@ -689,15 +678,10 @@ export default function DepartmentListing({
                         </div>
                       </div>
                     ))}
-
                   </div>
-
                 </CardContent>
-
               </Card>
-
             </div>
-
           </ScrollArea>
         </div>
       )}

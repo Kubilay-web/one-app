@@ -26,7 +26,7 @@ export const columns: ColumnDef<Parent>[] = [
             className="w-10 h-10 rounded-full object-cover"
           />
           <div className="">
-            <h2 className="font-medium capitalize">
+            <h2 className="text-base font-medium">
               {parent.firstName.toLowerCase()} {parent.lastName.toLowerCase()}
             </h2>
             <p className="text-xs text-muted-foreground">

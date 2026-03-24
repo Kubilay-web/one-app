@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
+import { ImGit } from "react-icons/im";
 
 // Type definitions for dummy data
 type NavLink = {
@@ -220,11 +221,11 @@ const DemoPage: React.FC = () => {
             </div>
             <div className="relative h-64 md:h-80 lg:h-96">
               <div className="relative h-full w-full">
-                <Image
+                <img
                   src="/api/placeholder/600/400"
                   alt="Students in classroom"
                   className="rounded-lg object-cover"
-                  fill
+                
                   priority
                 />
               </div>

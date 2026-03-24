@@ -21,7 +21,7 @@ export default async function ContactMessagesPage() {
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
-      <SchoolContactMessagesTable data={messages} />
+      <SchoolContactMessagesTable data={messages} schoolId={school.id} />
     </div>
   );
 }

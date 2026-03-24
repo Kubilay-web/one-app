@@ -13,6 +13,9 @@ export default async function page() {
 
   const departments = (await getAllDepartments(school?.id ?? "")) || [];
 
+
+  console.log("departments",departments)
+
   
   return (
     <div>

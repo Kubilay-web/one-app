@@ -29,6 +29,7 @@ export type ContactProps = {
 };
 export type UserCreateProps = {
   email: string;
+  username:string;
   password: string;
   role: UserRoleSchool;
   name: string;

@@ -1,4 +1,5 @@
-import { getServerSchool } from "../../../../../actions/auth";
+import { validateRequest } from "@/app/auth";
+import { getServerSchool, SchoolUser } from "../../../../../actions/auth";
 import { getSectionByType } from "../../../../../actions/site";
 import CustomizePageHeader from "../../../../../components/school/CustomizePageHeader";
 import LogoNavigationForm from "../../../../../components/school/section-forms/logo-naviation-form";
@@ -6,7 +7,18 @@ import { SectionType } from "../../../../../lib/sectionTypes";
 
 export default async function LogoNavigation() {
   // Get The section initial DATA
-  const school = await getServerSchool();
+  // const school = await getServerSchool();
+
+
+
+    const { user } = await validateRequest();
+  
+    if (!user) return null;
+  
+    const school = await SchoolUser(user.id);
+
+
+
   const section = await getSectionByType(
     school?.id,
     SectionType.LOGO_NAVIGATION

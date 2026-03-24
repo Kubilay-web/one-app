@@ -11,9 +11,13 @@ export default async function Page({
 }) {
   const schoolId = (await params).schoolId;
   const name = (await searchParams).name;
-  if (!schoolId || !name) {
-    return notFound();
-  }
+
+
+  // if (!schoolId || !name) {
+  //   return notFound();
+  // }
+
+
   return (
     <div className="max-w-3xl mx-auto p-16">
       <Card className="border-t-4 border-blue-600 shadow">
