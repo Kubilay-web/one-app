@@ -7,6 +7,7 @@ import TableHeader from "../../../../components/dashboard/Tables/TableHeader";
 import { getAllTeachers } from "../../../../actions/teachers";
 import { getServerSchool, SchoolUser } from "../../../../actions/auth";
 import { validateRequest } from "@/app/auth";
+import ResponsiveTable from "../../../../(back)/dashboard/admin/contacts/ResponsiveTable";
 
 export default async function page() {
   // const school = await getServerSchool();
@@ -19,7 +20,7 @@ export default async function page() {
 
   const teachers = (await getAllTeachers(school?.id ?? "")) || [];
   return (
-    <div className="p-8">
+    <div >
       <TableHeader
         title="Teachers"
         linkTitle="Add Teacher"
@@ -27,8 +28,10 @@ export default async function page() {
         data={teachers}
         model="teacher"
       />
-      <div className="py-8">
-        <DataTable data={teachers} columns={columns} />
+      <div className="py-2">
+        {/* <DataTable data={teachers} columns={columns} /> */}
+
+          <ResponsiveTable data={teachers} columns={columns} />
       </div>
     </div>
   );

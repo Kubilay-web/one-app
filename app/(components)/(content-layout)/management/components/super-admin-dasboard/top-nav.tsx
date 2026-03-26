@@ -14,11 +14,11 @@ interface BreadcrumbItem {
   href?: string
 }
 
-export default function TopNav() {
+export default function TopNav({user}) {
   
   const breadcrumbs: BreadcrumbItem[] = [
     // { label: "kokonutUI", href: "#" },
-    { label: "dashboard", href: "/super-admin-dashboard" },
+    { label: "Dashboard", href: "/management/super-admin-dashboard" },
   ]
 
   return (
@@ -54,7 +54,7 @@ export default function TopNav() {
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none">
             <Image
-              src="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png"
+              src={user.avatarUrl}
               alt="User avatar"
               width={28}
               height={28}
@@ -64,9 +64,9 @@ export default function TopNav() {
           <DropdownMenuContent
             align="end"
             sideOffset={8}
-            className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
+            className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg bg-white text-black"
           >
-            <Profile01 avatar="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png" />
+            <Profile01 user={user} avatar={user.avatarUrl} />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

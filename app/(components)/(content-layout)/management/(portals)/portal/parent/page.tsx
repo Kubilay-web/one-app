@@ -41,7 +41,7 @@ export default async function page() {
         <StudentList students={students} />
       ) : (
         <div>
-          <h2>You dont have any Children-{user?.id}</h2>
+          <h3>You dont have any Children-{user?.id}</h3>
         </div>
       )}
     </div>

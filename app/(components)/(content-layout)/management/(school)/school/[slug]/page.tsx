@@ -1,128 +1,83 @@
-import { getServerUser, SchoolUser } from "../../../actions/auth";
+import React, { Suspense } from "react";
+import { validateRequest } from "@/app/auth";
 import { getSchoolById } from "../../../actions/schools";
+import { getSectionByType, getSiteGalleryCategories, getSiteGalleryImages, getSiteRecentEvents, getSiteRecentNews } from "../../../actions/site";
+import { SectionType } from "../../../lib/sectionTypes";
 
 import EnableSite from "../../../components/dashboard/EnableSite";
-
-import HeadmasterQuote from "../../../components/school/headmaster-quote";
-import SchoolHeader from "../../../components/school/school-header";
-import SchoolAboutSection from "../../../components/school/SchoolAboutSection";
-import SchoolAdmissionSection from "../../../components/school/SchoolAdmissionSection";
-import SchoolContactForm from "../../../components/school/SchoolContactForm";
-import SchoolEvents from "../../../components/school/SchoolEvents";
-import SchoolFooter from "../../../components/school/SchoolFooter";
-import SchoolGallerySection from "../../../components/school/SchoolGallerySection";
-import SchoolHeroSection from "../../../components/school/SchoolHeroSection";
-
-import SchoolNews from "../../../components/school/SchoolNews";
-
-import React, { Suspense } from "react";
 import HeaderLoader from "../suspense-loaders/HeaderLoader";
-import {
-  getSectionByType,
-  getSiteGalleryCategories,
-  getSiteGalleryImages,
-  getSiteRecentEvents,
-  getSiteRecentNews,
-} from "../../../actions/site";
-import { SectionType } from "../../../lib/sectionTypes";
-import { validateRequest } from "@/app/auth";
+import SchoolHeader from "../../../components/school/school-header";
+import SchoolHeroSection from "../../../components/school/SchoolHeroSection";
+import SchoolAboutSection from "../../../components/school/SchoolAboutSection";
+import HeadmasterQuote from "../../../components/school/headmaster-quote";
+import SchoolAdmissionSection from "../../../components/school/SchoolAdmissionSection";
+import SchoolGallerySection from "../../../components/school/SchoolGallerySection";
+import SchoolNews from "../../../components/school/SchoolNews";
+import SchoolEvents from "../../../components/school/SchoolEvents";
+import SchoolContactForm from "../../../components/school/SchoolContactForm";
+import SchoolFooter from "../../../components/school/SchoolFooter";
 
-export default async function page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+export default async function Page({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+
+  if (!slug) return <div>School not found.</div>;
+
   const school = await getSchoolById(slug, "slug");
+  if (!school) return <div>School not found.</div>;
 
-
-  console.log("school",school)
-
-  // if (
-  //   !slug ||
-  //   !school ||
-  //   !school.siteEnabled ||
-  //   !(school.siteCompletion > 50)
-  // ) {
-  //   return <NotFound />;
-  // }
-
-
-  if (!slug || !school) {
-    return <div>School not found.</div>;
-  }
-
-
-
-    const { user } = await validateRequest();
-  
-    if (!user) return null;
-
-
-  
-  // const user = await getServerUser();
-
-
-
+  const { user } = await validateRequest();
 
   if (!school.siteEnabled && user) {
     return <EnableSite schoolSlug={school.slug} schoolId={school.id} />;
   }
-  const headerSection = await getSectionByType(
-    school?.id,
-    SectionType.LOGO_NAVIGATION
-  );
-  const heroSection = await getSectionByType(school?.id, SectionType.HERO);
-  const aboutSection = await getSectionByType(school?.id, SectionType.ABOUT);
-  const headTeacherQuoteSection = await getSectionByType(
-    school?.id,
-    SectionType.HEADMASTER_QUOTE
-  );
-  const admissionSection = await getSectionByType(
-    school?.id,
-    SectionType.ADMISSION
-  );
-  const contactSection = await getSectionByType(
-    school?.id,
-    SectionType.CONTACT
-  );
-  const footerSection = await getSectionByType(school?.id, SectionType.FOOTER);
-  const gallerySection = await getSectionByType(
-    school?.id,
-    SectionType.GALLERY
-  );
-  const newsSection = await getSectionByType(school?.id, SectionType.NEWS);
-  const eventSection = await getSectionByType(school?.id, SectionType.EVENTS);
-  const recentNews = (await getSiteRecentNews(school.id)) || [];
-  const recentEvents = (await getSiteRecentEvents(school.id)) || [];
 
-  // const gallerySection = await getSectionByType(school?.id, SectionType.GALLERY);
-  const galleryCategories =
-    (await getSiteGalleryCategories(school?.id ?? "")) || [];
-  const galleryImages = (await getSiteGalleryImages(school?.id ?? "")) || [];
-  // console.log(recentEvents);
+  // Parallel fetch tüm section'ları aynı anda çek
+  const [
+    headerSection,
+    heroSection,
+    aboutSection,
+    headTeacherQuoteSection,
+    admissionSection,
+    contactSection,
+    footerSection,
+    gallerySection,
+    newsSection,
+    eventSection,
+    recentNews,
+    recentEvents,
+    galleryCategories,
+    galleryImages
+  ] = await Promise.all([
+    getSectionByType(school.id, SectionType.LOGO_NAVIGATION),
+    getSectionByType(school.id, SectionType.HERO),
+    getSectionByType(school.id, SectionType.ABOUT),
+    getSectionByType(school.id, SectionType.HEADMASTER_QUOTE),
+    getSectionByType(school.id, SectionType.ADMISSION),
+    getSectionByType(school.id, SectionType.CONTACT),
+    getSectionByType(school.id, SectionType.FOOTER),
+    getSectionByType(school.id, SectionType.GALLERY),
+    getSectionByType(school.id, SectionType.NEWS),
+    getSectionByType(school.id, SectionType.EVENTS),
+    getSiteRecentNews(school.id),
+    getSiteRecentEvents(school.id),
+    getSiteGalleryCategories(school.id),
+    getSiteGalleryImages(school.id)
+  ]);
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* <TopBar /> */}
-
       <Suspense fallback={<HeaderLoader />}>
         <SchoolHeader section={headerSection} />
       </Suspense>
 
       <main>
-        {/* Hero Section */}
-
         <Suspense fallback={<HeaderLoader />}>
           <SchoolHeroSection section={heroSection} />
         </Suspense>
 
-        {/* About Our School */}
-
         <Suspense fallback={<HeaderLoader />}>
           <SchoolAboutSection section={aboutSection} />
         </Suspense>
-
-        {/* Headmaster's Quote */}
 
         <Suspense fallback={<HeaderLoader />}>
           <HeadmasterQuote section={headTeacherQuoteSection} />
@@ -130,46 +85,36 @@ export default async function page({
 
         <Suspense fallback={<HeaderLoader />}>
           <SchoolGallerySection
+            section={gallerySection}
             galleryCategories={galleryCategories}
             galleryImages={galleryImages}
-            section={gallerySection}
           />
         </Suspense>
 
-        {/* School News & Updates */}
-
-        <Suspense fallback={<HeaderLoader />}>
-          {recentNews.length > 0 && (
-            <SchoolNews recentNews={recentNews} section={newsSection} />
-          )}
-        </Suspense>
-
-        {/* Apply for Admission */}
+        {recentNews.length > 0 && (
+          <Suspense fallback={<HeaderLoader />}>
+            <SchoolNews section={newsSection} recentNews={recentNews} />
+          </Suspense>
+        )}
 
         <Suspense fallback={<HeaderLoader />}>
           <SchoolAdmissionSection section={admissionSection} />
         </Suspense>
 
-        {/* Upcoming Events */}
-
-        <Suspense fallback={<HeaderLoader />}>
-          {recentEvents.length > 0 && (
-            <SchoolEvents recentEvents={recentEvents} section={eventSection} />
-          )}
-        </Suspense>
-
-        {/* Contact Form */}
+        {recentEvents.length > 0 && (
+          <Suspense fallback={<HeaderLoader />}>
+            <SchoolEvents section={eventSection} recentEvents={recentEvents} />
+          </Suspense>
+        )}
 
         <Suspense fallback={<HeaderLoader />}>
           <SchoolContactForm section={contactSection} />
         </Suspense>
       </main>
 
-      {/* Footer */}
-
-      <Suspense fallback={<HeaderLoader />}>
+      {/* <Suspense fallback={<HeaderLoader />}>
         <SchoolFooter section={footerSection} />
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }

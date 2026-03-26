@@ -8,6 +8,7 @@ import { getAllParents } from "../../../../actions/parents";
 import { getAllTeachers } from "../../../../actions/teachers";
 import { getServerSchool, SchoolUser } from "../../../../actions/auth";
 import { validateRequest } from "@/app/auth";
+import ResponsiveTable from "../../admin/contacts/ResponsiveTable";
 
 export default async function page() {
   const { user } = await validateRequest();
@@ -20,7 +21,7 @@ export default async function page() {
 
   
   return (
-    <div className="p-8">
+    <div>
       <TableHeader
         title="Teachers"
         linkTitle="Add Teacher"
@@ -28,8 +29,11 @@ export default async function page() {
         data={teachers}
         model="teacher"
       />
-      <div className="py-8">
-        <DataTable data={teachers} columns={columns} />
+      <div className="py-2">
+        {/* <DataTable data={teachers} columns={columns} /> */}
+
+
+         <ResponsiveTable data={teachers} columns={columns} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
+import { validateRequest } from "@/app/auth";
 import SchoolAdminForm from "../../../../../components/dashboard/forms/school/school-admin-form";
 import { Card, CardContent } from "../../../../../components/ui/card";
-import { notFound } from "next/navigation";
+import { SchoolUser } from "@/app/(components)/(content-layout)/management/actions/auth";
 
 export default async function Page({
   params,
@@ -18,11 +19,18 @@ export default async function Page({
   // }
 
 
+
+    const { user } = await validateRequest();
+  
+    if (!user) return null;
+  
+    const school = await SchoolUser(user.id);
+
   return (
     <div className="max-w-3xl mx-auto p-16">
       <Card className="border-t-4 border-blue-600 shadow">
         <CardContent className="p-6">
-          <SchoolAdminForm schoolId={schoolId} schoolName={name as string} />
+          <SchoolAdminForm schoolId={school.id} schoolName={school?.name} />
         </CardContent>
       </Card>
     </div>

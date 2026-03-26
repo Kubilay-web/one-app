@@ -31,7 +31,7 @@ export default function NewsCard({ news }: NewsCardProps) {
         </div>
         <div className="p-6">
           <h3 className="font-bold mb-2">{news.title}</h3>
-          <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+          <p className="text-sm text-gray-600 mb-4 line-clamp-3 pt-5">
             {news.content}
           </p>
           <Button
@@ -44,7 +44,7 @@ export default function NewsCard({ news }: NewsCardProps) {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto bg-white text-black">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold">
               {news.title}

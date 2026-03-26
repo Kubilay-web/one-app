@@ -126,6 +126,9 @@
 
 
 
+
+
+
 "use client";
 
 import { useState } from "react";
@@ -196,10 +199,12 @@ export default function ContactInfoModal({
       <DialogTrigger asChild>
         {trigger || <Button variant="outline">View</Button>}
       </DialogTrigger>
-      <DialogContent className="bg-white text-black sm:max-w-[425px] md:max-w-[700px] lg:max-w-[900px]">
+      <DialogContent
+        className="bg-white text-black sm:max-w-[425px] md:max-w-[700px] lg:max-w-[900px] max-h-[90vh] overflow-y-auto"
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-4">
-            <Avatar className="w-16 h-16">
+            <Avatar className="w-16 h-16 flex-shrink-0">
               <AvatarImage
                 src={`https://api.dicebear.com/6.x/initials/svg?seed=${contact.fullName}`}
                 alt={contact.fullName}
@@ -220,11 +225,12 @@ export default function ContactInfoModal({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        {/* Scrollable Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
           {infoCards.map((card, index) => (
             <Card
               key={index}
-              className="overflow-hidden bg-white border border-gray-200 shadow-sm"
+              className="overflow-hidden bg-white border border-gray-200 shadow-sm flex-shrink-0"
             >
               <CardContent className="p-4 flex flex-col items-center text-center text-black">
                 <card.icon className="w-8 h-8 mb-2 text-black" />

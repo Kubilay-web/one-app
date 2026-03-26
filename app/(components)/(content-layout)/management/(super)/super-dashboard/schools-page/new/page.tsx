@@ -14,7 +14,7 @@ export default async function page() {
 
 
   const {user}=await validateRequest();
-  const role=user?.roleschool;
+  const role= user?.roleschool;
 
 
   // if (!user || role !== 'SUPER_ADMIN') {

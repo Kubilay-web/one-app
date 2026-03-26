@@ -46,6 +46,8 @@ import { getAllSubjects } from "../../../../actions/subjects";
 import SubjectListing from "../../../../components/dashboard/academics/SubjectListing";
 import React from "react";
 
+
+
 export default async function Page() {
   const { user } = await validateRequest();
   if (!user) return null;
@@ -53,26 +55,20 @@ export default async function Page() {
   const school = await SchoolUser(user.id);
   const schoolId = school?.id ?? "";
 
-  const subjectsResponse = await getAllSubjects(schoolId);
+  const [subjectsResponse, departments] = await Promise.all([
+    getAllSubjects(schoolId),
+    getBriefDepartments(schoolId),
+  ]);
 
-  console.log("subjectsResponse:", subjectsResponse);
-
-  // 🔥 önemli: eğer API direkt array dönüyorsa
   const subjects = Array.isArray(subjectsResponse)
     ? subjectsResponse
     : subjectsResponse?.data ?? [];
 
-  const departments =
-    (await getBriefDepartments(schoolId)) ?? [];
-
-  console.log("subjects:", subjects);
-  console.log("departments:", departments);
-
   return (
-    <div className="p-8">
+    <div>
       <SubjectListing
         subjects={subjects}
-        departments={departments}
+        departments={departments ?? []}
         schoolId={schoolId}
       />
     </div>

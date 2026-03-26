@@ -56,16 +56,21 @@ export async function createPeriod(data: PeriodCreateProps) {
   }
 }
 
+
+
+
 export async function updatePeriodById(
   id: string,
   data: Partial<PeriodCreateProps>
 ) {
   try {
+    const { schoolId, ...safeData } = data; // ✅ schoolId çıkarıldı
+
     const result = await fetcher<{ data: Period; error: null }>(
-      `${BASE_URL}/api/schoolmanage/periods}`,
+      `${BASE_URL}/api/schoolmanage/periods?id=${id}`,
       {
         method: "PATCH",
-        body: JSON.stringify(data),
+        body: JSON.stringify(safeData),
       }
     );
 
@@ -77,6 +82,8 @@ export async function updatePeriodById(
     throw new Error(error.message || "Failed to update Period");
   }
 }
+
+
 
 export async function getAllGroupedPeriods(schoolId: string) {
   try {

@@ -40,6 +40,7 @@ import { getAllPayments } from "../../../../actions/payments";
 import TableHeader from "../../../../components/dashboard/Tables/TableHeader";
 import DataTable from "../../../../components/DataTableComponents/DataTable";
 import { columns } from "./columns";
+import ResponsiveTable from "../../admin/contacts/ResponsiveTable";
 
 export default async function PaymentsPage() {
   const { user } = await validateRequest();
@@ -50,7 +51,7 @@ export default async function PaymentsPage() {
 
   if (!schoolId) {
     return (
-      <div className="p-8">
+      <div >
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           School not found. Please contact support.
         </div>
@@ -63,7 +64,7 @@ export default async function PaymentsPage() {
   console.log("Payments:", payments);
 
   return (
-    <div className="p-8">
+    <div >
       <TableHeader
         title="Fee Payments"
         linkTitle="Record New Payment"
@@ -71,8 +72,10 @@ export default async function PaymentsPage() {
         data={payments}
         model="payment"
       />
-      <div className="py-8">
-        <DataTable data={payments} columns={columns} />
+      <div>
+        {/* <DataTable data={payments} columns={columns} /> */}
+
+        <ResponsiveTable data={payments} columns={columns} /> 
       </div>
     </div>
   );

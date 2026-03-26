@@ -22,6 +22,7 @@ import { createPeriod, updatePeriodById } from "../../../../actions/periods";
 import { convertDateToIso } from "../../../../lib/convertDateToIso";
 import { Period } from "../../academics/periods-page";
 
+
 export default function PeriodForm({
   initialContent,
   editingId,

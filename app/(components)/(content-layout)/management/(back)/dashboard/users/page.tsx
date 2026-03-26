@@ -56,6 +56,7 @@ import TableHeader from "../../../components/dashboard/Tables/TableHeader";
 import { getStaffMembers } from "../../../actions/users";
 import { validateRequest } from "@/app/auth";
 import { SchoolUser } from "../../../actions/auth";
+import ResponsiveTable from "../admin/contacts/ResponsiveTable";
 
 export default async function StaffPage() {
   const { user } = await validateRequest();
@@ -79,7 +80,7 @@ export default async function StaffPage() {
   console.log("Staff members:", staffMembers);
 
   return (
-    <div className="p-8">
+    <div>
       <TableHeader
         title="Staff Members"
         linkTitle="Add New Staff"
@@ -87,8 +88,11 @@ export default async function StaffPage() {
         data={staffMembers}
         model="staff"
       />
-      <div className="py-8">
-        <DataTable data={staffMembers} columns={columns} />
+      <div className="py-2">
+        {/* <DataTable data={staffMembers} columns={columns} /> */}
+
+
+           <ResponsiveTable data={staffMembers} columns={columns} />
       </div>
     </div>
   );

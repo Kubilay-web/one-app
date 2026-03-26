@@ -19,7 +19,7 @@ export default function SchoolNews({
   const { title, subtitle } = section;
   return (
     <section id="news" className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 pt-2">
         <SectionHeader
           title={title as string}
           description={subtitle as string}

@@ -5,6 +5,7 @@ import { columns } from "./columns";
 import { getFeesForCurrentYear } from "../../../../actions/school-fees";
 import { getServerSchool, SchoolUser } from "../../../../actions/auth";
 import { validateRequest } from "@/app/auth";
+import ResponsiveTable from "../../admin/contacts/ResponsiveTable";
 
 export default async function page() {
   // const school = await getServerSchool();
@@ -21,7 +22,7 @@ export default async function page() {
 
 
   return (
-    <div className="p-8">
+    <div className="p-2">
       <TableHeader
         title={`School Fees for year ${new Date().getFullYear()}`}
         linkTitle="Add New School Fee"
@@ -29,8 +30,10 @@ export default async function page() {
         data={fees}
         model="schoolFee"
       />
-      <div className="py-8">
-        <DataTable data={fees} columns={columns} />
+      <div className="py-2">
+        {/* <DataTable data={fees} columns={columns} /> */}
+
+        <ResponsiveTable data={fees} columns={columns}/>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import TableHeader from "../../../../components/dashboard/Tables/TableHeader";
 import { getAllParents } from "../../../../actions/parents";
 import { getServerSchool, SchoolUser } from "../../../../actions/auth";
 import { validateRequest } from "@/app/auth";
+import ResponsiveTable from "../../admin/contacts/ResponsiveTable";
 
 export default async function Page() {
   // const school = await getServerSchool();
@@ -21,7 +22,7 @@ export default async function Page() {
   console.log("parents array:", parents);
 
   return (
-    <div className="p-8">
+    <div>
       <TableHeader
         title="Parents"
         linkTitle="Add Parent"
@@ -30,8 +31,9 @@ export default async function Page() {
         model="parent"
       />
 
-      <div className="py-8">
-        <DataTable columns={columns} data={parents} />
+      <div className="py-2">
+        {/* <DataTable columns={columns} data={parents} /> */}
+         <ResponsiveTable columns={columns} data={parents} /> 
       </div>
     </div>
   );

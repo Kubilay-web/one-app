@@ -1,25 +1,19 @@
+
+
 import { validateRequest } from "@/app/auth";
-import { getServerSchool, SchoolUser } from "../../../../actions/auth";
+import { SchoolUser } from "../../../../actions/auth";
 import { getAllDepartments } from "../../../../actions/departments";
 import DepartmentListing from "../../../../components/dashboard/department-listing";
 import React from "react";
 
 export default async function page() {
   const { user } = await validateRequest();
-
   if (!user) return null;
 
-  const school = await SchoolUser(user.id);
+  const schoolId = (await SchoolUser(user.id))?.id ?? "";
+  const departments = (await getAllDepartments(schoolId)) || [];
 
-  const departments = (await getAllDepartments(school?.id ?? "")) || [];
-
-
-  console.log("departments",departments)
-
-  
   return (
-    <div>
-      <DepartmentListing schoolId={school?.id} departments={departments} />
-    </div>
+    <DepartmentListing schoolId={schoolId} departments={departments} />
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import useSchoolStore from "../../store/school";
+// import useSchoolStore from "../../store/school";
 import { Class, Student, UserRole } from "../../types/types";
 import React, { useState } from "react";
 import TableHeader from "./Tables/TableHeader";
@@ -14,6 +14,7 @@ import { Button } from "../ui/button";
 import { getStudentsByClass } from "../../actions/students";
 import { Loader2 } from "lucide-react";
 import { UserRoleSchool } from "@prisma/client";
+import ResponsiveTable from "../../(back)/dashboard/admin/contacts/ResponsiveTable";
 
 export type StudentByClassProps = {
   classId: string;
@@ -84,9 +85,9 @@ export default function StudentListingByClass({
     }
   }
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-2 space-y-6">
       <Card className="border-t-4 border-blue-600 shadow">
-        <CardContent className="p-6 space-y-6">
+        <CardContent className="p-3 space-y-6">
           <div className="grid md:grid-cols-2 gap-3">
             <FormSelectInput
               label="Class"
@@ -126,8 +127,10 @@ export default function StudentListingByClass({
               data={students}
               model="student"
             />
-            <div className="py-8">
-              <DataTable data={students} columns={displayColumns} />
+            <div className="py-2">
+              {/* <DataTable data={students} columns={displayColumns} /> */}
+
+              <ResponsiveTable data={students} columns={displayColumns} /> 
             </div>
           </>
         ) : (

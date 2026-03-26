@@ -84,7 +84,7 @@ export default function EventCard({ event }: EventCardProps) {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl bg-white text-black">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">
               {event.title}
@@ -113,7 +113,7 @@ export default function EventCard({ event }: EventCardProps) {
               </span>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center mt-2">
               <MapPin className="h-5 w-5 mr-2 text-green-600" />
               <span className="font-medium">{event.location}</span>
             </div>

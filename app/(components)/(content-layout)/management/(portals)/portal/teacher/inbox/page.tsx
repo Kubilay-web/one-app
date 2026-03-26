@@ -16,7 +16,7 @@ export default async function page() {
   const key = "Teachers";
   const reminders = await getRemindersByKey(schoolId, key);
   return (
-    <div className="p-8">
+    <div className="p-2">
       <ReminderInbox reminders={reminders} />
     </div>
   );

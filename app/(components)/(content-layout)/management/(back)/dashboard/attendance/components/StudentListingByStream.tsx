@@ -62,12 +62,12 @@ export default function StudentListingByStream({
   classes,
   subjects,
   role = "ADMIN",
-  schoolId
+  schoolId,
 }: {
   classes: Class[];
   role?: UserRole;
   subjects: Subject[];
-  schoolId:string;
+  schoolId: string;
 }) {
   const { school } = useSchoolStore();
   const [students, setStudents] = useState<StudentWithAttendance[]>([]);
@@ -86,7 +86,7 @@ export default function StudentListingByStream({
   });
   const [selectedClass, setSelectedClass] = useState<any>(classOptions[0]);
   const [selectedSubject, setSelectedSubject] = useState<any>(
-    subjectOptions[0]
+    subjectOptions[0],
   );
   const classId = selectedClass?.value ?? "";
   const streams = classes.find((item) => item.id === classId)?.streams || [];
@@ -115,10 +115,10 @@ export default function StudentListingByStream({
   const [isSaving, setIsSaving] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
   const [startTime, setStartTime] = useState<string>(
-    format(new Date(), "HH:mm")
+    format(new Date(), "HH:mm"),
   );
   const [endTime, setEndTime] = useState<string>(
-    format(new Date(new Date().getTime() + 60 * 60 * 1000), "HH:mm")
+    format(new Date(new Date().getTime() + 60 * 60 * 1000), "HH:mm"),
   );
   const formattedDate = format(date, "MMMM d, yyyy");
 
@@ -128,7 +128,7 @@ export default function StudentListingByStream({
       students.map((student) => ({
         ...student,
         status: "PRESENT",
-      }))
+      })),
     );
   };
 
@@ -136,8 +136,8 @@ export default function StudentListingByStream({
   const updateStudentStatus = (studentId: string, status: AttendanceStatus) => {
     setStudents(
       students.map((student) =>
-        student.id === studentId ? { ...student, status } : student
-      )
+        student.id === studentId ? { ...student, status } : student,
+      ),
     );
   };
 
@@ -154,7 +154,7 @@ export default function StudentListingByStream({
   const saveAttendance = async () => {
     setIsSaving(true);
     const allMarked = students.every(
-      (student) => student.status !== "not_marked"
+      (student) => student.status !== "not_marked",
     );
 
     if (!allMarked) {
@@ -227,9 +227,9 @@ export default function StudentListingByStream({
     }
   }
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-2 space-y-6 w-full">
       <Card className="border-t-4 border-blue-600 shadow">
-        <CardContent className="p-6 space-y-6">
+        <CardContent className="p-4 space-y-6">
           <div className="grid md:grid-cols-3 gap-3">
             <FormSelectInput
               label="Class"
@@ -260,7 +260,7 @@ export default function StudentListingByStream({
           )}
         </CardContent>
       </Card>
-      {students && students.length > 0 && (
+      {/* {students && students.length > 0 && (
         <>
           <Card className="p-6">
             <div className="flex flex-col space-y-4">
@@ -368,6 +368,123 @@ export default function StudentListingByStream({
             </div>
           </Card>
         </>
+      )} */}
+
+      {students && students.length > 0 && (
+        <Card className="p-4 sm:p-6 w-full max-w-full">
+          <div className="flex flex-col space-y-4">
+            <h3 className="text-xl sm:text-2xl text-center font-semibold mb-2">
+              Attendance for {selectedClass?.label} {selectedStream?.label} -{" "}
+              {selectedSubject.label}
+            </h3>
+
+            <div className="grid gap-4 sm:gap-6">
+              {/* Date and Time Inputs */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Date Picker */}
+                <div>
+                  <Label htmlFor="date" className="text-sm font-medium">
+                    Date
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal"
+                        id="date"
+                      >
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {formattedDate}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <CalendarComponent
+                        mode="single"
+                        selected={date}
+                        onSelect={(date) => date && setDate(date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Start Time */}
+                <div>
+                  <Label htmlFor="startTime" className="text-sm font-medium">
+                    Start Time
+                  </Label>
+                  <div className="flex items-center">
+                    <Clock className="mr-2 h-4 w-4" />
+                    <Input
+                      type="time"
+                      id="startTime"
+                      value={startTime}
+                      onChange={handleStartTimeChange}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+
+                {/* End Time */}
+                <div>
+                  <Label htmlFor="endTime" className="text-sm font-medium">
+                    End Time
+                  </Label>
+                  <div className="flex items-center">
+                    <Clock className="mr-2 h-4 w-4" />
+                    <Input
+                      type="time"
+                      id="endTime"
+                      value={endTime}
+                      onChange={handleEndTimeChange}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Session Info & Buttons */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 my-4">
+              <div className="bg-muted p-2 rounded-md text-sm w-full sm:w-auto text-center sm:text-left">
+                <span className="font-medium">Session:</span>{" "}
+                {selectedSubject?.name} class for {selectedClass?.name}{" "}
+                {selectedStream?.stream} on {formattedDate}
+              </div>
+
+              <div className="flex flex-wrap gap-2 justify-start sm:justify-end w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  onClick={markAllPresent}
+                  className="whitespace-nowrap"
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  Mark All Present
+                </Button>
+                <Button
+                  onClick={saveAttendance}
+                  disabled={isSaving}
+                  className="whitespace-nowrap"
+                >
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Student List */}
+            <StudentList
+              students={students}
+              updateStudentStatus={updateStudentStatus}
+            />
+          </div>
+        </Card>
       )}
     </div>
   );

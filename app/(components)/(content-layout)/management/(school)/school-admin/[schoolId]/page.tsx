@@ -17,7 +17,7 @@ export default async function Page() {
   return (
     <div className="max-w-3xl mx-auto p-16">
       <Card className="border-t-4 border-blue-600 shadow">
-        <CardContent className="p-6">
+        <CardContent className="p-2">
           <SchoolAdminForm schoolId={school?.id} schoolName={school?.name} />
         </CardContent>
       </Card>
