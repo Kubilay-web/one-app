@@ -1914,6 +1914,13 @@
 
 // export default LandingPage;
 
+
+
+
+
+
+
+
 import db from "@/app/lib/db";
 import { getProducts } from "@/app/queries/product";
 import Image from "next/image";

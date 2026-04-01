@@ -580,13 +580,13 @@ export const getMenuItems = (user,school) => [
             title: "Dashboard Billing",
           },
 
-          {
-            path: "/invoice/dashboard/category-listing",
-            type: "link",
-            active: false,
-            selected: false,
-            title: "Dashboard Category Listing",
-          },
+          // {
+          //   path: "/invoice/dashboard/category-listing",
+          //   type: "link",
+          //   active: false,
+          //   selected: false,
+          //   title: "Dashboard Category Listing",
+          // },
 
           {
             path: "/invoice/dashboard/clients",
@@ -1039,7 +1039,7 @@ export const getMenuItems = (user,school) => [
             active: false,
             children: [
               {
-                path: `/management/school/${school.slug}/customize/about-section`,
+                path: `/management/school/${school?.id || ''}/customize/about-section`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1047,7 +1047,7 @@ export const getMenuItems = (user,school) => [
               },
 
                  {
-                path: `/management/school/${school.slug}/customize/admission-section`,
+                path: `/management/school/${school?.slug || ""}/customize/admission-section`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1056,7 +1056,7 @@ export const getMenuItems = (user,school) => [
 
               
                  {
-                path: `/management/school/${school.slug}/customize/contact-section`,
+                path: `/management/school/${school?.slug || ""}/customize/contact-section`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1064,7 +1064,7 @@ export const getMenuItems = (user,school) => [
               },
 
                    {
-                path: `/management/school/${school.slug}/customize/events`,
+                path: `/management/school/${school?.slug || ""}/customize/events`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1072,7 +1072,7 @@ export const getMenuItems = (user,school) => [
               },
 
                    {
-                path: `/management/school/${school.slug}/customize/footer`,
+                path: `/management/school/${school?.slug || ""}/customize/footer`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1080,7 +1080,7 @@ export const getMenuItems = (user,school) => [
               },
 
                     {
-                path: `/management/school/${school.slug}/customize/gallery-section`,
+                path: `/management/school/${school?.slug || ""}/customize/gallery-section`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1088,7 +1088,7 @@ export const getMenuItems = (user,school) => [
               },
 
                         {
-                path: `/management/school/${school.slug}/customize/headteacher-quote`,
+                path: `/management/school/${school?.slug || ""}/customize/headteacher-quote`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1097,7 +1097,7 @@ export const getMenuItems = (user,school) => [
 
 
                            {
-                path: `/management/school/${school.slug}/customize/hero-section`,
+                path: `/management/school/${school?.slug || ""}/customize/hero-section`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1106,7 +1106,7 @@ export const getMenuItems = (user,school) => [
 
 
                               {
-                path: `/management/school/${school.slug}/customize/logo`,
+                path: `/management/school/${school?.slug || ""}/customize/logo`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1115,7 +1115,7 @@ export const getMenuItems = (user,school) => [
 
 
                                 {
-                path: `/management/school/${school.slug}/customize/news`,
+                path: `/management/school/${school?.slug || ""}/customize/news`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1124,7 +1124,7 @@ export const getMenuItems = (user,school) => [
 
 
                                       {
-                path: `/management/school/${school.slug}/customize`,
+                path: `/management/school/${school?.slug || ""}/customize`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1133,7 +1133,7 @@ export const getMenuItems = (user,school) => [
 
 
                                         {
-                path: `/management/school/${school.slug}`,
+                path: `/management/school/${school?.slug || ""}`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1142,7 +1142,7 @@ export const getMenuItems = (user,school) => [
 
 
                                          {
-                path: `/management/school-admin/${school.id}`,
+                path: `/management/school-admin/${school?.id || ""}`,
                 type: "link",
                 active: false,
                 selected: false,
@@ -1205,7 +1205,7 @@ export const getMenuItems = (user,school) => [
               },
 
                        {
-                path: `/management/super-dashboard/schools-page/school-admin/${school.id}`,
+                path: `/management/super-dashboard/schools-page/school-admin/${school?.id || ""}`,
                 type: "link",
                 active: false,
                 selected: false,

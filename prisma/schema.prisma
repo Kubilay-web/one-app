@@ -143,6 +143,17 @@ model User {
 
 
 
+//Airbnb start
+
+
+  accountsbnb AccountBnb[]
+  listings Listing[]
+  reservations Reservation[]
+  favoriteIds     String[] 
+
+
+//Airbnb finish
+
 
 
 
@@ -2934,7 +2945,7 @@ model SubscriptionInvoice {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Stripe related fields
-  stripeSubscriptionId String? @unique
+  stripeSubscriptionId String?
   stripePriceId        String?
   stripeCustomerId     String?
 
@@ -4094,3 +4105,66 @@ enum StudentAttendanceStatus {
 
 
 //School Management Finish
+
+
+
+
+
+//Airbnb
+
+
+
+
+
+model AccountBnb {
+  id       String @id @default(cuid()) @map("_id")
+  userId             String  
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  
+  access_token       String?  
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? 
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Listing {
+  id       String @id @default(cuid()) @map("_id")
+  title String
+  description String
+  imageSrc String
+  createdAt DateTime @default(now())
+  category  String
+  roomCount Int
+  bathroomCount Int
+  guestCount Int
+  locationValue String
+  userId String 
+  price Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+}
+
+model Reservation {
+ id       String @id @default(cuid()) @map("_id")
+  userId String 
+  listingId String 
+  startDate DateTime
+  endDate DateTime
+  totalPrice Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
+
+//Airbnb

@@ -9,9 +9,9 @@ import React from "react";
 export default async function page() {
   const { user } = await validateRequest();
 
- if (user?.rolemedical !== "DOCTOR") {
-   return <NotAuthorized />;
- }
+//  if (user?.rolemedical !== "DOCTOR") {
+//    return <NotAuthorized />;
+//  }
 
   const appointments = (await getDoctorAppointments(user?.id)).data || [];
   return (

@@ -303,7 +303,7 @@ const BillingClient: React.FC<BillingClientProps> = ({
                       <button
                         onClick={() =>
                           router.push(
-                            `/billing?page=${pagination.currentPage - 1}`
+                            `/invoice/dashboard/billing?page=${pagination.currentPage - 1}`
                           )
                         }
                         className="px-3 py-1 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors text-sm"
@@ -315,7 +315,7 @@ const BillingClient: React.FC<BillingClientProps> = ({
                       <button
                         onClick={() =>
                           router.push(
-                            `/billing?page=${pagination.currentPage + 1}`
+                            `/invoice/dashboard/billing?page=${pagination.currentPage + 1}`
                           )
                         }
                         className="px-3 py-1 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors text-sm"

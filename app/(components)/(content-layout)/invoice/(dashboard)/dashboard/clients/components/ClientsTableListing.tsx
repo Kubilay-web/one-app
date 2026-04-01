@@ -195,7 +195,7 @@ export default function ClientsTableListing({
   ];
 
   const handleAddNew = () => {
-    router.push("/invoice/dashboard/clients/new");
+    router.push("/invoice/dashboard/invoices/new");
   };
 
   // Export to Excel

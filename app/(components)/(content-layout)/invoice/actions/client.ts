@@ -594,7 +594,7 @@ export async function getClientInvoices(
 export async function getClientStats(clientId: string) {
   try {
  const {user} = await validateRequest();
-    const userId = user.id;
+    const userId = user?.id;
 
     // Verify client belongs to user
     const client = await db.client.findFirst({

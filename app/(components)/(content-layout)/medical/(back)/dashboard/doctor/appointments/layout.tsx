@@ -24,9 +24,9 @@ export default async function AppointmentLayout({
   //  }
 
 
-    if (user?.rolemedical !== "DOCTOR") {
-     return <div>Rolemedical doctor only for this page.</div>;
-   }
+  //   if (user?.rolemedical !== "DOCTOR") {
+  //    return <div>Rolemedical doctor only for this page.</div>;
+  //  }
 
 
 

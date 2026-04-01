@@ -3,6 +3,8 @@ import db from "@/app/lib/db";
 import { ParentCreateProps } from '../types/types';
 import { convertDateToIso } from '../exams/convertDateToIso';
 // import bcrypt from 'bcrypt';
+
+
 import { hash } from "@node-rs/argon2";
 
 import { UserRoleSchool } from '@prisma/client';

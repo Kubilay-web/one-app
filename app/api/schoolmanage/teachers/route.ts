@@ -5,7 +5,10 @@ import { TeacherCreateProps } from '../types/types';
 
 import { convertDateToIso } from '../exams/convertDateToIso';
 import { UserRoleSchool } from '@prisma/client';
-import bcrypt from 'bcrypt';
+
+import { hash } from "@node-rs/argon2";
+
+
 
 // ==================== YARDIMCI FONKSİYONLAR ====================
 async function createUserService(data: {
@@ -28,7 +31,7 @@ async function createUserService(data: {
   }
 
   // Hash password
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const hashedPassword = await hash(data.password);
 
   const userData = {
     ...data,

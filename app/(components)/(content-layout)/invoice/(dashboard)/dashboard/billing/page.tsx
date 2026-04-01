@@ -110,15 +110,22 @@ async function BillingData({ searchParams }: BillingPageProps) {
 
   // Get session for user email
   const {user} = await validateRequest();
-  if (!user) {
-    redirect("/login?returnUrl=/invoice/dashsboard/billing");
-  }
+
+
+  // if (!user) {
+  //   redirect("/login?returnUrl=/invoice/dashsboard/billing");
+  // }
+
+
   const res = await getInvoiceQuota(user?.id ?? "");
-  if (!res) {
-    redirect("/login?returnUrl=/invoice/dashboard/billing");
-  }
+
+  // if (!res) {
+  //   redirect("/login?returnUrl=/invoice/dashboard/billing");
+  // }
+
+
   return (
-    <div className="">
+    <div>
       <div className="max-w-4xl mx-auto">
         <UsageBanner usageData={res} />
       </div>
@@ -137,9 +144,9 @@ export default async function BillingPage({ searchParams }: BillingPageProps) {
   // Check authentication
   const {user} = await validateRequest();
 
-  if (!user) {
-    redirect("/login?callbackUrl=/invoice/dashboard/billing");
-  }
+  // if (!user) {
+  //   redirect("/login?callbackUrl=/invoice/dashboard/billing");
+  // }
 
   return (
     <Suspense fallback={<BillingLoading />}>

@@ -15,7 +15,7 @@ export default async function AgencyLayout({
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       {children}
       <FloatingSocials />
       <Footer />

@@ -35,8 +35,8 @@ async function InvoiceListingWithData() {
   }
 
   return (
-    <div className="">
-      <div className="px-8">
+    <div>
+      <div className="px-2">
         <UsageBanner usageData={quotaRes} />
       </div>
       <InvoiceTableListing
