@@ -52,6 +52,8 @@ export default async function Page() {
   const { user } = await validateRequest();
   if (!user) return null;
 
+  
+
   const school = await SchoolUser(user.id);
   const schoolId = school?.id ?? "";
 

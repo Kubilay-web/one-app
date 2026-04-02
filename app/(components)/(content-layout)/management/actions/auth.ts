@@ -119,104 +119,99 @@ export async function getServerSchool() {
 }
 
 
-// export async function SchoolUser(userId: string) {
-//   const user = await db.user.findUnique({
-//     where: { id: userId },
-//     select: {
-//       schoolId: true
-//     }
-//   });
-
-//   if (!user?.schoolId) return null;
-
-//   const school = await db.school.findUnique({
-//     where: { id: user.schoolId }
-//   });
-
-//   return school;
-// }
-
-
-
-
 
 
 export async function SchoolUser(userId: string) {
-  try {
-    // Önce user'ı bul
-    const user = await db.user.findUnique({
-      where: { id: userId },
-      select: {
-        roleschool: true,
-        email: true,
-        name: true,
-      },
-    });
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: {
+      schoolId: true,
+    },
+  });
 
-    if (!user) return null;
+  if (!user?.schoolId) return null;
 
-    let schoolId = null;
-    let schoolName = null;
+  const school = await db.school.findUnique({
+    where: { id: user.schoolId },
+  });
 
-    // Role göre school bilgisini bul
-    switch (user.roleschool) {
-      case "STUDENT":
-        const student = await db.student.findUnique({
-          where: { userId },
-          select: { schoolId: true, schoolName: true },
-        });
-        schoolId = student?.schoolId;
-        schoolName = student?.schoolName;
-        break;
-
-      case "TEACHER":
-        const teacher = await db.teacher.findUnique({
-          where: { userId },
-          select: { schoolId: true, schoolName: true },
-        });
-        schoolId = teacher?.schoolId;
-        schoolName = teacher?.schoolName;
-        break;
-
-      case "PARENT":
-        const parent = await db.parent.findUnique({
-          where: { userId },
-          select: { schoolId: true, schoolName: true },
-        });
-        schoolId = parent?.schoolId;
-        schoolName = parent?.schoolName;
-        break;
-
-      case "ADMIN":
-      case "SUPER_ADMIN":
-        // Admin'ler için farklı bir mantık
-        const adminSchool = await db.school.findFirst({
-          where: { siteEnabled: true },
-        });
-        schoolId = adminSchool?.id;
-        schoolName = adminSchool?.name;
-        break;
-    }
-
-    if (!schoolId) return null;
-
-    const school = await db.school.findUnique({
-      where: { id: schoolId },
-    });
-
-    return {
-      school,
-      user: {
-        id: userId,
-        email: user.email,
-        name: user.name,
-        role: user.roleschool,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching school by user:", error);
-    return null;
-  }
+  return school;
 }
 
+// export async function SchoolUser(userId: string) {
+//   try {
+//     // Önce user'ı bul
+//     const user = await db.user.findUnique({
+//       where: { id: userId },
+//       select: {
+//         roleschool: true,
+//         email: true,
+//         name: true,
+//       },
+//     });
 
+//     if (!user) return null;
+
+//     let schoolId = null;
+//     let schoolName = null;
+
+//     // Role göre school bilgisini bul
+//     switch (user.roleschool) {
+//       case "STUDENT":
+//         const student = await db.student.findUnique({
+//           where: { userId },
+//           select: { schoolId: true, schoolName: true },
+//         });
+//         schoolId = student?.schoolId;
+//         schoolName = student?.schoolName;
+//         break;
+
+//       case "TEACHER":
+//         const teacher = await db.teacher.findUnique({
+//           where: { userId },
+//           select: { schoolId: true, schoolName: true },
+//         });
+//         schoolId = teacher?.schoolId;
+//         schoolName = teacher?.schoolName;
+//         break;
+
+//       case "PARENT":
+//         const parent = await db.parent.findUnique({
+//           where: { userId },
+//           select: { schoolId: true, schoolName: true },
+//         });
+//         schoolId = parent?.schoolId;
+//         schoolName = parent?.schoolName;
+//         break;
+
+//       case "ADMIN":
+//       case "SUPER_ADMIN":
+//         // Admin'ler için farklı bir mantık
+//         const adminSchool = await db.school.findFirst({
+//           where: { siteEnabled: true },
+//         });
+//         schoolId = adminSchool?.id;
+//         schoolName = adminSchool?.name;
+//         break;
+//     }
+
+//     if (!schoolId) return null;
+
+//     const school = await db.school.findUnique({
+//       where: { id: schoolId },
+//     });
+
+//     return {
+//       school,
+//       user: {
+//         id: userId,
+//         email: user.email,
+//         name: user.name,
+//         role: user.roleschool,
+//       },
+//     };
+//   } catch (error) {
+//     console.error("Error fetching school by user:", error);
+//     return null;
+//   }
+// }

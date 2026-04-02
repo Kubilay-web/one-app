@@ -12,8 +12,8 @@ export default async function page() {
   const { user } = await validateRequest();
   if (!user) return null;
 
-  const schoolData = await SchoolUser(user.id);
-  const schoolId = schoolData?.school.id ?? "";
+  const school = await SchoolUser(user.id);
+  const schoolId = school?.id ?? "";
 
   const [classes, allTeachers, departments] = await Promise.all([
     getAllClasses(schoolId),

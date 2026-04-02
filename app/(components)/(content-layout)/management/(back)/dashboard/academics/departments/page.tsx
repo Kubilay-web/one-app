@@ -10,8 +10,14 @@ export default async function page() {
   const { user } = await validateRequest();
   if (!user) return null;
 
-  const schoolId = (await SchoolUser(user.id))?.id ?? "";
+  // const schoolId = await SchoolUser(user.id);
+
+    const school = await SchoolUser(user.id);
+    const schoolId = school?.id ?? "";
+  
   const departments = (await getAllDepartments(schoolId)) || [];
+
+  console.log("departments",departments)
 
   return (
     <DepartmentListing schoolId={schoolId} departments={departments} />
