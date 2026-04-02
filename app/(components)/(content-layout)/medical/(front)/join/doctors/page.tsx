@@ -1,17 +1,13 @@
-
-
-
-
 import CustomButton from "../../../components/CustomButton";
-import CustomAccordion, {FAQItem} from "../../../components/Frontend/CustomAccodion";
+import CustomAccordion, {
+  FAQItem,
+} from "../../../components/Frontend/CustomAccodion";
 import Pricing from "../../../components/Frontend/Pricing";
-
 
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
 
 export default function page() {
   const features = [
@@ -68,10 +64,10 @@ export default function page() {
         </div>
       ),
     },
-    {
-      qn: "Can I use the Medical App on multiple devices?",
-      ans: "Yes, you can access our app from any device with an internet connection. Simply log in using your credentials.",
-    },
+    // {
+    //   qn: "Can I use the Medical App on multiple devices?",
+    //   ans: "Yes, you can access our app from any device with an internet connection. Simply log in using your credentials.",
+    // },
     {
       qn: "Is my data secure on the Medical App?",
       ans: "Absolutely. We prioritize the security and privacy of your data. Our platform employs industry-standard encryption and security protocols to safeguard your information.",
@@ -148,7 +144,7 @@ export default function page() {
               today.
             </h2>
 
-            <div className="grid grid-cols-2 gap-4 py-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-6">
               {cards.map((card, i) => {
                 return (
                   <div

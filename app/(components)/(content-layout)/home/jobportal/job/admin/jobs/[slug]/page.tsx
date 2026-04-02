@@ -1,5 +1,5 @@
 import JobPage from "../../../../components/JobPage";
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 import { notFound } from "next/navigation";
 import AdminSidebar from "./AdminSidebar";
 
@@ -8,7 +8,7 @@ interface PageProps {
 }
 
 export default async function Page({ params: { slug } }: PageProps) {
-  const job = await prisma.jobs.findUnique({
+  const job = await db.jobs.findUnique({
     where: { slug },
   });
 

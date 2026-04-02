@@ -42,7 +42,7 @@ export default function ShadSelectInput({
           <SelectTrigger className="w-full">
             <SelectValue placeholder={`Select ${optionTitle}`} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             <SelectGroup>
               {/* <SelectLabel>{optionTitle}</SelectLabel> */}
               {options.map((item) => {

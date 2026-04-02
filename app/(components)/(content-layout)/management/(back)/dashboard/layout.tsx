@@ -27,7 +27,7 @@ export default async function DashboardLayout({
   // }
 
   const notifications =
-    (await getSchoolNotifications(school.id ?? "")) || [];
+    (await getSchoolNotifications(school?.school.id ?? "")) || [];
 
   return (
     <div>

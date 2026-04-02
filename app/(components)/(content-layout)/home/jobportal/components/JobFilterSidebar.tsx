@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 import { jobFilterSchema, JobFilterValues } from "../lib/validation";
 import { redirect } from "next/navigation";
 import FormSubmitButton from "./FormSubmitButton";
@@ -33,12 +33,12 @@ export default async function JobFilterSidebar({
   defaultValues,
 }: JobFilterSidebarProps) {
   // ✅ JobTypes dropdown için async
-  const jobTypes = await prisma.jobtype.findMany({
+  const jobTypes = await db.jobtype.findMany({
     select: { id: true, name: true },
   });
 
   // ✅ Distinct şehirler async
-  const locations = await prisma.jobs.findMany({
+  const locations = await db.jobs.findMany({
     select: { city: { select: { id: true, name: true } } },
     distinct: ["cityId"],
   });

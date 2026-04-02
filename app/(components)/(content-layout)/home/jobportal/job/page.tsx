@@ -3,7 +3,7 @@ import JobResults from "../components/JobResults";
 import H1 from "../components/ui/h1";
 import { JobFilterValues } from "../lib/validation";
 import { Metadata } from "next";
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 
 interface PageProps {
   searchParams: {
@@ -68,7 +68,7 @@ async function fetchJobs(filterValues: JobFilterValues, page?: number) {
   const pageSize = 10;
   const skip = page ? (page - 1) * pageSize : 0;
 
-  return prisma.jobs.findMany({
+  return db.jobs.findMany({
     where,
     include: {
       company: true,

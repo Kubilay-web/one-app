@@ -1,7 +1,7 @@
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 import { cn } from "@/app/lib/utils";
 import { JobFilterValues } from "../lib/validation";
-import { Jobs, Prisma } from "@prisma/client";
+import { Jobs, db } from "@db/client";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import JobListItem from "./JobListItem";
@@ -26,7 +26,7 @@ export default async function JobResults({
     .filter((word) => word.length > 0)
     .join(" & ");
 
-  const searchFilter: Prisma.JobsWhereInput = searchString
+  const searchFilter: db.JobsWhereInput = searchString
     ? {
         OR: [
           { title: { search: searchString } },
@@ -40,7 +40,7 @@ export default async function JobResults({
     : {};
 
   // Filtreleme
-  const where: Prisma.JobsWhereInput = {
+  const where: db.JobsWhereInput = {
     AND: [
       searchFilter,
       type ? { job_type: { name: type } } : {},
@@ -57,7 +57,7 @@ export default async function JobResults({
     ],
   };
 
-  const jobsPromise = prisma.jobs.findMany({
+  const jobsPromise = db.jobs.findMany({
     where,
     include: {
       company: true,
@@ -71,7 +71,7 @@ export default async function JobResults({
     take: jobsPerPage,
   });
 
-  const countPromise = prisma.jobs.count({ where });
+  const countPromise = db.jobs.count({ where });
 
   const [jobs, totalResults] = await Promise.all([jobsPromise, countPromise]);
 

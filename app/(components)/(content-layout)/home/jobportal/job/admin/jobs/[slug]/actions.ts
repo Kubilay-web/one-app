@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 import { isAdmin } from "../../../../lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -25,7 +25,7 @@ export async function approveSubmission(
       throw new Error("Not authorized");
     }
 
-    await prisma.jobs.update({
+    await db.jobs.update({
       where: { id: jobId },
       data: { status: Prisma.JobStatus.status },
     });
@@ -58,7 +58,7 @@ export async function deleteJob(
 
 
 
-    await prisma.jobs.delete({
+    await db.jobs.delete({
       where: { id: jobId },
     });
 

@@ -38,6 +38,8 @@ export default async function PatientLayout({
   // if (user?.rolemedical !== "ADMIN") {
   //   return <NotAuthorized />;
   // }
+
+  
   const appointments = (await getAppointments()).data || [];
 
   const uniquePatientsMap = new Map();

@@ -1,4 +1,3 @@
-
 import {
   Calendar,
   CalendarCheck,
@@ -9,8 +8,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../../../components/ui/tabs";
-
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../../../../components/ui/tabs";
 
 import { Button } from "../../../../../../components/ui/button";
 
@@ -21,8 +24,6 @@ import { timeAgo } from "@/app/(components)/(content-layout)/medical/utils/timeA
 import SubHeading from "@/app/(components)/(content-layout)/medical/components/SubHeading";
 import { getNormalDate } from "@/app/(components)/(content-layout)/medical/utils/getNormalDate";
 import generateSlug from "@/app/(components)/(content-layout)/medical/utils/generateSlug";
-
-
 
 export default async function page({
   params: { id },
@@ -94,7 +95,13 @@ export default async function page({
                       <>
                         {doc.doctorId && (
                           <Button variant={"outline"}>
-                            <Link href={`/medical/doctors/${slug}?id=${doc.doctorId}`}>
+                            {/* <Link href={`/medical/doctors/${slug}?id=${doc.doctorId}`}>
+                              {doc.doctorName}
+                            </Link> */}
+
+                            <Link
+                              href={`/medical/dashboard/doctors/view/${doc.doctorId}`}
+                            >
                               {doc.doctorName}
                             </Link>
                           </Button>
@@ -119,11 +126,21 @@ export default async function page({
                     key={item.id}
                     href={`/medical/dashboard/doctor/appointments/view/${item.id}`}
                     className={cn(
-                      "border mb-2 border-gray-300 shadow-sm text-xs bg-white py-3 px-2 inline-block w-full rounded-md dark:text-slate-900"
+                      "border mb-2 border-gray-300 shadow-sm text-xs bg-white py-3 px-2 inline-block w-full rounded-md dark:text-slate-900",
                     )}
                   >
+                    {/* <div className="flex justify-between items-center pb-2">
+                      <h2 className="text-md">
+                        {item.firstName} {item.lastName}
+                      </h2>
+                      <div className="flex items-center ">
+                        <History className="w-4 h-4 mr-2" />
+                        <span>{timeAgo(item.createdAt)}</span>
+                      </div>
+                    </div> */}
+
                     <div className="flex justify-between items-center pb-2">
-                      <h2 className="text-lg">
+                      <h2 className="text-md">
                         {item.firstName} {item.lastName}
                       </h2>
                       <div className="flex items-center ">
@@ -131,6 +148,7 @@ export default async function page({
                         <span>{timeAgo(item.createdAt)}</span>
                       </div>
                     </div>
+
                     <div className="flex items-center gap-4 border-b">
                       <div className="flex items-center font-semibold">
                         <CalendarCheck className="w-4 h-4 mr-2" />
@@ -144,7 +162,7 @@ export default async function page({
                       className={cn(
                         "flex items-center pt-2 text-blue-600",
                         item.status === "approved" &&
-                          "text-green-600 font-semibold"
+                          "text-green-600 font-semibold",
                       )}
                     >
                       {item.status === "pending" ? (

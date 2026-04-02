@@ -369,6 +369,16 @@
 //   );
 // }
 
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import { DoctorDetail, AppointmentProps } from "../types/types";
@@ -531,7 +541,7 @@ export default function DoctorDetails({
   return (
     <>
       {step === 1 && (
-        <div className="">
+        <div>
           <div className="flex items-center justify-between">
             <button
               onClick={() => setIsActive("details")}

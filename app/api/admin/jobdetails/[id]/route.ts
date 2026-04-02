@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import db from "@/app/lib/db";
 
-const prisma = new PrismaClient();
 
 export async function GET(
   req: Request,
@@ -11,7 +10,7 @@ export async function GET(
     const jobId = params.id;
 
     // İş ilanını getir
-    const job = await prisma.jobs.findUnique({
+    const job = await db.jobs.findUnique({
       where: { id: jobId },
     });
 
@@ -20,15 +19,15 @@ export async function GET(
     }
 
     // İlgili diğer verileri getir
-    const jobTag = await prisma.jobtag.findFirst({
+    const jobTag = await db.jobtag.findFirst({
       where: { jobId: job.id },
     });
 
-    const benefits = await prisma.benfits.findFirst({
+    const benefits = await db.benfits.findFirst({
       where: { companyId: job.companyId },
     });
 
-    const jobSkills = await prisma.jobskill.findFirst({
+    const jobSkills = await db.jobskill.findFirst({
       where: { jobId: job.id },
     });
 

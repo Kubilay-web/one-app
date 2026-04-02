@@ -30,18 +30,17 @@ export default async function page() {
     }
   });
   const patients = Array.from(uniquePatientsMap.values()) as PatientProps[];
-  // console.log(patients);
-  //doctors/doctor-asuman-jb
+
   return (
     <div>
       <div className="py-2  border-b border-gray-200 flex items-center justify-end px-4">
         <div className="flex items-center gap-4">
-          <NewButton title="New Patient" href={``} />
+          {/* <NewButton title="New Patient" href={``} /> */}
         </div>
       </div>
       <HomeDisplayCard
         title="Patient"
-        newAppointmentLink={""}
+        // newAppointmentLink={""}
         count={patients.length}
       />
     </div>

@@ -1887,7 +1887,7 @@ export const getMenuItems = (user,school) => [
                 type: "link",
                 active: false,
                 selected: false,
-                title: "Patients Mecdical",
+                title: "Patients Medical",
               },
               {
                 path: "/medical/dashboard/doctor/settings",

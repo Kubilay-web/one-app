@@ -6,9 +6,6 @@ import Link from "next/link";
 import React from "react";
 import { SpecialtyProps } from "./SpecialtyForm";
 
-
-
-
 import toast from "react-hot-toast";
 import { Speciality, Symptom } from "@prisma/client";
 import {
@@ -23,10 +20,7 @@ import {
   AlertDialogTrigger,
 } from "../../components/ui/alert-dialog";
 
-
-
 import { deleteSymptom } from "../../actions/symptom";
-
 
 export default function SymptomCard({ symptom }: { symptom: Symptom }) {
   async function handleDelete(id: string) {
@@ -35,7 +29,8 @@ export default function SymptomCard({ symptom }: { symptom: Symptom }) {
   }
   return (
     <div className="border mb-2 border-gray-100 shadow-sm text-xs bg-white py-3 px-4 w-full rounded-md dark:text-slate-900 flex items-center gap-4 justify-between">
-      <h2>{symptom.title}</h2>
+      <h2 className="text-base font-medium">{symptom.title}</h2>
+
       <div className="flex">
         <Link
           className="text-blue-600"

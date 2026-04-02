@@ -160,7 +160,7 @@ export default function AvailabilityForm({
 
       <div className="flex justify-center mt-4">
         <Button onClick={handleSubmit} disabled={isLoading}>
-          {isLoading ? "Kaydediliyor..." : "Kaydet ve Devam Et"}
+          {isLoading ? "Saving..." : "Save And Continue"}
         </Button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import JobPage from "../../../components/JobPage";
 import { Button } from "../../../components/ui/button";
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -10,7 +10,7 @@ interface PageProps {
 }
 
 const getJob = cache(async (slug: string) => {
-  const job = await prisma.jobs.findFirst({
+  const job = await db.jobs.findFirst({
     where: { slug: { equals: slug, mode: "insensitive" } }, // 👈 case-insensitive
   });
   if (!job) notFound();
@@ -18,7 +18,7 @@ const getJob = cache(async (slug: string) => {
 });
 
 export async function generateStaticParams() {
-  const jobs = await prisma.jobs.findMany({
+  const jobs = await db.jobs.findMany({
     select: { slug: true },
   });
   return jobs.map(({ slug }) => ({ slug }));

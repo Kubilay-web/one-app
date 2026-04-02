@@ -1,5 +1,3 @@
-
-
 import { getAppointmentById } from "@/app/(components)/(content-layout)/medical/actions/appointments";
 import { Button } from "../../../../../../components/ui/button";
 import { Calendar, Mail, Phone, Video } from "lucide-react";
@@ -35,37 +33,63 @@ export default async function page({
         </div>
       </div>
       {appointment?.status === "approved" ? (
-        <div className=" border-2 border-green-600 shadow rounded-md p-4 mx-4 my-4">
+        <div className="border-2 border-green-600 shadow rounded-md p-4 mx-2 sm:mx-4 my-4">
           <div className="sm:col-span-4">
-            <div className="flex items-center justify-between border-b">
-              <h2 className="scroll-m-20 text-xl font-semibold tracking-tight py-2 mb-3">
+            {/* HEADER */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b pb-3 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold tracking-tight">
                 Appointment Approved
               </h2>
-              <Button>{`${appointment?.appointmentFormattedDate} at ${appointment?.appointmentTime}`}</Button>
+
+              <Button className="w-full sm:w-auto text-center break-words">
+                {appointment?.appointmentFormattedDate} at{" "}
+                {appointment?.appointmentTime}
+              </Button>
             </div>
-            <div className="py-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold capitalize">
-                  {" "}
+
+            {/* CONTENT */}
+            <div className="py-2 space-y-5">
+              {/* MEETING */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <h2 className="font-semibold capitalize text-md sm:text-base">
                   {appointment?.meetingProvider}
                 </h2>
-                <Button asChild variant={"outline"}>
+
+                <Button
+                  asChild
+                  variant={"outline"}
+                  className="w-full sm:w-auto"
+                >
                   <Link href={appointment?.meetingLink ?? "#"}>
                     <Video className="mr-2 w-4 h-4" />
                     <span>Join Meeting</span>
                   </Link>
                 </Button>
               </div>
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold capitalize"> Communicate</h2>
-                <div className="flex space-x-3">
-                  <Button asChild variant={"outline"}>
+
+              {/* COMMUNICATION */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {/* <h2 className="font-semibold capitalize text-sm sm:text-base">
+                  Communicate
+                </h2> */}
+
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+                  <Button
+                    asChild
+                    variant={"outline"}
+                    className="w-full sm:w-auto"
+                  >
                     <Link href={appointment?.meetingLink ?? "#"}>
                       <Phone className="mr-2 w-4 h-4" />
                       <span>Call Doctor</span>
                     </Link>
                   </Button>
-                  <Button asChild variant={"outline"}>
+
+                  <Button
+                    asChild
+                    variant={"outline"}
+                    className="w-full sm:w-auto"
+                  >
                     <Link href={appointment?.meetingLink ?? "#"}>
                       <Mail className="mr-2 w-4 h-4" />
                       <span>Mail Doctor</span>

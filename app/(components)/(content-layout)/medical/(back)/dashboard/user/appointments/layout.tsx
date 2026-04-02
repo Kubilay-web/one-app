@@ -33,7 +33,7 @@ export default async function AppointmentLayout({
       {/* Header */}
 
       {/* 2 PANNELS */}
-      <div className="flex w-full flex-wrap justify-between">
+      <div className="flex w-full flex-wrap justify-around">
         {/* LIST PANNEL */}
         <div className="py-3 border-r border-gray-100">
           <PanelHeader

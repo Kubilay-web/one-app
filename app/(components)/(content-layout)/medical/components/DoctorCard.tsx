@@ -44,10 +44,10 @@ export default function DoctorCard({
             <div className="flex items-center gap-4 py-4">
               <div className="relative">
                 <Image
-                  // src={
-                  //   doctor.doctorProfile?.profilePicture ?? "/onemedical/doc-profile.jpeg"
-                  // }
-                  src={"/onemedical/doc-profile.jpeg"}
+                   src={
+                     doctor.doctorProfile?.profilePicture ?? "/onemedical/doc-profile.jpeg"
+                   }
+                  // src={"/onemedical/doc-profile.jpeg"}
                   width={243}
                   height={207}
                   alt={doctor.name}

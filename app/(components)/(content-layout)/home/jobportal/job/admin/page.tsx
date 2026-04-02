@@ -1,11 +1,11 @@
 import JobListItem from "../../components/JobListItem";
 import H1 from "../../components/ui/h1";
-import prisma from "@/app/lib/prisma";
+import db from "@/app/lib/db";
 import Link from "next/link";
 import { JobStatus } from "@prisma/client"; // enum
 
 export default async function AdminPage() {
-  const unapprovedJobs = await prisma.jobs.findMany({
+  const unapprovedJobs = await db.jobs.findMany({
     where: { status: JobStatus.pending }, // approved yerine pending kontrolü
   });
 

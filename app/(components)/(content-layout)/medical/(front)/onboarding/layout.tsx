@@ -5,9 +5,9 @@ import { Toaster } from "react-hot-toast";
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const { user } = await validateRequest();
-  if (!user) {
-    redirect(`/medical`);
-  }
+  // if (!user) {
+  //   redirect(`/medical`);
+  // }
   return (
     <div className="">
       {children}

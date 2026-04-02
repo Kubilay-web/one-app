@@ -360,6 +360,242 @@
 
 
 
+// import {
+//   AlertTriangle,
+//   CalendarCheck,
+//   Check,
+//   CircleEllipsis,
+//   History,
+//   X,
+// } from "lucide-react";
+// import Image from "next/image";
+// import Link from "next/link";
+// import React from "react";
+
+// import { getDoctorAppointments } from "@/app/(components)/(content-layout)/medical/actions/appointments";
+// import { getDoctorById, getDoctorProfile } from "@/app/(components)/(content-layout)/medical/actions/users";
+// import { FaRegFilePdf } from "react-icons/fa";
+// import ApproveBtn from "@/app/(components)/(content-layout)/medical/components/Dashboard/ApproveBtn";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../../components/ui/tabs";
+// import { cn } from "@/app/lib/utils";
+// import { getNormalDate } from "@/app/(components)/(content-layout)/medical/utils/getNormalDate";
+// import { timeAgo } from "@/app/(components)/(content-layout)/medical/utils/timeAgo";
+// import SubHeading from "@/app/(components)/(content-layout)/medical/components/SubHeading";
+
+// export default async function page({
+//   params: { id },
+// }: {
+//   params: { id: string };
+// }) {
+//   const appointments = (await getDoctorAppointments(id)).data || [];
+//   const doctor = await getDoctorById(id);
+//   const doctorProfile = await getDoctorProfile(id);
+//   const status = doctorProfile?.status ?? "PENDING";
+//   const dob = doctorProfile?.dob ?? "1992-05-13T21:00:00.000Z";
+//   const expiry =
+//     doctorProfile?.medicalLicenseExpiry ?? "1992-05-13T21:00:00.000Z";
+
+//   if (!doctorProfile) {
+//     return (
+//       <div className="min-h-96 flex items-center justify-center px-4">
+//         <div className="space-y-3 text-center flex items-center justify-center flex-col">
+//           <AlertTriangle className="w-10 h-10" />
+//           <h2 className="text-lg font-semibold">No Doctor Profile Found</h2>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="p-3 sm:p-4 lg:p-6">
+//       {/* HEADER */}
+//       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+//         <div className="break-words">
+//           <h2 className="border-b pb-2 text-lg sm:text-xl font-semibold tracking-tight">
+//             {doctor?.name}
+//           </h2>
+//           <h2 className="border-b pb-3 mb-3 text-sm sm:text-base break-words">
+//             {doctor?.email} | {doctor?.phone}
+//           </h2>
+//         </div>
+
+//         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+//           <ApproveBtn status={status} profileId={doctorProfile?.id ?? ""} />
+//           <h2 className="border-b pb-3 mb-3 text-sm sm:text-base">
+//             Appointments ({appointments.length.toString().padStart(2, "0")})
+//           </h2>
+//         </div>
+//       </div>
+
+//       <Tabs defaultValue="details" className="w-full">
+//         {/* RESPONSIVE TAB LIST */}
+//         <TabsList className="w-full overflow-x-auto flex-nowrap whitespace-nowrap">
+//           <TabsTrigger value="details">Doctor Details</TabsTrigger>
+//           <TabsTrigger value="education">Education Info</TabsTrigger>
+//           {/* <TabsTrigger value="practice">Practice Info</TabsTrigger> */}
+//           <TabsTrigger value="additional">Additional Info</TabsTrigger>
+//           <TabsTrigger value="appointments">Appointments</TabsTrigger>
+//         </TabsList>
+
+//         {/* DETAILS */}
+//         <TabsContent value="details">
+//           <div className="p-3 sm:p-4">
+//             <SubHeading title="Bio Data" />
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Info label="First Name" value={doctorProfile?.firstName} />
+//               <Info label="Last Name" value={doctorProfile?.lastName} />
+//               <Info label="Date of Birth" value={getNormalDate(dob as string)} />
+//               <Info label="Middle Name" value={doctorProfile?.middleName} />
+//               <Info label="Gender" value={doctorProfile?.gender} />
+//             </div>
+//           </div>
+
+//           <div className="p-3 sm:p-4">
+//             <SubHeading title="Profile Information" />
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Info label="Medical License" value={doctorProfile?.medicalLicense} />
+//               <Info label="Years of Experience" value={doctorProfile?.yearsOfExperience} />
+//             </div>
+
+//             <div className="py-3 space-y-3">
+//               <Info
+//                 label="Medical License Expiry"
+//                 value={getNormalDate(expiry as string)}
+//               />
+//               <p className="text-sm break-words">{doctorProfile?.bio}</p>
+//             </div>
+//           </div>
+
+//           <div className="p-3 sm:p-4">
+//             <SubHeading title="Contact Information" />
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Info label="Email Address" value={doctorProfile?.email} />
+//               <Info label="Phone" value={doctorProfile?.phone} />
+//               <Info label="Country" value={doctorProfile?.country} />
+//               <Info label="City" value={doctorProfile?.city} />
+//               <Info label="State" value={doctorProfile?.state} />
+//             </div>
+//           </div>
+//         </TabsContent>
+
+//         {/* EDUCATION */}
+//         <TabsContent value="education">
+//           <div className="p-3 sm:p-4">
+//             <SubHeading title="Education Information" />
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Info label="Graduation Year" value={doctorProfile?.graduationYear} />
+//               <Info
+//                 label="Primary Specialization"
+//                 value={doctorProfile?.primarySpecialization}
+//               />
+//             </div>
+//           </div>
+//         </TabsContent>
+
+//         {/* PRACTICE */}
+//         <TabsContent value="practice">
+//           <div className="p-3 sm:p-4">
+//             <SubHeading title="Practice Information" />
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Info label="Hospital Name" value={doctorProfile?.hospitalName} />
+//               <Info label="Hourly Charge" value={doctorProfile?.hourlyWage} />
+//               <Info label="Hospital Address" value={doctorProfile?.hospitalAddress} />
+//               <Info
+//                 label="Hospital Contact"
+//                 value={doctorProfile?.hospitalContactNumber}
+//               />
+//               <Info
+//                 label="Hospital Hours"
+//                 value={doctorProfile?.hospitalHoursOfOperation}
+//               />
+//               <Info
+//                 label="Insurance Accepted"
+//                 value={doctorProfile?.insuranceAccepted}
+//               />
+//             </div>
+//           </div>
+//         </TabsContent>
+
+//         {/* APPOINTMENTS */}
+//         <TabsContent value="appointments">
+//           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 sm:p-4">
+//             {appointments.map((item) => (
+//               <Link
+//                 key={item.id}
+//                 href={`/medical/dashboard/doctor/appointments/view/${item.id}`}
+//                 className="border shadow-sm text-xs sm:text-sm bg-white py-3 px-3 rounded-md"
+//               >
+//                 <div className="flex justify-between items-center pb-2 flex-wrap gap-2">
+//                   <h2 className="font-semibold break-words">
+//                     {item.firstName} {item.lastName}
+//                   </h2>
+//                   <div className="flex items-center text-xs">
+//                     <History className="w-4 h-4 mr-2" />
+//                     <span>{timeAgo(item.createdAt)}</span>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex flex-wrap items-center gap-4 border-b pb-2">
+//                   <div className="flex items-center font-semibold">
+//                     <CalendarCheck className="w-4 h-4 mr-2" />
+//                     <span>{item.appointmentFormattedDate}</span>
+//                   </div>
+//                   <span className="font-semibold">
+//                     {item.appointmentTime}
+//                   </span>
+//                 </div>
+
+//                 <div
+//                   className={cn(
+//                     "flex items-center pt-2 text-blue-600",
+//                     item.status === "approved" &&
+//                       "text-green-600 font-semibold"
+//                   )}
+//                 >
+//                   {item.status === "pending" ? (
+//                     <CircleEllipsis className="mr-2 w-4 h-4" />
+//                   ) : item.status === "approved" ? (
+//                     <Check className="mr-2 w-4 h-4" />
+//                   ) : (
+//                     <X className="mr-2 w-4 h-4" />
+//                   )}
+//                   <span>{item.status}</span>
+//                 </div>
+//               </Link>
+//             ))}
+//           </div>
+//         </TabsContent>
+//       </Tabs>
+//     </div>
+//   );
+// }
+
+// /* Reusable Info Row */
+// function Info({ label, value }: { label: string; value: any }) {
+//   return (
+//     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm break-words">
+//       <span className="font-medium">{label} :</span>
+//       <span>{value || "-"}</span>
+//     </div>
+//   );
+// }
+
+
+
+///////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 import {
   AlertTriangle,
   CalendarCheck,
@@ -382,6 +618,7 @@ import { getNormalDate } from "@/app/(components)/(content-layout)/medical/utils
 import { timeAgo } from "@/app/(components)/(content-layout)/medical/utils/timeAgo";
 import SubHeading from "@/app/(components)/(content-layout)/medical/components/SubHeading";
 
+
 export default async function page({
   params: { id },
 }: {
@@ -390,6 +627,7 @@ export default async function page({
   const appointments = (await getDoctorAppointments(id)).data || [];
   const doctor = await getDoctorById(id);
   const doctorProfile = await getDoctorProfile(id);
+
   const status = doctorProfile?.status ?? "PENDING";
   const dob = doctorProfile?.dob ?? "1992-05-13T21:00:00.000Z";
   const expiry =
@@ -397,159 +635,141 @@ export default async function page({
 
   if (!doctorProfile) {
     return (
-      <div className="min-h-96 flex items-center justify-center px-4">
-        <div className="space-y-3 text-center flex items-center justify-center flex-col">
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="space-y-3 text-center flex flex-col items-center">
           <AlertTriangle className="w-10 h-10" />
-          <h2 className="text-lg font-semibold">No Doctor Profile Found</h2>
+          <h2 className="text-base sm:text-lg font-semibold">
+            No Doctor Profile Found
+          </h2>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
+    <div className="w-full max-w-2xl mx-auto p-3 sm:p-4 lg:p-6">
       {/* HEADER */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div className="break-words">
-          <h2 className="border-b pb-2 text-lg sm:text-xl font-semibold tracking-tight">
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-4">
+        <div className="w-full">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold border-b pb-2 break-words">
             {doctor?.name}
           </h2>
-          <h2 className="border-b pb-3 mb-3 text-sm sm:text-base break-words">
+
+          <p className="text-xs sm:text-sm md:text-base text-gray-600 mt-2 break-all">
             {doctor?.email} | {doctor?.phone}
-          </h2>
+          </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full xl:w-auto">
           <ApproveBtn status={status} profileId={doctorProfile?.id ?? ""} />
-          <h2 className="border-b pb-3 mb-3 text-sm sm:text-base">
-            Appointments ({appointments.length.toString().padStart(2, "0")})
-          </h2>
+
+          <div className="text-sm sm:text-base font-medium">
+            Appointments (
+            {appointments.length.toString().padStart(2, "0")})
+          </div>
         </div>
       </div>
 
       <Tabs defaultValue="details" className="w-full">
-        {/* RESPONSIVE TAB LIST */}
-        <TabsList className="w-full overflow-x-auto flex-nowrap whitespace-nowrap">
-          <TabsTrigger value="details">Doctor Details</TabsTrigger>
-          <TabsTrigger value="education">Education Info</TabsTrigger>
-          <TabsTrigger value="practice">Practice Info</TabsTrigger>
-          <TabsTrigger value="additional">Additional Info</TabsTrigger>
+        {/* SCROLLABLE TABS */}
+        <TabsList className="w-full flex overflow-x-auto gap-2 no-scrollbar">
+          <TabsTrigger value="details">Details</TabsTrigger>
+          <TabsTrigger value="education">Education</TabsTrigger>
+          <TabsTrigger value="additional">Additional</TabsTrigger>
           <TabsTrigger value="appointments">Appointments</TabsTrigger>
         </TabsList>
 
         {/* DETAILS */}
         <TabsContent value="details">
-          <div className="p-3 sm:p-4">
-            <SubHeading title="Bio Data" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Section title="Bio Data">
+            <Grid>
               <Info label="First Name" value={doctorProfile?.firstName} />
               <Info label="Last Name" value={doctorProfile?.lastName} />
               <Info label="Date of Birth" value={getNormalDate(dob as string)} />
               <Info label="Middle Name" value={doctorProfile?.middleName} />
               <Info label="Gender" value={doctorProfile?.gender} />
-            </div>
-          </div>
+            </Grid>
+          </Section>
 
-          <div className="p-3 sm:p-4">
-            <SubHeading title="Profile Information" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Section title="Profile Information">
+            <Grid>
               <Info label="Medical License" value={doctorProfile?.medicalLicense} />
-              <Info label="Years of Experience" value={doctorProfile?.yearsOfExperience} />
-            </div>
+              <Info label="Experience" value={doctorProfile?.yearsOfExperience} />
+            </Grid>
 
-            <div className="py-3 space-y-3">
+            <div className="mt-3 space-y-2">
               <Info
-                label="Medical License Expiry"
+                label="License Expiry"
                 value={getNormalDate(expiry as string)}
               />
-              <p className="text-sm break-words">{doctorProfile?.bio}</p>
+              <p className="text-sm text-gray-600 break-words">
+                {doctorProfile?.bio}
+              </p>
             </div>
-          </div>
+          </Section>
 
-          <div className="p-3 sm:p-4">
-            <SubHeading title="Contact Information" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Info label="Email Address" value={doctorProfile?.email} />
+          <Section title="Contact Information">
+            <Grid>
+              <Info label="Email" value={doctorProfile?.email} />
               <Info label="Phone" value={doctorProfile?.phone} />
               <Info label="Country" value={doctorProfile?.country} />
               <Info label="City" value={doctorProfile?.city} />
               <Info label="State" value={doctorProfile?.state} />
-            </div>
-          </div>
+            </Grid>
+          </Section>
         </TabsContent>
 
         {/* EDUCATION */}
         <TabsContent value="education">
-          <div className="p-3 sm:p-4">
-            <SubHeading title="Education Information" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Section title="Education Information">
+            <Grid>
               <Info label="Graduation Year" value={doctorProfile?.graduationYear} />
               <Info
-                label="Primary Specialization"
+                label="Specialization"
                 value={doctorProfile?.primarySpecialization}
               />
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* PRACTICE */}
-        <TabsContent value="practice">
-          <div className="p-3 sm:p-4">
-            <SubHeading title="Practice Information" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Info label="Hospital Name" value={doctorProfile?.hospitalName} />
-              <Info label="Hourly Charge" value={doctorProfile?.hourlyWage} />
-              <Info label="Hospital Address" value={doctorProfile?.hospitalAddress} />
-              <Info
-                label="Hospital Contact"
-                value={doctorProfile?.hospitalContactNumber}
-              />
-              <Info
-                label="Hospital Hours"
-                value={doctorProfile?.hospitalHoursOfOperation}
-              />
-              <Info
-                label="Insurance Accepted"
-                value={doctorProfile?.insuranceAccepted}
-              />
-            </div>
-          </div>
+            </Grid>
+          </Section>
         </TabsContent>
 
         {/* APPOINTMENTS */}
         <TabsContent value="appointments">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 sm:p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-2 sm:p-4">
             {appointments.map((item) => (
               <Link
                 key={item.id}
                 href={`/medical/dashboard/doctor/appointments/view/${item.id}`}
-                className="border shadow-sm text-xs sm:text-sm bg-white py-3 px-3 rounded-md"
+                className="border rounded-xl shadow-sm hover:shadow-md transition p-3 bg-white flex flex-col justify-between"
               >
-                <div className="flex justify-between items-center pb-2 flex-wrap gap-2">
-                  <h2 className="font-semibold break-words">
+                {/* TOP */}
+                <div className="flex justify-between items-start gap-2 flex-wrap">
+                  <h2 className="font-semibold text-sm sm:text-base break-words">
                     {item.firstName} {item.lastName}
                   </h2>
-                  <div className="flex items-center text-xs">
-                    <History className="w-4 h-4 mr-2" />
-                    <span>{timeAgo(item.createdAt)}</span>
+
+                  <div className="flex items-center text-xs text-gray-500">
+                    <History className="w-4 h-4 mr-1" />
+                    {timeAgo(item.createdAt)}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 border-b pb-2">
-                  <div className="flex items-center font-semibold">
-                    <CalendarCheck className="w-4 h-4 mr-2" />
-                    <span>{item.appointmentFormattedDate}</span>
+                {/* DATE */}
+                <div className="flex flex-wrap items-center gap-3 border-y py-2 my-2 text-sm">
+                  <div className="flex items-center font-medium">
+                    <CalendarCheck className="w-4 h-4 mr-1" />
+                    {item.appointmentFormattedDate}
                   </div>
-                  <span className="font-semibold">
-                    {item.appointmentTime}
-                  </span>
+
+                  <span>{item.appointmentTime}</span>
                 </div>
 
+                {/* STATUS */}
                 <div
                   className={cn(
-                    "flex items-center pt-2 text-blue-600",
-                    item.status === "approved" &&
-                      "text-green-600 font-semibold"
+                    "flex items-center text-sm",
+                    item.status === "approved" && "text-green-600",
+                    item.status === "rejected" && "text-red-500",
+                    item.status === "pending" && "text-yellow-500"
                   )}
                 >
                   {item.status === "pending" ? (
@@ -559,7 +779,7 @@ export default async function page({
                   ) : (
                     <X className="mr-2 w-4 h-4" />
                   )}
-                  <span>{item.status}</span>
+                  {item.status}
                 </div>
               </Link>
             ))}
@@ -570,12 +790,36 @@ export default async function page({
   );
 }
 
-/* Reusable Info Row */
-function Info({ label, value }: { label: string; value: any }) {
+/* SECTION WRAPPER */
+function Section({ title, children }: any) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm break-words">
-      <span className="font-medium">{label} :</span>
-      <span>{value || "-"}</span>
+    <div className="p-3 sm:p-4 mb-4 border rounded-xl bg-white shadow-sm">
+      <h3 className="text-sm sm:text-base font-semibold mb-3">
+        {title}
+      </h3>
+      {children}
     </div>
   );
 }
+
+/* GRID */
+function Grid({ children }: any) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {children}
+    </div>
+  );
+}
+
+/* INFO */
+function Info({ label, value }: { label: string; value: any }) {
+  return (
+    <div className="flex flex-col text-sm">
+      <span className="text-gray-500">{label}</span>
+      <span className="font-medium break-words">
+        {value || "-"}
+      </span>
+    </div>
+  );
+}
+

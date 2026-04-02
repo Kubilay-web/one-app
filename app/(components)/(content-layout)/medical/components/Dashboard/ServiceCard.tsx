@@ -1,7 +1,5 @@
 "use client";
 
-
-
 import { deleteService } from "../../actions/services";
 
 import { Service } from "@prisma/client";
@@ -23,8 +21,6 @@ import {
   AlertDialogTrigger,
 } from "../../components/ui/alert-dialog";
 
-
-
 export default function ServiceCard({ service }: { service: Service }) {
   async function handleDelete(id: string) {
     await deleteService(id);
@@ -40,7 +36,8 @@ export default function ServiceCard({ service }: { service: Service }) {
           alt={service.title}
           className="w-14 h-auto"
         />
-        <h2>{service.title}</h2>
+
+        <h2 className="text-base font-medium">{service.title}</h2>
       </div>
       <div className="flex">
         <Link

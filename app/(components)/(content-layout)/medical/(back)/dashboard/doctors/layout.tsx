@@ -122,6 +122,9 @@ export default async function PatientLayout({
 
   const {user}=await validateRequest();
 
+
+  
+
   // if (user?.rolemedical !== "ADMIN") {
   //   return <NotAuthorized />;
   // }

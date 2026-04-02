@@ -3,12 +3,12 @@ import React from "react";
 import NewButton from "./NewButton";
 type HomeDisplayCardProps = {
   count: number;
-  newAppointmentLink: string;
+  // newAppointmentLink: string;
   title: string;
 };
 export default function HomeDisplayCard({
   count,
-  newAppointmentLink,
+  // newAppointmentLink,
   title,
 }: HomeDisplayCardProps) {
   return (
@@ -21,7 +21,7 @@ export default function HomeDisplayCard({
             You have {count} {title} today.
           </p>
         </div>
-        <NewButton title={`New ${title}`} href={newAppointmentLink} />
+        {/* <NewButton title={`New ${title}`} href={newAppointmentLink} /> */}
       </div>
     </div>
   );

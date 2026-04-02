@@ -27,6 +27,15 @@ export default async function Layout({ children }: { children: ReactNode }) {
     // </div>
 
 
+    // <div className="flex w-full flex-row justify-center">
+    //   {/* <Sidebar session={user} /> */}
+    //   <div className="flex w-full flex-col">
+    //     {/* <NavBar session={user} /> */}
+    //     <div className="flex w-full flex-col">{children}</div>
+    //   </div>
+    //     <Toaster position="top center"/>
+    // </div>
+
     <div className="flex w-full flex-row justify-center">
       {/* <Sidebar session={user} /> */}
       <div className="flex w-full flex-col">

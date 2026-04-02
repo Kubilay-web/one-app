@@ -20,6 +20,8 @@ import dynamic from "next/dynamic";
 
 import { createInboxMessage } from "../../actions/inbox";
 import { useSession } from "@/app/SessionProvider";
+
+
 const QuillEditor = dynamic(
   () => import("../../components/FormInputs/QuillEditor"),
   {
@@ -95,7 +97,7 @@ export default function InboxForm({
         </div>
       </div>
       <form className=" py-4 px-4  mx-auto " onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-4 grid-cols-2">
+        <div>
           <FormSelectInput
             label="Recipients"
             options={users}

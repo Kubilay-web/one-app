@@ -118,6 +118,12 @@
 
 
 
+
+
+
+
+
+
 import DoctorDetails from "../../../components/DoctorDetails";
 import { getDoctorBySlug, getDoctorProfile } from "../../../actions/users";
 import { getAppointmentByPatientId } from "../../../actions/appointments";
@@ -127,6 +133,8 @@ import { Check, RefreshCcw } from "lucide-react";
 import Image from "next/image";
 import { validateRequest } from "@/app/auth";
 
+
+
 export default async function Page({
   params,
 }: {
@@ -134,13 +142,12 @@ export default async function Page({
 }) {
   const { user } = await validateRequest();
 
-  // ✅ Doctor'ı slug ile çek
   const doctor = await getDoctorBySlug(params.slug);
 
   if (!doctor) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <h2 className="text-3xl font-semibold">
+      <div className="min-h-screen flex items-center justify-center px-4 text-center">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold">
           No Doctor Details Found
         </h2>
       </div>
@@ -152,19 +159,24 @@ export default async function Page({
   const status = doctorProfile?.status ?? "PENDING";
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-800 py-8 min-h-screen">
-      <div className="bg-white dark:bg-slate-950 max-w-4xl border mx-auto shadow-md rounded-md">
-        <div className="py-8 px-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center space-x-5">
-                <h2 className="uppercase font-bold text-2xl tracking-widest">
+    <div className="bg-slate-50 dark:bg-slate-800 py-6 sm:py-8 min-h-screen px-3 sm:px-6">
+      <div className="bg-white dark:bg-slate-950 max-w-4xl mx-auto border shadow-md rounded-md">
+        <div className="py-6 sm:py-8 px-4 sm:px-6">
+          
+          {/* TOP SECTION */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            
+            {/* LEFT SIDE */}
+            <div className="text-center md:text-left">
+              
+              <div className="flex flex-col md:flex-row md:items-center md:space-x-5 gap-3">
+                <h2 className="uppercase font-bold text-xl sm:text-2xl tracking-widest">
                   {doctor.name}
                 </h2>
 
                 <button
                   className={cn(
-                    "py-2 px-3 rounded-md text-xs flex items-center space-x-2",
+                    "py-2 px-3 rounded-md text-xs flex items-center justify-center md:justify-start",
                     status === "APPROVED"
                       ? "bg-green-500 text-white"
                       : "bg-orange-400 text-white"
@@ -182,7 +194,7 @@ export default async function Page({
                 </button>
               </div>
 
-              <div className="py-3">
+              <div className="py-3 text-sm sm:text-base text-gray-600 dark:text-gray-300">
                 <p>{doctor.doctorProfile?.operationMode}</p>
                 <p>
                   {doctor.doctorProfile?.state},{" "}
@@ -192,21 +204,27 @@ export default async function Page({
               </div>
             </div>
 
-            <Image
-              src="/onemedical/doc-profile.jpeg"
-              width={243}
-              height={207}
-              alt="Doctor"
-              className="w-36 h-36 rounded-full object-cover"
-            />
+            {/* RIGHT SIDE IMAGE */}
+            <div className="flex justify-center md:justify-end">
+              <Image
+                src="/onemedical/doc-profile.jpeg"
+                width={243}
+                height={207}
+                alt="Doctor"
+                className="w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full object-cover"
+              />
+            </div>
           </div>
         </div>
 
-        <DoctorDetails
-          appointment={appointment as Appointment | null}
-          doctor={doctor}
-          doctorProfile={doctorProfile}
-        />
+        {/* DETAILS */}
+        <div className="px-4 sm:px-6 pb-6">
+          <DoctorDetails
+            appointment={appointment as Appointment | null}
+            doctor={doctor}
+            doctorProfile={doctorProfile}
+          />
+        </div>
       </div>
     </div>
   );

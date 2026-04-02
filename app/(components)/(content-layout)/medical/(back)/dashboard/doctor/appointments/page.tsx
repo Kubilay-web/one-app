@@ -7,6 +7,8 @@ import NotAuthorized from "../../../../components/NotAuthorized";
 import React from "react";
 
 export default async function page() {
+
+
   const { user } = await validateRequest();
 
 //  if (user?.rolemedical !== "DOCTOR") {
@@ -14,19 +16,23 @@ export default async function page() {
 //  }
 
   const appointments = (await getDoctorAppointments(user?.id)).data || [];
+
+  
   return (
     <div>
       <div className="py-2 border-b border-gray-200 flex items-center justify-end px-4">
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <NewButton
             title="New Appointment"
             href="/medical/dashboard/doctor/appointments/new"
           />
-        </div>
+        </div> */}
       </div>
       <HomeDisplayCard
         title="Appointment"
-        newAppointmentLink="/medical/dashboard/doctor/appointments/new"
+        // newAppointmentLink="/medical/dashboard/doctor/appointments/new"
+
+        // newAppointmentLink="#"
         count={appointments.length}
       />
     </div>

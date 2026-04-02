@@ -17,9 +17,11 @@ export default async function page() {
   const {user}=await validateRequest();
 
 
-  if (user?.rolemedical !== "DOCTOR") {
-    return <NotAuthorized />;
-  }
+  // if (user?.rolemedical !== "DOCTOR") {
+  //   return <NotAuthorized />;
+  // }
+
+
   const slug = generateSlug(user?.username ?? "");
   const appointments = (await getDoctorAppointments(user?.id)).data || [];
 
@@ -45,13 +47,13 @@ export default async function page() {
   return (
     <div>
       <div className="py-2  border-b border-gray-200 flex items-center justify-end px-4">
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <NewButton title="New Patient" href={`/medical/doctors/${slug}`} />
-        </div>
+        </div> */}
       </div>
       <HomeDisplayCard
         title="Patient"
-        newAppointmentLink={`/medical/doctors/${slug}`}
+        // newAppointmentLink={`/medical/doctors/${slug}`}
         count={patients.length}
       />
     </div>

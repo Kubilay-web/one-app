@@ -25,18 +25,21 @@ export default async function page() {
 
   
   const doctors = (await getDoctors()) || [];
+  
+  
+  
   // console.log(patients);
-  //doctors/doctor-asuman-jb
+
   return (
     <div>
       <div className="py-2  border-b border-gray-200 flex items-center px-4">
         <div className="flex items-center gap-4">
-          <NewButton title="New Doctor" href={`#`} />
+          {/* <NewButton title="New Doctor" href={`#`} /> */}
         </div>
       </div>
       <HomeDisplayCard
         title="Doctors"
-        newAppointmentLink={`#`}
+        // newAppointmentLink={`#`}
         count={doctors.length}
       />
     </div>
