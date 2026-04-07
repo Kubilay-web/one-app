@@ -165,7 +165,7 @@ export default function BrandForm({ editingId, initialData }: ClientFormProps) {
         </div>
       </div>
       <FormFooter
-        href="/oneproject/dashsboard/brand-settings"
+        href="#"
         editingId={editingId}
         loading={loading}
         title="Brand Settings"

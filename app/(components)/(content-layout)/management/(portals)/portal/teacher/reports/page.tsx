@@ -28,7 +28,7 @@ export default async function page() {
   );
 
   return (
-    <div className="p-8">
+    <div className="p-2">
       <ReportCardsListing
         exams={exams || []}
         terms={terms}
