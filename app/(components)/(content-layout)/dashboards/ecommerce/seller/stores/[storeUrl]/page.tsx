@@ -484,7 +484,7 @@ const SellerStorePage = () => {
                   
                   <div className="flex items-center gap-4">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                      {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} /> */}
                       <input
                         type="text"
                         placeholder="Search products..."
@@ -497,7 +497,7 @@ const SellerStorePage = () => {
                     <select
                       value={selectedTimeRange}
                       onChange={(e) => setSelectedTimeRange(e.target.value)}
-                      className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-none"
                     >
                       <option value="7days">Last 7 Days</option>
                       <option value="30days">Last 30 Days</option>

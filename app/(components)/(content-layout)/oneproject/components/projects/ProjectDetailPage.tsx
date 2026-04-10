@@ -19,13 +19,16 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog";
 import parse from "html-react-parser";
-import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../components/ui/avatar";
 import { Badge } from "../../components/ui/badge";
 
 // import emptyFolder from "../../public/empty-folder.png";
 
-
-import emptyFolder from "../../../../../../public/oneproject/empty-folder.png"
+import emptyFolder from "../../../../../../public/oneproject/empty-folder.png";
 import {
   CalendarDays,
   ChevronLeft,
@@ -67,7 +70,12 @@ import BudgetProgressBar from "./BudgetProgressBar";
 import CommentForm from "../Forms/CommentForm";
 import { getInitials } from "../../lib/generateInitials";
 import ModuleForm from "../Forms/ModuleForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs";
 import { deleteModule } from "../../actions/modules";
 import toast from "react-hot-toast";
 import InviteClient from "../DataTableColumns/InviteClient";
@@ -84,7 +92,7 @@ type SafeUser = {
   id: string;
   email: string;
   username: string;
-  avatarUrl:string;
+  avatarUrl: string;
 };
 
 export default function ProjectDetailPage({
@@ -96,8 +104,6 @@ export default function ProjectDetailPage({
 }) {
   const { defaultCurrency, exchangeRate } = useCurrencySettings();
 
-
-
   // const formatCurrency = (amount: number) => {
   //   const convertedAmount = amount * exchangeRate;
   //   return new Intl.NumberFormat("en-US", {
@@ -108,20 +114,19 @@ export default function ProjectDetailPage({
   //   }).format(convertedAmount);
   // };
 
-  const session= useSession();
-  const user=session.user;
+  const session = useSession();
+  const user = session.user;
 
-
-  let role=user?.roleproject
-
+  let role = user?.roleproject;
 
   if (user?.id !== projectData.user.id) {
     role = "MEMBER";
   }
 
-  
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [notes, setNotes] = useState("");
+
   const paidAmount = projectData.payments.reduce((acc, item) => {
     return acc + item.amount;
   }, 0);
@@ -166,11 +171,14 @@ export default function ProjectDetailPage({
     }
 
     // Set up an interval to update days difference every day
-    const intervalId = setInterval(() => {
-      if (projectData.endDate) {
-        setDaysDifference(calculateDaysDifference(projectData.endDate));
-      }
-    }, 24 * 60 * 60 * 1000); // Update every 24 hours
+    const intervalId = setInterval(
+      () => {
+        if (projectData.endDate) {
+          setDaysDifference(calculateDaysDifference(projectData.endDate));
+        }
+      },
+      24 * 60 * 60 * 1000,
+    ); // Update every 24 hours
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
@@ -186,6 +194,33 @@ export default function ProjectDetailPage({
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    if (projectData.notes) {
+      try {
+        const parsed = JSON.parse(projectData.notes);
+        setNotes(parsed?.content || "");
+      } catch {
+        setNotes(projectData.notes); // fallback
+      }
+    }
+  }, [projectData.notes]);
+
+  async function handleSaveNotes() {
+    try {
+      // örnek payload
+      const payload = JSON.stringify({ content: notes });
+
+      // burada kendi API/action çağrını yap
+      console.log(payload);
+
+      toast.success("Notes saved");
+      setIsEditingNotes(false);
+    } catch (err) {
+      toast.error("Failed to save notes");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
       {/* Back to Projects Button */}
@@ -245,19 +280,28 @@ export default function ProjectDetailPage({
           </Card>
 
           <Tabs defaultValue="modules" className="w-full">
-            <TabsList>
-              <TabsTrigger value="modules">Project Modules</TabsTrigger>
-              <TabsTrigger value="notes">Notes</TabsTrigger>
-              <TabsTrigger value="comments">Comments</TabsTrigger>
-              <TabsTrigger value="payments">Payments</TabsTrigger>
+            <TabsList className="flex flex-wrap gap-2">
+              <TabsTrigger value="modules" className="flex-1 sm:flex-none">
+                Project Modules
+              </TabsTrigger>
+              <TabsTrigger value="notes" className="flex-1 sm:flex-none">
+                Notes
+              </TabsTrigger>
+              <TabsTrigger value="comments" className="flex-1 sm:flex-none">
+                Comments
+              </TabsTrigger>
+              <TabsTrigger value="payments" className="flex-1 sm:flex-none">
+                Payments
+              </TabsTrigger>
             </TabsList>
+
+            {/* ================= MODULES ================= */}
             <TabsContent value="modules">
-              {/* Modules */}
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    <div className="flex items-center justify-between">
-                      <h2>Project Modules</h2>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3  mt-5">
+                      <h2 className="text-lg sm:text-xl">Project Modules</h2>
                       <ModuleForm
                         projectId={projectData.id}
                         userId={user?.id}
@@ -266,19 +310,21 @@ export default function ProjectDetailPage({
                     </div>
                   </CardTitle>
                 </CardHeader>
+
                 <CardContent>
-                  <ScrollArea className="h-[300px] pr-4">
+                  <ScrollArea className="h-[260px] sm:h-[300px] pr-2 sm:pr-4">
                     {projectData.modules.length > 0 ? (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                         {projectData.modules.map((module) => (
                           <Card
                             key={module.id}
                             className="hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-indigo-50 to-cyan-50 group"
                           >
-                            <CardHeader className="p-4">
-                              <CardTitle className="text-sm flex items-center justify-between space-x-2">
-                                {module.name}
-                                <div className="flex items-center gap-3">
+                            <CardHeader className="p-3 sm:p-4">
+                              <CardTitle className="text-xs sm:text-sm flex items-center justify-between gap-2">
+                                <span className="truncate">{module.name}</span>
+
+                                <div className="flex items-center gap-2 sm:gap-3">
                                   <ModuleForm
                                     editingId={module.id}
                                     initialContent={module.name}
@@ -286,25 +332,28 @@ export default function ProjectDetailPage({
                                     userId={user?.id}
                                     userName={user?.username}
                                   />
+
                                   <AlertDialog>
                                     <AlertDialogTrigger asChild>
-                                      <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <button className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                                         <Trash className="w-4 h-4 text-red-500" />
                                       </button>
                                     </AlertDialogTrigger>
+
                                     <AlertDialogContent>
                                       <AlertDialogHeader>
                                         <AlertDialogTitle>
-                                          <div className="flex items-center text-red-600">
-                                            <TriangleAlert className="w-5 h-5 mr-2 font-bold" />
+                                          <div className="flex items-center text-red-600 text-sm sm:text-base">
+                                            <TriangleAlert className="w-5 h-5 mr-2" />
                                             Are you absolutely sure?
                                           </div>
                                         </AlertDialogTitle>
-                                        <AlertDialogDescription>
+                                        <AlertDialogDescription className="text-xs sm:text-sm">
                                           This action cannot be undone. This
                                           will permanently delete your Module.
                                         </AlertDialogDescription>
                                       </AlertDialogHeader>
+
                                       <AlertDialogFooter>
                                         <AlertDialogCancel>
                                           Cancel
@@ -321,11 +370,12 @@ export default function ProjectDetailPage({
                                       </AlertDialogFooter>
                                     </AlertDialogContent>
                                   </AlertDialog>
+
                                   <Link
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                                     href={`/oneproject/project/modules/${module.id}?pId=${module.projectId}&&slug=${projectData.slug}`}
                                   >
-                                    <Eye className="w-4 h-4 " />
+                                    <Eye className="w-4 h-4" />
                                   </Link>
                                 </div>
                               </CardTitle>
@@ -334,13 +384,12 @@ export default function ProjectDetailPage({
                         ))}
                       </div>
                     ) : (
-                      <div className="h-full flex items-center justify-center">
+                      <div className="h-full flex items-center justify-center text-center">
                         <div className="space-y-4">
-                          {/* <h2>No Modules Yet</h2> */}
                           <Image
                             src={emptyFolder}
                             alt="No Modules"
-                            className="w-36 h-auto"
+                            className="w-24 sm:w-36 h-auto mx-auto"
                           />
                           <ModuleForm
                             projectId={projectData.id}
@@ -354,58 +403,56 @@ export default function ProjectDetailPage({
                 </CardContent>
               </Card>
             </TabsContent>
+
+            {/* ================= NOTES ================= */}
             <TabsContent value="notes">
-              {/* Notes */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Notes (Use / to start writing)</CardTitle>
-                  <Button
-                    onClick={() => setIsEditingNotes(!isEditingNotes)}
-                    variant="ghost"
-                    size="icon"
-                  >
-                    {isEditingNotes ? (
-                      <X className="h-4 w-4" />
-                    ) : (
-                      <Edit className="h-4 w-4" />
+                  <CardTitle className="text-base sm:text-lg">Notes</CardTitle>
+
+                  <div className="flex gap-2 mt-5">
+                    {isEditingNotes && (
+                      <Button size="sm" onClick={handleSaveNotes}>
+                        Save
+                      </Button>
                     )}
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose lg:prose-xl">
-                    {isEditingNotes ? (
-                      <NotesForm
-                        isEditable={true}
-                        editingId={projectData.id}
-                        initialNotes={JSON.parse(
-                          projectData.notes ??
-                            '{"welcome": "Welcome to the Project, Please Add Here project Notes"}'
-                        )}
-                      />
-                    ) : (
-                      <>
-                        {projectData.notes ? (
-                          <NotesForm
-                            isEditable={false}
-                            editingId={projectData.id}
-                            initialNotes={JSON.parse(projectData.notes)}
-                          />
-                        ) : (
-                          <p>No notes available.</p>
-                        )}
-                      </>
-                    )}
+
+                    <Button
+                      onClick={() => setIsEditingNotes(!isEditingNotes)}
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 sm:h-9 sm:w-9"
+                    >
+                      {isEditingNotes ? <X /> : <Edit />}
+                    </Button>
                   </div>
+                </CardHeader>
+
+                <CardContent className="p-3 sm:p-6">
+                  {isEditingNotes ? (
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Write your notes here..."
+                      className="w-full min-h-[180px] sm:min-h-[300px] p-3 border rounded-md outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base"
+                    />
+                  ) : (
+                    <div className="whitespace-pre-wrap text-sm sm:text-base text-gray-700">
+                      {notes || "No notes available."}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
+
+            {/* ================= COMMENTS ================= */}
             <TabsContent value="comments">
-              {/* Comments */}
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    <div className="flex  items-center justify-between">
-                      <h2>Comments</h2>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3  mt-5">
+                      <h2 className="text-lg">Comments</h2>
+
                       <CommentForm
                         projectId={projectData.id}
                         userId={user?.id}
@@ -415,21 +462,26 @@ export default function ProjectDetailPage({
                     </div>
                   </CardTitle>
                 </CardHeader>
+
                 {projectData.comments.length > 0 ? (
                   <CardContent className="space-y-4">
                     {projectData.comments.map((comment) => (
                       <div
                         key={comment.id}
-                        className="flex items-start space-x-4 group cursor-pointer"
+                        className="flex items-start space-x-3 sm:space-x-4"
                       >
                         <Avatar>
                           <AvatarFallback>
                             {getInitials(comment.userName)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <div className="flex ">
-                            <p className="font-semibold">{comment.userName}</p>
+
+                        <div className="w-full">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                            <p className="font-semibold text-sm sm:text-base">
+                              {comment.userName}
+                            </p>
+
                             <CommentForm
                               projectId={projectData.id}
                               userId={user?.id}
@@ -439,14 +491,17 @@ export default function ProjectDetailPage({
                               initialContent={comment.content}
                             />
                           </div>
-                          <div className="prose ">{parse(comment.content)}</div>
+
+                          <div className="prose text-sm sm:text-base break-words">
+                            {parse(comment.content)}
+                          </div>
                         </div>
                       </div>
                     ))}
                   </CardContent>
                 ) : (
                   <CardFooter>
-                    <div className="flex flex-col gap-3 justify-center">
+                    <div className="flex flex-col gap-3 text-center w-full">
                       <p>No Comments Yet</p>
                       <CommentForm
                         projectId={projectData.id}
@@ -459,120 +514,122 @@ export default function ProjectDetailPage({
                 )}
               </Card>
             </TabsContent>
+
+            {/* ================= PAYMENTS ================= */}
             <TabsContent value="payments">
-              {/* Invoices and Payments */}
-              <div className="max-w-2xl mx-auto">
+              <div className="max-w-full sm:max-w-2xl mx-auto mt-5">
                 <Card>
                   <CardHeader>
                     <CardTitle>
-                      <div className="flex items-center justify-between">
-                        <h2>Invoices & Payments</h2>
-                        {role === "USER" ||
-                          (role === "ADMIN" && (
-                            <PaymentForm
-                              projectId={projectData.id}
-                              userId={projectData.userId}
-                              clientId={projectData.clientId}
-                              remainingAmount={remainingAmount}
-                            />
-                          ))}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <h2 className="text-lg">Invoices & Payments</h2>
+
+                        {(role === "USER" || role === "ADMIN") && (
+                          <PaymentForm
+                            projectId={projectData.id}
+                            userId={projectData.userId}
+                            clientId={projectData.clientId}
+                            remainingAmount={remainingAmount}
+                          />
+                        )}
                       </div>
                     </CardTitle>
                   </CardHeader>
+
                   <CardContent>
                     <Tabs defaultValue="payments">
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="payments">Payments</TabsTrigger>
                         <TabsTrigger value="invoices">Invoices</TabsTrigger>
                       </TabsList>
-                      <TabsContent value="invoices" className="space-y-4">
+
+                      <TabsContent
+                        value="invoices"
+                        className="space-y-3 sm:space-y-4"
+                      >
                         {projectData.payments.length > 0 ? (
-                          <>
-                            {projectData.payments.map((invoice) => (
-                              <div
-                                key={invoice.id}
-                                className="flex justify-between items-center"
-                              >
-                                <div>
-                                  <p className="font-semibold">
-                                    #{invoice.invoiceNumber}
-                                  </p>
-                                  <p className="text-sm text-gray-500">
-                                    Due:{" "}
-                                    {new Date(
-                                      invoice.date
-                                    ).toLocaleDateString()}
-                                  </p>
-                                </div>
-                                <div className="">
-                                  <h2>{invoice.title}</h2>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <Badge variant="secondary">
-                                    {/* ${invoice.amount.toLocaleString()} */}
-                                    {formatCurrency(
-                                      invoice.amount,
-                                      defaultCurrency,
-                                      exchangeRate
-                                    )}
-                                  </Badge>
-                                  <Button variant="outline" size="sm" asChild>
-                                    <Link
-                                      href={`/oneproject/project/invoice/${invoice.id}?project=${projectData.slug}`}
-                                    >
-                                      <Eye className="h-4 w-4 mr-2" />
-                                      View
-                                    </Link>
-                                  </Button>
-                                </div>
+                          projectData.payments.map((invoice) => (
+                            <div
+                              key={invoice.id}
+                              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                            >
+                              <div>
+                                <p className="font-semibold text-sm">
+                                  #{invoice.invoiceNumber}
+                                </p>
+                                <p className="text-xs sm:text-sm text-gray-500">
+                                  Due:{" "}
+                                  {new Date(invoice.date).toLocaleDateString()}
+                                </p>
                               </div>
-                            ))}
-                          </>
+
+                              <h2 className="text-sm">{invoice.title}</h2>
+
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary">
+                                  {formatCurrency(
+                                    invoice.amount,
+                                    defaultCurrency,
+                                    exchangeRate,
+                                  )}
+                                </Badge>
+
+                                <Button variant="outline" size="sm" asChild>
+                                  <Link
+                                    href={`/oneproject/project/invoice/${invoice.id}?project=${projectData.slug}`}
+                                  >
+                                    <Eye className="h-4 w-4 mr-1" />
+                                    View
+                                  </Link>
+                                </Button>
+                              </div>
+                            </div>
+                          ))
                         ) : (
-                          <div className="text-sm">
-                            <p>No Invoices Yet</p>
-                          </div>
+                          <p className="text-sm">No Invoices Yet</p>
                         )}
                       </TabsContent>
-                      <TabsContent value="payments" className="space-y-4">
+
+                      <TabsContent
+                        value="payments"
+                        className="space-y-3 sm:space-y-4"
+                      >
                         {projectData.payments.length > 0 ? (
-                          <>
-                            {projectData.payments.map((payment) => (
-                              <div
-                                key={payment.id}
-                                className="flex justify-between items-center"
-                              >
-                                <span>
-                                  {new Date(payment.date).toLocaleDateString()}
-                                </span>
-                                <p>{payment.title}</p>
-                                <div className="flex items-center">
-                                  <Badge
-                                    variant="outline"
-                                    className="bg-green-100"
-                                  >
-                                    {formatCurrency(
-                                      payment.amount,
-                                      defaultCurrency,
-                                      exchangeRate
-                                    )}
-                                  </Badge>
-                                  {/* Delete Button */}
-                                  <PaymentDeleteButton paymentId={payment.id} />
-                                </div>
+                          projectData.payments.map((payment) => (
+                            <div
+                              key={payment.id}
+                              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                            >
+                              <span className="text-sm">
+                                {new Date(payment.date).toLocaleDateString()}
+                              </span>
+
+                              <p className="text-sm">{payment.title}</p>
+
+                              <div className="flex items-center gap-2">
+                                <Badge
+                                  variant="outline"
+                                  className="bg-green-100"
+                                >
+                                  {formatCurrency(
+                                    payment.amount,
+                                    defaultCurrency,
+                                    exchangeRate,
+                                  )}
+                                </Badge>
+
+                                <PaymentDeleteButton paymentId={payment.id} />
                               </div>
-                            ))}
-                          </>
+                            </div>
+                          ))
                         ) : (
-                          <div className="text-sm">
-                            <p>No Payments Yet</p>
-                          </div>
+                          <p className="text-sm">No Payments Yet</p>
                         )}
                       </TabsContent>
                     </Tabs>
                   </CardContent>
+
                   <CardFooter>
-                    {/* <Progress value={70} className="w-full" /> */}
                     {projectData.budget && (
                       <BudgetProgressBar
                         budget={projectData.budget}
@@ -603,7 +660,7 @@ export default function ProjectDetailPage({
                     {formatCurrency(
                       projectData?.budget ?? 0,
                       defaultCurrency,
-                      exchangeRate
+                      exchangeRate,
                     )}
                   </span>
                 </div>
@@ -667,7 +724,7 @@ export default function ProjectDetailPage({
                       <div className="">
                         <InviteMembers
                           allMembers={existingUsers.filter(
-                            (member) => member.id !== user?.id
+                            (member) => member.id !== user?.id,
                           )}
                           projectData={projectData}
                         />
@@ -710,7 +767,9 @@ export default function ProjectDetailPage({
                         />
                       ) : (
                         <AvatarFallback>
-                          {projectData.user.username.substring(0, 2).toUpperCase()}
+                          {projectData.user.username
+                            .substring(0, 2)
+                            .toUpperCase()}
                         </AvatarFallback>
                       )}
                     </Avatar>
@@ -724,7 +783,9 @@ export default function ProjectDetailPage({
                     </div>
                   ) : (
                     <div>
-                      <p className="font-semibold">{projectData.user?.username}</p>
+                      <p className="font-semibold">
+                        {projectData.user?.username}
+                      </p>
                       <p className="text-sm text-gray-500">
                         {projectData.user.companyName || "Individual Client"}
                       </p>

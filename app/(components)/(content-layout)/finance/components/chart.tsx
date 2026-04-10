@@ -55,7 +55,7 @@ export const Chart = ({ data = [] }: Props) => {
           <SelectTrigger className="lg:w-auto h-9 rounded-md px-3">
             <SelectValue placeholder="Chart type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white text-black">
             <SelectItem value="area">
               <div className="flex items-center">
                 <AreaChart className="size-4 mr-2 shrink-0" />

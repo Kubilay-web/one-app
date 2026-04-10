@@ -79,11 +79,11 @@ export const columns: ColumnDef<Project>[] = [
     header: "Deadline(days)",
     cell: ({ row }) => <ProjectDeadline row={row} />,
   },
-  {
-    accessorKey: "startDate",
-    header: "Project Start Date",
-    cell: ({ row }) => <DateColumn row={row} accessorKey="startDate" />,
-  },
+  // {
+  //   accessorKey: "startDate",
+  //   header: "Project Start Date",
+  //   cell: ({ row }) => <DateColumn row={row} accessorKey="startDate" />,
+  // },
   {
     accessorKey: "isPublic",
     header: "Portfolio",

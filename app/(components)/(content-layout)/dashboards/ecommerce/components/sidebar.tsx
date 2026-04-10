@@ -20,7 +20,7 @@ const Sidebar: FC<SidebarProps> = async ({ isAdmin, stores }) => {
   const { user } = await validateRequest();
 
   return (
-    <div className="flex h-screen w-[300px] flex-col border-r p-4">
+    <div className="flex h-auto w-[300px] flex-col border-r p-4 gap-4">
       <Logo width="100%" height="180px" />
       <span className="mt-3"></span>
       {user && <UserInfo user={user} />}

@@ -38,7 +38,7 @@ export const AmountInput = ({
       <TooltipProvider>
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>
-            <button 
+            {/* <button 
               type="button" 
               onClick={onReverseValue}
               className={cn(
@@ -50,9 +50,9 @@ export const AmountInput = ({
               {!parsedValue && <Info className="size-3 text-white" />}
               {isIncome && <PlusCircle className="size-3 text-white" />}
               {isExpense && <MinusCircle className="size-3 text-white" />}
-            </button>
+            </button> */}
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent className="bg-white text-black">
             Use [+] for income and [-] for expenses
           </TooltipContent>
         </Tooltip>

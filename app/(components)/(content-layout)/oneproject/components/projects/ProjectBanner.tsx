@@ -153,7 +153,9 @@ export default function ProjectBanner({
             </div>
           </form>
         ) : (
-          <h1 className="text-4xl font-bold text-white">{name}</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold text-white">
+  {name}
+</h1>
         )}
 
         {!editing && isPrivate && (

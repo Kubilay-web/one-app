@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-
 import { generateSlug } from "../../lib/generateSlug";
 import toast from "react-hot-toast";
 import { Project, User } from "@prisma/client";
@@ -18,7 +17,7 @@ import ImageInput from "../FormInputs/ImageInput";
 import FormFooter from "./FormFooter";
 
 import FormSelectInput from "../FormInputs/FormSelectInput";
-import { createProject,updateProjectById } from "../../actions/projects";
+import { createProject, updateProjectById } from "../../actions/projects";
 import { convertDateToIso } from "../../lib/convertDateToIso";
 import { convertIsoToDateString } from "../../lib/convertISODateToNorma";
 import useCurrencySettings from "../../hooks/useCurrencySettings";
@@ -105,7 +104,7 @@ export default function ProjectForm({
           reset();
           setImageUrl("/oneproject/thumbnail.png");
 
-          router.push("/dashboard/projects");
+          router.push("/oneproject/dashboard/projects");
         } else {
           toast.error("Something went wrong");
         }
@@ -119,7 +118,7 @@ export default function ProjectForm({
   }
   const { localCurrency, exchangeRate } = useCurrencySettings();
   return (
-    <form className="" onSubmit={handleSubmit(saveProject)}>
+    <form className="w-full" onSubmit={handleSubmit(saveProject)}>
       <FormHeader
         href="/projects"
         parent=""
@@ -127,16 +126,21 @@ export default function ProjectForm({
         editingId={editingId}
         loading={loading}
       />
-      <p className="text-sm text-red-500 font-semibold text-center py-1 mt-2">
+
+      <p className="text-sm text-red-500 font-semibold text-center py-2 mt-2">
         Note : 1 USD = {exchangeRate} {localCurrency}
       </p>
-      <div className="grid grid-cols-12 gap-6 py-8">
-        <div className="lg:col-span-8 col-span-full space-y-3">
+
+      {/* MAIN GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 py-6 sm:py-8">
+        {/* LEFT SIDE */}
+        <div className="lg:col-span-8 space-y-4">
           <Card>
-            <CardContent>
-              <div className="grid gap-6">
-                <div className="grid grid-cols-12  gap-4 pt-4">
-                  <div className="lg:col-span-8 col-span-full">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid gap-4 sm:gap-6">
+                {/* Name + Budget */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  <div className="md:col-span-8">
                     <TextInput
                       register={register}
                       errors={errors}
@@ -144,7 +148,7 @@ export default function ProjectForm({
                       name="name"
                     />
                   </div>
-                  <div className="col-span-full lg:col-span-4">
+                  <div className="md:col-span-4">
                     <TextInput
                       register={register}
                       errors={errors}
@@ -156,7 +160,8 @@ export default function ProjectForm({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Dates */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <TextInput
                     register={register}
                     errors={errors}
@@ -172,23 +177,9 @@ export default function ProjectForm({
                     name="endDate"
                   />
                 </div>
-                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <TextInput
-                    register={register}
-                    errors={errors}
-                    label="Project Budget"
-                    name="budget"
-                    placeholder="8000"
-                  />
-                  <TextInput
-                    register={register}
-                    errors={errors}
-                    label="Project Deadline"
-                    name="deadline"
-                    placeholder="eg 8 weeks"
-                  />
-                </div> */}
-                <div className="grid gap-3">
+
+                {/* Client */}
+                <div>
                   <FormSelectInput
                     label="Clients"
                     options={clients}
@@ -198,7 +189,9 @@ export default function ProjectForm({
                     href="/oneproject/dashboard/clients/new"
                   />
                 </div>
-                <div className="grid gap-3">
+
+                {/* Description */}
+                <div>
                   <TextArea
                     register={register}
                     errors={errors}
@@ -210,17 +203,19 @@ export default function ProjectForm({
             </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-4 col-span-full ">
-          <div className="grid auto-rows-max items-start gap-4 ">
+
+        {/* RIGHT SIDE (IMAGE) */}
+        <div className="lg:col-span-4">
+          <div className="grid gap-4">
             <ImageInput
               title="Project Thumbnail"
               imageUrl={imageUrl}
               setImageUrl={setImageUrl}
-              // endpoint="projectThumbnail"
             />
           </div>
         </div>
       </div>
+
       <FormFooter
         href="/projects"
         editingId={editingId}

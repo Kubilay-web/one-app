@@ -62,7 +62,7 @@ const CommonFilter = ({
           </div>
         </SelectTrigger>
 
-        <SelectContent>
+        <SelectContent className="bg-white text-black">
           <SelectGroup>
             {filters.map((item) => (
               <SelectItem key={item.value} value={item.value}>

@@ -1914,13 +1914,6 @@
 
 // export default LandingPage;
 
-
-
-
-
-
-
-
 import db from "@/app/lib/db";
 import { getProducts } from "@/app/queries/product";
 import Image from "next/image";
@@ -2124,7 +2117,7 @@ const LandingPage = async () => {
   // Kategoriler Bölümü
   const renderCategoriesSection = (section: any, images: any[]) => {
     const categoryImages = images.filter(
-      (img) => img.type === "thumbnail" || img.type === "icon"
+      (img) => img.type === "thumbnail" || img.type === "icon",
     );
 
     console.log(`${section.type} Section - Images:`, images.length);
@@ -2280,7 +2273,7 @@ const LandingPage = async () => {
   // Today Deals Bölümü
   const renderDealsSection = (section: any, images: any[]) => {
     const dealImages = images.filter(
-      (img) => img.type === "main" || img.type === "gallery"
+      (img) => img.type === "main" || img.type === "gallery",
     );
 
     console.log(`${section.type} Section - Images:`, images.length);
@@ -2332,7 +2325,7 @@ const LandingPage = async () => {
         <div className="container">
           <div className="grid grid-cols-12 sm:gap-x-6">
             <div className="xl:col-span-12 col-span-12">
-              <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4">
+              <div className="flex justify-between items-baseline flex-wrap gap-2 mb-4 p-2">
                 <div className="heading-section text-start">
                   <div className="heading-title">
                     {section.title || "Today Deals"}
@@ -2342,13 +2335,10 @@ const LandingPage = async () => {
                   </div>
                 </div>
                 <div className="min-w-fit">
-                  <Link
-                    href={section.data?.moreDealsLink || "/deals"}
-                    className="text-primary font-semibold"
-                  >
+                  <div className="text-primary font-semibold">
                     <u>{section.data?.moreDealsText || "More Deals"}</u>
                     <i className="fe fe-arrow-right ms-1"></i>
-                  </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2544,7 +2534,7 @@ const LandingPage = async () => {
         }
       >
         <div className="container">
-          <div className="grid grid-cols-12 gap-x-6 justify-center pt-5 pb-5">
+          <div className="grid grid-cols-12 gap-x-6 justify-center pr-4 pl-4 pt-5 pb-5 mb-7">
             <div className="lg:col-span-1 col-span-12 text-center"></div>
             <div className="lg:col-span-10 col-span-12 text-center">
               <div className="mb-4">
@@ -2558,16 +2548,17 @@ const LandingPage = async () => {
             </div>
             <div className="lg:col-span-1 col-span-12 text-center"></div>
             <div className="lg:col-span-4 col-span-12 text-center"></div>
-            <div className="lg:col-span-4 col-span-12 !text-center">
+
+            <div className="lg:col-span-4 col-span-12 !text-center pb-3">
               <form
                 action="/api/subscribe"
                 method="POST"
-                className="custom-form-group"
+                className="flex justify-center items-stretch w-full max-w-md mx-auto"
               >
                 <input
                   type="email"
                   name="email"
-                  className="form-control !rounded-full shadow-sm !py-3 bg-white/90"
+                  className="form-control rounded-l-full flex-1 border border-gray-300 px-4"
                   placeholder={
                     section.data?.placeholder || "Enter Your Email.."
                   }
@@ -2575,13 +2566,14 @@ const LandingPage = async () => {
                   required
                 />
                 <button
-                  className="ti-btn ti-btn-danger !bg-danger !border-0 custom-form-btn !rounded-full"
                   type="submit"
+                  className="ti-btn ti-btn-danger !bg-danger !border-0 rounded-r-full px-6 flex items-center justify-center"
                 >
                   {section.data?.buttonText || "Subscribe"}
                 </button>
               </form>
             </div>
+
             <div className="lg:col-span-4 col-span-12 text-center"></div>
           </div>
         </div>
@@ -2704,13 +2696,13 @@ const LandingPage = async () => {
   // CTA Bölümü
   const renderCTASection = (section: any, images: any[]) => {
     const ctaImage = images.find(
-      (img) => img.type === "main" || img.type === "side"
+      (img) => img.type === "main" || img.type === "side",
     );
 
     console.log(`${section.type} Section - Images:`, images.length);
 
     return (
-      <section className="bg-banner-2 text-white">
+      <section className="bg-banner-2 text-white mb-8">
         <div className="container">
           <div className="grid grid-cols-12 gap-x-6 items-center">
             {ctaImage && (
@@ -2733,7 +2725,7 @@ const LandingPage = async () => {
                   : "xl:col-span-12 col-span-12"
               }
             >
-              <div className="my-6">
+              <div className="my-6 p-3">
                 <h2 className="font-semibold mb-4 text-white">
                   {section.title || "Start Your Online Business Here"}
                   <Link
@@ -2765,7 +2757,7 @@ const LandingPage = async () => {
   // Testimonials Bölümü (Yeni eklenen)
   const renderTestimonialsSection = (section: any, images: any[]) => {
     const testimonialImages = images.filter(
-      (img) => img.type === "thumbnail" || img.type === "icon"
+      (img) => img.type === "thumbnail" || img.type === "icon",
     );
 
     console.log(`${section.type} Section - Images:`, images.length);
@@ -2867,7 +2859,7 @@ const LandingPage = async () => {
   // Brands Bölümü (Yeni eklenen)
   const renderBrandsSection = (section: any, images: any[]) => {
     const brandImages = images.filter(
-      (img) => img.type === "thumbnail" || img.type === "icon"
+      (img) => img.type === "thumbnail" || img.type === "icon",
     );
 
     console.log(`${section.type} Section - Images:`, images.length);
@@ -3007,7 +2999,7 @@ const LandingPage = async () => {
   const renderLimitedDealsSection = (section: any, allProducts: any[]) => {
     console.log(
       `${section.type} Section - Products:`,
-      allProducts?.length || 0
+      allProducts?.length || 0,
     );
     return renderProductsSection(section, allProducts);
   };
@@ -3015,7 +3007,7 @@ const LandingPage = async () => {
   const renderSpecialProductsSection = (section: any, allProducts: any[]) => {
     console.log(
       `${section.type} Section - Products:`,
-      allProducts?.length || 0
+      allProducts?.length || 0,
     );
     return renderProductsSection(section, allProducts);
   };
@@ -3023,7 +3015,7 @@ const LandingPage = async () => {
   const renderNewestArrivalsSection = (section: any, allProducts: any[]) => {
     console.log(
       `${section.type} Section - Products:`,
-      allProducts?.length || 0
+      allProducts?.length || 0,
     );
     return renderProductsSection(section, allProducts);
   };
@@ -3031,7 +3023,7 @@ const LandingPage = async () => {
   const renderAllProductsSection = (section: any, allProducts: any[]) => {
     console.log(
       `${section.type} Section - Products:`,
-      allProducts?.length || 0
+      allProducts?.length || 0,
     );
     return renderProductsSection(section, allProducts);
   };
@@ -3045,7 +3037,7 @@ const LandingPage = async () => {
       type: s.type,
       title: s.title,
       imageCount: s.images.length,
-    }))
+    })),
   );
 
   return (

@@ -98,7 +98,7 @@ function Filters({ searchParams }: { searchParams: SearchParams }) {
           )}
         </div>
 
-        <div className="flex gap-5">
+        <div className="flex gap-2">
           <Button onClick={handleClearAll}>Clear</Button>
           <Button className="bg-primary" type="primary" onClick={() => setShowFiltersModal(true)}>
             Show Filters

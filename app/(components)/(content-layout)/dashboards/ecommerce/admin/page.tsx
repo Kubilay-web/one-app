@@ -1,84 +1,92 @@
-"use client"
+"use client";
 
-import React, { Fragment, useEffect, useState, useCallback } from 'react'
-import dynamic from 'next/dynamic'
-import { useRouter } from 'next/navigation'
+import React, { Fragment, useEffect, useState, useCallback } from "react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import SpkEcommerceCard from "@/shared/@spk-reusable-components/dashboards/spk-ecommerce-card";
 import Spktables from "@/shared/@spk-reusable-components/tables/spk-tables";
 import Pageheader from "@/shared/layouts-components/page-header/pageheader";
 import Seo from "@/shared/layouts-components/seo/seo";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from '@/app/SessionProvider';
+import { useSession } from "@/app/SessionProvider";
 
 // Dynamically import charts to reduce initial bundle size
 const Spkapexcharts = dynamic(
-  () => import("@/shared/@spk-reusable-components/spk-packages/apexcharts-component"),
-  { ssr: false, loading: () => <div className="h-[300px] animate-pulse bg-gray-200 dark:bg-gray-700 rounded"></div> }
+  () =>
+    import(
+      "@/shared/@spk-reusable-components/spk-packages/apexcharts-component"
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[300px] animate-pulse bg-gray-200 dark:bg-gray-700 rounded"></div>
+    ),
+  },
 );
 
 // Types
 interface AdminStats {
-  totalUsers: number
-  totalOrders: number
-  totalRevenue: number
-  pendingOrders: number
-  activeProducts: number
-  todayRevenue: number
-  conversionRate: number
-  averageOrderValue: number
+  totalUsers: number;
+  totalOrders: number;
+  totalRevenue: number;
+  pendingOrders: number;
+  activeProducts: number;
+  todayRevenue: number;
+  conversionRate: number;
+  averageOrderValue: number;
 }
 
 interface RecentOrder {
-  id: string
-  orderId: string
-  customerName: string
-  customerEmail: string
-  customerSrc: string
-  quantity: number
-  price: string
-  status: string
-  statusColor: string
-  date: string
+  id: string;
+  orderId: string;
+  customerName: string;
+  customerEmail: string;
+  customerSrc: string;
+  quantity: number;
+  price: string;
+  status: string;
+  statusColor: string;
+  date: string;
 }
 
 interface TopProduct {
-  id: number
-  name: string
-  src: string
-  price: string
-  category: string
-  categoryColor: string
-  sales: number
+  id: number;
+  name: string;
+  src: string;
+  price: string;
+  category: string;
+  categoryColor: string;
+  sales: number;
 }
 
 interface User {
-  id: string
-  username: string
-  email: string
-  role: string
-  createdAt: string
-  lastLogin: string
-  status: 'active' | 'inactive' | 'banned'
-  avatarUrl?: string
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  lastLogin: string;
+  status: "active" | "inactive" | "banned";
+  avatarUrl?: string;
 }
 
 interface Transaction {
-  id: string
-  method: string
-  date: string
-  amount: string
-  status: string
-  statusClass: string
-  bgClass: string
-  iconColor: string
-  icon: string
+  id: string;
+  method: string;
+  date: string;
+  amount: string;
+  status: string;
+  statusClass: string;
+  bgClass: string;
+  iconColor: string;
+  icon: string;
 }
 
 const AdminPage = () => {
-  const router = useRouter()
-  const { user } = useSession()
-  const [loading, setLoading] = useState(true)
+  const router = useRouter();
+  const { user } = useSession();
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 0,
     totalOrders: 0,
@@ -87,68 +95,68 @@ const AdminPage = () => {
     activeProducts: 0,
     todayRevenue: 0,
     conversionRate: 0,
-    averageOrderValue: 0
-  })
-  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([])
-  const [topProducts, setTopProducts] = useState<TopProduct[]>([])
-  const [users, setUsers] = useState<User[]>([])
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+    averageOrderValue: 0,
+  });
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [salesData, setSalesData] = useState({
     series: [44, 55, 41, 17, 15],
     options: {
       chart: {
-        type: 'donut',
+        type: "donut",
       },
-      labels: ['Completed', 'Pending', 'Cancelled', 'Returned', 'Processing'],
-      colors: ['#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#3b82f6'],
+      labels: ["Completed", "Pending", "Cancelled", "Returned", "Processing"],
+      colors: ["#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#3b82f6"],
       legend: {
-        position: 'bottom'
-      }
-    }
-  })
+        position: "bottom",
+      },
+    },
+  });
 
   // Check admin access
   useEffect(() => {
-  
-    fetchAdminData()
-  }, [user, router])
+    fetchAdminData();
+  }, [user, router]);
 
   // Fetch all admin data efficiently
   const fetchAdminData = useCallback(async () => {
     try {
-      setLoading(true)
-      
+      setLoading(true);
+
       // Use Promise.all to fetch all data in parallel
-      const [statsRes, ordersRes, productsRes, usersRes, transactionsRes] = await Promise.all([
-        fetch('/api/oneshop/admin/stats'),
-        fetch('/api/oneshop/admin/orders'),
-        fetch('/api/oneshop/admin/products'),
-        fetch('/api/oneshop/admin/users'),
-        fetch('/api/oneshop/admin/transactions')
-      ])
+      const [statsRes, ordersRes, productsRes, usersRes, transactionsRes] =
+        await Promise.all([
+          fetch("/api/oneshop/admin/stats"),
+          fetch("/api/oneshop/admin/orders"),
+          fetch("/api/oneshop/admin/products"),
+          fetch("/api/oneshop/admin/users"),
+          fetch("/api/oneshop/admin/transactions"),
+        ]);
 
       // Parse all responses
-      const [statsData, ordersData, productsData, usersData, transactionsData] = await Promise.all([
-        statsRes.json(),
-        ordersRes.json(),
-        productsRes.json(),
-        usersRes.json(),
-        transactionsRes.json()
-      ])
+      const [statsData, ordersData, productsData, usersData, transactionsData] =
+        await Promise.all([
+          statsRes.json(),
+          ordersRes.json(),
+          productsRes.json(),
+          usersRes.json(),
+          transactionsRes.json(),
+        ]);
 
       // Update state
-      setStats(statsData)
-      setRecentOrders(ordersData.orders || [])
-      setTopProducts(productsData.products || [])
-      setUsers(usersData.users || [])
-      setTransactions(transactionsData.transactions || [])
-      
+      setStats(statsData);
+      setRecentOrders(ordersData.orders || []);
+      setTopProducts(productsData.products || []);
+      setUsers(usersData.users || []);
+      setTransactions(transactionsData.transactions || []);
     } catch (error) {
-      console.error('Error fetching admin data:', error)
+      console.error("Error fetching admin data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   // Stats card data
   const cardData = [
@@ -160,7 +168,7 @@ const AdminPage = () => {
       icon: "ri-group-line",
       bgClass: "bg-primary/10",
       textClass: "text-primary",
-      trendIcon: "ri-arrow-up-s-line"
+      trendIcon: "ri-arrow-up-s-line",
     },
     {
       title: "Total Orders",
@@ -170,7 +178,7 @@ const AdminPage = () => {
       icon: "ri-shopping-bag-line",
       bgClass: "bg-secondary/10",
       textClass: "text-secondary",
-      trendIcon: "ri-arrow-up-s-line"
+      trendIcon: "ri-arrow-up-s-line",
     },
     {
       title: "Total Revenue",
@@ -180,7 +188,7 @@ const AdminPage = () => {
       icon: "ri-money-dollar-circle-line",
       bgClass: "bg-success/10",
       textClass: "text-success",
-      trendIcon: "ri-arrow-up-s-line"
+      trendIcon: "ri-arrow-up-s-line",
     },
     {
       title: "Pending Orders",
@@ -190,9 +198,9 @@ const AdminPage = () => {
       icon: "ri-time-line",
       bgClass: "bg-warning/10",
       textClass: "text-warning",
-      trendIcon: "ri-arrow-down-s-line"
-    }
-  ]
+      trendIcon: "ri-arrow-down-s-line",
+    },
+  ];
 
   // Additional stats cards
   const additionalCards = [
@@ -204,7 +212,7 @@ const AdminPage = () => {
       icon: "ri-shopping-cart-line",
       bgClass: "bg-info/10",
       textClass: "text-info",
-      trendIcon: "ri-arrow-up-s-line"
+      trendIcon: "ri-arrow-up-s-line",
     },
     {
       title: "Today's Revenue",
@@ -214,7 +222,7 @@ const AdminPage = () => {
       icon: "ri-calendar-line",
       bgClass: "bg-purple-500/10",
       textClass: "text-purple-500",
-      trendIcon: "ri-arrow-up-s-line"
+      trendIcon: "ri-arrow-up-s-line",
     },
     {
       title: "Conversion Rate",
@@ -224,7 +232,7 @@ const AdminPage = () => {
       icon: "ri-line-chart-line",
       bgClass: "bg-pink-500/10",
       textClass: "text-pink-500",
-      trendIcon: "ri-arrow-up-s-line"
+      trendIcon: "ri-arrow-up-s-line",
     },
     {
       title: "Avg Order Value",
@@ -234,58 +242,67 @@ const AdminPage = () => {
       icon: "ri-money-dollar-box-line",
       bgClass: "bg-indigo-500/10",
       textClass: "text-indigo-500",
-      trendIcon: "ri-arrow-up-s-line"
-    }
-  ]
+      trendIcon: "ri-arrow-up-s-line",
+    },
+  ];
 
   // Handle user actions
-  const handleUserAction = async (userId: string, action: 'activate' | 'deactivate' | 'delete') => {
+  const handleUserAction = async (
+    userId: string,
+    action: "activate" | "deactivate" | "delete",
+  ) => {
     try {
       const response = await fetch(`/api/oneshop/admin/users/${userId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
-      })
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
 
       if (response.ok) {
         // Refresh users list
-        fetchAdminData()
+        fetchAdminData();
       }
     } catch (error) {
-      console.error('Error performing user action:', error)
+      console.error("Error performing user action:", error);
     }
-  }
+  };
 
   // Handle order action
-  const handleOrderAction = async (orderId: string, action: 'approve' | 'cancel' | 'ship') => {
+  const handleOrderAction = async (
+    orderId: string,
+    action: "approve" | "cancel" | "ship",
+  ) => {
     try {
       const response = await fetch(`/api/oneshop/admin/orders/${orderId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
-      })
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
 
       if (response.ok) {
         // Refresh orders list
-        fetchAdminData()
+        fetchAdminData();
       }
     } catch (error) {
-      console.error('Error performing order action:', error)
+      console.error("Error performing order action:", error);
     }
-  }
+  };
 
   if (loading) {
     return (
       <div className="container-fluid">
         <div className="grid grid-cols-12 gap-x-6">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="xxl:col-span-3 lg:col-span-6 md:col-span-6 col-span-12">
+            <div
+              key={i}
+              className="xxl:col-span-3 lg:col-span-6 md:col-span-6 col-span-12"
+            >
               <div className="box h-32 animate-pulse bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -293,17 +310,20 @@ const AdminPage = () => {
       <div className="container-fluid">
         {/* <!-- Page Header --> */}
         <Seo title="Admin Dashboard" />
-        <Pageheader 
-          Heading="Admin Dashboard" 
-          breadcrumbs={['Dashboards', 'Admin']} 
-          currentpage="Admin Dashboard" 
+        <Pageheader
+          Heading="Admin Dashboard"
+          breadcrumbs={["Dashboards", "Admin"]}
+          currentpage="Admin Dashboard"
         />
         {/* <!-- Page Header Close --> */}
 
         {/* <!-- Start:: Stats Overview --> */}
         <div className="grid grid-cols-12 gap-x-6 mb-6">
           {cardData.map((card, index) => (
-            <div key={index} className="xxl:col-span-3 lg:col-span-6 md:col-span-6 col-span-12">
+            <div
+              key={index}
+              className="xxl:col-span-3 lg:col-span-6 md:col-span-6 col-span-12"
+            >
               <SpkEcommerceCard card={card} />
             </div>
           ))}
@@ -313,7 +333,10 @@ const AdminPage = () => {
         {/* <!-- Start:: Additional Stats --> */}
         <div className="grid grid-cols-12 gap-x-6 mb-6">
           {additionalCards.map((card, index) => (
-            <div key={index} className="xxl:col-span-3 lg:col-span-6 md:col-span-6 col-span-12">
+            <div
+              key={index}
+              className="xxl:col-span-3 lg:col-span-6 md:col-span-6 col-span-12"
+            >
               <SpkEcommerceCard card={card} />
             </div>
           ))}
@@ -335,32 +358,50 @@ const AdminPage = () => {
               </div>
               <div className="box-body">
                 <div id="revenue-chart">
-                  <Spkapexcharts 
+                  <Spkapexcharts
                     chartOptions={{
                       chart: {
-                        type: 'area',
+                        type: "area",
                         height: 350,
-                        toolbar: { show: false }
+                        toolbar: { show: false },
                       },
                       dataLabels: { enabled: false },
-                      stroke: { curve: 'smooth' },
+                      stroke: { curve: "smooth" },
                       xaxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                        categories: [
+                          "Jan",
+                          "Feb",
+                          "Mar",
+                          "Apr",
+                          "May",
+                          "Jun",
+                          "Jul",
+                          "Aug",
+                          "Sep",
+                          "Oct",
+                          "Nov",
+                          "Dec",
+                        ],
                       },
-                      colors: ['#3b82f6'],
+                      colors: ["#3b82f6"],
                       fill: {
-                        type: 'gradient',
+                        type: "gradient",
                         gradient: {
                           shadeIntensity: 1,
                           opacityFrom: 0.7,
                           opacityTo: 0.2,
-                        }
-                      }
+                        },
+                      },
                     }}
-                    chartSeries={[{
-                      name: 'Revenue',
-                      data: [30000, 41000, 35000, 51000, 49000, 62000, 69000, 91000, 82000, 72000, 89000, 94000]
-                    }]}
+                    chartSeries={[
+                      {
+                        name: "Revenue",
+                        data: [
+                          30000, 41000, 35000, 51000, 49000, 62000, 69000,
+                          91000, 82000, 72000, 89000, 94000,
+                        ],
+                      },
+                    ]}
                     type="area"
                     width="100%"
                     height={350}
@@ -369,8 +410,8 @@ const AdminPage = () => {
               </div>
             </div>
           </div>
-          
-          <div className="xl:col-span-4 col-span-12">
+
+          {/* <div className="xl:col-span-4 col-span-12">
             <div className="box">
               <div className="box-header">
                 <div className="box-title">Sales Distribution</div>
@@ -387,6 +428,27 @@ const AdminPage = () => {
                 </div>
               </div>
             </div>
+          </div> */}
+
+          <div className="xl:col-span-4 col-span-12">
+            <div className="box">
+              <div className="box-header">
+                <div className="box-title">Sales Distribution</div>
+              </div>
+              <div className="box-body">
+                <div id="sales-distribution" className="w-full overflow-x-auto">
+                  <div className="min-w-[280px]">
+                    <Spkapexcharts
+                      chartOptions={salesData.options}
+                      chartSeries={salesData.series}
+                      type="donut"
+                      width="100%"
+                      height={350}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         {/* <!-- End:: Revenue Chart --> */}
@@ -397,8 +459,8 @@ const AdminPage = () => {
             <div className="box overflow-hidden">
               <div className="box-header justify-between">
                 <div className="box-title">Recent Orders</div>
-                <Link 
-                  scroll={false} 
+                <Link
+                  scroll={false}
                   href="/admin/orders"
                   className="text-[0.75rem] text-textmuted dark:text-textmuted/50 hover:text-primary"
                 >
@@ -407,17 +469,17 @@ const AdminPage = () => {
               </div>
               <div className="box-body !p-0">
                 <div className="table-responsive">
-                  <Spktables 
-                    tableClass="ti-custom-table ti-custom-table-head w-full" 
-                    Customcheckclass="!text-center" 
+                  <Spktables
+                    tableClass="ti-custom-table ti-custom-table-head w-full"
+                    Customcheckclass="!text-center"
                     showCheckbox={true}
                     header={[
-                      { title: 'Order ID', headerClassname: 'text-left' }, 
-                      { title: 'Customer', }, 
-                      { title: 'Amount', }, 
-                      { title: 'Status', }, 
-                      { title: 'Date', }, 
-                      { title: 'Actions', headerClassname: 'text-center' }
+                      { title: "Order ID", headerClassname: "text-left" },
+                      { title: "Customer" },
+                      { title: "Amount" },
+                      { title: "Status" },
+                      { title: "Date" },
+                      { title: "Actions", headerClassname: "text-center" },
                     ]}
                   >
                     {recentOrders.map((order) => (
@@ -429,50 +491,66 @@ const AdminPage = () => {
                           <div className="flex items-center">
                             <div className="me-2 leading-none">
                               <span className="avatar avatar-sm">
-                                <Image 
-                                  width={32} 
+                                <Image
+                                  width={32}
                                   height={32}
-                                  src={order.customerSrc} 
+                                  src={order.customerSrc}
                                   alt={order.customerName}
                                   className="rounded-full"
                                 />
                               </span>
                             </div>
                             <div>
-                              <div className="text-[0.875rem] font-medium">{order.customerName}</div>
-                              <div className="text-textmuted dark:text-textmuted/50 text-[0.75rem]">{order.customerEmail}</div>
+                              <div className="text-[0.875rem] font-medium">
+                                {order.customerName}
+                              </div>
+                              <div className="text-textmuted dark:text-textmuted/50 text-[0.75rem]">
+                                {order.customerEmail}
+                              </div>
                             </div>
                           </div>
                         </td>
                         <td>
-                          <span className="font-semibold text-[0.875rem]">{order.price}</span>
+                          <span className="font-semibold text-[0.875rem]">
+                            {order.price}
+                          </span>
                         </td>
                         <td>
-                          <span className={`badge bg-${order.statusColor}/[0.15] text-${order.statusColor}`}>
+                          <span
+                            className={`badge bg-${order.statusColor}/[0.15] text-${order.statusColor}`}
+                          >
                             {order.status}
                           </span>
                         </td>
                         <td>
-                          <span className="text-textmuted dark:text-textmuted/50">{order.date}</span>
+                          <span className="text-textmuted dark:text-textmuted/50">
+                            {order.date}
+                          </span>
                         </td>
                         <td className="text-center">
                           <div className="flex justify-center gap-1">
                             <button
-                              onClick={() => handleOrderAction(order.id, 'approve')}
+                              onClick={() =>
+                                handleOrderAction(order.id, "approve")
+                              }
                               className="ti-btn ti-btn-icon ti-btn-sm ti-btn-soft-success btn-wave"
                               title="Approve"
                             >
                               <i className="ri-check-line"></i>
                             </button>
                             <button
-                              onClick={() => handleOrderAction(order.id, 'ship')}
+                              onClick={() =>
+                                handleOrderAction(order.id, "ship")
+                              }
                               className="ti-btn ti-btn-icon ti-btn-sm ti-btn-soft-info btn-wave"
                               title="Mark as Shipped"
                             >
                               <i className="ri-truck-line"></i>
                             </button>
                             <button
-                              onClick={() => handleOrderAction(order.id, 'cancel')}
+                              onClick={() =>
+                                handleOrderAction(order.id, "cancel")
+                              }
                               className="ti-btn ti-btn-icon ti-btn-sm ti-btn-soft-danger btn-wave"
                               title="Cancel"
                             >
@@ -493,8 +571,8 @@ const AdminPage = () => {
             <div className="box overflow-hidden">
               <div className="box-header justify-between">
                 <div className="box-title">Recent Transactions</div>
-                <Link 
-                  scroll={false} 
+                <Link
+                  scroll={false}
                   href="/admin/transactions"
                   className="text-[0.75rem] text-textmuted dark:text-textmuted/50 hover:text-primary"
                 >
@@ -508,18 +586,32 @@ const AdminPage = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-start gap-3">
                           <div>
-                            <span className={`avatar avatar-sm ${transaction.bgClass} ${transaction.iconColor}`}>
-                              <i className={`${transaction.icon} text-[1.125rem]`}></i>
+                            <span
+                              className={`avatar avatar-sm ${transaction.bgClass} ${transaction.iconColor}`}
+                            >
+                              <i
+                                className={`${transaction.icon} text-[1.125rem]`}
+                              ></i>
                             </span>
                           </div>
                           <div>
-                            <div className="block font-medium mb-1">{transaction.method}</div>
-                            <div className="block text-[0.6875rem] text-textmuted dark:text-textmuted/50">{transaction.date}</div>
+                            <div className="block font-medium mb-1">
+                              {transaction.method}
+                            </div>
+                            <div className="block text-[0.6875rem] text-textmuted dark:text-textmuted/50">
+                              {transaction.date}
+                            </div>
                           </div>
                         </div>
                         <div className="text-end">
-                          <div className="block font-medium">{transaction.amount}</div>
-                          <div className={`text-[0.75rem] ${transaction.statusClass}`}>{transaction.status}</div>
+                          <div className="block font-medium">
+                            {transaction.amount}
+                          </div>
+                          <div
+                            className={`text-[0.75rem] ${transaction.statusClass}`}
+                          >
+                            {transaction.status}
+                          </div>
                         </div>
                       </div>
                     </li>
@@ -538,8 +630,8 @@ const AdminPage = () => {
             <div className="box overflow-hidden">
               <div className="box-header justify-between">
                 <div className="box-title">Top Selling Products</div>
-                <Link 
-                  scroll={false} 
+                <Link
+                  scroll={false}
                   href="/admin/products"
                   className="text-[0.75rem] text-textmuted dark:text-textmuted/50 hover:text-primary"
                 >
@@ -548,45 +640,56 @@ const AdminPage = () => {
               </div>
               <div className="box-body !p-0">
                 <div className="table-responsive">
-                  <Spktables 
-                    tableClass="ti-custom-table ti-custom-table-head w-full" 
+                  <Spktables
+                    tableClass="ti-custom-table ti-custom-table-head w-full"
                     header={[
-                      { title: 'Product', }, 
-                      { title: 'Price', }, 
-                      { title: 'Category', }, 
-                      { title: 'Sales', }
+                      { title: "Product" },
+                      { title: "Price" },
+                      { title: "Category" },
+                      { title: "Sales" },
                     ]}
                   >
                     {topProducts.map((product) => (
                       <tr key={product.id}>
                         <td>
-                          <Link scroll={false} href={`/admin/products/${product.id}`}>
+                          <Link
+                            scroll={false}
+                            href={`/admin/products/${product.id}`}
+                          >
                             <div className="flex items-center">
                               <div className="me-2 leading-none">
                                 <span className="avatar avatar-sm">
-                                  <Image 
-                                    width={32} 
+                                  <Image
+                                    width={32}
                                     height={32}
-                                    src={product.src} 
+                                    src={product.src}
                                     alt={product.name}
                                     className="rounded"
                                   />
                                 </span>
                               </div>
-                              <div className="text-[0.875rem]">{product.name}</div>
+                              <div className="text-[0.875rem]">
+                                {product.name}
+                              </div>
                             </div>
                           </Link>
                         </td>
                         <td>
-                          <span className="font-medium text-[0.875rem]">{product.price}</span>
+                          <span className="font-medium text-[0.875rem]">
+                            {product.price}
+                          </span>
                         </td>
                         <td>
-                          <span className={`badge bg-${product.categoryColor}/[0.15] text-${product.categoryColor}`}>
+                          <span
+                            className={`badge bg-${product.categoryColor}/[0.15] text-${product.categoryColor}`}
+                          >
                             {product.category}
                           </span>
                         </td>
                         <td>
-                          <span className="font-medium text-[0.875rem]">{product.sales.toLocaleString()}</span>
+                          <span className="font-medium text-[0.875rem]">
+                            {product.sales.toLocaleString()}
+                          </span>
                         </td>
                       </tr>
                     ))}
@@ -601,8 +704,8 @@ const AdminPage = () => {
             <div className="box overflow-hidden">
               <div className="box-header justify-between">
                 <div className="box-title">User Management</div>
-                <Link 
-                  scroll={false} 
+                <Link
+                  scroll={false}
                   href="/admin/users"
                   className="text-[0.75rem] text-textmuted dark:text-textmuted/50 hover:text-primary"
                 >
@@ -611,14 +714,14 @@ const AdminPage = () => {
               </div>
               <div className="box-body !p-0">
                 <div className="table-responsive">
-                  <Spktables 
-                    tableClass="ti-custom-table ti-custom-table-head w-full" 
+                  <Spktables
+                    tableClass="ti-custom-table ti-custom-table-head w-full"
                     header={[
-                      { title: 'User', }, 
-                      { title: 'Email', }, 
-                      { title: 'Role', }, 
-                      { title: 'Status', }, 
-                      { title: 'Actions', headerClassname: 'text-center' }
+                      { title: "User" },
+                      { title: "Email" },
+                      { title: "Role" },
+                      { title: "Status" },
+                      { title: "Actions", headerClassname: "text-center" },
                     ]}
                   >
                     {users.map((user) => (
@@ -627,19 +730,25 @@ const AdminPage = () => {
                           <div className="flex items-center">
                             <div className="me-2 leading-none">
                               <span className="avatar avatar-sm">
-                                <Image 
-                                  width={32} 
+                                <Image
+                                  width={32}
                                   height={32}
-                                  src={user.avatarUrl || '/images/avatar-placeholder.png'} 
+                                  src={
+                                    user.avatarUrl ||
+                                    "/images/avatar-placeholder.png"
+                                  }
                                   alt={user.username}
                                   className="rounded-full"
                                 />
                               </span>
                             </div>
                             <div>
-                              <div className="text-[0.875rem] font-medium">{user.username}</div>
+                              <div className="text-[0.875rem] font-medium">
+                                {user.username}
+                              </div>
                               <div className="text-textmuted dark:text-textmuted/50 text-[0.75rem]">
-                                Joined {new Date(user.createdAt).toLocaleDateString()}
+                                Joined{" "}
+                                {new Date(user.createdAt).toLocaleDateString()}
                               </div>
                             </div>
                           </div>
@@ -648,47 +757,58 @@ const AdminPage = () => {
                           <span className="text-[0.875rem]">{user.email}</span>
                         </td>
                         <td>
-                          <span className={`badge ${
-                            user.role === 'ADMIN' 
-                              ? 'bg-purple-500/[0.15] text-purple-500' 
-                              : user.role === 'SELLER'
-                              ? 'bg-blue-500/[0.15] text-blue-500'
-                              : 'bg-gray-500/[0.15] text-gray-500'
-                          }`}>
+                          <span
+                            className={`badge ${
+                              user.role === "ADMIN"
+                                ? "bg-purple-500/[0.15] text-purple-500"
+                                : user.role === "SELLER"
+                                  ? "bg-blue-500/[0.15] text-blue-500"
+                                  : "bg-gray-500/[0.15] text-gray-500"
+                            }`}
+                          >
                             {user.role}
                           </span>
                         </td>
                         <td>
-                          <span className={`badge ${
-                            user.status === 'active'
-                              ? 'bg-green-500/[0.15] text-green-500'
-                              : user.status === 'inactive'
-                              ? 'bg-yellow-500/[0.15] text-yellow-500'
-                              : 'bg-red-500/[0.15] text-red-500'
-                          }`}>
-                            {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                          <span
+                            className={`badge ${
+                              user.status === "active"
+                                ? "bg-green-500/[0.15] text-green-500"
+                                : user.status === "inactive"
+                                  ? "bg-yellow-500/[0.15] text-yellow-500"
+                                  : "bg-red-500/[0.15] text-red-500"
+                            }`}
+                          >
+                            {user.status.charAt(0).toUpperCase() +
+                              user.status.slice(1)}
                           </span>
                         </td>
                         <td className="text-center">
                           <div className="flex justify-center gap-1">
                             <button
-                              onClick={() => handleUserAction(user.id, 'activate')}
+                              onClick={() =>
+                                handleUserAction(user.id, "activate")
+                              }
                               className="ti-btn ti-btn-icon ti-btn-sm ti-btn-soft-success btn-wave"
                               title="Activate"
-                              disabled={user.status === 'active'}
+                              disabled={user.status === "active"}
                             >
                               <i className="ri-user-follow-line"></i>
                             </button>
                             <button
-                              onClick={() => handleUserAction(user.id, 'deactivate')}
+                              onClick={() =>
+                                handleUserAction(user.id, "deactivate")
+                              }
                               className="ti-btn ti-btn-icon ti-btn-sm ti-btn-soft-warning btn-wave"
                               title="Deactivate"
-                              disabled={user.status === 'inactive'}
+                              disabled={user.status === "inactive"}
                             >
                               <i className="ri-user-unfollow-line"></i>
                             </button>
                             <button
-                              onClick={() => handleUserAction(user.id, 'delete')}
+                              onClick={() =>
+                                handleUserAction(user.id, "delete")
+                              }
                               className="ti-btn ti-btn-icon ti-btn-sm ti-btn-soft-danger btn-wave"
                               title="Delete"
                             >
@@ -716,16 +836,23 @@ const AdminPage = () => {
               </div>
               <div className="box-body">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary mb-2">94.2%</div>
-                  <div className="text-textmuted dark:text-textmuted/50 mb-4">Overall Performance</div>
+                  <div className="text-3xl font-bold text-primary mb-2">
+                    94.2%
+                  </div>
+                  <div className="text-textmuted dark:text-textmuted/50 mb-4">
+                    Overall Performance
+                  </div>
                   <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: '94.2%' }}></div>
+                    <div
+                      className="h-full bg-primary rounded-full"
+                      style={{ width: "94.2%" }}
+                    ></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div className="xl:col-span-3 lg:col-span-6 col-span-12">
             <div className="box">
               <div className="box-header">
@@ -733,18 +860,25 @@ const AdminPage = () => {
               </div>
               <div className="box-body">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-success mb-2">4.8</div>
-                  <div className="text-textmuted dark:text-textmuted/50 mb-4">Average Rating</div>
+                  <div className="text-3xl font-bold text-success mb-2">
+                    4.8
+                  </div>
+                  <div className="text-textmuted dark:text-textmuted/50 mb-4">
+                    Average Rating
+                  </div>
                   <div className="flex justify-center">
                     {[...Array(5)].map((_, i) => (
-                      <i key={i} className="ri-star-fill text-yellow-500 text-xl"></i>
+                      <i
+                        key={i}
+                        className="ri-star-fill text-yellow-500 text-xl"
+                      ></i>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div className="xl:col-span-3 lg:col-span-6 col-span-12">
             <div className="box">
               <div className="box-header">
@@ -753,7 +887,9 @@ const AdminPage = () => {
               <div className="box-body">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-info mb-2">1,247</div>
-                  <div className="text-textmuted dark:text-textmuted/50 mb-4">Current Active Users</div>
+                  <div className="text-textmuted dark:text-textmuted/50 mb-4">
+                    Current Active Users
+                  </div>
                   <div className="text-sm">
                     <span className="text-success">↑ 12%</span> from last hour
                   </div>
@@ -761,7 +897,7 @@ const AdminPage = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="xl:col-span-3 lg:col-span-6 col-span-12">
             <div className="box">
               <div className="box-header">
@@ -769,8 +905,12 @@ const AdminPage = () => {
               </div>
               <div className="box-body">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-500 mb-2">100%</div>
-                  <div className="text-textmuted dark:text-textmuted/50 mb-4">Uptime</div>
+                  <div className="text-3xl font-bold text-green-500 mb-2">
+                    100%
+                  </div>
+                  <div className="text-textmuted dark:text-textmuted/50 mb-4">
+                    Uptime
+                  </div>
                   <div className="flex items-center justify-center">
                     <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
                     <span className="text-sm">All systems operational</span>
@@ -783,7 +923,7 @@ const AdminPage = () => {
         {/* <!-- End:: Quick Stats --> */}
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default AdminPage
+export default AdminPage;

@@ -13,7 +13,7 @@ async function AdminUsersPage() {
       username: true,
       avatarUrl:true,
       email: true,
-      roleestate: true, // roleestate alanını da seç
+      roleestate: true, 
       createdAt: true,
       updatedAt: true,
     },

@@ -6,26 +6,38 @@ import db from "@/app/lib/db";
 import { validateRequest } from "@/app/auth";
 
 async function SubscriptionsPage() {
-  const {user}=await validateRequest();
+  const { user } = await validateRequest();
+
   const userSubscription: any = await db.subscriptionEstate.findFirst({
     where: { userId: user?.id },
     orderBy: { createdAt: "desc" },
   });
+
   return (
     <div>
       <PageTitle title="Subscriptions" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {subscriptionPlans.map((plan) => {
-          let isSelected = userSubscription?.plan?.name === plan.name;
+          // Mevcut kullanıcının planı
+          const currentPlanName = userSubscription?.plan?.name;
+
+          // Eğer kullanıcıda mevcut plan yoksa default Basic seçili olsun
+          let isCurrentPlan = currentPlanName === plan.name;
           if (!userSubscription) {
-            isSelected = plan.name === "Basic";
+            isCurrentPlan = plan.name === "Basic";
           }
+
+          // Daha düşük planlara geçişi engellemek için fiyat karşılaştırması
+          const isDisabled =
+            isCurrentPlan || (userSubscription && plan.price < userSubscription.plan.price);
+
           return (
             <div
-              className={`flex flex-col gap-5 justify-between p-5 border rounded  border-solid
-             ${isSelected ? "border-primary border-2" : "border-gray-300"}
-            `}
+              key={plan.name}
+              className={`flex flex-col gap-5 justify-between p-5 border rounded border-solid
+                ${isCurrentPlan ? "border-primary border-2" : "border-gray-300"}
+              `}
             >
               <div className="flex flex-col gap-3">
                 <h1 className="text-xl font-bold text-primary">{plan.name}</h1>
@@ -37,11 +49,14 @@ async function SubscriptionsPage() {
 
                 <div className="flex flex-col gap-1">
                   {plan.features.map((feature) => (
-                    <span className="text-gray-500 text-sm">{feature}</span>
+                    <span key={feature} className="text-gray-500 text-sm">
+                      {feature}
+                    </span>
                   ))}
                 </div>
               </div>
-              <BuySubScription plan={plan} />
+
+              <BuySubScription plan={plan} disabled={isDisabled} />
             </div>
           );
         })}

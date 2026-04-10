@@ -250,7 +250,7 @@ async function ClientHeader({ clientId }: { clientId: string }) {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2">
-          <Link
+          {/* <Link
             className={buttonVariants({
               variant: "ghost",
             })}
@@ -258,7 +258,7 @@ async function ClientHeader({ clientId }: { clientId: string }) {
           >
             <Edit className="w-4 h-4 mr-2" />
             Edit Client
-          </Link>
+          </Link> */}
 
           <Link
             className={buttonVariants()}

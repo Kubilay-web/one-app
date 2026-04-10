@@ -42,6 +42,8 @@ const QuillEditor = dynamic(
     ssr: false,
   },
 );
+
+
 export type MailProps = {
   to: string;
   subject: string;
@@ -223,7 +225,7 @@ export default function ComposeMailForm({
             className="bg-white text-black"
           />
           <QuillEditor
-            className="w-full bg-white text-black border border-gray-300"
+            className="w-full bg-white text-black border border-gray-300 p-2"
             label="Compose Mail"
             value={content}
             onChange={setContent}

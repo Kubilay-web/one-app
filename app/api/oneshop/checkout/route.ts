@@ -14,12 +14,12 @@
 //   if (!paypalClient) {
 //     const clientId = process.env.PAYPAL_CLIENT_ID!;
 //     const clientSecret = process.env.PAYPAL_SECRET!;
-    
+
 //     const isProduction = process.env.NODE_ENV === "production";
 //     const environment = isProduction
 //       ? new paypal.core.LiveEnvironment(clientId, clientSecret)
 //       : new paypal.core.SandboxEnvironment(clientId, clientSecret);
-    
+
 //     paypalClient = new paypal.core.PayPalHttpClient(environment);
 //   }
 //   return paypalClient;
@@ -106,7 +106,7 @@
 //     }
 
 //     let paymentMethodEnum: "Paypal" | "Stripe" | null = null;
-    
+
 //     if (paymentMethod === "card") {
 //       paymentMethodEnum = "Stripe";
 //     } else if (paymentMethod === "paypal") {
@@ -128,16 +128,16 @@
 //           create: cartItems.map((item: any) => ({
 //             storeId: item.storeId || "default-store",
 //             status: "Pending",
-//             shippingService: shippingMethod === "express" 
-//               ? "Express Delivery" 
+//             shippingService: shippingMethod === "express"
+//               ? "Express Delivery"
 //               : "Standard Delivery",
 //             shippingDeliveryMin: shippingMethod === "express" ? 2 : 5,
 //             shippingDeliveryMax: shippingMethod === "express" ? 3 : 7,
 //             shippingFees: shippingFees / cartItems.length,
 //             subTotal: Number(item.price) * Number(item.quantity),
 //             total: Number(item.price) * Number(item.quantity) + (shippingFees / cartItems.length),
-//             note: shippingMethod === "express" 
-//               ? "Express shipping" 
+//             note: shippingMethod === "express"
+//               ? "Express shipping"
 //               : "Standard shipping",
 //             ...(appliedCoupon && {
 //               couponId: appliedCoupon.couponId,
@@ -203,7 +203,7 @@
 //           limit: 1,
 //         });
 
-//         customer = existingCustomers.data.length > 0 
+//         customer = existingCustomers.data.length > 0
 //           ? existingCustomers.data[0]
 //           : await stripe.customers.create({
 //               email: user.email,
@@ -235,8 +235,8 @@
 //                   amount: Math.round(shippingFees * 100),
 //                   currency: "usd",
 //                 },
-//                 display_name: shippingMethod === "express" 
-//                   ? "Express Shipping" 
+//                 display_name: shippingMethod === "express"
+//                   ? "Express Shipping"
 //                   : "Standard Shipping",
 //               },
 //             }],
@@ -288,10 +288,10 @@
 //             });
 //           } catch {}
 //         }
-        
+
 //         await db.order.update({
 //           where: { id: order.id },
-//           data: { 
+//           data: {
 //             paymentStatus: "Failed", // Schema'da var
 //             orderStatus: "Cancelled",
 //           },
@@ -309,7 +309,7 @@
 //       try {
 //         const paypalClient = initializePayPal();
 //         const req = new paypal.orders.OrdersCreateRequest();
-        
+
 //         req.requestBody({
 //           intent: "CAPTURE",
 //           purchase_units: [{
@@ -343,7 +343,7 @@
 //         });
 
 //         const response = await paypalClient.execute(req);
-        
+
 //         if (response.statusCode !== 201) {
 //           throw new Error(`PayPal error: ${response.statusCode}`);
 //         }
@@ -387,10 +387,10 @@
 //             });
 //           } catch {}
 //         }
-        
+
 //         await db.order.update({
 //           where: { id: order.id },
-//           data: { 
+//           data: {
 //             paymentStatus: "Failed", // Schema'da var
 //             orderStatus: "Cancelled",
 //           },
@@ -408,7 +408,7 @@
 //       // COD/UPI için paymentStatus PENDING kalır
 //       await db.order.update({
 //         where: { id: order.id },
-//         data: { 
+//         data: {
 //           orderStatus: "Confirmed",
 //         },
 //       });
@@ -434,21 +434,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // app/api/oneshop/checkout/route.ts
 // import { NextRequest, NextResponse } from "next/server";
 // import db from "@/app/lib/db";
@@ -465,12 +450,12 @@
 //   if (!paypalClient) {
 //     const clientId = process.env.PAYPAL_CLIENT_ID!;
 //     const clientSecret = process.env.PAYPAL_SECRET!;
-    
+
 //     const isProduction = process.env.NODE_ENV === "production";
 //     const environment = isProduction
 //       ? new paypal.core.LiveEnvironment(clientId, clientSecret)
 //       : new paypal.core.SandboxEnvironment(clientId, clientSecret);
-    
+
 //     paypalClient = new paypal.core.PayPalHttpClient(environment);
 //   }
 //   return paypalClient;
@@ -558,7 +543,7 @@
 //     }
 
 //     let paymentMethodEnum: "Paypal" | "Stripe" | "COD" | "UPI" | null = null;
-    
+
 //     if (paymentMethod === "card") {
 //       paymentMethodEnum = "Stripe";
 //     } else if (paymentMethod === "paypal") {
@@ -584,16 +569,16 @@
 //           create: cartItems.map((item: any) => ({
 //             storeId: item.storeId || "default-store",
 //             status: "Pending",
-//             shippingService: shippingMethod === "express" 
-//               ? "Express Delivery" 
+//             shippingService: shippingMethod === "express"
+//               ? "Express Delivery"
 //               : "Standard Delivery",
 //             shippingDeliveryMin: shippingMethod === "express" ? 2 : 5,
 //             shippingDeliveryMax: shippingMethod === "express" ? 3 : 7,
 //             shippingFees: shippingFees / cartItems.length,
 //             subTotal: Number(item.price) * Number(item.quantity),
 //             total: Number(item.price) * Number(item.quantity) + (shippingFees / cartItems.length),
-//             note: shippingMethod === "express" 
-//               ? "Express shipping" 
+//             note: shippingMethod === "express"
+//               ? "Express shipping"
 //               : "Standard shipping",
 //             ...(appliedCoupon && {
 //               couponId: appliedCoupon.couponId,
@@ -660,7 +645,7 @@
 //           limit: 1,
 //         });
 
-//         customer = existingCustomers.data.length > 0 
+//         customer = existingCustomers.data.length > 0
 //           ? existingCustomers.data[0]
 //           : await stripe.customers.create({
 //               email: user.email,
@@ -692,8 +677,8 @@
 //                   amount: Math.round(shippingFees * 100),
 //                   currency: "usd",
 //                 },
-//                 display_name: shippingMethod === "express" 
-//                   ? "Express Shipping" 
+//                 display_name: shippingMethod === "express"
+//                   ? "Express Shipping"
 //                   : "Standard Shipping",
 //               },
 //             }],
@@ -707,8 +692,8 @@
 //               }),
 //             }],
 //           }),
-//           metadata: { 
-//             orderId: order.id, 
+//           metadata: {
+//             orderId: order.id,
 //             userId: user.id,
 //             paymentMethod: "Stripe"
 //           },
@@ -747,10 +732,10 @@
 //             });
 //           } catch {}
 //         }
-        
+
 //         await db.order.update({
 //           where: { id: order.id },
-//           data: { 
+//           data: {
 //             paymentStatus: "Failed",
 //             orderStatus: "Cancelled",
 //           },
@@ -768,7 +753,7 @@
 //       try {
 //         const paypalClient = initializePayPal();
 //         const req = new paypal.orders.OrdersCreateRequest();
-        
+
 //         req.requestBody({
 //           intent: "CAPTURE",
 //           purchase_units: [{
@@ -802,7 +787,7 @@
 //         });
 
 //         const response = await paypalClient.execute(req);
-        
+
 //         if (response.statusCode !== 201) {
 //           throw new Error(`PayPal error: ${response.statusCode}`);
 //         }
@@ -844,10 +829,10 @@
 //             });
 //           } catch {}
 //         }
-        
+
 //         await db.order.update({
 //           where: { id: order.id },
-//           data: { 
+//           data: {
 //             paymentStatus: "Failed",
 //             orderStatus: "Cancelled",
 //           },
@@ -865,7 +850,7 @@
 //       // COD/UPI için hemen Paid olarak işaretle
 //       const updatedOrder = await db.order.update({
 //         where: { id: order.id },
-//         data: { 
+//         data: {
 //           paymentStatus: "Paid",
 //           orderStatus: "Confirmed",
 //         },
@@ -914,18 +899,7 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
 //Final Part
-
-
-
 
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/lib/db";
@@ -945,12 +919,12 @@ const initializePayPal = () => {
   if (!paypalClient) {
     const clientId = process.env.PAYPAL_CLIENT_ID!;
     const clientSecret = process.env.PAYPAL_SECRET!;
-    
+
     const isProduction = process.env.NODE_ENV === "production";
     const environment = isProduction
       ? new paypal.core.LiveEnvironment(clientId, clientSecret)
       : new paypal.core.SandboxEnvironment(clientId, clientSecret);
-    
+
     paypalClient = new paypal.core.PayPalHttpClient(environment);
   }
   return paypalClient;
@@ -964,7 +938,11 @@ const currencyRates: Record<string, number> = {
   TRY: 32.5,
 };
 
-const convertCurrency = (amount: number, fromCurrency: string, toCurrency: string): number => {
+const convertCurrency = (
+  amount: number,
+  fromCurrency: string,
+  toCurrency: string,
+): number => {
   if (fromCurrency === toCurrency) return amount;
   const amountInUSD = amount / (currencyRates[fromCurrency] || 1);
   return amountInUSD * (currencyRates[toCurrency] || 1);
@@ -995,16 +973,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
     if (!shippingAddressId) {
-      return NextResponse.json({ error: "Shipping address required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Shipping address required" },
+        { status: 400 },
+      );
     }
     if (!paymentMethod) {
-      return NextResponse.json({ error: "Payment method required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Payment method required" },
+        { status: 400 },
+      );
     }
 
     // Calculate totals
     const subTotal = cartItems.reduce(
-      (sum: number, item: any) => sum + Number(item.price) * Number(item.quantity),
-      0
+      (sum: number, item: any) =>
+        sum + Number(item.price) * Number(item.quantity),
+      0,
     );
     const shippingFees = Number(shippingFee) || 0;
     const discount = Number(discountAmount) || 0;
@@ -1025,10 +1010,16 @@ export async function POST(request: NextRequest) {
         where: { id: item.sizeId, productVariantId: item.variantId },
       });
       if (!size) {
-        return NextResponse.json({ error: `Size not found for ${item.name}` }, { status: 400 });
+        return NextResponse.json(
+          { error: `Size not found for ${item.name}` },
+          { status: 400 },
+        );
       }
       if (size.quantity < item.quantity) {
-        return NextResponse.json({ error: `Insufficient stock for ${item.name}` }, { status: 400 });
+        return NextResponse.json(
+          { error: `Insufficient stock for ${item.name}` },
+          { status: 400 },
+        );
       }
     }
 
@@ -1055,13 +1046,21 @@ export async function POST(request: NextRequest) {
           create: cartItems.map((item: any) => ({
             storeId: item.storeId || "default-store",
             status: "Pending",
-            shippingService: shippingMethod === "express" ? "Express Delivery" : "Standard Delivery",
+            shippingService:
+              shippingMethod === "express"
+                ? "Express Delivery"
+                : "Standard Delivery",
             shippingDeliveryMin: shippingMethod === "express" ? 2 : 5,
             shippingDeliveryMax: shippingMethod === "express" ? 3 : 7,
             shippingFees: shippingFees / cartItems.length,
             subTotal: Number(item.price) * Number(item.quantity),
-            total: Number(item.price) * Number(item.quantity) + (shippingFees / cartItems.length),
-            note: shippingMethod === "express" ? "Express shipping" : "Standard shipping",
+            total:
+              Number(item.price) * Number(item.quantity) +
+              shippingFees / cartItems.length,
+            note:
+              shippingMethod === "express"
+                ? "Express shipping"
+                : "Standard shipping",
             ...(appliedCoupon && { couponId: appliedCoupon.couponId }),
             items: {
               create: {
@@ -1124,320 +1123,599 @@ export async function POST(request: NextRequest) {
 
     // STRIPE PAYMENT
 
+    //     if (paymentMethod === "card") {
+    //   try {
+    //     let customer: Stripe.Customer;
+    //     const existingCustomers = await stripe.customers.list({
+    //       email: user.email,
+    //       limit: 1,
+    //     });
+    //     customer = existingCustomers.data.length > 0
+    //       ? existingCustomers.data[0]
+    //       : await stripe.customers.create({
+    //           email: user.email,
+    //           name: user.displayName || user.username,
+    //           metadata: { userId: user.id },
+    //         });
+
+    //     // Discount'ı Stripe'da göstermeden, sadece ödeme total'ini azalt
+    //     // Bu durumda kullanıcı Stripe'da discount'ı görmez ama ödeme total'inde olur
+
+    //     // DÜZELTİLMİŞ: Coupon oluşturmadan doğrudan session yarat
+    //     const session = await stripe.checkout.sessions.create({
+    //       customer: customer.id,
+    //       mode: "payment",
+    //       payment_method_types: ["card"],
+    //       line_items: cartItems.map((item: any) => ({
+    //         price_data: {
+    //           currency: currency.toLowerCase(),
+    //           product_data: {
+    //             name: item.name,
+    //             description: `Size: ${item.size}`,
+    //             images: item.image ? [item.image] : [],
+    //           },
+    //           // Discount'ı item fiyatına yansıt
+    //           unit_amount: Math.round(
+    //             convertCurrency(
+    //               discount > 0
+    //                 ? item.price * (1 - (discount / subTotal))
+    //                 : item.price,
+    //               currency,
+    //               "USD"
+    //             ) * 100
+    //           ),
+    //         },
+    //         quantity: item.quantity,
+    //       })),
+    //       ...(shippingFees > 0 && {
+    //         shipping_options: [{
+    //           shipping_rate_data: {
+    //             type: "fixed_amount",
+    //             fixed_amount: {
+    //               amount: Math.round(convertCurrency(shippingFees, currency, "USD") * 100),
+    //               currency: currency.toLowerCase(),
+    //             },
+    //             display_name: shippingMethod === "express" ? "Express Shipping" : "Standard Shipping",
+    //           },
+    //         }],
+    //       }),
+    //       metadata: {
+    //         orderId: order.id,
+    //         userId: user.id,
+    //         paymentMethod: "Stripe",
+    //         currency,
+    //         discountApplied: discount.toString(),
+    //         couponCode: appliedCoupon?.couponCode || "",
+    //       },
+    //       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/shop/order/${order.id}?payment_success=true&session_id={CHECKOUT_SESSION_ID}&payment_method=stripe`,
+    //       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
+    //     });
+
+    //     // ✅ CRITICAL: MARK ORDER AS PAID IMMEDIATELY
+    //     console.log("✅ Stripe session created. Marking order as paid in DB...");
+
+    //     const paidOrder = await db.order.update({
+    //       where: { id: order.id },
+    //       data: {
+    //         paymentStatus: "Paid",
+    //         orderStatus: "Confirmed",
+    //       },
+    //       include: {
+    //         groups: {
+    //           include: {
+    //             items: true,
+    //             store: true,
+    //           },
+    //         },
+    //       },
+    //     });
+
+    //     // Create PaymentDetails as Completed
+    //     await db.paymentDetails.create({
+    //       data: {
+    //         paymentInetntId: session.id,
+    //         paymentMethod: "Stripe",
+    //         status: "Completed",
+    //         amount: total,
+    //         currency,
+    //         orderId: order.id,
+    //         userId: user.id,
+    //       },
+    //     });
+
+    //     // Send invoice email
+    //     try {
+    //       await sendInvoiceEmail(user, paidOrder, currency);
+    //     } catch (emailError) {
+    //       console.error("Failed to send invoice email:", emailError);
+    //     }
+
+    //     return NextResponse.json({
+    //       success: true,
+    //       paymentUrl: session.url,
+    //       sessionId: session.id,
+    //       order: paidOrder,
+    //       redirectUrl: `/shop/order/${order.id}`,
+    //       message: "Order created and marked as paid",
+    //     });
+
+    //   } catch (error: any) {
+    //     // Rollback on error
+    //     console.error("Stripe error:", error);
+    //     await rollbackOrder(order.id, cartItems);
+    //     return NextResponse.json({ error: `Stripe error: ${error.message}` }, { status: 500 });
+    //   }
+    // }
 
     if (paymentMethod === "card") {
-  try {
-    let customer: Stripe.Customer;
-    const existingCustomers = await stripe.customers.list({
-      email: user.email,
-      limit: 1,
-    });
-    customer = existingCustomers.data.length > 0 
-      ? existingCustomers.data[0]
-      : await stripe.customers.create({
+      try {
+        let customer: Stripe.Customer;
+        const existingCustomers = await stripe.customers.list({
           email: user.email,
-          name: user.displayName || user.username,
-          metadata: { userId: user.id },
+          limit: 1,
         });
 
-    // Discount'ı Stripe'da göstermeden, sadece ödeme total'ini azalt
-    // Bu durumda kullanıcı Stripe'da discount'ı görmez ama ödeme total'inde olur
-    
-    // DÜZELTİLMİŞ: Coupon oluşturmadan doğrudan session yarat
-    const session = await stripe.checkout.sessions.create({
-      customer: customer.id,
-      mode: "payment",
-      payment_method_types: ["card"],
-      line_items: cartItems.map((item: any) => ({
-        price_data: {
-          currency: currency.toLowerCase(),
-          product_data: {
-            name: item.name,
-            description: `Size: ${item.size}`,
-            images: item.image ? [item.image] : [],
+        customer =
+          existingCustomers.data.length > 0
+            ? existingCustomers.data[0]
+            : await stripe.customers.create({
+                email: user.email,
+                name: user.displayName || user.username,
+                metadata: { userId: user.id },
+              });
+
+        // Önce order'ı "Pending" olarak işaretle
+        await db.order.update({
+          where: { id: order.id },
+          data: {
+            paymentStatus: "Pending",
+            orderStatus: "Pending",
           },
-          // Discount'ı item fiyatına yansıt
-          unit_amount: Math.round(
-            convertCurrency(
-              discount > 0 
-                ? item.price * (1 - (discount / subTotal)) 
-                : item.price, 
-              currency, 
-              "USD"
-            ) * 100
-          ),
-        },
-        quantity: item.quantity,
-      })),
-      ...(shippingFees > 0 && {
-        shipping_options: [{
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: {
-              amount: Math.round(convertCurrency(shippingFees, currency, "USD") * 100),
+        });
+
+        // Stripe session oluştur - TAM KOD
+        const session = await stripe.checkout.sessions.create({
+          customer: customer.id,
+          mode: "payment", // ✅ Bu çok önemli!
+          payment_method_types: ["card"],
+          line_items: cartItems.map((item: any) => ({
+            price_data: {
               currency: currency.toLowerCase(),
+              product_data: {
+                name: item.name,
+                description: `Size: ${item.size}`,
+                images: item.image ? [item.image] : [],
+              },
+              unit_amount: Math.round(
+                convertCurrency(item.price, "USD", currency) * 100,
+              ),
             },
-            display_name: shippingMethod === "express" ? "Express Shipping" : "Standard Shipping",
+            quantity: item.quantity,
+          })),
+          ...(shippingFees > 0 && {
+            shipping_options: [
+              {
+                shipping_rate_data: {
+                  type: "fixed_amount",
+                  fixed_amount: {
+                    amount: Math.round(
+                      convertCurrency(shippingFees, currency, "USD") * 100,
+                    ),
+                    currency: currency.toLowerCase(),
+                  },
+                  display_name:
+                    shippingMethod === "express"
+                      ? "Express Shipping"
+                      : "Standard Shipping",
+                },
+              },
+            ],
+          }),
+          metadata: {
+            orderId: order.id,
+            userId: user.id,
+            paymentMethod: "Stripe",
+            currency,
           },
-        }],
-      }),
-      metadata: { 
-        orderId: order.id, 
-        userId: user.id,
-        paymentMethod: "Stripe",
-        currency,
-        discountApplied: discount.toString(),
-        couponCode: appliedCoupon?.couponCode || "",
-      },
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/shop/order/${order.id}?payment_success=true&session_id={CHECKOUT_SESSION_ID}&payment_method=stripe`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
-    });
+          success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/oneshop/checkout/stripe/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
+          cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout?canceled=true`,
+        });
 
-    // ✅ CRITICAL: MARK ORDER AS PAID IMMEDIATELY
-    console.log("✅ Stripe session created. Marking order as paid in DB...");
-    
-    const paidOrder = await db.order.update({
-      where: { id: order.id },
-      data: { 
-        paymentStatus: "Paid",
-        orderStatus: "Confirmed",
-      },
-      include: {
-        groups: {
-          include: {
-            items: true,
-            store: true,
+        // PaymentDetails oluştur
+        await db.paymentDetails.create({
+          data: {
+            paymentInetntId: session.id,
+            paymentMethod: "Stripe",
+            status: "Pending",
+            amount: total,
+            currency,
+            orderId: order.id,
+            userId: user.id,
           },
-        },
-      },
-    });
+        });
 
-    // Create PaymentDetails as Completed
-    await db.paymentDetails.create({
-      data: {
-        paymentInetntId: session.id,
-        paymentMethod: "Stripe",
-        status: "Completed",
-        amount: total,
-        currency,
-        orderId: order.id,
-        userId: user.id,
-      },
-    });
+        console.log("✅ Stripe session created:", session.id);
 
-    // Send invoice email
-    try {
-      await sendInvoiceEmail(user, paidOrder, currency);
-    } catch (emailError) {
-      console.error("Failed to send invoice email:", emailError);
+        return NextResponse.json({
+          success: true,
+          paymentUrl: session.url,
+          sessionId: session.id,
+          order: order,
+          message: "Redirecting to Stripe checkout",
+        });
+      } catch (error: any) {
+        console.error("Stripe error:", error);
+        await rollbackOrder(order.id, cartItems);
+        return NextResponse.json(
+          { error: `Stripe error: ${error.message}` },
+          { status: 500 },
+        );
+      }
     }
-
-    return NextResponse.json({
-      success: true,
-      paymentUrl: session.url,
-      sessionId: session.id,
-      order: paidOrder,
-      redirectUrl: `/shop/order/${order.id}`,
-      message: "Order created and marked as paid",
-    });
-
-  } catch (error: any) {
-    // Rollback on error
-    console.error("Stripe error:", error);
-    await rollbackOrder(order.id, cartItems);
-    return NextResponse.json({ error: `Stripe error: ${error.message}` }, { status: 500 });
-  }
-}
-
-
 
     // PAYPAL PAYMENT
 
+    // if (paymentMethod === "paypal") {
+    //   try {
+    //     const paypalClient = initializePayPal();
+    //     const req = new paypal.orders.OrdersCreateRequest();
 
-    // PAYPAL PAYMENT kısmını şu şekilde değiştirin:
-if (paymentMethod === "paypal") {
-  try {
-    const paypalClient = initializePayPal();
-    const req = new paypal.orders.OrdersCreateRequest();
-    
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const returnUrl = `${baseUrl}/shop/order/${order.id}?payment_success=true&payment_method=paypal`;
-    const cancelUrl = `${baseUrl}/checkout`;
-    
-    // ✅ DÜZELTİLMİŞ: Ülke kodunu almak için helper fonksiyon
-    const getCountryCode = (countryName: string): string => {
-      const countryMap: Record<string, string> = {
-        'United States': 'US',
-        'USA': 'US',
-        'United Kingdom': 'GB',
-        'UK': 'GB',
-        'Great Britain': 'GB',
-        'Turkey': 'TR',
-        'Turkiye': 'TR',
-        'Germany': 'DE',
-        'France': 'FR',
-        'Italy': 'IT',
-        'Spain': 'ES',
-        'Canada': 'CA',
-        'Australia': 'AU',
-        'Japan': 'JP',
-        'China': 'CN',
-        'India': 'IN',
-        // Diğer ülkeleri ekleyebilirsiniz
-      };
-      return countryMap[countryName] || countryName.substring(0, 2).toUpperCase();
-    };
-    
-    const countryCode = getCountryCode(shippingAddress.country?.name || 'US');
-    
-    // ✅ DÜZELTİLMİŞ: PayPal shipping address formatında adres oluştur
-    const paypalShippingAddress = {
-      address_line_1: shippingAddress.address1,
-      address_line_2: shippingAddress.address2 || "",
-      admin_area_2: shippingAddress.city,
-      admin_area_1: shippingAddress.state,
-      postal_code: shippingAddress.zip_code,
-      country_code: countryCode,
-    };
-    
-    req.requestBody({
-      intent: "CAPTURE",
-      purchase_units: [{
-        reference_id: order.id,
-        description: `Order #${order.id.slice(0, 8)}`,
-        amount: {
-          currency_code: currency,
-          value: total.toFixed(2),
-          breakdown: {
-            item_total: { currency_code: currency, value: subTotal.toFixed(2) },
-            shipping: { currency_code: currency, value: shippingFees.toFixed(2) },
-            ...(discount > 0 && {
-              discount: { currency_code: currency, value: discount.toFixed(2) },
-            }),
-          },
-        },
-        items: cartItems.map((item: any) => ({
-          name: item.name.length > 127 ? item.name.substring(0, 124) + "..." : item.name,
-          sku: item.sku,
-          unit_amount: { 
-            currency_code: currency, 
-            value: convertCurrency(item.price, "USD", currency).toFixed(2) 
-          },
-          quantity: item.quantity.toString(),
-          category: "PHYSICAL_GOODS",
-        })),
-        // ✅ DÜZELTİLMİŞ: Shipping adresini ekle
-        shipping: {
-          name: {
-            full_name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
-          },
-          address: paypalShippingAddress,
-        },
-      }],
-      application_context: {
-        brand_name: "OneShop",
-        user_action: "PAY_NOW",
-        // ✅ DÜZELTİLMİŞ: Shipping preference'ı güncelle
-        shipping_preference: "SET_PROVIDED_ADDRESS", // Artık adresimiz var
-        return_url: returnUrl,
-        cancel_url: cancelUrl,
-        payment_method: {
-          payer_selected: "PAYPAL",
-          payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED",
-        },
-      },
-    });
+    //     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    //     const returnUrl = `${baseUrl}/shop/order/${order.id}?payment_success=true&payment_method=paypal`;
+    //     const cancelUrl = `${baseUrl}/checkout`;
 
-    console.log("PayPal request body:", JSON.stringify(req.body, null, 2));
+    //     // ✅ DÜZELTİLMİŞ: Ülke kodunu almak için helper fonksiyon
+    //     const getCountryCode = (countryName: string): string => {
+    //       const countryMap: Record<string, string> = {
+    //         'United States': 'US',
+    //         'USA': 'US',
+    //         'United Kingdom': 'GB',
+    //         'UK': 'GB',
+    //         'Great Britain': 'GB',
+    //         'Turkey': 'TR',
+    //         'Turkiye': 'TR',
+    //         'Germany': 'DE',
+    //         'France': 'FR',
+    //         'Italy': 'IT',
+    //         'Spain': 'ES',
+    //         'Canada': 'CA',
+    //         'Australia': 'AU',
+    //         'Japan': 'JP',
+    //         'China': 'CN',
+    //         'India': 'IN',
+    //         // Diğer ülkeleri ekleyebilirsiniz
+    //       };
+    //       return countryMap[countryName] || countryName.substring(0, 2).toUpperCase();
+    //     };
 
-    const response = await paypalClient.execute(req);
-    if (response.statusCode !== 201) {
-      throw new Error(`PayPal error: ${response.statusCode} - ${JSON.stringify(response.result)}`);
+    //     const countryCode = getCountryCode(shippingAddress.country?.name || 'US');
+
+    //     // ✅ DÜZELTİLMİŞ: PayPal shipping address formatında adres oluştur
+    //     const paypalShippingAddress = {
+    //       address_line_1: shippingAddress.address1,
+    //       address_line_2: shippingAddress.address2 || "",
+    //       admin_area_2: shippingAddress.city,
+    //       admin_area_1: shippingAddress.state,
+    //       postal_code: shippingAddress.zip_code,
+    //       country_code: countryCode,
+    //     };
+
+    //     req.requestBody({
+    //       intent: "CAPTURE",
+    //       purchase_units: [{
+    //         reference_id: order.id,
+    //         description: `Order #${order.id.slice(0, 8)}`,
+    //         amount: {
+    //           currency_code: currency,
+    //           value: total.toFixed(2),
+    //           breakdown: {
+    //             item_total: { currency_code: currency, value: subTotal.toFixed(2) },
+    //             shipping: { currency_code: currency, value: shippingFees.toFixed(2) },
+    //             ...(discount > 0 && {
+    //               discount: { currency_code: currency, value: discount.toFixed(2) },
+    //             }),
+    //           },
+    //         },
+    //         items: cartItems.map((item: any) => ({
+    //           name: item.name.length > 127 ? item.name.substring(0, 124) + "..." : item.name,
+    //           sku: item.sku,
+    //           unit_amount: {
+    //             currency_code: currency,
+    //             value: convertCurrency(item.price, "USD", currency).toFixed(2)
+    //           },
+    //           quantity: item.quantity.toString(),
+    //           category: "PHYSICAL_GOODS",
+    //         })),
+    //         // ✅ DÜZELTİLMİŞ: Shipping adresini ekle
+    //         shipping: {
+    //           name: {
+    //             full_name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+    //           },
+    //           address: paypalShippingAddress,
+    //         },
+    //       }],
+    //       application_context: {
+    //         brand_name: "OneShop",
+    //         user_action: "PAY_NOW",
+    //         // ✅ DÜZELTİLMİŞ: Shipping preference'ı güncelle
+    //         shipping_preference: "SET_PROVIDED_ADDRESS", // Artık adresimiz var
+    //         return_url: returnUrl,
+    //         cancel_url: cancelUrl,
+    //         payment_method: {
+    //           payer_selected: "PAYPAL",
+    //           payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED",
+    //         },
+    //       },
+    //     });
+
+    //     console.log("PayPal request body:", JSON.stringify(req.body, null, 2));
+
+    //     const response = await paypalClient.execute(req);
+    //     if (response.statusCode !== 201) {
+    //       throw new Error(`PayPal error: ${response.statusCode} - ${JSON.stringify(response.result)}`);
+    //     }
+
+    //     // ✅ CRITICAL: MARK ORDER AS PAID IMMEDIATELY
+    //     console.log("✅ PayPal order created. Marking order as paid in DB...");
+
+    //     const paidOrder = await db.order.update({
+    //       where: { id: order.id },
+    //       data: {
+    //         paymentStatus: "Paid",
+    //         orderStatus: "Confirmed",
+    //       },
+    //       include: {
+    //         groups: {
+    //           include: {
+    //             items: true,
+    //             store: true,
+    //           },
+    //         },
+    //       },
+    //     });
+
+    //     // Create PaymentDetails as Completed
+    //     await db.paymentDetails.create({
+    //       data: {
+    //         paymentInetntId: response.result.id,
+    //         paymentMethod: "PayPal",
+    //         status: "Completed",
+    //         amount: total,
+    //         currency,
+    //         orderId: order.id,
+    //         userId: user.id,
+    //       },
+    //     });
+
+    //     // Try to capture PayPal payment
+    //     try {
+    //       const captureReq = new paypal.orders.OrdersCaptureRequest(response.result.id);
+    //       const captureResponse = await paypalClient.execute(captureReq);
+    //       console.log("✅ PayPal payment captured:", captureResponse.result.status);
+    //     } catch (captureError) {
+    //       console.log("ℹ️ PayPal capture might happen on user approval");
+    //     }
+
+    //     // Send invoice email
+    //     try {
+    //       await sendInvoiceEmail(user, paidOrder, currency);
+    //     } catch (emailError) {
+    //       console.error("Failed to send invoice email:", emailError);
+    //     }
+
+    //     const approvalUrl = response.result.links.find(
+    //       (link: any) => link.rel === "approve"
+    //     )?.href;
+
+    //     if (!approvalUrl) throw new Error("No approval URL");
+
+    //     return NextResponse.json({
+    //       success: true,
+    //       paymentUrl: approvalUrl,
+    //       paypalOrderId: response.result.id,
+    //       order: paidOrder,
+    //       redirectUrl: `/shop/order/${order.id}`,
+    //       message: "Order created and marked as paid",
+    //     });
+
+    //   } catch (error: any) {
+    //     console.error("PayPal error details:", error);
+
+    //     // Rollback on error
+    //     await rollbackOrder(order.id, cartItems);
+
+    //     return NextResponse.json({
+    //       error: `PayPal error: ${error.message}`,
+    //       details: error.result || null
+    //     }, { status: 500 });
+    //   }
+    // }
+
+    if (paymentMethod === "paypal") {
+      try {
+        const paypalClient = initializePayPal();
+        const req = new paypal.orders.OrdersCreateRequest();
+
+        const baseUrl =
+          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        const returnUrl = `${baseUrl}/api/oneshop/checkout/paypal/success?order_id=${order.id}`;
+        const cancelUrl = `${baseUrl}/checkout?canceled=true`;
+
+        // Önce order'ı "Processing" olarak işaretle
+        await db.order.update({
+          where: { id: order.id },
+          data: {
+            paymentStatus: "Pending",
+            orderStatus: "Pending",
+          },
+        });
+
+        const getCountryCode = (countryName: string): string => {
+          const countryMap: Record<string, string> = {
+            "United States": "US",
+            USA: "US",
+            "United Kingdom": "GB",
+            UK: "GB",
+            "Great Britain": "GB",
+            Turkey: "TR",
+            Turkiye: "TR",
+            Germany: "DE",
+            France: "FR",
+            Italy: "IT",
+            Spain: "ES",
+            Canada: "CA",
+            Australia: "AU",
+            Japan: "JP",
+            China: "CN",
+            India: "IN",
+          };
+          return (
+            countryMap[countryName] || countryName.substring(0, 2).toUpperCase()
+          );
+        };
+
+        const countryCode = getCountryCode(
+          shippingAddress.country?.name || "US",
+        );
+
+        const paypalShippingAddress = {
+          address_line_1: shippingAddress.address1,
+          address_line_2: shippingAddress.address2 || "",
+          admin_area_2: shippingAddress.city,
+          admin_area_1: shippingAddress.state,
+          postal_code: shippingAddress.zip_code,
+          country_code: countryCode,
+        };
+
+        req.requestBody({
+          intent: "CAPTURE",
+          purchase_units: [
+            {
+              reference_id: order.id,
+              description: `Order #${order.id.slice(0, 8)}`,
+              amount: {
+                currency_code: currency,
+                value: total.toFixed(2),
+                breakdown: {
+                  item_total: {
+                    currency_code: currency,
+                    value: subTotal.toFixed(2),
+                  },
+                  shipping: {
+                    currency_code: currency,
+                    value: shippingFees.toFixed(2),
+                  },
+                  ...(discount > 0 && {
+                    discount: {
+                      currency_code: currency,
+                      value: discount.toFixed(2),
+                    },
+                  }),
+                },
+              },
+              items: cartItems.map((item: any) => ({
+                name:
+                  item.name.length > 127
+                    ? item.name.substring(0, 124) + "..."
+                    : item.name,
+                sku: item.sku,
+                unit_amount: {
+                  currency_code: currency,
+                  value: convertCurrency(item.price, "USD", currency).toFixed(
+                    2,
+                  ),
+                },
+                quantity: item.quantity.toString(),
+                category: "PHYSICAL_GOODS",
+              })),
+              shipping: {
+                name: {
+                  full_name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+                },
+                address: paypalShippingAddress,
+              },
+            },
+          ],
+          application_context: {
+            brand_name: "OneShop",
+            user_action: "PAY_NOW",
+            shipping_preference: "SET_PROVIDED_ADDRESS",
+            return_url: returnUrl,
+            cancel_url: cancelUrl,
+            payment_method: {
+              payer_selected: "PAYPAL",
+              payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED",
+            },
+          },
+        });
+
+        console.log(
+          "PayPal request body:",
+          JSON.stringify(req.requestBody, null, 2),
+        );
+
+        const response = await paypalClient.execute(req);
+
+        if (response.statusCode !== 201) {
+          throw new Error(
+            `PayPal error: ${response.statusCode} - ${JSON.stringify(response.result)}`,
+          );
+        }
+
+        // PaymentDetails oluştur (pending)
+        await db.paymentDetails.create({
+          data: {
+            paymentInetntId: response.result.id,
+            paymentMethod: "PayPal",
+            status: "Pending",
+            amount: total,
+            currency,
+            orderId: order.id,
+            userId: user.id,
+          },
+        });
+
+        const approvalUrl = response.result.links.find(
+          (link: any) => link.rel === "approve",
+        )?.href;
+
+        if (!approvalUrl) throw new Error("No approval URL found");
+
+        console.log(
+          "✅ PayPal order created successfully:",
+          response.result.id,
+        );
+
+        return NextResponse.json({
+          success: true,
+          paymentUrl: approvalUrl,
+          paypalOrderId: response.result.id,
+          order: order,
+          message: "Redirecting to PayPal",
+        });
+      } catch (error: any) {
+        console.error("PayPal error details:", error);
+
+        // Rollback on error
+        await rollbackOrder(order.id, cartItems);
+
+        return NextResponse.json(
+          {
+            error: `PayPal error: ${error.message}`,
+            details: error.result || null,
+          },
+          { status: 500 },
+        );
+      }
     }
-
-    // ✅ CRITICAL: MARK ORDER AS PAID IMMEDIATELY
-    console.log("✅ PayPal order created. Marking order as paid in DB...");
-    
-    const paidOrder = await db.order.update({
-      where: { id: order.id },
-      data: { 
-        paymentStatus: "Paid",
-        orderStatus: "Confirmed",
-        d
-      },
-      include: {
-        groups: {
-          include: {
-            items: true,
-            store: true,
-          },
-        },
-      },
-    });
-
-    // Create PaymentDetails as Completed
-    await db.paymentDetails.create({
-      data: {
-        paymentInetntId: response.result.id,
-        paymentMethod: "PayPal",
-        status: "Completed",
-        amount: total,
-        currency,
-        orderId: order.id,
-        userId: user.id,
-      },
-    });
-
-    // Try to capture PayPal payment
-    try {
-      const captureReq = new paypal.orders.OrdersCaptureRequest(response.result.id);
-      const captureResponse = await paypalClient.execute(captureReq);
-      console.log("✅ PayPal payment captured:", captureResponse.result.status);
-    } catch (captureError) {
-      console.log("ℹ️ PayPal capture might happen on user approval");
-    }
-
-    // Send invoice email
-    try {
-      await sendInvoiceEmail(user, paidOrder, currency);
-    } catch (emailError) {
-      console.error("Failed to send invoice email:", emailError);
-    }
-
-    const approvalUrl = response.result.links.find(
-      (link: any) => link.rel === "approve"
-    )?.href;
-
-    if (!approvalUrl) throw new Error("No approval URL");
-
-    return NextResponse.json({
-      success: true,
-      paymentUrl: approvalUrl,
-      paypalOrderId: response.result.id,
-      order: paidOrder,
-      redirectUrl: `/shop/order/${order.id}`,
-      message: "Order created and marked as paid",
-    });
-
-  } catch (error: any) {
-    console.error("PayPal error details:", error);
-    
-    // Rollback on error
-    await rollbackOrder(order.id, cartItems);
-    
-    return NextResponse.json({ 
-      error: `PayPal error: ${error.message}`,
-      details: error.result || null 
-    }, { status: 500 });
-  }
-}
 
     // COD/UPI PAYMENT
+
     if (paymentMethod === "cod" || paymentMethod === "upi") {
       // Mark as Paid immediately for COD/UPI
       const paidOrder = await db.order.update({
         where: { id: order.id },
-        data: { 
+        data: {
           paymentStatus: "Paid",
           orderStatus: "Confirmed",
         },
@@ -1479,11 +1757,16 @@ if (paymentMethod === "paypal") {
       });
     }
 
-    return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
-
+    return NextResponse.json(
+      { error: "Invalid payment method" },
+      { status: 400 },
+    );
   } catch (error: any) {
     console.error("Checkout error:", error);
-    return NextResponse.json({ error: error.message || "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || "Server error" },
+      { status: 500 },
+    );
   }
 }
 
@@ -1497,16 +1780,16 @@ async function rollbackOrder(orderId: string, cartItems: any[]) {
         data: { quantity: { increment: item.quantity } },
       });
     }
-    
+
     // Mark order as failed
     await db.order.update({
       where: { id: orderId },
-      data: { 
+      data: {
         paymentStatus: "Failed",
         orderStatus: "Cancelled",
       },
     });
-    
+
     console.log(`Order ${orderId} rolled back successfully`);
   } catch (rollbackError) {
     console.error("Rollback failed:", rollbackError);
@@ -1517,10 +1800,10 @@ async function rollbackOrder(orderId: string, cartItems: any[]) {
 async function sendInvoiceEmail(user: any, order: any, currency: string) {
   try {
     const orderDate = new Date(order.createdAt);
-    const formattedDate = orderDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    const formattedDate = orderDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
 
     const totalDiscount = order.groups.reduce((sum: number, group: any) => {
@@ -1575,28 +1858,36 @@ async function sendInvoiceEmail(user: any, order: any, currency: string) {
                 </tr>
               </thead>
               <tbody>
-                ${order.groups.flatMap((group: any) => 
-                  group.items.map((item: any) => `
+                ${order.groups
+                  .flatMap((group: any) =>
+                    group.items.map(
+                      (item: any) => `
                     <tr>
                       <td>${item.name} (${item.size})</td>
                       <td>${item.quantity}</td>
                       <td>${currency}${item.price.toFixed(2)}</td>
                       <td>${currency}${item.totalPrice.toFixed(2)}</td>
                     </tr>
-                  `)
-                ).join('')}
+                  `,
+                    ),
+                  )
+                  .join("")}
               </tbody>
               <tfoot>
                 <tr>
                   <td colspan="3" style="text-align: right;"><strong>Subtotal:</strong></td>
                   <td>${currency}${order.subTotal.toFixed(2)}</td>
                 </tr>
-                ${totalDiscount > 0 ? `
+                ${
+                  totalDiscount > 0
+                    ? `
                 <tr>
                   <td colspan="3" style="text-align: right;"><strong>Discount:</strong></td>
                   <td>-${currency}${totalDiscount.toFixed(2)}</td>
                 </tr>
-                ` : ''}
+                `
+                    : ""
+                }
                 <tr class="total-row">
                   <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
                   <td>${currency}${order.total.toFixed(2)}</td>
@@ -1618,7 +1909,7 @@ async function sendInvoiceEmail(user: any, order: any, currency: string) {
     `;
 
     await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: "onboarding@resend.dev",
       to: user.email!,
       subject: `Your Order Confirmation #${order.id.slice(0, 8)}`,
       html,
@@ -1633,7 +1924,7 @@ async function sendInvoiceEmail(user: any, order: any, currency: string) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const orderId = searchParams.get("orderId");
-  
+
   if (!orderId) {
     return NextResponse.json({ error: "Order ID required" }, { status: 400 });
   }
@@ -1666,6 +1957,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(order);
   } catch (error) {
     console.error("Error fetching order:", error);
-    return NextResponse.json({ error: "Failed to fetch order" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch order" },
+      { status: 500 },
+    );
   }
 }

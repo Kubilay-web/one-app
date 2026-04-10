@@ -13,7 +13,11 @@ export default async function page() {
   if (!user) return null;
 
   const school = await SchoolUser(user.id);
+
   const schoolId = school?.id ?? "";
+
+
+
 
   const [classes, allTeachers, departments] = await Promise.all([
     getAllClasses(schoolId),

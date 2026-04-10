@@ -179,7 +179,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
       // Redirect to categories list after a short delay
       setTimeout(() => {
-        router.push("/ecommerce/admin/categories");
+        router.push("/dashboards/ecommerce/admin/categories");
       }, 1500);
     } catch (error: any) {
       console.error("Error creating category:", error);
@@ -233,7 +233,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
                           Create New Category
                         </div>
                         <Link
-                          href="/ecommerce/admin/categories"
+                          href="/dashboards/ecommerce/admin/categories"
                           className="ti-btn ti-btn-outline-light btn-wave waves-effect waves-light !text-dark !m-0"
                         >
                           <i className="bi bi-arrow-left rtl:rotate-180 inline-flex me-1"></i>{" "}

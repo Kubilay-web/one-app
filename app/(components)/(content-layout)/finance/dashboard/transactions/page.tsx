@@ -154,7 +154,7 @@ export const TransactionsPage = () => {
             <UploadButton onUpload={onUpload} />
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent >
           <DataTable
             filterKey="payee"
             columns={columns.map((col) => ({
@@ -162,7 +162,7 @@ export const TransactionsPage = () => {
               Cell: (props: any) => {
                 if (col.id === "actions") {
                   return (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 bg-white text-black">
                       <Button
                         size="sm"
                         variant="outline"

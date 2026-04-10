@@ -130,6 +130,9 @@ model User {
   // School-related fields
   schoolId   String?
   schoolName String?
+  school     School? @relation(fields: [schoolId], references: [id])
+
+  
 
   // One-to-One relationships
   teacher Teacher?
@@ -3154,6 +3157,9 @@ model School {
   logo         String?
   primaryEmail String?
   slug         String  @unique
+
+
+    users               User[] // <--- BUNU EKLEYİN (User modelindeki school ile eşleşecek)
 
   // Add relations
   userLogs               UserLog[] // One-to-many with students

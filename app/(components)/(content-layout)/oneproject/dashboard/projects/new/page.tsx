@@ -19,7 +19,7 @@ export default async function page() {
     }) || [];
 
   return (
-    <div className="p-8">
+    <div className="p-4">
       <ProjectForm clients={userClients} userId={userId} />
     </div>
   );

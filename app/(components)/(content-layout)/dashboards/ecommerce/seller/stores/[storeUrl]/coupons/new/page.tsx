@@ -133,7 +133,6 @@ export default function SellerNewCouponPage() {
         setStoreInfo(data.data);
       } else {
         toast.error(data.message || 'Failed to load store information');
-        router.push('/seller/dashboard');
       }
     } catch (error) {
       console.error('Error fetching store info:', error);

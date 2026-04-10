@@ -409,7 +409,7 @@ export default function FileManager({
       <div className="flex-1 overflow-auto bg-white">
         
         {/* HEADER */}
-        <div className="p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-2 border-b border-gray-200">
+        <div className="p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-5 border-b border-gray-200">
           
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="ghost" size="icon">

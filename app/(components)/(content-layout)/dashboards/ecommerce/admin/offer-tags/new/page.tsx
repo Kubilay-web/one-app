@@ -51,7 +51,7 @@ const AdminNewOfferTagsPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/oneshop/admin/offertags', {
+      const response = await fetch('/api/oneshop/admin/offer-tags', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const AdminNewOfferTagsPage = () => {
       
       // Redirect to offer tags list after a short delay
       setTimeout(() => {
-        router.push('/dashboards/ecommerce/admin/offertags');
+        router.push('/dashboards/ecommerce/admin/offer-tags');
       }, 1500);
 
     } catch (error: any) {
@@ -83,7 +83,7 @@ const AdminNewOfferTagsPage = () => {
   // Handle cancel
   const handleCancel = () => {
     if (window.confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
-      router.push('/ecommerce/admin/offertags');
+      router.push('/dashboards/ecommerce/admin/offer-tags');
     }
   };
 
@@ -118,7 +118,7 @@ const AdminNewOfferTagsPage = () => {
                           Create New Offer Tag
                         </div>
                         <Link 
-                          href="/ecommerce/admin/offertags"
+                          href="/dashboards/ecommerce/admin/offer-tags"
                           className="ti-btn ti-btn-outline-light btn-wave waves-effect waves-light !text-dark !m-0"
                         >
                           <i className="bi bi-arrow-left rtl:rotate-180 inline-flex me-1"></i> Back to Offer Tags

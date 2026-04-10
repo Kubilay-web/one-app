@@ -525,7 +525,7 @@ const SellerProductsPage = () => {
         <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
-            <div className="flex-1">
+            {/* <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
@@ -535,7 +535,7 @@ const SellerProductsPage = () => {
                   className="pl-10"
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Filters */}
             <div className="flex flex-wrap gap-2">
@@ -544,7 +544,7 @@ const SellerProductsPage = () => {
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className='bg-white text-black'>
                   <SelectItem value="all">All Categories</SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
@@ -559,7 +559,7 @@ const SellerProductsPage = () => {
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent  className='bg-white text-black'>
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="in-stock">In Stock</SelectItem>
                   <SelectItem value="low-stock">Low Stock</SelectItem>
@@ -572,7 +572,7 @@ const SellerProductsPage = () => {
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent  className='bg-white text-black'>
                   <SelectItem value="createdAt">Date Added</SelectItem>
                   <SelectItem value="name">Name</SelectItem>
                   <SelectItem value="sales">Sales</SelectItem>
@@ -586,7 +586,7 @@ const SellerProductsPage = () => {
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Order" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent  className='bg-white text-black'>
                   <SelectItem value="desc">Descending</SelectItem>
                   <SelectItem value="asc">Ascending</SelectItem>
                 </SelectContent>

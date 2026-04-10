@@ -36,23 +36,43 @@ export default function SellerNewStorePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  // const [formData, setFormData] = useState<FormData>({
+  //   name: '',
+  //   description: '',
+  //   email: '',
+  //   phone: '',
+  //   url: '',
+  //   logo: '/assets/images/default-store-logo.png',
+  //   cover: '/assets/images/default-store-cover.jpg',
+  //   returnPolicy: 'Return in 30 days.',
+  //   defaultShippingService: 'Standard Shipping',
+  //   defaultShippingFeePerItem: '0',
+  //   defaultShippingFeeForAdditionalItem: '0',
+  //   defaultShippingFeePerKg: '0',
+  //   defaultShippingFeeFixed: '0',
+  //   defaultDeliveryTimeMin: '7',
+  //   defaultDeliveryTimeMax: '31',
+  // });
+
+
+
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    description: '',
-    email: '',
-    phone: '',
-    url: '',
-    logo: '/assets/images/default-store-logo.png',
-    cover: '/assets/images/default-store-cover.jpg',
-    returnPolicy: 'Return in 30 days.',
-    defaultShippingService: 'Standard Shipping',
-    defaultShippingFeePerItem: '0',
-    defaultShippingFeeForAdditionalItem: '0',
-    defaultShippingFeePerKg: '0',
-    defaultShippingFeeFixed: '0',
-    defaultDeliveryTimeMin: '7',
-    defaultDeliveryTimeMax: '31',
-  });
+  name: '',
+  description: '',
+  email: '',
+  phone: '',
+  url: '',
+  logo: 'https://dummyimage.com/100x100/cccccc/000000&text=Logo',
+  cover: 'https://dummyimage.com/1000x200/aaaaaa/000000&text=Cover',
+  returnPolicy: 'Return in 30 days.',
+  defaultShippingService: 'Standard Shipping',
+  defaultShippingFeePerItem: '0',
+  defaultShippingFeeForAdditionalItem: '0',
+  defaultShippingFeePerKg: '0',
+  defaultShippingFeeFixed: '0',
+  defaultDeliveryTimeMin: '7',
+  defaultDeliveryTimeMax: '31',
+});
 
   // Validation states
   const [urlValidating, setUrlValidating] = useState(false);

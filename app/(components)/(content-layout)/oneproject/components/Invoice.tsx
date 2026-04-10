@@ -7,7 +7,6 @@ import Link from "next/link";
 import { ChevronLeft, Mail, Printer } from "lucide-react";
 import { getNormalDate } from "../lib/getNormalDate";
 
-
 import { sendInvoiceLink } from "../actions/emails";
 import toast from "react-hot-toast";
 import { usePathname } from "next/navigation";
@@ -24,11 +23,10 @@ export default function Invoice({
 }) {
   const { defaultCurrency, exchangeRate } = useCurrencySettings();
 
-  const session=useSession();
-  const user =session.user;
-  const role=user.roleproject;
+  const session = useSession();
+  const user = session.user;
+  const role = user.roleproject;
 
-  
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -52,7 +50,7 @@ export default function Invoice({
     try {
       const res = await sendInvoiceLink(
         invoiceDetails as InvoiceDetails,
-        invoiceLink
+        invoiceLink,
       );
       setLoading(false);
       toast.success("Invoice Sent");
@@ -65,7 +63,10 @@ export default function Invoice({
     <div className="max-w-2xl mx-auto p-8">
       <div className="flex py-3 justify-between items-center">
         <Button variant="outline" className="mb-4">
-          <Link href={`/oneproject/project/${project}`} className="flex items-center">
+          <Link
+            href={`/oneproject/project/${project}`}
+            className="flex items-center"
+          >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Project
           </Link>
@@ -124,18 +125,21 @@ export default function Invoice({
         </div>
 
         <div className="p-4 sm:p-7 overflow-y-auto">
-          <div className="flex items-center justify-between">
-            <div className="">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 sm:gap-10">
+            {/* BILL FROM */}
+            <div className="w-full sm:w-auto">
               <h3
                 id="hs-ai-modal-label"
-                className="text-lg font-semibold text-gray-800 dark:text-neutral-200"
+                className="text-base sm:text-lg font-semibold text-gray-800 dark:text-neutral-200"
               >
                 Bill From
               </h3>
-              <p className="text-sm text-gray-500 dark:text-neutral-500">
+
+              <p className="text-sm text-gray-500 dark:text-neutral-500 break-words">
                 {invoiceDetails?.user?.name}
               </p>
-              <p className="text-sm text-gray-500 dark:text-neutral-500">
+
+              <p className="text-sm text-gray-500 dark:text-neutral-500 break-words">
                 {invoiceDetails?.user?.email}
               </p>
 
@@ -146,19 +150,24 @@ export default function Invoice({
                 </span>
               </p>
             </div>
-            <div className="">
+
+            {/* BILL TO */}
+            <div className="w-full sm:w-auto">
               <h3
                 id="hs-ai-modal-label"
-                className="text-lg font-semibold text-gray-800 dark:text-neutral-200"
+                className="text-base sm:text-lg font-semibold text-gray-800 dark:text-neutral-200"
               >
                 Bill To
               </h3>
-              <p className="text-sm text-gray-500 dark:text-neutral-500">
+
+              <p className="text-sm text-gray-500 dark:text-neutral-500 break-words">
                 {invoiceDetails?.client?.name}
               </p>
-              <p className="text-sm text-gray-500 dark:text-neutral-500">
+
+              <p className="text-sm text-gray-500 dark:text-neutral-500 break-words">
                 {invoiceDetails?.client?.email}
               </p>
+
               <p className="text-sm font-medium dark:text-neutral-500 pt-3">
                 Invoice #{" "}
                 <span className="text-muted-foreground">
@@ -177,7 +186,7 @@ export default function Invoice({
                 {/* ${invoiceDetails?.invoice.amount.toLocaleString()} */}
                 {formatCurrency(
                   invoiceDetails!.invoice.amount * exchangeRate,
-                  defaultCurrency
+                  defaultCurrency,
                 )}
               </span>
             </div>
@@ -222,7 +231,7 @@ export default function Invoice({
                       (invoiceDetails!.invoice.amount -
                         invoiceDetails!.invoice.tax) *
                         exchangeRate,
-                      defaultCurrency
+                      defaultCurrency,
                     )}
                   </span>
                 </div>
@@ -234,7 +243,7 @@ export default function Invoice({
                     {/* ${invoiceDetails?.invoice.tax.toLocaleString()} */}
                     {formatCurrency(
                       invoiceDetails!.invoice.tax * exchangeRate,
-                      defaultCurrency
+                      defaultCurrency,
                     )}
                   </span>
                 </div>
@@ -246,7 +255,7 @@ export default function Invoice({
                     {/* ${invoiceDetails?.invoice.amount.toLocaleString()} */}
                     {formatCurrency(
                       invoiceDetails!.invoice.amount * exchangeRate,
-                      defaultCurrency
+                      defaultCurrency,
                     )}
                   </span>
                 </div>

@@ -164,7 +164,7 @@ export default function BrandSettingsForm({
       <div className="absolute top-20 right-20 w-32 h-32 rounded-full bg-gradient-to-br from-purple-200/20 to-pink-200/20 blur-xl"></div>
       <div className="absolute bottom-20 left-20 w-48 h-48 rounded-full bg-gradient-to-tl from-indigo-200/15 to-purple-200/15 blur-2xl"></div>
 
-      <div className="relative z-10 p-6 lg:p-8">
+      <div className="relative z-10 p-2 lg:p-8">
         {/* Premium Header */}
         <div className="text-center mb-8 space-y-4">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg shadow-purple-500/25 mb-4">

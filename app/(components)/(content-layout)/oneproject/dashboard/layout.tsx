@@ -74,6 +74,9 @@ export default async function DashboardLayout({
     redirect("/");
   }
   const role = user.roleproject;
+
+
+  
   // if (role !== "USER") {
   //   return notFound();
   // }
