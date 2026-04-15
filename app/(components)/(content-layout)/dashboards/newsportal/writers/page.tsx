@@ -94,7 +94,7 @@ export default function Writers() {
                 <td className="px-6 py-4">
                   <div className="flex gap-3 text-gray-500">
                     <Link
-                      href={`/dashboard/newsportal/editwriter/${item.id}`}
+                      href={`/dashboards/newsportal/editwriter/${item.id}`}
                       className="rounded bg-yellow-500 p-2 text-white hover:bg-yellow-800"
                     >
                       <FaEdit />

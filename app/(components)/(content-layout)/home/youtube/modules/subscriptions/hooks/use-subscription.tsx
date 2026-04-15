@@ -28,7 +28,7 @@ export const useSubscription = ({
     try {
       setIsPending(true);
 
-      const res = await fetch("/api/subscriptions/create", {
+      const res = await fetch("http://localhost:3000/api/video/subscriptions/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),

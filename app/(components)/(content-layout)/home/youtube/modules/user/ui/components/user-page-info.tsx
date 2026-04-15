@@ -56,7 +56,7 @@ export const UserPageInfo = ({ users }) => {
         <div className="flex items-center gap-3">
           <UserAvatar
             size="lg"
-            imageUrl={users.avatarUrl}
+            imageUrl={users.avatarUrl || "/assets/images/default-user.avif"}
             name={users.username}
             className="h-[60px] w-[60px]"
           />
@@ -76,7 +76,7 @@ export const UserPageInfo = ({ users }) => {
             asChild
             className="w-full mt-3 rounded-full"
           >
-            <Link prefetch href="/home/youtube/main/studio">
+            <Link prefetch href="/home/youtube/studio">
               Go to studio
             </Link>
           </Button>
@@ -94,7 +94,7 @@ export const UserPageInfo = ({ users }) => {
       <div className="hidden md:flex items-start gap-4">
         <UserAvatar
           size="xl"
-          imageUrl={users.avatarUrl}
+          imageUrl={users.avatarUrl || "/assets/images/default-user.avif"}
           name={users.username}
           className={cn(
             isCurrentUser &&
@@ -112,7 +112,7 @@ export const UserPageInfo = ({ users }) => {
           <div className="mt-5">
             {isCurrentUser ? (
               <Button variant="secondary" asChild className="mt-3 rounded-full">
-                <Link prefetch href="/home/youtube/main/studio">
+                <Link prefetch href="/home/youtube/studio">
                   Go to studio
                 </Link>
               </Button>

@@ -63,7 +63,7 @@ export default function SeedProjectPage() {
     setResult(null);
 
     try {
-      const response = await fetch("/api/seed/news", {
+      const response = await fetch("/api/seed/youtube", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

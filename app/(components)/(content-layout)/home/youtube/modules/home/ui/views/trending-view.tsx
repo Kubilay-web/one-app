@@ -9,7 +9,7 @@ export const TrendingView = () => {
           Most popular videos at the moment
         </p>
       </div>
-      <TrendingVideosSection />
+      {/* <TrendingVideosSection /> */}
     </div>
   );
 };

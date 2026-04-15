@@ -9,7 +9,7 @@ const UserCard = ({ id, displayName, image, username }: User) => (
       <UserAvatar
         id={id}
         name={displayName} // name yerine displayName kullanılıyor
-        imageUrl={image}
+        imageUrl={image || "/assets/images/default-user.avif"}
         className="size-[100px] rounded-full object-cover"
         fallbackClassName="text-3xl tracking-widest"
       />

@@ -103,7 +103,7 @@ const EditWriter = () => {
                 required
                 name="category"
                 id="category"
-                className="h-10 rounded-md border border-gray-300 px-3 py-2 outline-0 focus:border-blue-500"
+                className="h-10 rounded-md border border-gray-300 px-3 py-2 outline-0 focus:border-blue-500 appearance-none bg-none"
               >
                 <option value="">--- Select Category ---</option>
                 <option value="Education">Education</option>

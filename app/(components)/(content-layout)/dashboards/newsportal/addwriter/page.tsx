@@ -92,7 +92,7 @@ const AddWriter = () => {
                 required
                 name="category"
                 id="category"
-                className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none bg-none"
               >
                 <option value="">--- Select Category ---</option>
                 <option value="Education">Education</option>

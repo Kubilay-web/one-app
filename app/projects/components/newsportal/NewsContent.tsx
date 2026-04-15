@@ -121,7 +121,7 @@ const NewsContent = () => {
         <select
           onChange={type_filter}
           name="status"
-          className="w-48 rounded-md border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          className="w-48 rounded-md border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-400 appearance-none bg-none"
         >
           <option value="">--- Select Status ---</option>
           <option value="pending">Pending</option>
@@ -234,7 +234,7 @@ const NewsContent = () => {
                       {user?.role === "WRITER" && (
                         <>
                           <Link
-                            href={`/dashboard/newsportal/editnews/${n.id}`}
+                            href={`/dashboards/newsportal/editnews/${n.id}`}
                             className="rounded bg-yellow-500 p-2 text-white hover:bg-yellow-800"
                           >
                             <FaEdit />

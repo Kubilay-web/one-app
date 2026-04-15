@@ -55,7 +55,7 @@ const EditNews = () => {
       setLoading(true);
       const { data } = await axios.put(`/api/news/edit/${news_id}`, formData);
       toast.success(data.message);
-      router.push("/dashboard/newsportal/news");
+      router.push("/dashboards/newsportal/news");
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Update failed");
     } finally {
