@@ -31,7 +31,7 @@ const Home = () => {
           blogs.map((blog) => (
             <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={blog.id}>
               <Link
-                href={`/job-portal/blog/${blog.id}`}
+                href={`home/jobs/blog/${blog.id}`}
                 style={{ textDecoration: "none" }}
               >
                 <div

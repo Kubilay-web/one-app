@@ -97,7 +97,8 @@ export default function JobsCard({ jobs }) {
   const isBookmarked = jobBookmark?.some((item) => item?.jobId === jobs?.id);
 
   const handleClick = () => {
-    router.push(`/job-portal/job/?slug=${jobs?.slug}`);
+    // router.push(`/job-portal/job/?slug=${jobs?.slug}`);
+    router.push(`/home/jobs/job-details/${jobs?.slug}`);
   };
 
   return (

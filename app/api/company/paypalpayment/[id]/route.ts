@@ -63,8 +63,8 @@ export async function POST(
             },
           ],
           application_context: {
-            return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/job-portal/paypal/success?planId=${plan.id}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/job-portal/paypal/cancel`,
+            return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/home/jobs/paypal/success?planId=${plan.id}`,
+            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/home/jobs/paypal/cancel`,
             brand_name: "Your Job Portal",
             user_action: "PAY_NOW",
           },

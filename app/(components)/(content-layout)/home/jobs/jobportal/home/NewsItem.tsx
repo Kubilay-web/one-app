@@ -44,7 +44,7 @@ export default function Home() {
       ) : blogs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map((blog) => (
-            <Link key={blog.id} href={`/job-portal/blog/${blog.id}`}>
+            <Link key={blog.id} href={`/home/jobs/blog/${blog.id}`}>
               <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer">
                 <div className="relative w-full h-48">
                   <img

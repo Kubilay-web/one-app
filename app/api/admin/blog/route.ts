@@ -29,7 +29,7 @@ export async function GET() {
   try {
     // Son 3 blogu getir
     const blogs = await db.blog.findMany({
-      take: 3, // En son 3 blog
+      take: 50, // En son 3 blog
     });
 
     return NextResponse.json(blogs);

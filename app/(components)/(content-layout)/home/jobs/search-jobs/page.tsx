@@ -442,9 +442,9 @@ const SearchJobs = () => {
                       onChange={handleSearchChange}
                       onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit(e)}
                     />
-                    <span className="absolute left-3 top-2.5">
+                    {/* <span className="absolute left-3 top-2.5">
                       <i className="ti ti-search"></i>
-                    </span>
+                    </span> */}
                   </div>
                 </div>
 
@@ -625,7 +625,7 @@ const SearchJobs = () => {
                     </div>
                   )}
 
-                  <div className="xl:col-span-12 col-span-12">
+                  {/* <div className="xl:col-span-12 col-span-12">
                     <div className="box">
                       <div className="box-body">
                         <div className="">
@@ -644,7 +644,7 @@ const SearchJobs = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 
                 {totalPages > 1 && (

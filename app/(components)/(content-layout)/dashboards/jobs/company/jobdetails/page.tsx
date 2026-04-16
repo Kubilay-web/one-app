@@ -164,7 +164,7 @@ export default function JobsDetailsCompany({ searchParams }) {
       const data = await res.json();
       if (res.ok) {
         toast.success("Job updated successfully", { duration: 2000, position: "top-center" });
-        setTimeout(() => router.push("/dashboard/job/company/companyjob"), 2000);
+        setTimeout(() => router.push("/dashboards/jobs/company/companyjob"), 2000);
       } else {
         toast.error(data.err || "Failed to update job");
         setLoading(false);

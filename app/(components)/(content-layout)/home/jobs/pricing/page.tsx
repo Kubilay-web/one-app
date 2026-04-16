@@ -26,7 +26,7 @@ export default function Register() {
   };
 
   const redirectToCheckout = (id: string) => {
-    router.push(`/apps/jobs/chekout/?id=${id}`);
+    router.push(`/home/jobs/checkout/?id=${id}`);
   };
 
   return (

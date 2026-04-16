@@ -68,7 +68,7 @@ const BlogListPage = () => {
         {blogs.map((blog) => (
           <Link
             key={blog.id}
-            href={`/apps/jobs/blog/${blog.slug}`}
+            href={`/home/jobs/blog/${blog.id}`}
             className="block rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white"
           >
             {blog.image && (

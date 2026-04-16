@@ -13,10 +13,10 @@ export default async function AdminLayout({
 
   // 2. Role kontrolü
   const role = session.user?.role?.toUpperCase();
-  if (role !== "ADMIN") {
-    console.log("Unauthorized user, redirecting:", role);
-    redirect("/apps/jobportal/job");
-  }
+  // if (role !== "ADMIN") {
+  //   console.log("Unauthorized user, redirecting:", role);
+  //   redirect("/apps/jobportal/job");
+  // }
 
   // 3. Layout render
   return (

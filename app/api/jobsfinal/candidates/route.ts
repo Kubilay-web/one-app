@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     // Filtreleme koşullarını oluştur
     const where: any = {
-      status: 'available' // Sadece müsait adaylar
+      // status: 'available' // Sadece müsait adaylar
     };
 
     // Kategori filtresi

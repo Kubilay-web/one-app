@@ -476,7 +476,7 @@ const SearchCompany = () => {
                           </span>
                           <div className="ms-2">
                             <div className="font-medium mb-0 h5 flex items-center">
-                              <Link scroll={false} href={`/company/${company.slug}`}>
+                              <Link scroll={false} href={`/home/jobs/company/${company.slug}`}>
                                 {company.name}
                                 {company.isProfileVerified && (
                                   <SpkOverlay>
@@ -525,7 +525,7 @@ const SearchCompany = () => {
                               {company._count?.Jobs || 0} Open Positions
                             </Link>
                           </div>
-                          <Link scroll={false} href={`/company/${company.slug}`} className="ti-btn btn-wave ti-btn-primary !m-0">
+                          <Link scroll={false} href={`/home/jobs/company/${company.slug}`} className="ti-btn btn-wave ti-btn-primary !m-0">
                             View Profile <i className="ri-arrow-right-line align-middle"></i>
                           </Link>
                         </div>

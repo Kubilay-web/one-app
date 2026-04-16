@@ -48,7 +48,7 @@ const PaymentSuccess = () => {
           Thank you
         </p>
         <a
-          href="/"
+          href="/home/jobs/main"
           className="inline-block bg-blue-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-600 transition"
         >
           Back to Home

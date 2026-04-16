@@ -30,7 +30,7 @@ export default function Company() {
   };
 
   const handleEdit = (id: string) => {
-    router.push(`/dashboard/job/company/jobdetails/?id=${id}`);
+    router.push(`/dashboards/jobs/company/jobdetails/?id=${id}`);
   };
 
   const handleDelete = async (id: string) => {
@@ -161,12 +161,12 @@ export default function Company() {
                       >
                         Delete
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => handleApplication(job?.id)}
                         className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-sm transition"
                       >
                         Applications
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 );
