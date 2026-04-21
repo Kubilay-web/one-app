@@ -18,7 +18,7 @@ export default async function page() {
 
 
 
-
+  
   const [classes, allTeachers, departments] = await Promise.all([
     getAllClasses(schoolId),
     getTeachersWithBriefInfo(schoolId),

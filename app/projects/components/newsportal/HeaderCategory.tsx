@@ -143,9 +143,7 @@ const Header_Category = () => {
 
   const get_categories = async () => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/category/all`,
-      );
+      const res = await fetch("/api/news/category/all");
       const data = await res.json();
       set_categories(data.categories);
     } catch (error) {

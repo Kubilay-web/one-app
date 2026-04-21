@@ -4558,9 +4558,1324 @@
 
 
 
+// "use client";
+
+// import { useEffect, useState, useCallback, useMemo } from "react";
+// import Image from "next/image";
+// import Link from "next/link";
+// import { useCartStore } from "@/app/cart-store/useCartStore";
+// import { useCheckoutStore } from "@/app/oneshopstore/cartstore/checkoutstore";
+// import { useToast } from "@/app/projects/components/ui/use-toast";
+// import {
+//   Truck, User, CreditCard, CheckCircle, Plus, Edit2, Trash2,
+//   MapPin, Package, Shield, Tag, X, Calendar, AlertCircle, Loader2
+// } from "lucide-react";
+// import { CartProductType } from "@/app/lib/types";
+
+// interface StoreGroupedItems {
+//   [storeId: string]: CartProductType[];
+// }
+
+// const Checkout = () => {
+//   const { toast } = useToast();
+//   const [loading, setLoading] = useState(true);
+//   const [shippingCalculated, setShippingCalculated] = useState(false);
+//   const [currency, setCurrency] = useState("USD");
+
+//   // Cart store
+//   const {
+//     cart,
+//     totalPrice,
+//     subtotal: cartSubtotal,
+//     shippingFee: cartShippingFee,
+//     appliedCoupon,
+//     clearCart,
+//     removeCoupon,
+//     calculateSubtotal,
+//     recalculateAll,
+//   } = useCartStore();
+
+//   // Checkout store
+//   const {
+//     step,
+//     shippingAddresses,
+//     selectedAddressId,
+//     paymentMethod,
+//     shippingMethod,
+//     note,
+//     countries,
+//     isLoading: checkoutLoading,
+//     error,
+//     shippingFee,
+//     estimatedDeliveryDays,
+//     shippingService,
+//     calculatedShipping,
+//     isProcessingPayment,
+
+//     setStep,
+//     nextStep,
+//     prevStep,
+//     fetchShippingAddresses,
+//     addShippingAddress,
+//     updateShippingAddress,
+//     deleteShippingAddress,
+//     setSelectedAddress,
+//     fetchCountries,
+//     setPaymentMethod,
+//     setShippingMethod,
+//     setNote,
+//     calculateShippingFee,
+//     placeOrder,
+//     resetCheckout,
+//   } = useCheckoutStore();
+
+//   // Form states
+//   const [showAddressForm, setShowAddressForm] = useState(false);
+//   const [editingAddress, setEditingAddress] = useState<null | any>(null);
+//   const [addressForm, setAddressForm] = useState({
+//     firstName: "",
+//     lastName: "",
+//     phone: "",
+//     address1: "",
+//     address2: "",
+//     state: "",
+//     city: "",
+//     zip_code: "",
+//     countryId: "",
+//     default: false,
+//   });
+
+//   // Memoized helper functions
+//   const getCurrencySymbol = useCallback(() => {
+//     switch (currency) {
+//       case "USD": return "$";
+//       case "EUR": return "€";
+//       case "GBP": return "£";
+//       case "TRY": return "₺";
+//       default: return "$";
+//     }
+//   }, [currency]);
+
+//   const getSubTotal = useCallback(() => calculateSubtotal(), [calculateSubtotal]);
+  
+//   const getShippingFees = useCallback(() => {
+//     if (calculatedShipping && shippingFee > 0) {
+//       return shippingMethod === "express" ? shippingFee + 9.99 : shippingFee;
+//     }
+//     return shippingMethod === "express" ? 9.99 : 0;
+//   }, [calculatedShipping, shippingFee, shippingMethod]);
+
+//   const getTotal = useMemo(() => {
+//     const currentShipping = getShippingFees();
+//     let total = totalPrice;
+//     if (total === cartSubtotal - (appliedCoupon?.discountAmount || 0)) {
+//       total += currentShipping;
+//     }
+//     return Math.max(0, total);
+//   }, [totalPrice, cartSubtotal, appliedCoupon, getShippingFees]);
+
+//   const getItemCount = useMemo(() => 
+//     cart.reduce((count, item) => count + item.quantity, 0), 
+//     [cart]
+//   );
+
+//   // Calculate totals with useMemo
+//   const subTotal = useMemo(() => getSubTotal(), [getSubTotal]);
+//   const shippingFees = useMemo(() => getShippingFees(), [getShippingFees]);
+//   const total = getTotal;
+//   const itemCount = getItemCount;
+//   const currencySymbol = getCurrencySymbol();
+
+//   // Calculate delivery date
+//   const getDeliveryDate = useCallback(() => {
+//     const today = new Date();
+//     const minDate = new Date(today);
+//     minDate.setDate(today.getDate() + estimatedDeliveryDays.min);
+//     const maxDate = new Date(today);
+//     maxDate.setDate(today.getDate() + estimatedDeliveryDays.max);
+//     return {
+//       min: minDate.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
+//       max: maxDate.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
+//     };
+//   }, [estimatedDeliveryDays]);
+
+//   const deliveryDate = useMemo(() => getDeliveryDate(), [getDeliveryDate]);
+
+//   // Optimized data loading with parallel fetching
+//   useEffect(() => {
+//     const loadData = async () => {
+//       try {
+//         setLoading(true);
+//         const savedCurrency = localStorage.getItem("preferred-currency") || "USD";
+//         setCurrency(savedCurrency);
+
+//         // Load cart from localStorage
+//         const cartStoreData = localStorage.getItem("cart-store");
+//         if (cartStoreData) {
+//           try {
+//             const parsedData = JSON.parse(cartStoreData);
+//             const cartFromStorage = parsedData.state?.cart || [];
+//             if (cartFromStorage.length > 0) {
+//               useCartStore.getState().setCart(cartFromStorage);
+//             }
+//           } catch (e) {
+//             console.error("Error parsing cart-store:", e);
+//           }
+//         }
+
+//         // Parallel fetch with abort controllers
+//         const abortController1 = new AbortController();
+//         const abortController2 = new AbortController();
+//         const timeoutId1 = setTimeout(() => abortController1.abort(), 10000);
+//         const timeoutId2 = setTimeout(() => abortController2.abort(), 10000);
+
+//         await Promise.all([
+//           fetchShippingAddresses(),
+//           fetchCountries()
+//         ]);
+
+//         clearTimeout(timeoutId1);
+//         clearTimeout(timeoutId2);
+//       } catch (error) {
+//         if (error instanceof Error && error.name !== 'AbortError') {
+//           toast({
+//             title: "Error",
+//             description: "Failed to load checkout data.",
+//             variant: "destructive",
+//           });
+//         }
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     loadData();
+//   }, [fetchShippingAddresses, fetchCountries, toast]);
+
+//   // Debounced shipping calculation
+//   const debouncedCalculateShipping = useCallback(
+//     (() => {
+//       let timeoutId: NodeJS.Timeout;
+//       return (cartItems: any[], countryId: string) => {
+//         clearTimeout(timeoutId);
+//         timeoutId = setTimeout(() => {
+//           calculateShippingFee(cartItems, countryId, undefined, currency).catch(console.error);
+//         }, 500);
+//       };
+//     })(),
+//     [calculateShippingFee, currency]
+//   );
+
+//   // Calculate shipping when address or cart changes - with debounce
+//   useEffect(() => {
+//     if (!selectedAddressId || cart.length === 0) return;
+
+//     const calculateShipping = async () => {
+//       try {
+//         const selectedAddress = shippingAddresses.find(
+//           (addr) => addr.id === selectedAddressId
+//         );
+//         if (!selectedAddress?.countryId) return;
+
+//         const cartItems = cart.map((item) => ({
+//           productId: item.productId,
+//           variantId: item.variantId,
+//           sizeId: item.sizeId,
+//           quantity: item.quantity,
+//           price: item.price,
+//           storeId: item.storeId || "default-store",
+//         }));
+
+//         debouncedCalculateShipping(cartItems, selectedAddress.countryId);
+//         setShippingCalculated(true);
+//       } catch (error) {
+//         toast({
+//           title: "Shipping Error",
+//           description: "Failed to calculate shipping costs.",
+//           variant: "destructive",
+//         });
+//       }
+//     };
+
+//     calculateShipping();
+//   }, [selectedAddressId, cart, shippingAddresses, debouncedCalculateShipping, toast]);
+
+//   // Optimized address handlers with useCallback
+//   const handleAddressSubmit = useCallback(async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     try {
+//       if (editingAddress) {
+//         await updateShippingAddress(editingAddress.id, addressForm);
+//         toast({ title: "Address updated", description: "Shipping address has been updated." });
+//       } else {
+//         await addShippingAddress(addressForm);
+//         toast({ title: "Address added", description: "New shipping address has been added." });
+//       }
+//       setShowAddressForm(false);
+//       setEditingAddress(null);
+//       setAddressForm({
+//         firstName: "", lastName: "", phone: "", address1: "", address2: "",
+//         state: "", city: "", zip_code: "", countryId: "", default: false,
+//       });
+//     } catch (error: any) {
+//       toast({
+//         title: "Error",
+//         description: error.message || "Failed to save address.",
+//         variant: "destructive",
+//       });
+//     }
+//   }, [editingAddress, addressForm, updateShippingAddress, addShippingAddress, toast]);
+
+//   const handleEditAddress = useCallback((address: any) => {
+//     setEditingAddress(address);
+//     setAddressForm({
+//       firstName: address.firstName,
+//       lastName: address.lastName,
+//       phone: address.phone,
+//       address1: address.address1,
+//       address2: address.address2 || "",
+//       state: address.state,
+//       city: address.city,
+//       zip_code: address.zip_code,
+//       countryId: address.countryId,
+//       default: address.default,
+//     });
+//     setShowAddressForm(true);
+//   }, []);
+
+//   const handleDeleteAddress = useCallback(async (id: string) => {
+//     if (!confirm("Are you sure you want to delete this address?")) return;
+//     try {
+//       await deleteShippingAddress(id);
+//       toast({ title: "Address deleted", description: "Shipping address has been deleted." });
+//     } catch (error: any) {
+//       toast({
+//         title: "Error",
+//         description: error.message || "Failed to delete address.",
+//         variant: "destructive",
+//       });
+//     }
+//   }, [deleteShippingAddress, toast]);
+
+//   const handleAddressSelect = useCallback((addressId: string) => {
+//     setSelectedAddress(addressId);
+//   }, [setSelectedAddress]);
+
+//   const handleRemoveCouponClick = useCallback(async () => {
+//     if (!appliedCoupon || !confirm("Are you sure you want to remove this coupon?")) return;
+//     try {
+//       removeCoupon();
+//       recalculateAll();
+//       toast({ title: "Coupon removed", description: "Coupon has been removed from your order." });
+//     } catch (error: any) {
+//       toast({
+//         title: "Error",
+//         description: error.message || "Failed to remove coupon.",
+//         variant: "destructive",
+//       });
+//     }
+//   }, [appliedCoupon, removeCoupon, recalculateAll, toast]);
+
+//   const handlePaymentMethodSelect = useCallback((method: string) => {
+//     setPaymentMethod(method as any);
+//     if (method === "cod" || method === "upi") {
+//       setTimeout(() => nextStep(), 500);
+//     }
+//   }, [setPaymentMethod, nextStep]);
+
+//   const handlePlaceOrder = useCallback(async () => {
+//     if (isProcessingPayment) return;
+    
+//     // Validations
+//     if (!selectedAddressId) {
+//       toast({
+//         title: "Error",
+//         description: "Please select a shipping address.",
+//         variant: "destructive",
+//       });
+//       return;
+//     }
+//     if (!paymentMethod) {
+//       toast({
+//         title: "Error",
+//         description: "Please select a payment method.",
+//         variant: "destructive",
+//       });
+//       return;
+//     }
+//     if (cart.length === 0) {
+//       toast({
+//         title: "Error",
+//         description: "Your cart is empty.",
+//         variant: "destructive",
+//       });
+//       return;
+//     }
+
+//     try {
+//       const result = await placeOrder(currency);
+
+//       if (result.success) {
+//         if (result.paymentUrl && (paymentMethod === "card" || paymentMethod === "paypal")) {
+//           window.location.href = result.paymentUrl;
+//         } else if (result.order?.id) {
+//           clearCart();
+//           resetCheckout();
+//           toast({
+//             title: "Order Placed Successfully!",
+//             description: "Redirecting to order details...",
+//           });
+//           setTimeout(() => {
+//             window.location.href = `/shop/order/${result.order.id}`;
+//           }, 1500);
+//         }
+//       } else {
+//         toast({
+//           title: "Order Failed",
+//           description: result.error || "Failed to place order.",
+//           variant: "destructive",
+//         });
+//       }
+//     } catch (error: any) {
+//       toast({
+//         title: "Error",
+//         description: error.message || "An unexpected error occurred.",
+//         variant: "destructive",
+//       });
+//     }
+//   }, [isProcessingPayment, selectedAddressId, paymentMethod, cart, currency, placeOrder, clearCart, resetCheckout, toast]);
+
+//   // Memoized selected address
+//   const selectedAddress = useMemo(() => 
+//     shippingAddresses.find((a) => a.id === selectedAddressId),
+//     [shippingAddresses, selectedAddressId]
+//   );
+
+//   // Currency selector component
+//   const CurrencySelector = useMemo(() => () => (
+//     <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+//       <div className="flex items-center justify-between mb-3">
+//         <div className="flex items-center gap-2">
+//           <CreditCard className="w-5 h-5 text-blue-600" />
+//           <span className="font-medium">Payment Currency</span>
+//         </div>
+//         <select
+//           value={currency}
+//           onChange={(e) => {
+//             setCurrency(e.target.value);
+//             localStorage.setItem("preferred-currency", e.target.value);
+//           }}
+//           className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-sm"
+//         >
+//           <option value="USD">USD ($)</option>
+//           <option value="EUR">EUR (€)</option>
+//           <option value="GBP">GBP (£)</option>
+//           <option value="TRY">TRY (₺)</option>
+//         </select>
+//       </div>
+//       <p className="text-sm text-gray-500">
+//         All amounts will be shown in your selected currency
+//       </p>
+//     </div>
+//   ), [currency]);
+
+//   // Loading state
+//   if (loading || checkoutLoading) {
+//     return (
+//       <div className="container mx-auto px-4 py-8">
+//         <div className="animate-pulse">
+//           <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4"></div>
+//           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+//             <div className="lg:col-span-2 space-y-4">
+//               <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+//               <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+//             </div>
+//             <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded"></div>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   // Empty cart
+//   if (cart.length === 0 && !loading) {
+//     return (
+//       <div className="container mx-auto px-4 py-16">
+//         <div className="max-w-md mx-auto text-center">
+//           <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+//             <Package className="w-12 h-12 text-gray-400" />
+//           </div>
+//           <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
+//           <p className="text-gray-500 mb-8">Add some items to your cart before checkout.</p>
+//           <Link
+//             href="/shop"
+//             className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
+//           >
+//             Continue Shopping
+//           </Link>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="container mx-auto px-4 py-8">
+//       {/* Header */}
+//       <div className="mb-8">
+//         <h1 className="text-3xl font-bold">Checkout</h1>
+//         <p className="text-gray-500">
+//           {itemCount} item{itemCount !== 1 ? "s" : ""} in your order
+//         </p>
+//       </div>
+
+//       {/* Currency Selector */}
+//       <CurrencySelector />
+
+//       {/* Progress Steps */}
+//       <div className="mb-8">
+//         <div className="flex items-center justify-center mb-4">
+//           {[1, 2, 3].map((stepNumber) => (
+//             <div key={stepNumber} className="flex items-center">
+//               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+//                 step >= stepNumber
+//                   ? "bg-blue-600 text-white"
+//                   : "bg-gray-100 dark:bg-gray-800 text-gray-400"
+//               }`}>
+//                 {stepNumber}
+//               </div>
+//               {stepNumber < 3 && (
+//                 <div className={`h-1 w-16 mx-2 ${
+//                   step > stepNumber ? "bg-blue-600" : "bg-gray-200 dark:bg-gray-700"
+//                 }`} />
+//               )}
+//             </div>
+//           ))}
+//         </div>
+//         <div className="flex justify-between text-sm max-w-md mx-auto">
+//           <span className={step === 1 ? "text-blue-600 font-medium" : "text-gray-500"}>
+//             Shipping Address
+//           </span>
+//           <span className={step === 2 ? "text-blue-600 font-medium" : "text-gray-500"}>
+//             Payment Method
+//           </span>
+//           <span className={step === 3 ? "text-blue-600 font-medium" : "text-gray-500"}>
+//             Confirmation
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* Shipping Information Card */}
+//       {selectedAddressId && shippingCalculated && shippingFee > 0 && step < 3 && (
+//         <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+//           <div className="flex items-start gap-3">
+//             <Truck className="w-5 h-5 text-blue-600 mt-0.5" />
+//             <div className="flex-1">
+//               <div className="flex justify-between items-start mb-2">
+//                 <div>
+//                   <p className="font-medium text-blue-800 dark:text-blue-400">Shipping Information</p>
+//                   <p className="text-sm text-blue-600 dark:text-blue-300">
+//                     {shippingService}
+//                     {shippingMethod === "express" && " • Express Shipping"}
+//                   </p>
+//                 </div>
+//                 <p className="font-bold text-blue-700 dark:text-blue-300">
+//                   {currencySymbol}{shippingFees.toFixed(2)}
+//                 </p>
+//               </div>
+//               <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+//                 <Calendar className="w-4 h-4" />
+//                 <span>Estimated delivery: {deliveryDate.min} - {deliveryDate.max}</span>
+//               </div>
+//               {selectedAddress && (
+//                 <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+//                   Shipping to: {selectedAddress.country?.name}
+//                 </p>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+//         {/* Main Checkout Content */}
+//         <div className="lg:col-span-2">
+//           {error && (
+//             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+//               <div className="flex items-center gap-2">
+//                 <AlertCircle className="w-5 h-5 text-red-600" />
+//                 <p className="text-red-600 dark:text-red-400">{error}</p>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Step 1: Shipping Address */}
+//           {step === 1 && (
+//             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+//               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+//                 <div className="flex items-center gap-2 mb-2">
+//                   <MapPin className="w-5 h-5 text-blue-600" />
+//                   <h2 className="text-xl font-semibold">Shipping Address</h2>
+//                 </div>
+//                 <p className="text-gray-500">Select or add a shipping address</p>
+//               </div>
+
+//               <div className="p-6">
+//                 {/* Address List */}
+//                 <div className="space-y-4 mb-6">
+//                   {shippingAddresses.length === 0 ? (
+//                     <div className="text-center py-8">
+//                       <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+//                       <p className="text-gray-500 mb-4">No shipping addresses saved yet.</p>
+//                       <button
+//                         onClick={() => setShowAddressForm(true)}
+//                         className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+//                       >
+//                         Add Your First Address
+//                       </button>
+//                     </div>
+//                   ) : (
+//                     shippingAddresses.map((address) => (
+//                       <div
+//                         key={address.id}
+//                         className={`p-4 border rounded-lg cursor-pointer transition-all ${
+//                           selectedAddressId === address.id
+//                             ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+//                             : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+//                         }`}
+//                         onClick={() => handleAddressSelect(address.id)}
+//                       >
+//                         <div className="flex justify-between items-start">
+//                           <div>
+//                             <div className="flex items-center gap-2 mb-1">
+//                               <p className="font-medium">{address.firstName} {address.lastName}</p>
+//                               {address.default && (
+//                                 <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded">
+//                                   Default
+//                                 </span>
+//                               )}
+//                             </div>
+//                             <p className="text-gray-600 dark:text-gray-400">
+//                               {address.address1}
+//                               {address.address2 && `, ${address.address2}`}
+//                             </p>
+//                             <p className="text-gray-600 dark:text-gray-400">
+//                               {address.city}, {address.state} {address.zip_code}
+//                             </p>
+//                             <p className="text-gray-600 dark:text-gray-400">{address.country?.name}</p>
+//                             <p className="text-gray-600 dark:text-gray-400">Phone: {address.phone}</p>
+//                           </div>
+//                           <div className="flex gap-2">
+//                             <button
+//                               onClick={(e) => {
+//                                 e.stopPropagation();
+//                                 handleEditAddress(address);
+//                               }}
+//                               className="p-2 text-gray-500 hover:text-blue-600"
+//                             >
+//                               <Edit2 className="w-4 h-4" />
+//                             </button>
+//                             {!address.default && (
+//                               <button
+//                                 onClick={(e) => {
+//                                   e.stopPropagation();
+//                                   handleDeleteAddress(address.id);
+//                                 }}
+//                                 className="p-2 text-gray-500 hover:text-red-600"
+//                               >
+//                                 <Trash2 className="w-4 h-4" />
+//                               </button>
+//                             )}
+//                           </div>
+//                         </div>
+//                       </div>
+//                     ))
+//                   )}
+//                 </div>
+
+//                 {/* Add New Address Button */}
+//                 {!showAddressForm && shippingAddresses.length > 0 && (
+//                   <button
+//                     onClick={() => setShowAddressForm(true)}
+//                     className="w-full p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors"
+//                   >
+//                     <div className="flex items-center justify-center gap-2">
+//                       <Plus className="w-5 h-5" />
+//                       <span>Add New Address</span>
+//                     </div>
+//                   </button>
+//                 )}
+
+//                 {/* Address Form */}
+//                 {showAddressForm && (
+//                   <form onSubmit={handleAddressSubmit} className="mt-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+//                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+//                       <div>
+//                         <label className="block text-sm font-medium mb-2">First Name *</label>
+//                         <input
+//                           type="text"
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.firstName}
+//                           onChange={(e) => setAddressForm({ ...addressForm, firstName: e.target.value })}
+//                         />
+//                       </div>
+//                       <div>
+//                         <label className="block text-sm font-medium mb-2">Last Name *</label>
+//                         <input
+//                           type="text"
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.lastName}
+//                           onChange={(e) => setAddressForm({ ...addressForm, lastName: e.target.value })}
+//                         />
+//                       </div>
+//                       <div>
+//                         <label className="block text-sm font-medium mb-2">Phone *</label>
+//                         <input
+//                           type="tel"
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.phone}
+//                           onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })}
+//                         />
+//                       </div>
+//                       <div>
+//                         <label className="block text-sm font-medium mb-2">Country *</label>
+//                         <select
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.countryId}
+//                           onChange={(e) => setAddressForm({ ...addressForm, countryId: e.target.value })}
+//                         >
+//                           <option value="">Select Country</option>
+//                           {countries.map((country) => (
+//                             <option key={country.id} value={country.id}>{country.name}</option>
+//                           ))}
+//                         </select>
+//                       </div>
+//                       <div className="md:col-span-2">
+//                         <label className="block text-sm font-medium mb-2">Address Line 1 *</label>
+//                         <input
+//                           type="text"
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.address1}
+//                           onChange={(e) => setAddressForm({ ...addressForm, address1: e.target.value })}
+//                         />
+//                       </div>
+//                       <div className="md:col-span-2">
+//                         <label className="block text-sm font-medium mb-2">Address Line 2 (Optional)</label>
+//                         <input
+//                           type="text"
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.address2}
+//                           onChange={(e) => setAddressForm({ ...addressForm, address2: e.target.value })}
+//                         />
+//                       </div>
+//                       <div>
+//                         <label className="block text-sm font-medium mb-2">City *</label>
+//                         <input
+//                           type="text"
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.city}
+//                           onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
+//                         />
+//                       </div>
+//                       <div>
+//                         <label className="block text-sm font-medium mb-2">State/Province *</label>
+//                         <input
+//                           type="text"
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.state}
+//                           onChange={(e) => setAddressForm({ ...addressForm, state: e.target.value })}
+//                         />
+//                       </div>
+//                       <div>
+//                         <label className="block text-sm font-medium mb-2">ZIP/Postal Code *</label>
+//                         <input
+//                           type="text"
+//                           required
+//                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+//                           value={addressForm.zip_code}
+//                           onChange={(e) => setAddressForm({ ...addressForm, zip_code: e.target.value })}
+//                         />
+//                       </div>
+//                       <div className="md:col-span-2 flex items-center">
+//                         <input
+//                           type="checkbox"
+//                           id="defaultAddress"
+//                           className="mr-2"
+//                           checked={addressForm.default}
+//                           onChange={(e) => setAddressForm({ ...addressForm, default: e.target.checked })}
+//                         />
+//                         <label htmlFor="defaultAddress" className="text-sm">Set as default shipping address</label>
+//                       </div>
+//                     </div>
+//                     <div className="flex gap-2">
+//                       <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+//                         {editingAddress ? "Update Address" : "Save Address"}
+//                       </button>
+//                       <button
+//                         type="button"
+//                         onClick={() => {
+//                           setShowAddressForm(false);
+//                           setEditingAddress(null);
+//                           setAddressForm({
+//                             firstName: "", lastName: "", phone: "", address1: "", address2: "",
+//                             state: "", city: "", zip_code: "", countryId: "", default: false,
+//                           });
+//                         }}
+//                         className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+//                       >
+//                         Cancel
+//                       </button>
+//                     </div>
+//                   </form>
+//                 )}
+//               </div>
+
+//               <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+//                 <button
+//                   onClick={nextStep}
+//                   className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+//                   disabled={!selectedAddressId}
+//                 >
+//                   Continue to Payment
+//                   <CreditCard className="w-4 h-4" />
+//                 </button>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Step 2: Payment */}
+//           {step === 2 && (
+//             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+//               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+//                 <div className="flex items-center gap-2 mb-2">
+//                   <CreditCard className="w-5 h-5 text-blue-600" />
+//                   <h2 className="text-xl font-semibold">Payment Method</h2>
+//                 </div>
+//                 <p className="text-gray-500">Choose your preferred payment method</p>
+//               </div>
+
+//               <div className="p-6">
+//                 {/* Selected Address Display */}
+//                 {selectedAddressId && selectedAddress && (
+//                   <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+//                     <div className="flex items-start gap-3">
+//                       <MapPin className="w-5 h-5 text-blue-600 mt-0.5" />
+//                       <div className="flex-1">
+//                         <p className="font-medium text-blue-800 dark:text-blue-400 mb-1">Shipping to:</p>
+//                         <p className="text-sm text-blue-700 dark:text-blue-300">
+//                           {selectedAddress.firstName} {selectedAddress.lastName}
+//                         </p>
+//                         <p className="text-sm text-blue-600 dark:text-blue-400">
+//                           {selectedAddress.address1}
+//                           {selectedAddress.address2 && `, ${selectedAddress.address2}`}
+//                         </p>
+//                         <p className="text-sm text-blue-600 dark:text-blue-400">
+//                           {selectedAddress.city}, {selectedAddress.state} {selectedAddress.zip_code}
+//                         </p>
+//                         <p className="text-sm text-blue-600 dark:text-blue-400">{selectedAddress.country?.name}</p>
+//                         <p className="text-sm text-blue-600 dark:text-blue-400">Phone: {selectedAddress.phone}</p>
+//                       </div>
+//                       <button
+//                         onClick={() => setStep(1)}
+//                         className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+//                       >
+//                         Change
+//                       </button>
+//                     </div>
+//                   </div>
+//                 )}
+
+//                 {/* Payment Method Selection */}
+//                 <div className="space-y-4 mb-6">
+//                   <button
+//                     onClick={() => handlePaymentMethodSelect("card")}
+//                     disabled={isProcessingPayment}
+//                     className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
+//                       paymentMethod === "card"
+//                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+//                         : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+//                     } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
+//                   >
+//                     <div className="flex items-center gap-3">
+//                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
+//                         <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+//                       </div>
+//                       <div>
+//                         <p className="font-medium">Credit/Debit Card (Stripe)</p>
+//                         <p className="text-sm text-gray-500">Secure payment with Stripe</p>
+//                       </div>
+//                     </div>
+//                     <div className="flex gap-2">
+//                       <div className="w-10 h-6 bg-blue-100 rounded flex items-center justify-center">
+//                         <span className="text-xs font-bold text-blue-700">VISA</span>
+//                       </div>
+//                       <div className="w-10 h-6 bg-red-100 rounded flex items-center justify-center">
+//                         <span className="text-xs font-bold text-red-700">MC</span>
+//                       </div>
+//                     </div>
+//                   </button>
+
+//                   <button
+//                     onClick={() => handlePaymentMethodSelect("paypal")}
+//                     disabled={isProcessingPayment}
+//                     className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
+//                       paymentMethod === "paypal"
+//                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+//                         : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+//                     } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
+//                   >
+//                     <div className="flex items-center gap-3">
+//                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
+//                         <span className="text-lg font-bold text-blue-700">P</span>
+//                       </div>
+//                       <div>
+//                         <p className="font-medium">PayPal</p>
+//                         <p className="text-sm text-gray-500">Pay with your PayPal account</p>
+//                       </div>
+//                     </div>
+//                     <div>
+//                       <span className="text-lg font-bold text-blue-700">PayPal</span>
+//                     </div>
+//                   </button>
+
+//                   <button
+//                     onClick={() => handlePaymentMethodSelect("cod")}
+//                     disabled={isProcessingPayment}
+//                     className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
+//                       paymentMethod === "cod"
+//                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+//                         : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+//                     } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
+//                   >
+//                     <div className="flex items-center gap-3">
+//                       <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded flex items-center justify-center">
+//                         <Package className="w-5 h-5 text-green-600 dark:text-green-400" />
+//                       </div>
+//                       <div>
+//                         <p className="font-medium">Cash on Delivery</p>
+//                         <p className="text-sm text-gray-500">Pay when you receive your order</p>
+//                       </div>
+//                     </div>
+//                   </button>
+
+//                   <button
+//                     onClick={() => handlePaymentMethodSelect("upi")}
+//                     disabled={isProcessingPayment}
+//                     className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
+//                       paymentMethod === "upi"
+//                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+//                         : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+//                     } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
+//                   >
+//                     <div className="flex items-center gap-3">
+//                       <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded flex items-center justify-center">
+//                         <CreditCard className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+//                       </div>
+//                       <div>
+//                         <p className="font-medium">UPI</p>
+//                         <p className="text-sm text-gray-500">Pay using UPI payment methods</p>
+//                       </div>
+//                     </div>
+//                   </button>
+//                 </div>
+
+//                 {/* Security Note */}
+//                 <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+//                   <div className="flex items-center gap-2 mb-2">
+//                     <Shield className="w-5 h-5 text-green-600" />
+//                     <p className="font-medium">Secure Payment</p>
+//                   </div>
+//                   <p className="text-sm text-gray-600 dark:text-gray-400">
+//                     Your payment is processed securely. We never store your card details.
+//                     All transactions are encrypted and PCI compliant.
+//                   </p>
+//                 </div>
+//               </div>
+
+//               <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+//                 <button
+//                   onClick={prevStep}
+//                   className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+//                   disabled={isProcessingPayment}
+//                 >
+//                   Back to Address
+//                 </button>
+
+//                 {/* Place Order Button */}
+//                 {paymentMethod && (
+//                   <button
+//                     onClick={handlePlaceOrder}
+//                     className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+//                     disabled={isProcessingPayment}
+//                   >
+//                     {isProcessingPayment ? (
+//                       <>
+//                         <Loader2 className="w-4 h-4 animate-spin" />
+//                         Processing...
+//                       </>
+//                     ) : (
+//                       <>
+//                         {paymentMethod === "card" || paymentMethod === "paypal"
+//                           ? "Proceed to Payment"
+//                           : "Place Order"}
+//                         {paymentMethod === "card" || paymentMethod === "paypal" ? (
+//                           <CreditCard className="w-4 h-4" />
+//                         ) : (
+//                           <CheckCircle className="w-4 h-4" />
+//                         )}
+//                       </>
+//                     )}
+//                   </button>
+//                 )}
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Step 3: Confirmation (for COD/UPI) */}
+//           {step === 3 && (paymentMethod === "cod" || paymentMethod === "upi") && (
+//             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+//               <div className="p-12 text-center">
+//                 <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+//                   <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
+//                 </div>
+//                 <h2 className="text-2xl font-bold mb-2">Order Confirmed! 🎉</h2>
+//                 <p className="text-gray-500 mb-6">
+//                   Thank you for your order. We've sent a confirmation email with your order details.
+//                 </p>
+
+//                 <div className="max-w-md mx-auto bg-gray-50 dark:bg-gray-900 rounded-lg p-6 mb-6">
+//                   <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded">
+//                     <div className="flex items-center justify-between mb-2">
+//                       <div className="flex items-center">
+//                         <Truck className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
+//                         <span className="font-medium text-blue-700 dark:text-blue-300">
+//                           {shippingMethod === "express" ? "Express Shipping" : "Standard Shipping"}
+//                         </span>
+//                       </div>
+//                       <span className="font-bold text-blue-700 dark:text-blue-300">
+//                         {currencySymbol}{shippingFees.toFixed(2)}
+//                       </span>
+//                     </div>
+//                     <div className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400">
+//                       <Calendar className="w-3 h-3" />
+//                       <span>Estimated delivery: {deliveryDate.min} - {deliveryDate.max}</span>
+//                     </div>
+//                   </div>
+
+//                   {appliedCoupon && (
+//                     <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded">
+//                       <div className="flex items-center justify-between">
+//                         <div className="flex items-center">
+//                           <Tag className="w-4 h-4 mr-2 text-green-600 dark:text-green-400" />
+//                           <span className="font-medium text-green-700 dark:text-green-300">
+//                             {appliedCoupon.couponCode}
+//                           </span>
+//                         </div>
+//                         <span className="font-bold text-green-700 dark:text-green-300">
+//                           -{currencySymbol}{appliedCoupon.discountAmount.toFixed(2)}
+//                         </span>
+//                       </div>
+//                     </div>
+//                   )}
+
+//                   <div className="flex justify-between items-center text-lg font-bold pt-4 border-t border-gray-200 dark:border-gray-700">
+//                     <span>Total</span>
+//                     <span>{currencySymbol}{total.toFixed(2)}</span>
+//                   </div>
+//                 </div>
+
+//                 <div className="space-x-4">
+//                   <button
+//                     onClick={handlePlaceOrder}
+//                     className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+//                     disabled={isProcessingPayment}
+//                   >
+//                     {isProcessingPayment ? (
+//                       <>
+//                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+//                         Processing...
+//                       </>
+//                     ) : (
+//                       "Complete Order"
+//                     )}
+//                   </button>
+//                   <Link
+//                     href="/shop"
+//                     className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+//                   >
+//                     Continue Shopping
+//                   </Link>
+//                 </div>
+//               </div>
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Order Summary Sidebar */}
+//         <div>
+//           <div className="sticky top-8 space-y-6">
+//             {/* Order Summary */}
+//             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+//               <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+//                 <div className="flex justify-between items-center">
+//                   <div>
+//                     <h3 className="text-lg font-semibold">Order Summary</h3>
+//                     <p className="text-sm text-gray-500">
+//                       {itemCount} item{itemCount !== 1 ? "s" : ""}
+//                     </p>
+//                   </div>
+//                   {appliedCoupon && (
+//                     <div className="flex items-center text-green-600 dark:text-green-400">
+//                       <Tag className="w-4 h-4 mr-1" />
+//                       <span className="text-sm font-medium">{appliedCoupon.couponCode}</span>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+
+//               <div className="p-4">
+//                 {/* Cart Items Preview */}
+//                 <div className="mb-4 max-h-80 overflow-y-auto">
+//                   {cart.slice(0, 3).map((item) => (
+//                     <div
+//                       key={`${item.productId}-${item.variantId}-${item.sizeId}`}
+//                       className="flex items-center gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
+//                     >
+//                       <div className="relative w-16 h-16 flex-shrink-0">
+//                         <Image
+//                           src={item.image || "/placeholder-product.jpg"}
+//                           alt={item.name}
+//                           fill
+//                           className="object-cover rounded-md"
+//                           sizes="64px"
+//                           loading="lazy"
+//                         />
+//                         <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center">
+//                           {item.quantity}
+//                         </div>
+//                       </div>
+//                       <div className="flex-1 min-w-0">
+//                         <p className="font-medium text-sm truncate">{item.name}</p>
+//                         <p className="text-xs text-gray-500">Size: {item.size} | {item.sku}</p>
+//                         <p className="font-bold text-sm">
+//                           {currencySymbol}{(item.price * item.quantity).toFixed(2)}
+//                         </p>
+//                       </div>
+//                     </div>
+//                   ))}
+//                   {cart.length > 3 && (
+//                     <div className="text-center py-2">
+//                       <p className="text-sm text-gray-500">
+//                         +{cart.length - 3} more item{cart.length - 3 !== 1 ? "s" : ""}
+//                       </p>
+//                     </div>
+//                   )}
+//                 </div>
+
+//                 {/* Price Breakdown */}
+//                 <div className="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+//                   <div className="flex justify-between">
+//                     <span className="text-gray-600">
+//                       {appliedCoupon ? "Subtotal (Before Discount)" : "Subtotal"}
+//                     </span>
+//                     <span className={`${appliedCoupon ? "text-gray-500 line-through" : "font-medium"}`}>
+//                       {currencySymbol}{subTotal.toFixed(2)}
+//                     </span>
+//                   </div>
+
+//                   {appliedCoupon && (
+//                     <>
+//                       <div className="flex justify-between text-green-600 dark:text-green-400">
+//                         <span className="flex items-center">
+//                           <Tag className="w-3 h-3 mr-1" />
+//                           Discount ({appliedCoupon.couponCode})
+//                         </span>
+//                         <span>-{currencySymbol}{appliedCoupon.discountAmount.toFixed(2)}</span>
+//                       </div>
+//                       <div className="flex justify-between font-medium pb-2 border-b border-gray-100 dark:border-gray-700">
+//                         <span>Discounted Subtotal</span>
+//                         <span>{currencySymbol}{(subTotal - appliedCoupon.discountAmount).toFixed(2)}</span>
+//                       </div>
+//                     </>
+//                   )}
+
+//                   <div className="flex justify-between pt-2">
+//                     <span className="text-gray-600">Shipping</span>
+//                     <span className="font-medium">
+//                       {shippingFees === 0 ? "Free" : (
+//                         <>
+//                           {currencySymbol}{shippingFees.toFixed(2)}
+//                           {shippingCalculated && (
+//                             <span className="text-xs text-gray-500 ml-1">
+//                               ({shippingMethod === "express" ? "Express" : "Standard"})
+//                             </span>
+//                           )}
+//                         </>
+//                       )}
+//                     </span>
+//                   </div>
+
+//                   <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
+//                     <span>Total</span>
+//                     <span>{currencySymbol}{total.toFixed(2)}</span>
+//                   </div>
+
+//                   {appliedCoupon && step < 3 && (
+//                     <div className="pt-3">
+//                       <button
+//                         onClick={handleRemoveCouponClick}
+//                         className="w-full flex items-center justify-center gap-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 py-2 border border-red-200 dark:border-red-800 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+//                       >
+//                         <X className="w-3 h-3" />
+//                         Remove Coupon
+//                       </button>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Applied Coupon Info Card */}
+//             {appliedCoupon && (
+//               <div className="bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm border border-green-200 dark:border-green-700 p-4">
+//                 <div className="flex items-center justify-between mb-3">
+//                   <div className="flex items-center gap-2">
+//                     <Tag className="w-5 h-5 text-green-600 dark:text-green-400" />
+//                     <h4 className="font-medium text-green-800 dark:text-green-400">Coupon Applied</h4>
+//                   </div>
+//                   <span className="text-xs font-medium px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
+//                     {appliedCoupon.discountPercentage}% OFF
+//                   </span>
+//                 </div>
+//                 <div className="space-y-2">
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-sm text-green-700 dark:text-green-300">
+//                       Code: <span className="font-mono font-bold">{appliedCoupon.couponCode}</span>
+//                     </span>
+//                     <span className="font-bold text-green-700 dark:text-green-300">
+//                       -{currencySymbol}{appliedCoupon.discountAmount.toFixed(2)}
+//                     </span>
+//                   </div>
+//                   <p className="text-xs text-green-600 dark:text-green-400">
+//                     You saved {currencySymbol}{appliedCoupon.discountAmount.toFixed(2)} on this order
+//                   </p>
+//                 </div>
+//               </div>
+//             )}
+
+//             {/* Shipping Information Card */}
+//             {selectedAddressId && shippingCalculated && shippingFee > 0 && (
+//               <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm border border-blue-100 dark:border-blue-700 p-4">
+//                 <div className="flex items-center justify-between mb-3">
+//                   <div className="flex items-center gap-2">
+//                     <Truck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+//                     <h4 className="font-medium text-blue-800 dark:text-blue-400">Shipping Details</h4>
+//                   </div>
+//                 </div>
+//                 <div className="space-y-2">
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-sm text-blue-700 dark:text-blue-300">Service</span>
+//                     <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+//                       {shippingService}
+//                     </span>
+//                   </div>
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-sm text-blue-700 dark:text-blue-300">Delivery Time</span>
+//                     <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+//                       {estimatedDeliveryDays.min}-{estimatedDeliveryDays.max} days
+//                     </span>
+//                   </div>
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-sm text-blue-700 dark:text-blue-300">Method</span>
+//                     <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+//                       {shippingMethod === "express" ? `Express (+${currencySymbol}9.99)` : "Standard"}
+//                     </span>
+//                   </div>
+//                   <div className="pt-2 border-t border-blue-100 dark:border-blue-700">
+//                     <div className="flex justify-between items-center">
+//                       <span className="text-sm font-medium text-blue-800 dark:text-blue-400">Total Shipping</span>
+//                       <span className="font-bold text-blue-800 dark:text-blue-400">
+//                         {currencySymbol}{shippingFees.toFixed(2)}
+//                       </span>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+
+//             {/* Security Assurance */}
+//             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+//               <div className="flex items-center gap-2 mb-3">
+//                 <Shield className="w-5 h-5 text-blue-600" />
+//                 <h4 className="font-medium">Shop with Confidence</h4>
+//               </div>
+//               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+//                 <li className="flex items-center gap-2">
+//                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+//                   <span>Secure SSL Encryption</span>
+//                 </li>
+//                 <li className="flex items-center gap-2">
+//                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+//                   <span>30-Day Return Policy</span>
+//                 </li>
+//                 <li className="flex items-center gap-2">
+//                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+//                   <span>Free Shipping Over {currencySymbol}50</span>
+//                 </li>
+//                 <li className="flex items-center gap-2">
+//                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+//                   <span>24/7 Customer Support</span>
+//                 </li>
+//               </ul>
+//             </div>
+
+//             {/* Need Help */}
+//             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-100 dark:border-blue-800">
+//               <h4 className="font-medium text-blue-800 dark:text-blue-400 mb-2">Need Help?</h4>
+//               <p className="text-sm text-blue-600 dark:text-blue-300 mb-3">
+//                 Have questions about your order? We're here to help.
+//               </p>
+//               <Link
+//                 href="/contact"
+//                 className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+//               >
+//                 Contact Support →
+//               </Link>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Checkout;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/app/cart-store/useCartStore";
@@ -4575,6 +5890,521 @@ import { CartProductType } from "@/app/lib/types";
 interface StoreGroupedItems {
   [storeId: string]: CartProductType[];
 }
+
+// Memoized Order Summary Sidebar Component
+const OrderSummarySidebar = memo(({
+  cart,
+  itemCount,
+  subTotal,
+  appliedCoupon,
+  shippingFees,
+  shippingCalculated,
+  shippingMethod,
+  total,
+  currencySymbol,
+  step,
+  onRemoveCoupon
+}: {
+  cart: CartProductType[];
+  itemCount: number;
+  subTotal: number;
+  appliedCoupon: any;
+  shippingFees: number;
+  shippingCalculated: boolean;
+  shippingMethod: string;
+  total: number;
+  currencySymbol: string;
+  step: number;
+  onRemoveCoupon: () => void;
+}) => {
+  const [showAllItems, setShowAllItems] = useState(false);
+  const displayItems = showAllItems ? cart : cart.slice(0, 3);
+
+  return (
+    <div className="sticky top-8 space-y-6">
+      {/* Order Summary */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-semibold">Order Summary</h3>
+              <p className="text-sm text-gray-500">
+                {itemCount} item{itemCount !== 1 ? "s" : ""}
+              </p>
+            </div>
+            {appliedCoupon && (
+              <div className="flex items-center text-green-600 dark:text-green-400">
+                <Tag className="w-4 h-4 mr-1" />
+                <span className="text-sm font-medium">{appliedCoupon.couponCode}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="p-4">
+          {/* Cart Items Preview */}
+          <div className="mb-4 max-h-80 overflow-y-auto">
+            {displayItems.map((item) => (
+              <div
+                key={`${item.productId}-${item.variantId}-${item.sizeId}`}
+                className="flex items-center gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
+              >
+                <div className="relative w-16 h-16 flex-shrink-0">
+                  <Image
+                    src={item.image || "/placeholder-product.jpg"}
+                    alt={item.name}
+                    fill
+                    className="object-cover rounded-md"
+                    sizes="64px"
+                    loading="lazy"
+                  />
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center">
+                    {item.quantity}
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm truncate">{item.name}</p>
+                  <p className="text-xs text-gray-500">Size: {item.size} | {item.sku}</p>
+                  <p className="font-bold text-sm">
+                    {currencySymbol}{(item.price * item.quantity).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            ))}
+            {cart.length > 3 && !showAllItems && (
+              <button
+                onClick={() => setShowAllItems(true)}
+                className="w-full text-center py-2 text-sm text-blue-600 hover:text-blue-700"
+              >
+                +{cart.length - 3} more item{cart.length - 3 !== 1 ? "s" : ""}
+              </button>
+            )}
+            {showAllItems && cart.length > 3 && (
+              <button
+                onClick={() => setShowAllItems(false)}
+                className="w-full text-center py-2 text-sm text-gray-500 hover:text-gray-600"
+              >
+                Show less
+              </button>
+            )}
+          </div>
+
+          {/* Price Breakdown */}
+          <div className="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+            <div className="flex justify-between">
+              <span className="text-gray-600">
+                {appliedCoupon ? "Subtotal (Before Discount)" : "Subtotal"}
+              </span>
+              <span className={`${appliedCoupon ? "text-gray-500 line-through" : "font-medium"}`}>
+                {currencySymbol}{subTotal.toFixed(2)}
+              </span>
+            </div>
+
+            {appliedCoupon && (
+              <>
+                <div className="flex justify-between text-green-600 dark:text-green-400">
+                  <span className="flex items-center">
+                    <Tag className="w-3 h-3 mr-1" />
+                    Discount ({appliedCoupon.couponCode})
+                  </span>
+                  <span>-{currencySymbol}{appliedCoupon.discountAmount.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between font-medium pb-2 border-b border-gray-100 dark:border-gray-700">
+                  <span>Discounted Subtotal</span>
+                  <span>{currencySymbol}{(subTotal - appliedCoupon.discountAmount).toFixed(2)}</span>
+                </div>
+              </>
+            )}
+
+            <div className="flex justify-between pt-2">
+              <span className="text-gray-600">Shipping</span>
+              <span className="font-medium">
+                {shippingFees === 0 ? "Free" : (
+                  <>
+                    {currencySymbol}{shippingFees.toFixed(2)}
+                    {shippingCalculated && (
+                      <span className="text-xs text-gray-500 ml-1">
+                        ({shippingMethod === "express" ? "Express" : "Standard"})
+                      </span>
+                    )}
+                  </>
+                )}
+              </span>
+            </div>
+
+            <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
+              <span>Total</span>
+              <span>{currencySymbol}{total.toFixed(2)}</span>
+            </div>
+
+            {appliedCoupon && step < 3 && (
+              <div className="pt-3">
+                <button
+                  onClick={onRemoveCoupon}
+                  className="w-full flex items-center justify-center gap-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 py-2 border border-red-200 dark:border-red-800 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                  Remove Coupon
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Applied Coupon Info Card */}
+      {appliedCoupon && (
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm border border-green-200 dark:border-green-700 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Tag className="w-5 h-5 text-green-600 dark:text-green-400" />
+              <h4 className="font-medium text-green-800 dark:text-green-400">Coupon Applied</h4>
+            </div>
+            <span className="text-xs font-medium px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
+              {appliedCoupon.discountPercentage}% OFF
+            </span>
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-green-700 dark:text-green-300">
+                Code: <span className="font-mono font-bold">{appliedCoupon.couponCode}</span>
+              </span>
+              <span className="font-bold text-green-700 dark:text-green-300">
+                -{currencySymbol}{appliedCoupon.discountAmount.toFixed(2)}
+              </span>
+            </div>
+            <p className="text-xs text-green-600 dark:text-green-400">
+              You saved {currencySymbol}{appliedCoupon.discountAmount.toFixed(2)} on this order
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
+OrderSummarySidebar.displayName = 'OrderSummarySidebar';
+
+// Memoized Shipping Address Card Component
+const ShippingAddressCard = memo(({
+  address,
+  isSelected,
+  onSelect,
+  onEdit,
+  onDelete,
+  showDelete = true
+}: {
+  address: any;
+  isSelected: boolean;
+  onSelect: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  showDelete?: boolean;
+}) => (
+  <div
+    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+      isSelected
+        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+        : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+    }`}
+    onClick={onSelect}
+  >
+    <div className="flex justify-between items-start">
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="font-medium">{address.firstName} {address.lastName}</p>
+          {address.default && (
+            <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded">
+              Default
+            </span>
+          )}
+        </div>
+        <p className="text-gray-600 dark:text-gray-400">
+          {address.address1}
+          {address.address2 && `, ${address.address2}`}
+        </p>
+        <p className="text-gray-600 dark:text-gray-400">
+          {address.city}, {address.state} {address.zip_code}
+        </p>
+        <p className="text-gray-600 dark:text-gray-400">{address.country?.name}</p>
+        <p className="text-gray-600 dark:text-gray-400">Phone: {address.phone}</p>
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
+          className="p-2 text-gray-500 hover:text-blue-600"
+          aria-label="Edit address"
+        >
+          <Edit2 className="w-4 h-4" />
+        </button>
+        {showDelete && !address.default && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            className="p-2 text-gray-500 hover:text-red-600"
+            aria-label="Delete address"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+));
+
+ShippingAddressCard.displayName = 'ShippingAddressCard';
+
+// Memoized Payment Method Button Component
+const PaymentMethodButton = memo(({
+  method,
+  label,
+  description,
+  icon,
+  isSelected,
+  onSelect,
+  disabled,
+  rightElement
+}: {
+  method: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  isSelected: boolean;
+  onSelect: () => void;
+  disabled?: boolean;
+  rightElement?: React.ReactNode;
+}) => (
+  <button
+    onClick={onSelect}
+    disabled={disabled}
+    className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
+      isSelected
+        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+        : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+    } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+  >
+    <div className="flex items-center gap-3">
+      {icon}
+      <div>
+        <p className="font-medium">{label}</p>
+        <p className="text-sm text-gray-500">{description}</p>
+      </div>
+    </div>
+    {rightElement}
+  </button>
+));
+
+PaymentMethodButton.displayName = 'PaymentMethodButton';
+
+// Memoized Loading Skeleton
+const CheckoutSkeleton = memo(() => (
+  <div className="container mx-auto px-4 py-8">
+    <div className="animate-pulse">
+      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4"></div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-4">
+          <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+        </div>
+        <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      </div>
+    </div>
+  </div>
+));
+
+CheckoutSkeleton.displayName = 'CheckoutSkeleton';
+
+// Memoized Empty Cart Component
+const EmptyCartCheckout = memo(() => (
+  <div className="container mx-auto px-4 py-16">
+    <div className="max-w-md mx-auto text-center">
+      <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+        <Package className="w-12 h-12 text-gray-400" />
+      </div>
+      <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
+      <p className="text-gray-500 mb-8">Add some items to your cart before checkout.</p>
+      <Link
+        href="/shop"
+        className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
+      >
+        Continue Shopping
+      </Link>
+    </div>
+  </div>
+));
+
+EmptyCartCheckout.displayName = 'EmptyCartCheckout';
+
+// Memoized Currency Selector
+const CurrencySelector = memo(({ currency, onCurrencyChange }: { currency: string; onCurrencyChange: (value: string) => void }) => (
+  <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-2">
+        <CreditCard className="w-5 h-5 text-blue-600" />
+        <span className="font-medium">Payment Currency</span>
+      </div>
+      <select
+        value={currency}
+        onChange={(e) => onCurrencyChange(e.target.value)}
+        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-sm"
+      >
+        <option value="USD">USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+        <option value="TRY">TRY (₺)</option>
+      </select>
+    </div>
+    <p className="text-sm text-gray-500">
+      All amounts will be shown in your selected currency
+    </p>
+  </div>
+));
+
+CurrencySelector.displayName = 'CurrencySelector';
+
+// Memoized Address Form Component
+const AddressForm = memo(({
+  formData,
+  countries,
+  onSubmit,
+  onCancel,
+  onChange,
+  isEditing
+}: {
+  formData: any;
+  countries: any[];
+  onSubmit: (e: React.FormEvent) => void;
+  onCancel: () => void;
+  onChange: (field: string, value: any) => void;
+  isEditing: boolean;
+}) => (
+  <form onSubmit={onSubmit} className="mt-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label className="block text-sm font-medium mb-2">First Name *</label>
+        <input
+          type="text"
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.firstName}
+          onChange={(e) => onChange('firstName', e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-2">Last Name *</label>
+        <input
+          type="text"
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.lastName}
+          onChange={(e) => onChange('lastName', e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-2">Phone *</label>
+        <input
+          type="tel"
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.phone}
+          onChange={(e) => onChange('phone', e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-2">Country *</label>
+        <select
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.countryId}
+          onChange={(e) => onChange('countryId', e.target.value)}
+        >
+          <option value="">Select Country</option>
+          {countries.map((country) => (
+            <option key={country.id} value={country.id}>{country.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="md:col-span-2">
+        <label className="block text-sm font-medium mb-2">Address Line 1 *</label>
+        <input
+          type="text"
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.address1}
+          onChange={(e) => onChange('address1', e.target.value)}
+        />
+      </div>
+      <div className="md:col-span-2">
+        <label className="block text-sm font-medium mb-2">Address Line 2 (Optional)</label>
+        <input
+          type="text"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.address2}
+          onChange={(e) => onChange('address2', e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-2">City *</label>
+        <input
+          type="text"
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.city}
+          onChange={(e) => onChange('city', e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-2">State/Province *</label>
+        <input
+          type="text"
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.state}
+          onChange={(e) => onChange('state', e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-2">ZIP/Postal Code *</label>
+        <input
+          type="text"
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
+          value={formData.zip_code}
+          onChange={(e) => onChange('zip_code', e.target.value)}
+        />
+      </div>
+      <div className="md:col-span-2 flex items-center">
+        <input
+          type="checkbox"
+          id="defaultAddress"
+          className="mr-2"
+          checked={formData.default}
+          onChange={(e) => onChange('default', e.target.checked)}
+        />
+        <label htmlFor="defaultAddress" className="text-sm">Set as default shipping address</label>
+      </div>
+    </div>
+    <div className="flex gap-2">
+      <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+        {isEditing ? "Update Address" : "Save Address"}
+      </button>
+      <button
+        type="button"
+        onClick={onCancel}
+        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+));
+
+AddressForm.displayName = 'AddressForm';
 
 const Checkout = () => {
   const { toast } = useToast();
@@ -4724,18 +6554,15 @@ const Checkout = () => {
         }
 
         // Parallel fetch with abort controllers
-        const abortController1 = new AbortController();
-        const abortController2 = new AbortController();
-        const timeoutId1 = setTimeout(() => abortController1.abort(), 10000);
-        const timeoutId2 = setTimeout(() => abortController2.abort(), 10000);
+        const abortController = new AbortController();
+        const timeoutId = setTimeout(() => abortController.abort(), 10000);
 
         await Promise.all([
           fetchShippingAddresses(),
           fetchCountries()
         ]);
 
-        clearTimeout(timeoutId1);
-        clearTimeout(timeoutId2);
+        clearTimeout(timeoutId);
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
           toast({
@@ -4951,71 +6778,23 @@ const Checkout = () => {
     [shippingAddresses, selectedAddressId]
   );
 
-  // Currency selector component
-  const CurrencySelector = useMemo(() => () => (
-    <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <CreditCard className="w-5 h-5 text-blue-600" />
-          <span className="font-medium">Payment Currency</span>
-        </div>
-        <select
-          value={currency}
-          onChange={(e) => {
-            setCurrency(e.target.value);
-            localStorage.setItem("preferred-currency", e.target.value);
-          }}
-          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-sm"
-        >
-          <option value="USD">USD ($)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="GBP">GBP (£)</option>
-          <option value="TRY">TRY (₺)</option>
-        </select>
-      </div>
-      <p className="text-sm text-gray-500">
-        All amounts will be shown in your selected currency
-      </p>
-    </div>
-  ), [currency]);
+  const handleCurrencyChange = useCallback((value: string) => {
+    setCurrency(value);
+    localStorage.setItem("preferred-currency", value);
+  }, []);
+
+  const handleAddressFormChange = useCallback((field: string, value: any) => {
+    setAddressForm(prev => ({ ...prev, [field]: value }));
+  }, []);
 
   // Loading state
   if (loading || checkoutLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4"></div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-4">
-              <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            </div>
-            <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
+    return <CheckoutSkeleton />;
   }
 
   // Empty cart
   if (cart.length === 0 && !loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-md mx-auto text-center">
-          <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-            <Package className="w-12 h-12 text-gray-400" />
-          </div>
-          <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
-          <p className="text-gray-500 mb-8">Add some items to your cart before checkout.</p>
-          <Link
-            href="/shop"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-      </div>
-    );
+    return <EmptyCartCheckout />;
   }
 
   return (
@@ -5029,7 +6808,7 @@ const Checkout = () => {
       </div>
 
       {/* Currency Selector */}
-      <CurrencySelector />
+      <CurrencySelector currency={currency} onCurrencyChange={handleCurrencyChange} />
 
       {/* Progress Steps */}
       <div className="mb-8">
@@ -5135,59 +6914,15 @@ const Checkout = () => {
                     </div>
                   ) : (
                     shippingAddresses.map((address) => (
-                      <div
+                      <ShippingAddressCard
                         key={address.id}
-                        className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                          selectedAddressId === address.id
-                            ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                            : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                        }`}
-                        onClick={() => handleAddressSelect(address.id)}
-                      >
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <p className="font-medium">{address.firstName} {address.lastName}</p>
-                              {address.default && (
-                                <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded">
-                                  Default
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-gray-600 dark:text-gray-400">
-                              {address.address1}
-                              {address.address2 && `, ${address.address2}`}
-                            </p>
-                            <p className="text-gray-600 dark:text-gray-400">
-                              {address.city}, {address.state} {address.zip_code}
-                            </p>
-                            <p className="text-gray-600 dark:text-gray-400">{address.country?.name}</p>
-                            <p className="text-gray-600 dark:text-gray-400">Phone: {address.phone}</p>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEditAddress(address);
-                              }}
-                              className="p-2 text-gray-500 hover:text-blue-600"
-                            >
-                              <Edit2 className="w-4 h-4" />
-                            </button>
-                            {!address.default && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteAddress(address.id);
-                                }}
-                                className="p-2 text-gray-500 hover:text-red-600"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
+                        address={address}
+                        isSelected={selectedAddressId === address.id}
+                        onSelect={() => handleAddressSelect(address.id)}
+                        onEdit={() => handleEditAddress(address)}
+                        onDelete={() => handleDeleteAddress(address.id)}
+                        showDelete={!address.default}
+                      />
                     ))
                   )}
                 </div>
@@ -5207,132 +6942,21 @@ const Checkout = () => {
 
                 {/* Address Form */}
                 {showAddressForm && (
-                  <form onSubmit={handleAddressSubmit} className="mt-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-2">First Name *</label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.firstName}
-                          onChange={(e) => setAddressForm({ ...addressForm, firstName: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Last Name *</label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.lastName}
-                          onChange={(e) => setAddressForm({ ...addressForm, lastName: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Phone *</label>
-                        <input
-                          type="tel"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.phone}
-                          onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Country *</label>
-                        <select
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.countryId}
-                          onChange={(e) => setAddressForm({ ...addressForm, countryId: e.target.value })}
-                        >
-                          <option value="">Select Country</option>
-                          {countries.map((country) => (
-                            <option key={country.id} value={country.id}>{country.name}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium mb-2">Address Line 1 *</label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.address1}
-                          onChange={(e) => setAddressForm({ ...addressForm, address1: e.target.value })}
-                        />
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium mb-2">Address Line 2 (Optional)</label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.address2}
-                          onChange={(e) => setAddressForm({ ...addressForm, address2: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">City *</label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.city}
-                          onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">State/Province *</label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.state}
-                          onChange={(e) => setAddressForm({ ...addressForm, state: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">ZIP/Postal Code *</label>
-                        <input
-                          type="text"
-                          required
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900"
-                          value={addressForm.zip_code}
-                          onChange={(e) => setAddressForm({ ...addressForm, zip_code: e.target.value })}
-                        />
-                      </div>
-                      <div className="md:col-span-2 flex items-center">
-                        <input
-                          type="checkbox"
-                          id="defaultAddress"
-                          className="mr-2"
-                          checked={addressForm.default}
-                          onChange={(e) => setAddressForm({ ...addressForm, default: e.target.checked })}
-                        />
-                        <label htmlFor="defaultAddress" className="text-sm">Set as default shipping address</label>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        {editingAddress ? "Update Address" : "Save Address"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowAddressForm(false);
-                          setEditingAddress(null);
-                          setAddressForm({
-                            firstName: "", lastName: "", phone: "", address1: "", address2: "",
-                            state: "", city: "", zip_code: "", countryId: "", default: false,
-                          });
-                        }}
-                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
+                  <AddressForm
+                    formData={addressForm}
+                    countries={countries}
+                    onSubmit={handleAddressSubmit}
+                    onCancel={() => {
+                      setShowAddressForm(false);
+                      setEditingAddress(null);
+                      setAddressForm({
+                        firstName: "", lastName: "", phone: "", address1: "", address2: "",
+                        state: "", city: "", zip_code: "", countryId: "", default: false,
+                      });
+                    }}
+                    onChange={handleAddressFormChange}
+                    isEditing={!!editingAddress}
+                  />
                 )}
               </div>
 
@@ -5393,96 +7017,72 @@ const Checkout = () => {
 
                 {/* Payment Method Selection */}
                 <div className="space-y-4 mb-6">
-                  <button
-                    onClick={() => handlePaymentMethodSelect("card")}
-                    disabled={isProcessingPayment}
-                    className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
-                      paymentMethod === "card"
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                    } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
+                  <PaymentMethodButton
+                    method="card"
+                    label="Credit/Debit Card (Stripe)"
+                    description="Secure payment with Stripe"
+                    icon={
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
                         <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       </div>
-                      <div>
-                        <p className="font-medium">Credit/Debit Card (Stripe)</p>
-                        <p className="text-sm text-gray-500">Secure payment with Stripe</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <div className="w-10 h-6 bg-blue-100 rounded flex items-center justify-center">
-                        <span className="text-xs font-bold text-blue-700">VISA</span>
-                      </div>
-                      <div className="w-10 h-6 bg-red-100 rounded flex items-center justify-center">
-                        <span className="text-xs font-bold text-red-700">MC</span>
-                      </div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => handlePaymentMethodSelect("paypal")}
+                    }
+                    isSelected={paymentMethod === "card"}
+                    onSelect={() => handlePaymentMethodSelect("card")}
                     disabled={isProcessingPayment}
-                    className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
-                      paymentMethod === "paypal"
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                    } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
+                    rightElement={
+                      <div className="flex gap-2">
+                        <div className="w-10 h-6 bg-blue-100 rounded flex items-center justify-center">
+                          <span className="text-xs font-bold text-blue-700">VISA</span>
+                        </div>
+                        <div className="w-10 h-6 bg-red-100 rounded flex items-center justify-center">
+                          <span className="text-xs font-bold text-red-700">MC</span>
+                        </div>
+                      </div>
+                    }
+                  />
+
+                  <PaymentMethodButton
+                    method="paypal"
+                    label="PayPal"
+                    description="Pay with your PayPal account"
+                    icon={
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded flex items-center justify-center">
                         <span className="text-lg font-bold text-blue-700">P</span>
                       </div>
-                      <div>
-                        <p className="font-medium">PayPal</p>
-                        <p className="text-sm text-gray-500">Pay with your PayPal account</p>
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-lg font-bold text-blue-700">PayPal</span>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => handlePaymentMethodSelect("cod")}
+                    }
+                    isSelected={paymentMethod === "paypal"}
+                    onSelect={() => handlePaymentMethodSelect("paypal")}
                     disabled={isProcessingPayment}
-                    className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
-                      paymentMethod === "cod"
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                    } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
+                    rightElement={<span className="text-lg font-bold text-blue-700">PayPal</span>}
+                  />
+
+                  <PaymentMethodButton
+                    method="cod"
+                    label="Cash on Delivery"
+                    description="Pay when you receive your order"
+                    icon={
                       <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded flex items-center justify-center">
                         <Package className="w-5 h-5 text-green-600 dark:text-green-400" />
                       </div>
-                      <div>
-                        <p className="font-medium">Cash on Delivery</p>
-                        <p className="text-sm text-gray-500">Pay when you receive your order</p>
-                      </div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => handlePaymentMethodSelect("upi")}
+                    }
+                    isSelected={paymentMethod === "cod"}
+                    onSelect={() => handlePaymentMethodSelect("cod")}
                     disabled={isProcessingPayment}
-                    className={`w-full p-4 border rounded-lg text-left transition-all flex items-center justify-between ${
-                      paymentMethod === "upi"
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                    } ${isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
+                  />
+
+                  <PaymentMethodButton
+                    method="upi"
+                    label="UPI"
+                    description="Pay using UPI payment methods"
+                    icon={
                       <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded flex items-center justify-center">
                         <CreditCard className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                       </div>
-                      <div>
-                        <p className="font-medium">UPI</p>
-                        <p className="text-sm text-gray-500">Pay using UPI payment methods</p>
-                      </div>
-                    </div>
-                  </button>
+                    }
+                    isSelected={paymentMethod === "upi"}
+                    onSelect={() => handlePaymentMethodSelect("upi")}
+                    disabled={isProcessingPayment}
+                  />
                 </div>
 
                 {/* Security Note */}
@@ -5618,238 +7218,19 @@ const Checkout = () => {
         </div>
 
         {/* Order Summary Sidebar */}
-        <div>
-          <div className="sticky top-8 space-y-6">
-            {/* Order Summary */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="text-lg font-semibold">Order Summary</h3>
-                    <p className="text-sm text-gray-500">
-                      {itemCount} item{itemCount !== 1 ? "s" : ""}
-                    </p>
-                  </div>
-                  {appliedCoupon && (
-                    <div className="flex items-center text-green-600 dark:text-green-400">
-                      <Tag className="w-4 h-4 mr-1" />
-                      <span className="text-sm font-medium">{appliedCoupon.couponCode}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="p-4">
-                {/* Cart Items Preview */}
-                <div className="mb-4 max-h-80 overflow-y-auto">
-                  {cart.slice(0, 3).map((item) => (
-                    <div
-                      key={`${item.productId}-${item.variantId}-${item.sizeId}`}
-                      className="flex items-center gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
-                    >
-                      <div className="relative w-16 h-16 flex-shrink-0">
-                        <Image
-                          src={item.image || "/placeholder-product.jpg"}
-                          alt={item.name}
-                          fill
-                          className="object-cover rounded-md"
-                          sizes="64px"
-                          loading="lazy"
-                        />
-                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center">
-                          {item.quantity}
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{item.name}</p>
-                        <p className="text-xs text-gray-500">Size: {item.size} | {item.sku}</p>
-                        <p className="font-bold text-sm">
-                          {currencySymbol}{(item.price * item.quantity).toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                  {cart.length > 3 && (
-                    <div className="text-center py-2">
-                      <p className="text-sm text-gray-500">
-                        +{cart.length - 3} more item{cart.length - 3 !== 1 ? "s" : ""}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Price Breakdown */}
-                <div className="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">
-                      {appliedCoupon ? "Subtotal (Before Discount)" : "Subtotal"}
-                    </span>
-                    <span className={`${appliedCoupon ? "text-gray-500 line-through" : "font-medium"}`}>
-                      {currencySymbol}{subTotal.toFixed(2)}
-                    </span>
-                  </div>
-
-                  {appliedCoupon && (
-                    <>
-                      <div className="flex justify-between text-green-600 dark:text-green-400">
-                        <span className="flex items-center">
-                          <Tag className="w-3 h-3 mr-1" />
-                          Discount ({appliedCoupon.couponCode})
-                        </span>
-                        <span>-{currencySymbol}{appliedCoupon.discountAmount.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between font-medium pb-2 border-b border-gray-100 dark:border-gray-700">
-                        <span>Discounted Subtotal</span>
-                        <span>{currencySymbol}{(subTotal - appliedCoupon.discountAmount).toFixed(2)}</span>
-                      </div>
-                    </>
-                  )}
-
-                  <div className="flex justify-between pt-2">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium">
-                      {shippingFees === 0 ? "Free" : (
-                        <>
-                          {currencySymbol}{shippingFees.toFixed(2)}
-                          {shippingCalculated && (
-                            <span className="text-xs text-gray-500 ml-1">
-                              ({shippingMethod === "express" ? "Express" : "Standard"})
-                            </span>
-                          )}
-                        </>
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
-                    <span>Total</span>
-                    <span>{currencySymbol}{total.toFixed(2)}</span>
-                  </div>
-
-                  {appliedCoupon && step < 3 && (
-                    <div className="pt-3">
-                      <button
-                        onClick={handleRemoveCouponClick}
-                        className="w-full flex items-center justify-center gap-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 py-2 border border-red-200 dark:border-red-800 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                      >
-                        <X className="w-3 h-3" />
-                        Remove Coupon
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Applied Coupon Info Card */}
-            {appliedCoupon && (
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm border border-green-200 dark:border-green-700 p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Tag className="w-5 h-5 text-green-600 dark:text-green-400" />
-                    <h4 className="font-medium text-green-800 dark:text-green-400">Coupon Applied</h4>
-                  </div>
-                  <span className="text-xs font-medium px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
-                    {appliedCoupon.discountPercentage}% OFF
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-green-700 dark:text-green-300">
-                      Code: <span className="font-mono font-bold">{appliedCoupon.couponCode}</span>
-                    </span>
-                    <span className="font-bold text-green-700 dark:text-green-300">
-                      -{currencySymbol}{appliedCoupon.discountAmount.toFixed(2)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-green-600 dark:text-green-400">
-                    You saved {currencySymbol}{appliedCoupon.discountAmount.toFixed(2)} on this order
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Shipping Information Card */}
-            {selectedAddressId && shippingCalculated && shippingFee > 0 && (
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm border border-blue-100 dark:border-blue-700 p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Truck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    <h4 className="font-medium text-blue-800 dark:text-blue-400">Shipping Details</h4>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Service</span>
-                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                      {shippingService}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Delivery Time</span>
-                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                      {estimatedDeliveryDays.min}-{estimatedDeliveryDays.max} days
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Method</span>
-                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                      {shippingMethod === "express" ? `Express (+${currencySymbol}9.99)` : "Standard"}
-                    </span>
-                  </div>
-                  <div className="pt-2 border-t border-blue-100 dark:border-blue-700">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-blue-800 dark:text-blue-400">Total Shipping</span>
-                      <span className="font-bold text-blue-800 dark:text-blue-400">
-                        {currencySymbol}{shippingFees.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Security Assurance */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Shield className="w-5 h-5 text-blue-600" />
-                <h4 className="font-medium">Shop with Confidence</h4>
-              </div>
-              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>Secure SSL Encryption</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>30-Day Return Policy</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>Free Shipping Over {currencySymbol}50</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>24/7 Customer Support</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Need Help */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-100 dark:border-blue-800">
-              <h4 className="font-medium text-blue-800 dark:text-blue-400 mb-2">Need Help?</h4>
-              <p className="text-sm text-blue-600 dark:text-blue-300 mb-3">
-                Have questions about your order? We're here to help.
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
-              >
-                Contact Support →
-              </Link>
-            </div>
-          </div>
-        </div>
+        <OrderSummarySidebar
+          cart={cart}
+          itemCount={itemCount}
+          subTotal={subTotal}
+          appliedCoupon={appliedCoupon}
+          shippingFees={shippingFees}
+          shippingCalculated={shippingCalculated}
+          shippingMethod={shippingMethod}
+          total={total}
+          currencySymbol={currencySymbol}
+          step={step}
+          onRemoveCoupon={handleRemoveCouponClick}
+        />
       </div>
     </div>
   );

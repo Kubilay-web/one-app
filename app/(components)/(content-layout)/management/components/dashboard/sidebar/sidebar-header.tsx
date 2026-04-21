@@ -41,10 +41,10 @@ export default function SidebarHeader({
 }) {
   return (
     <div className="flex h-16 items-center gap-4 border-b px-4">
-      <SidebarTrigger />
+      {/* <SidebarTrigger />
       <div className="flex-1">
         <Input placeholder="Search products..." className="max-w-sm" />
-      </div>
+      </div> */}
       {/* */}
       <Button asChild variant="outline">
         <Link href={"/management/dashboard/students/new "}>

@@ -2019,11 +2019,11 @@ const ProductDetails = () => {
                   {/* Enhanced Image Container with Zoom */}
                   <div className="box !border-0 !mb-0">
                     <div className="ecommerce-gallery relative">
-                      {selectedSize?.discount && selectedSize.discount > 0 && (
+                      {/* {selectedSize?.discount && selectedSize.discount > 0 && (
                         <span className="absolute top-3 left-3 z-10 badge bg-warning tag-badge text-white">
                           {selectedSize.discount}% OFF
                         </span>
-                      )}
+                      )} */}
 
                       {/* Zoom Controls */}
                       <div className="absolute top-3 right-3 z-10 flex gap-1">
