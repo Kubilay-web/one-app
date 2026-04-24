@@ -8,12 +8,7 @@
 // import Image from "next/image";
 // import { ToastContainer, toast } from 'react-toastify';
 
-
-
-
 // import Cover from "../(components)/(authentication-layout)/authentication/sign-in/cover/page";
-
-
 
 // export default function Login() {
 
@@ -34,11 +29,11 @@
 //     };
 //     const Login = (e: React.FormEvent) => {
 //         e.preventDefault();
-      
+
 //         auth.signInWithEmailAndPassword(email, password)
 //           .then(user => {
 //             console.log(user);
-      
+
 //             // Show success message
 //             toast.success('Login successful', {
 //                 position: 'top-right',
@@ -54,7 +49,7 @@
 //           })
 //           .catch(err => {
 //             setError(err.message);
-      
+
 //             // Show error message
 //             toast.error('Invalid details', {
 //                 position: 'top-right',
@@ -68,8 +63,7 @@
 //       };
 
 //       const Login1 = (_e: any) => {
-        
-      
+
 //         if (data.email === "adminnextjs@gmail.com" && data.password === "1234567890") {
 //             // Show toast immediately when login button is clicked
 //             toast.success('Login successful', {
@@ -89,14 +83,13 @@
 //             email: "adminnextjs@gmail.com",
 //             password: "1234567890",
 //           });
-      
-          
+
 //             toast.error('Invalid login credentials', {
 //               position: 'top-right',
 //               autoClose: 1500,
 //               hideProgressBar: false,
 //               closeOnClick: true,
-              
+
 //               pauseOnHover: true,
 //               draggable: true,
 //             });
@@ -107,7 +100,6 @@
 //         let path = "/home/facebook/pages/home";
 //         router.push(path);
 //     };
-    
 
 //     useEffect(() => {
 //         const body = document.body.classList
@@ -123,7 +115,7 @@
 //             <div>
 //                 <Cover/>
 //                 <ToastContainer />
-       
+
 //             </div>
 //         </div>
 //     );
@@ -131,27 +123,40 @@
 
 
 
-"use client"
-import { useEffect, useState } from "react";
-import { ToastContainer } from 'react-toastify';
+
+// "use client";
+// import { useEffect, useState } from "react";
+// import { ToastContainer } from "react-toastify";
+// import Cover from "../(components)/(authentication-layout)/authentication/sign-in/cover/page";
+
+// export default function Login() {
+//   useEffect(() => {
+//     const body = document.body.classList;
+//     body.add("authentication-background");
+
+//     return () => {
+//       body.remove("authentication-background");
+//     };
+//   });
+
+//   return (
+//     <div>
+//       <div>
+//         <Cover />
+//         <ToastContainer />
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
 import Cover from "../(components)/(authentication-layout)/authentication/sign-in/cover/page";
+import { headers } from "next/headers";
 
 export default function Login() {
-    useEffect(() => {
-        const body = document.body.classList
-        body.add("authentication-background")
+  const host = headers().get("x-host") || headers().get("host") || "";
 
-        return () => {
-            body.remove("authentication-background")
-        };
-    });
-
-    return (
-        <div>
-            <div>
-                <Cover />
-                <ToastContainer />
-            </div>
-        </div>
-    );
+  return <Cover host={host} />;
 }

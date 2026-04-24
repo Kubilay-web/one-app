@@ -3285,6 +3285,14 @@ export const getMenuItems = (user,school) => [
                 selected: false,
                 title: "Add Writer",
               },
+
+                    {
+                path: "/dashboards/newsportal/category",
+                type: "link",
+                active: false,
+                selected: false,
+                title: "Category",
+              },
               {
                 path: "/dashboards/newsportal/createnews",
                 type: "link",

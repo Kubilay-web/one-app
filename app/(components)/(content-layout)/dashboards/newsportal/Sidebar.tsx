@@ -25,7 +25,7 @@ const Sidebar = ({ user }) => {
   return (
     <div className="h-screen general-sidebar w-[250px] bg-[#dadaff]">
       <div className="flex h-[70px] items-center justify-center">
-        <Link href="/">
+   
           <Image
             className="h-[35px] w-[190px] object-contain"
             src="https://i.ibb.co.com/WcB36Jq/mainlogo.png"
@@ -33,7 +33,7 @@ const Sidebar = ({ user }) => {
             width={190}
             height={35}
           />
-        </Link>
+
       </div>
       <ul className="flex flex-col gap-y-1 px-3 font-medium">
         {role === "ADMIN" ? (
