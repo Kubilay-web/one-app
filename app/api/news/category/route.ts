@@ -216,7 +216,7 @@ export async function POST(request: Request) {
 
     if (existingCategory) {
       return NextResponse.json(
-        { success: false, message: "Bu kategori zaten mevcut" },
+        { success: false, message: "Category existing." },
         { status: 400 }
       );
     }

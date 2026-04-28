@@ -152,7 +152,7 @@ const Header = () => {
             <Image
               className="h-full w-[200px]"
               alt="logo"
-              src="/assets/news-portal/assets/logo.png"
+              src="/assets/news-portal/assets/photo.jpg"
               width={303}
               height={66}
               priority

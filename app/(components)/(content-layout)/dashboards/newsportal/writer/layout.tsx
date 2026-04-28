@@ -22,7 +22,7 @@ export default async function Layout({ children }: AdminLayoutProps) {
             Access Denied
           </h1>
           <p className="mb-6 text-gray-500">
-            You need admin privileges to view this page.
+            You need writer privileges to view this page.
           </p>
         </div>
       </div>

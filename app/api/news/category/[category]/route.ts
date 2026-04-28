@@ -3,34 +3,41 @@
 import db from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { category: string } },
-) {
-  const { category } = params; // URL'den kategori parametresini alıyoruz
+// export async function GET(
+//   req: NextRequest,
+//   { params }: { params: { category: string } },
+// ) {
+//   const { category } = params; // URL'den kategori parametresini alıyoruz
 
-  try {
-    // Belirli kategori ve aktif statüdeki haberleri getiriyoruz
-    const news = await db.news.findMany({
-      where: {
-        category: category, // Belirtilen kategori
-        status: "active", // Sadece 'active' olanlar
-      },
-      orderBy: {
-        createdAt: "desc", // En yeni haberler önce
-      },
-    });
+//   try {
+//     // Belirli kategori ve aktif statüdeki haberleri getiriyoruz
+//     const news = await db.news.findMany({
+//       where: {
+//         category: category, // Belirtilen kategori
+//         status: "active", // Sadece 'active' olanlar
+//       },
+//       orderBy: {
+//         createdAt: "desc", // En yeni haberler önce
+//       },
+//     });
 
-    // Haberleri döndürüyoruz
-    return NextResponse.json({ news }, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 },
-    );
-  }
-}
+//     // Haberleri döndürüyoruz
+//     return NextResponse.json({ news }, { status: 200 });
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json(
+//       { message: "Internal server error" },
+//       { status: 500 },
+//     );
+//   }
+// }
+
+
+
+
+
+
+
 
 
 
@@ -80,6 +87,59 @@ export async function GET(
 
 
 
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ category: string }> }
+) {
+  const { category } = await params;
+  
+  try {
+    // 1. Önce slug ile kategori ara (CategoryNews tablosunda)
+    let categoryRecord = await db.categoryNews.findFirst({
+      where: { slug: category }
+    });
+    
+    // 2. Slug ile bulamazsa, name ile ara (decode edilmiş)
+    if (!categoryRecord) {
+      const decodedCategory = decodeURIComponent(category);
+      categoryRecord = await db.categoryNews.findFirst({
+        where: { name: decodedCategory }
+      });
+    }
+    
+    // 3. Kategori bulunamazsa
+    if (!categoryRecord) {
+      return NextResponse.json(
+        { success: false, message: "Category not found", news: [] },
+        { status: 404 }
+      );
+    }
+    
+    // 4. Kategori adını kullanarak haberleri getir
+    const news = await db.news.findMany({
+      where: {
+        category: categoryRecord.name, // Kategori adını kullan
+        status: "active",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return NextResponse.json({ 
+      success: true, 
+      news,
+      category: categoryRecord 
+    }, { status: 200 });
+    
+  } catch (error) {
+    console.error("Error fetching category news:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error", news: [] },
+      { status: 500 },
+    );
+  }
+}
 
 
 

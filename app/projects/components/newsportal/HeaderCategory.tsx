@@ -131,6 +131,11 @@
 
 
 
+
+
+
+
+
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -138,27 +143,45 @@ import React, { useEffect, useState } from "react";
 import { IoMdList, IoMdCloseCircle } from "react-icons/io";
 import { FaSearch } from "react-icons/fa";
 
-const Header_Category = () => {
-  const [categories, set_categories] = useState([]);
+// Tip tanımlaması
+interface Category {
+  name: string;
+  slug: string;
+  count: number;
+}
 
-  const get_categories = async () => {
+const Header_Category = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const getCategories = async () => {
     try {
       const res = await fetch("/api/news/category/all");
       const data = await res.json();
-      set_categories(data.categories);
+      console.log("API Response:", data); // Debug için
+      
+      if (data.success && Array.isArray(data.categories)) {
+        setCategories(data.categories);
+      } else {
+        setCategories([]);
+      }
     } catch (error) {
-      console.log(error);
+      console.log("Kategoriler alınırken hata:", error);
+      setCategories([]);
     }
   };
 
   useEffect(() => {
-    get_categories();
+    getCategories();
   }, []);
 
   const path = usePathname();
-
-  const [cate_show, set_cate_show] = useState(false);
+  const [cate_show, setCateShow] = useState(false);
   const [show, setShow] = useState(false);
+
+  // Aktif kategori kontrolü (slug ile)
+  const isActiveCategory = (slug: string) => {
+    return path === `/news/category/${slug}`;
+  };
 
   return (
     <div className="w-full overflow-hidden">
@@ -167,7 +190,7 @@ const Header_Category = () => {
 
           {/* MOBILE MENU */}
           <div
-            onClick={() => set_cate_show(!cate_show)}
+            onClick={() => setCateShow(!cate_show)}
             className={`flex h-full w-[50px] shrink-0 cursor-pointer items-center justify-center text-3xl lg:hidden ${
               cate_show ? "bg-black/20" : ""
             } hover:bg-black/20`}
@@ -175,11 +198,11 @@ const Header_Category = () => {
             <IoMdList />
           </div>
 
-          {/* DESKTOP MENU (EN KRİTİK KISIM) */}
+          {/* DESKTOP MENU */}
           <div className="hidden lg:flex flex-1 min-w-0 items-center overflow-x-auto whitespace-nowrap">
             <Link
               className={`px-4 xl:px-6 py-[13px] font-medium shrink-0 ${
-                path === "/news" ? "bg-black/20" : ""
+                path === "/" || path === "/news" ? "bg-black/20" : ""
               }`}
               href={"/"}
             >
@@ -191,13 +214,11 @@ const Header_Category = () => {
                 <Link
                   key={i}
                   className={`px-4 xl:px-6 py-[13px] font-medium shrink-0 ${
-                    path === `/news/category/${c.category}`
-                      ? "bg-black/20"
-                      : ""
+                    isActiveCategory(c.slug) ? "bg-black/20" : ""
                   }`}
-                  href={`/news/category/${c.category}`}
+                  href={`/news/category/${c.slug}`}
                 >
-                  {c.category}
+                  {c.name}
                 </Link>
               ))}
           </div>
@@ -219,13 +240,17 @@ const Header_Category = () => {
               }`}
             >
               <div className="p-3">
-                <form className="flex">
+                <form className="flex" action="/news/search" method="GET">
                   <input
                     type="text"
-                    placeholder="Search"
+                    name="q"
+                    placeholder="Search news..."
                     className="h-[40px] w-full border border-slate-300 bg-slate-100 p-2 outline-none"
                   />
-                  <button className="flex h-[40px] w-[45px] items-center justify-center bg-blue-600 text-white hover:bg-blue-700">
+                  <button 
+                    type="submit"
+                    className="flex h-[40px] w-[45px] items-center justify-center bg-blue-600 text-white hover:bg-blue-700"
+                  >
                     <FaSearch />
                   </button>
                 </form>
@@ -240,9 +265,10 @@ const Header_Category = () => {
         <div className="flex flex-wrap gap-2 px-3 py-2 lg:hidden">
           <Link
             className={`px-3 py-[5px] font-medium ${
-              path === "/" ? "bg-black/20" : ""
+              path === "/" || path === "/news" ? "bg-black/20" : ""
             }`}
             href={"/"}
+            onClick={() => setCateShow(false)}
           >
             Home
           </Link>
@@ -252,13 +278,12 @@ const Header_Category = () => {
               <Link
                 key={i}
                 className={`px-3 py-[5px] font-medium ${
-                  path === `/news/category/${c.category}`
-                    ? "bg-black/20"
-                    : ""
+                  isActiveCategory(c.slug) ? "bg-black/20" : ""
                 }`}
-                href={`/news/category/${c.category}`}
+                href={`/news/category/${c.slug}`}
+                onClick={() => setCateShow(false)}
               >
-                {c.category}
+                {c.name}
               </Link>
             ))}
         </div>

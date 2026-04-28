@@ -19,14 +19,14 @@ const Footer = () => {
                 className=""
                 width={200}
                 height={100}
-                src="/assets/news-portal/assets/logo.png"
+                src="/assets/news-portal/assets/photo.jpg"
                 alt="logo"
               />
 
               <h2 className="text-justify text-slate-300 text-[15px]">
-                Easynews24.com is one of the popular Indian news portal. It has
-                begun with commitment of fearless, investigative, informative
-                and independent journalism. This online portal has started to
+                Invenimus News is one of the popular news portal. It has begun
+                with commitment of fearless, investigative, informative and
+                independent journalism. This online portal has started to
                 provide real time news updates with maximum use of modern
                 technology from May 10th 2023.
               </h2>
@@ -43,9 +43,9 @@ const Footer = () => {
 
       <div className="bg-[#262323]">
         <div className="flex flex-col items-center justify-between gap-3 px-4 py-5 md:flex-row md:px-8">
-          <div className="flex items-center justify-start gap-y-2 text-gray-300">
-            <span>Copyright @ 2024</span>
-            <Link href={"#"}>Learn with Easylearingbd</Link>
+          <div className="flex items-center justify-start gap-x-2 text-gray-300">
+            <span>Copyright @ 2026</span>
+            <Link href={"#"}>Invenimus</Link>
           </div>
 
           <div className="flex gap-x-[4px]">
