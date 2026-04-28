@@ -77,32 +77,24 @@
 
 // export default Header;
 
-
-
-
-
-
-
 import React from "react";
 import moment from "moment";
 import { FaFacebookF, FaTwitter, FaYoutube } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import HeaderCategory from "./HeaderCategory";
+import { H3Icon } from "@heroicons/react/24/outline";
+import { RiH4 } from "react-icons/ri";
 
 const Header = () => {
   return (
     <header className="bg-[#333333] text-[#cccccc]">
       <div className="flex items-center justify-between border-b border-[#444444] px-5 py-2 lg:px-8">
-
         {/* DATE */}
-        <span className="text-sm font-medium">
-          {moment().format("LLLL")}
-        </span>
+        <span className="text-sm font-medium">{moment().format("LLLL")}</span>
 
         {/* RIGHT SIDE */}
         <div className="flex items-center space-x-3">
-
           {/* SOCIAL */}
           <div className="flex space-x-2">
             <a
@@ -134,19 +126,17 @@ const Header = () => {
           >
             Login
           </Link>
-
         </div>
       </div>
 
       {/* HEADER BANNER */}
       <div
-        style={{
-          backgroundImage: `url("/assets/news-portal/assets/header-bg.jpg")`,
-        }}
+        // style={{
+        //   backgroundImage: `url("/assets/news-portal/assets/header-bg.jpg")`,
+        // }}
         className="bg-cover bg-center py-6 text-center"
       >
         <div className="flex flex-col items-center justify-between space-y-6 px-5 md:flex-row md:space-y-0 lg:px-8">
-
           {/* LOGO */}
           <div className="flex w-full flex-col items-center space-y-3 md:w-4/12 md:items-start">
             <Image
@@ -158,9 +148,13 @@ const Header = () => {
               priority
             />
 
-            <h2 className="text-md font-semibold tracking-wide text-[#cccccc] md:text-left">
+            {/* <h2 className="text-md font-semibold tracking-wide text-[#cccccc] md:text-left">
               Media that rocks your world
-            </h2>
+            </h2> */}
+
+            <h5 className="text-md font-semibold tracking-wide text-[#cccccc] md:text-left">
+              Ihre Immobilien-Management-Plattform
+            </h5>
           </div>
 
           {/* AD */}
