@@ -1842,6 +1842,7 @@ model News {
   title       String
   slug        String   @unique
   image       String
+  imagePublicId  String?  // Cloudinary public ID için
   category    String
   description String   @default("")
   date        String

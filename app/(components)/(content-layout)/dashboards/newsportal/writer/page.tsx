@@ -261,7 +261,7 @@ const Writerindex = () => {
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
                         <Link
-                          href={`/dashboards/newsportal/edit/${item.id}`}
+                          href={`/dashboards/newsportal/editnews/${item.id}`}
                           className="rounded bg-blue-500 p-2 text-white hover:bg-blue-800"
                         >
                           <FaEye />

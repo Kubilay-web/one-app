@@ -129,6 +129,175 @@
 
 
 
+// "use client";
+
+// import { useState, useEffect } from "react";
+// import Link from "next/link";
+// import axios from "axios";
+// import { useRouter } from "next/navigation";
+// import toast from "react-hot-toast";
+
+// const AddWriter = () => {
+//   const [loader, setLoader] = useState(false);
+//   const [categories, setCategories] = useState<string[]>([]);
+//   const [loadingCategories, setLoadingCategories] = useState(true);
+//   const router = useRouter();
+
+//   const [state, setState] = useState({
+//     penName: "",
+//     category: "",
+//   });
+
+//   // Kategorileri API'den çek
+//   useEffect(() => {
+//     const fetchCategories = async () => {
+//       try {
+//         setLoadingCategories(true);
+//         const { data } = await axios.get(
+//           `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/category`
+//         );
+        
+//         if (data.success && Array.isArray(data.categories)) {
+//           setCategories(data.categories);
+//         } else {
+//           // Fallback kategoriler
+//           setCategories([
+//             "Business", "Education", "Entertainment", "Health", 
+//             "International", "Lifestyle", "Politics", "Science", 
+//             "Sports", "Technology", "Travel"
+//           ]);
+//         }
+//       } catch (error) {
+//         console.error("Kategoriler yüklenirken hata:", error);
+//         toast.error("Kategoriler yüklenemedi");
+//         setCategories([
+//           "Business", "Education", "Entertainment", "Health", 
+//           "International", "Lifestyle", "Politics", "Science", 
+//           "Sports", "Technology", "Travel"
+//         ]);
+//       } finally {
+//         setLoadingCategories(false);
+//       }
+//     };
+
+//     fetchCategories();
+//   }, []);
+
+//   const inputHandle = (
+//     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+//   ) => {
+//     setState({
+//       ...state,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     try {
+//       setLoader(true);
+//       const { data } = await axios.put(
+//         `${process.env.NEXT_PUBLIC_BASE_URL}/api/writer`,
+//         state,
+//       );
+//       setLoader(false);
+//       toast.success(data.message);
+//       router.push("/dashboards/newsportal/writers");
+//     } catch (error: any) {
+//       setLoader(false);
+//       toast.error(error?.response?.data?.message || "Something went wrong");
+//     }
+//   };
+
+//   return (
+//     <div className="rounded-md bg-white shadow-md">
+//       {/* Header */}
+//       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 gap-2 sm:gap-0 border-b border-gray-200">
+//         <h2 className="text-xl font-semibold text-gray-700">Add Writers</h2>
+//         <Link
+//           href="/dashboards/newsportal/writers"
+//           className="rounded-md bg-blue-500 px-4 py-2 text-white text-center hover:bg-blue-800 transition"
+//         >
+//           Writers
+//         </Link>
+//       </div>
+
+//       {/* Form */}
+//       <div className="p-4">
+//         <form onSubmit={submit}>
+//           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//             {/* PenName */}
+//             <div className="flex flex-col gap-2">
+//               <label htmlFor="name" className="text-md font-semibold text-gray-600">
+//                 PenName
+//               </label>
+//               <input
+//                 onChange={inputHandle}
+//                 value={state.penName}
+//                 required
+//                 type="text"
+//                 placeholder="Enter pen name"
+//                 name="penName"
+//                 id="name"
+//                 className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+//               />
+//             </div>
+
+//             {/* Category - Dinamik */}
+//             <div className="flex flex-col gap-2">
+//               <label htmlFor="category" className="text-md font-semibold text-gray-600">
+//                 Category
+//               </label>
+//               <select
+//                 onChange={inputHandle}
+//                 value={state.category}
+//                 required
+//                 name="category"
+//                 id="category"
+//                 disabled={loadingCategories}
+//                 className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+//               >
+//                 <option value="">
+//                   {loadingCategories ? "Loading categories..." : "--- Select Category ---"}
+//                 </option>
+//                 {categories.map((category) => (
+//                   <option key={category} value={category}>
+//                     {category}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//           </div>
+
+//           <div className="mt-4 flex justify-start">
+//             <button
+//               type="submit"
+//               disabled={loader || loadingCategories}
+//               className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-800 transition disabled:opacity-60"
+//             >
+//               {loader ? "Adding..." : "Add Writer"}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AddWriter;
+
+
+
+
+
+
+
+
+
+
+
+
+// app/dashboards/newsportal/writer/add/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -141,11 +310,14 @@ const AddWriter = () => {
   const [loader, setLoader] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [users, setUsers] = useState<{ id: string; email: string; name: string }[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
   const router = useRouter();
 
   const [state, setState] = useState({
     penName: "",
     category: "",
+    userId: "",
   });
 
   // Kategorileri API'den çek
@@ -153,14 +325,11 @@ const AddWriter = () => {
     const fetchCategories = async () => {
       try {
         setLoadingCategories(true);
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/category`
-        );
+        const { data } = await axios.get("/api/news/category");
         
         if (data.success && Array.isArray(data.categories)) {
           setCategories(data.categories);
         } else {
-          // Fallback kategoriler
           setCategories([
             "Business", "Education", "Entertainment", "Health", 
             "International", "Lifestyle", "Politics", "Science", 
@@ -180,7 +349,21 @@ const AddWriter = () => {
       }
     };
 
+    // Kullanıcıları çek (Writer olmayan kullanıcılar)
+    const fetchUsers = async () => {
+      try {
+        setLoadingUsers(true);
+        const { data } = await axios.get("/api/news/writer/non-writers");
+        setUsers(data.users);
+      } catch (error) {
+        console.error("Kullanıcılar yüklenirken hata:", error);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+
     fetchCategories();
+    fetchUsers();
   }, []);
 
   const inputHandle = (
@@ -194,12 +377,15 @@ const AddWriter = () => {
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!state.userId) {
+      toast.error("Please select a user");
+      return;
+    }
+    
     try {
       setLoader(true);
-      const { data } = await axios.put(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/writer`,
-        state,
-      );
+      const { data } = await axios.post("/api/news/writer", state);
       setLoader(false);
       toast.success(data.message);
       router.push("/dashboards/newsportal/writers");
@@ -211,7 +397,6 @@ const AddWriter = () => {
 
   return (
     <div className="rounded-md bg-white shadow-md">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 gap-2 sm:gap-0 border-b border-gray-200">
         <h2 className="text-xl font-semibold text-gray-700">Add Writers</h2>
         <Link
@@ -222,14 +407,38 @@ const AddWriter = () => {
         </Link>
       </div>
 
-      {/* Form */}
       <div className="p-4">
         <form onSubmit={submit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* User Selection */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="userId" className="text-md font-semibold text-gray-600">
+                Select User
+              </label>
+              <select
+                onChange={inputHandle}
+                value={state.userId}
+                required
+                name="userId"
+                id="userId"
+                disabled={loadingUsers}
+                className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="">
+                  {loadingUsers ? "Loading users..." : "--- Select User ---"}
+                </option>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.email} {user.name ? `(${user.name})` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* PenName */}
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="text-md font-semibold text-gray-600">
-                PenName
+              <label htmlFor="penName" className="text-md font-semibold text-gray-600">
+                Pen Name
               </label>
               <input
                 onChange={inputHandle}
@@ -238,12 +447,12 @@ const AddWriter = () => {
                 type="text"
                 placeholder="Enter pen name"
                 name="penName"
-                id="name"
+                id="penName"
                 className="h-10 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
-            {/* Category - Dinamik */}
+            {/* Category */}
             <div className="flex flex-col gap-2">
               <label htmlFor="category" className="text-md font-semibold text-gray-600">
                 Category
@@ -269,11 +478,10 @@ const AddWriter = () => {
             </div>
           </div>
 
-          {/* Submit */}
           <div className="mt-4 flex justify-start">
             <button
               type="submit"
-              disabled={loader || loadingCategories}
+              disabled={loader || loadingCategories || loadingUsers}
               className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-800 transition disabled:opacity-60"
             >
               {loader ? "Adding..." : "Add Writer"}

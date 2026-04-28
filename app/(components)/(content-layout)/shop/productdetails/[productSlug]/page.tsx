@@ -15,11 +15,11 @@ export default async function ProductPage({
   });
 
   if (!product) {
-    return redirect("/");
+    return redirect("/shop");
   }
 
   if (!product.variants.length) {
-    return redirect("/");
+    return redirect("/shop");
   }
 
   return redirect(`/shop/productdetails/${product.slug}/${product.variants[0].slug}`);

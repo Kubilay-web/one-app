@@ -3,18 +3,24 @@
 import { revalidatePath } from "next/cache";
 import { SchoolProps } from "../components/dashboard/forms/school/school-admin-form";
 import { School } from "../types/types";
+import { validateRequest } from "@/app/auth";
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 // ==================== CREATE SCHOOL ====================
 export async function createSchool(data: SchoolProps) {
   try {
+    const { user } = await validateRequest();
     const res = await fetch(`${BASE_API_URL}/api/schoolmanage/schools`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        ...data,
+        userId: user?.id, // ✅ Kullanıcı ID'sini gönder
+        userEmail: user?.email, // ✅ İsteğe bağlı
+      }),
     });
 
     const result = await res.json();
@@ -49,8 +55,6 @@ export async function createSchool(data: SchoolProps) {
 //     return null;
 //   }
 // }
-
-
 
 export async function getSchoolById(slug: string) {
   if (!slug) return null;

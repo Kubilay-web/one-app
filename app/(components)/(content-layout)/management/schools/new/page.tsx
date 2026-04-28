@@ -10,6 +10,7 @@ export default async function page() {
 	// const user = await getServerUser();
 
 	const {user} = await validateRequest();
+	console.log("user",user)
 	// const role = user?.role;
 
 
@@ -19,7 +20,7 @@ export default async function page() {
 
 
 	return (
-		<div className="">
+		<div>
 			<Card className="border-t-4 border-blue-600 shadow">
 				<CardContent className="p-6">
 					<SchoolOnboardingForm />

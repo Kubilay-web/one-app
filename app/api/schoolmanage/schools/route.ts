@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/lib/db";
 import { generateSlug } from "../generateSlug";
-import { validateRequest } from "@/app/auth";
 
 
 
@@ -177,7 +176,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, logo, primaryEmail } = await request.json();
+
+    const { name, logo, primaryEmail,userId } = await request.json();
 
 
 
@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Oturum açmış kullanıcıyı kontrol et (isteğe bağlı: token ile doğrula)
-    if (!user) {
+    if (!userId) {
       return NextResponse.json(
         {
           data: null,
@@ -234,7 +234,7 @@ export async function POST(request: NextRequest) {
 
       // 2. Kullanıcıyı bu okula bağla (schoolId ve schoolName güncelle)
       const updatedUser = await tx.user.update({
-        where: { id: user.id },
+        where: { id: userId },
         data: {
           schoolId: newSchool.id,
           schoolName: newSchool.name,
