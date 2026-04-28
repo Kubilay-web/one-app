@@ -77,14 +77,16 @@
 
 // export default Header;
 
+
+
+
 import React from "react";
 import moment from "moment";
 import { FaFacebookF, FaTwitter, FaYoutube } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import HeaderCategory from "./HeaderCategory";
-import { H3Icon } from "@heroicons/react/24/outline";
-import { RiH4 } from "react-icons/ri";
+
 
 const Header = () => {
   return (
@@ -153,7 +155,7 @@ const Header = () => {
             </h2> */}
 
             <h5 className="text-md font-semibold tracking-wide text-[#cccccc] md:text-left">
-              Ihre Immobilien-Management-Plattform
+              Privat vermieten. Professionell verwalten.
             </h5>
           </div>
 
